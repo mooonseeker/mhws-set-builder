@@ -1,4 +1,4 @@
-import type { FinalSet, Slot } from '@/types';
+import type { Accessory, FinalSet, Skill, SkillWithLevel, Slot } from '@/types';
 
 /**
  * Calculates the slot value score for remaining slots.
@@ -20,40 +20,76 @@ function calculateSlotValue(slots: Slot[]): number {
     }, 0);
 }
 
+
 /**
- * Calculates total defense from all equipment in the set.
- * @param set The final set to calculate defense for
- * @returns Total defense value
+ * 计算套装的总技能等级
  */
-function calculateTotalDefense(set: FinalSet): number {
-    const { equipment } = set;
-    let totalDefense = 0;
+function computeTotalSkills(set: FinalSet): Map<string, number> {
+    const totalSkills = new Map<string, number>();
 
-    // Add weapon defense
-    if (equipment.weapon?.equipment.defense) {
-        totalDefense += equipment.weapon.equipment.defense;
-    }
-
-    // Add armor defense
-    const armorParts = ['helm', 'body', 'arm', 'waist', 'leg'] as const;
-    armorParts.forEach(part => {
-        const armor = equipment[part];
-        if (armor?.equipment.defense) {
-            totalDefense += armor.equipment.defense;
+    // 装备自带技能
+    Object.values(set.equipment).forEach((slottedEq) => {
+        if (slottedEq?.equipment?.skills) {
+            slottedEq.equipment.skills.forEach((skill: SkillWithLevel) => {
+                const current = totalSkills.get(skill.skillId) || 0;
+                totalSkills.set(skill.skillId, current + skill.level);
+            });
         }
     });
 
-    // Note: Charms typically don't have defense, so we don't include them
+    // 装饰品技能
+    set.accessories.forEach((accessoryList) => {
+        accessoryList.forEach((accessory: Accessory) => {
+            accessory.skills.forEach((skill: SkillWithLevel) => {
+                const current = totalSkills.get(skill.skillId) || 0;
+                totalSkills.set(skill.skillId, current + skill.level);
+            });
+        });
+    });
 
-    return totalDefense;
+    return totalSkills;
+}
+
+/**
+ * 计算溢出技能
+ * @param set 配装方案
+ * @param requiredSkills 所需技能
+ * @param skillDetails 技能详情Map
+ * @returns 溢出技能列表
+ */
+export function calculateExtraSkills(
+    set: FinalSet,
+    requiredSkills: SkillWithLevel[]
+): SkillWithLevel[] {
+    const totalSkills = computeTotalSkills(set);
+    const extraSkills: SkillWithLevel[] = [];
+
+    totalSkills.forEach((totalLevel, skillId) => {
+        const required = requiredSkills.find((s) => s.skillId === skillId);
+        const requiredLevel = required?.level || 0;
+        if (totalLevel > requiredLevel) {
+            extraSkills.push({
+                skillId,
+                level: totalLevel - requiredLevel,
+            });
+        }
+    });
+
+    return extraSkills;
 }
 
 /**
  * Evaluates and sorts a list of final sets based on comprehensive criteria.
  * @param sets The list of sets to evaluate.
+ * @param requiredSkills 用户所需技能
+ * @param skillDetails 技能详情映射
  * @returns A sorted list of evaluated sets.
  */
-export function evaluateAndSortResults(sets: FinalSet[]): FinalSet[] {
+export function evaluateAndSortResults(
+    sets: FinalSet[],
+    requiredSkills: SkillWithLevel[],
+    skillDetails: Map<string, Skill>
+): FinalSet[] {
 
     if (sets.length <= 1) {
         return sets;
@@ -61,26 +97,25 @@ export function evaluateAndSortResults(sets: FinalSet[]): FinalSet[] {
 
     // Sort using multi-level comparison
     return sets.sort((a, b) => {
-        // 1. Compare slot value (higher is better)
+        // 1. 剩余孔位价值 (高 -> 低)
         const aSlotValue = calculateSlotValue(a.remainingSlots);
         const bSlotValue = calculateSlotValue(b.remainingSlots);
-
         if (aSlotValue !== bSlotValue) {
-            return bSlotValue - aSlotValue; // Descending order
+            return bSlotValue - aSlotValue;
         }
 
-        // 2. Compare total defense (higher is better)
-        const aDefense = calculateTotalDefense(a);
-        const bDefense = calculateTotalDefense(b);
+        // 2. 溢出核心技能总等级 (低 -> 高)
+        const aExtraSkills = calculateExtraSkills(a, requiredSkills);
+        const bExtraSkills = calculateExtraSkills(b, requiredSkills);
 
-        if (aDefense !== bDefense) {
-            return bDefense - aDefense; // Descending order
-        }
+        const aExtraKeySum = aExtraSkills
+            .filter((skill) => skillDetails.get(skill.skillId)?.isKey)
+            .reduce((sum, skill) => sum + skill.level, 0);
 
-        // 3. Compare extra skills count (lower is better - more precise builds)
-        const aExtraSkills = a.extraSkills.length;
-        const bExtraSkills = b.extraSkills.length;
+        const bExtraKeySum = bExtraSkills
+            .filter((skill) => skillDetails.get(skill.skillId)?.isKey)
+            .reduce((sum, skill) => sum + skill.level, 0);
 
-        return aExtraSkills - bExtraSkills; // Ascending order
+        return aExtraKeySum - bExtraKeySum;
     });
 }

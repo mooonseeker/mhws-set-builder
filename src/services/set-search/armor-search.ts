@@ -98,7 +98,6 @@ function backtrack(
                 equipment: cloneDeep(context.equipment),
                 accessories: new Map(), // No accessories are added here
                 remainingSlots: [...context.availableSlots.armor, ...context.availableSlots.weapon],
-                extraSkills: [], // Extra skill calculation can be added later
             };
             console.log(`${indent}  -> Success: No armor skill deficits. Solution found.`);
             finalResults.push(finalSet);
@@ -185,7 +184,6 @@ function backtrack(
                     equipment: solutionEquipment,
                     accessories: finalAccessories,
                     remainingSlots: [...solution.remainingSlots.armor, ...context.availableSlots.weapon],
-                    extraSkills: [], // Extra skill calculation can be added later
                 };
                 finalResults.push(finalSet);
                 if (finalResults.length >= limit) {

@@ -109,6 +109,4 @@ export interface FinalSet {
     accessories: Map<string, Accessory[]>;
     /** 剩余的孔位 */
     remainingSlots: Slot[];
-    /** 溢出的技能 */
-    extraSkills: SkillWithLevel[];
 }

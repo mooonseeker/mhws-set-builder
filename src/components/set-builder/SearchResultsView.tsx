@@ -1,9 +1,14 @@
+import { useMemo } from 'react';
+
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useSetBuilder } from '@/contexts/SetBuilderContext';
 import { useSkills } from '@/contexts/SkillContext';
+import {
+    calculateExtraSkills, evaluateAndSortResults
+} from '@/services/set-search/result-evaluator';
 
-import type { FinalSet, Slot } from "@/types";
+import type { FinalSet, SkillWithLevel, Slot } from "@/types";
 
 // Helper function to count remaining slots
 const countSlots = (slots: Slot[]): Record<string, number> => {
@@ -17,10 +22,21 @@ const countSlots = (slots: Slot[]): Record<string, number> => {
 
 export function SearchResultsView() {
     const {
+        requiredSkills,
         searchResults,
         loadSetToBuilder,
     } = useSetBuilder();
-    const { getSkillById } = useSkills();
+    const { skills, getSkillById } = useSkills();
+
+    const skillDetails = useMemo(
+        () => new Map(skills.map((skill) => [skill.id, skill])),
+        [skills]
+    );
+
+    const sortedResults = useMemo(() => {
+        if (!searchResults || searchResults.length === 0) return [];
+        return evaluateAndSortResults(searchResults, requiredSkills, skillDetails);
+    }, [searchResults, requiredSkills, skillDetails]);
 
     const handleSelectSet = (set: FinalSet) => {
         loadSetToBuilder(set);
@@ -31,8 +47,9 @@ export function SearchResultsView() {
             <h2 className="text-xl font-bold">搜索结果</h2>
             {searchResults.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {searchResults.map((set, index) => {
+                    {sortedResults.map((set, index) => {
                         const remainingSlotsCount = countSlots(set.remainingSlots);
+                        const extraSkills = calculateExtraSkills(set, requiredSkills, skillDetails);
 
                         return (
                             <Card
@@ -47,15 +64,15 @@ export function SearchResultsView() {
                                 <CardContent className="flex-grow flex flex-col justify-between">
                                     <div>
                                         <h4 className="font-semibold mb-2">额外技能:</h4>
-                                        {set.extraSkills.length > 0 ? (
+                                        {extraSkills.length > 0 ? (
                                             <div className="flex flex-wrap gap-1">
-                                                {set.extraSkills.map(({ skillId, level }) => {
+                                                {extraSkills.map(({ skillId, level }) => {
                                                     const skill = getSkillById(skillId);
                                                     return (
                                                         <Badge key={skillId} variant="secondary">
                                                             {skill?.name || skillId} Lv{level}
                                                         </Badge>
-                                                    )
+                                                    );
                                                 })}
                                             </div>
                                         ) : (

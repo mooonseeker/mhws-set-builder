@@ -10,7 +10,6 @@ import { cloneDeep } from 'lodash-es';
 import { solveAccessories } from './accessory-solver';
 import { fillArmorScaffold } from './armor-search';
 import { preprocess } from './preprocess';
-import { evaluateAndSortResults } from './result-evaluator';
 import { generateArmorScaffolds } from './scaffold-generator';
 import { categorizeTargetSkills } from './utils';
 
@@ -296,12 +295,10 @@ export const findOptimalSets = async (
             `[!] The search was stopped because the number of combinations found reached the limit of ${SEARCH_LIMIT}. The results may be incomplete. Please add more specific skill requirements to narrow down the search.`
         );
     }
-    console.log(`[+] Step 4: Found a total of ${finalResults.length} raw sets. Evaluating and sorting...`);
-    // evaluateAndSortResults 将在后续任务中适配，目前可能功能不全
-    const sortedSets = evaluateAndSortResults(finalResults);
+    console.log(`[+] Step 4: Found a total of ${finalResults.length} raw sets. Results ready for frontend evaluation.`);
 
     const endTime = performance.now();
     console.log(`[+] Full search completed in ${(endTime - startTime).toFixed(2)}ms.`);
-    console.log('[Debug] Final sets to be returned to UI:', JSON.stringify(sortedSets.slice(0, SEARCH_LIMIT), null, 2));
-    return sortedSets.slice(0, SEARCH_LIMIT);
+    console.log('[Debug] Final sets to be returned to UI:', JSON.stringify(finalResults.slice(0, SEARCH_LIMIT), null, 2));
+    return finalResults.slice(0, SEARCH_LIMIT);
 };
