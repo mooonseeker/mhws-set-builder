@@ -3,7 +3,7 @@
  * This file orchestrates the entire process of finding optimal equipment sets.
  */
 
-import type { Accessory, Armor, ArmorType, Charm, FinalSet, Skill, SkillWithLevel, Weapon } from '@/types';
+import type { Accessory, Armor, ArmorType, Charm, EquipmentSet, FinalSet, Skill, SkillWithLevel, Slot, Weapon } from '@/types';
 import type { SearchContext, SkillDeficit } from '@/types/set-builder';
 import { cloneDeep } from 'lodash-es';
 
@@ -33,13 +33,13 @@ interface AllGameData {
  * to a more efficient search process.
  *
  * @param requiredSkills - An array of skills the user requires.
- * @param fixedWeapon - The specific weapon to build the set around.
+ * @param fixedEquipment - The specific equipment set to build around.
  * @param allData - All game data including armors, weapons, accessories, skills, and charms.
  * @returns A promise that resolves to an array of final, sorted sets.
  */
 export const findOptimalSets = async (
     requiredSkills: SkillWithLevel[],
-    fixedWeapon: Weapon,
+    fixedEquipment: EquipmentSet,
     allData: AllGameData,
 ): Promise<FinalSet[]> => {
     console.log('[+] Starting findOptimalSets v7.1...');
@@ -69,7 +69,6 @@ export const findOptimalSets = async (
     });
 
     const finalResults: FinalSet[] = [];
-    const totalCharms = allData.charms.length;
     let limitReached = false;
 
     // 如果没有护石数据，可以继续搜索（仅使用武器）
@@ -78,36 +77,43 @@ export const findOptimalSets = async (
         // 如果需要，可以在这里添加一个只使用武器的逻辑分支
     }
 
-    // 3. 主搜索循环: 遍历所有护石 (charms)
-    for (const [index, charm] of allData.charms.entries()) {
+    // 3. 主搜索循环: 根据情况遍历护石或直接处理
+    const charmsToIterate = fixedEquipment.charm ? [fixedEquipment.charm.equipment as Charm] : allData.charms;
+    const totalCharms = charmsToIterate.length;
+
+    for (const [index, charm] of charmsToIterate.entries()) {
         const charmStartTime = performance.now();
         console.log(`[+] Step 3: Main loop - Processing charm ${index + 1}/${totalCharms} (ID: ${charm.id})`);
-        // 3a. 创建初始 SearchContext
-        const currentSkills = new Map<string, number>();
-        fixedWeapon.skills.forEach((skill: SkillWithLevel) => {
-            currentSkills.set(skill.skillId, (currentSkills.get(skill.skillId) || 0) + skill.level);
-        });
-        charm.skills.forEach((skill: SkillWithLevel) => {
-            currentSkills.set(skill.skillId, (currentSkills.get(skill.skillId) || 0) + skill.level);
-        });
 
+        // 3a. 创建初始 SearchContext
         const context: SearchContext = {
-            equipment: {
-                weapon: { equipment: fixedWeapon, accessories: Array(fixedWeapon.slots.length).fill(null) },
-                charm: { equipment: charm as Charm, accessories: Array(charm.slots.length).fill(null) },
-            },
-            currentSkills,
-            availableSlots: {
-                weapon: [
-                    ...fixedWeapon.slots.map(s => ({ ...s, sourceId: fixedWeapon.id })),
-                    ...charm.slots.filter(s => s.type === 'weapon').map(s => ({ ...s, sourceId: charm.id })),
-                ],
-                armor: [
-                    ...charm.slots.filter(s => s.type === 'armor').map(s => ({ ...s, sourceId: charm.id })),
-                ],
-            },
-            skillDeficits: cloneDeep(categorizedSkills), // 深拷贝以防循环间的状态污染
+            equipment: cloneDeep(fixedEquipment),
+            currentSkills: new Map<string, number>(),
+            availableSlots: { weapon: [], armor: [] },
+            skillDeficits: cloneDeep(categorizedSkills),
         };
+
+        // 如果 charm 不在 fixedEquipment 中，则添加到 context
+        if (!context.equipment.charm) {
+            context.equipment.charm = { equipment: charm, accessories: Array(charm.slots.length).fill(null) };
+        }
+
+        // 累加所有固定装备的技能和孔位
+        Object.values(context.equipment).forEach(slottedEq => {
+            if (!slottedEq) return;
+            const eq = slottedEq.equipment;
+            eq.skills.forEach((skill: SkillWithLevel) => {
+                context.currentSkills.set(skill.skillId, (context.currentSkills.get(skill.skillId) || 0) + skill.level);
+            });
+            eq.slots.forEach((slot: Slot) => {
+                const slotWithSource = { ...slot, sourceId: eq.id };
+                if (slot.type === 'weapon') {
+                    context.availableSlots.weapon.push(slotWithSource);
+                } else {
+                    context.availableSlots.armor.push(slotWithSource);
+                }
+            });
+        });
 
         // 3b. 求解 Weapon-Skills
         const weaponSkillDeficits: SkillDeficit[] = context.skillDeficits.weaponSkills

@@ -35,14 +35,16 @@ interface SetBuilderState {
     isResultsModalOpen: boolean;
     lockedSlots: Record<EquipmentCellType, boolean>;
     autoModeView: 'requirements' | 'results' | 'summary';
-    isSearchPrimed: boolean;
+    isSearchConfirmOpen: boolean;
 }
 
 interface SetBuilderActions {
     setMode: (mode: 'manual' | 'auto') => void;
     addRequiredSkill: (skill: SkillWithLevel) => void;
     updateRequiredSkillLevel: (skillId: string, newLevel: number) => void;
-    startSearch: () => Promise<void>;
+    startSearch: () => void;
+    confirmSearch: () => Promise<void>;
+    cancelSearch: () => void;
     loadSetToBuilder: (set: FinalSet) => void;
     handleEqSlotClick: (type: EquipmentCellType) => void;
     handleEqSelect: (item: Armor | Weapon | Charm) => void;
@@ -85,7 +87,7 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({ children
         charm: false,
     });
     const [autoModeView, setAutoModeViewState] = useState<'requirements' | 'results' | 'summary'>('requirements');
-    const [isSearchPrimed, setIsSearchPrimed] = useState<boolean>(false);
+    const [isSearchConfirmOpen, setIsSearchConfirmOpen] = useState(false);
 
     const handleEqSlotClick = (type: EquipmentCellType) => {
         if (selectionContext?.type === 'equipment' && selectionContext.equipmentType === type) {
@@ -150,60 +152,80 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({ children
         }
     };
 
-    const startSearch = useCallback(async (): Promise<void> => {
-        // 第一步：准备搜索
-        if (!isSearchPrimed) {
-            setIsSearchPrimed(true);
+    const startSearch = () => {
+        const hasUnlockedItems = Object.entries(currentEquipmentSet).some(([type, eq]) => eq && !lockedSlots[type as EquipmentCellType]);
+        const hasAccessories = Object.values(currentEquipmentSet).some(eq => eq && eq.accessories.some((acc: Accessory | null) => acc !== null));
 
-            // 清空未被锁定的装备槽
-            setCurrentEquipmentSet(prev => {
-                const newSet = { ...prev };
-                Object.keys(newSet).forEach(key => {
-                    const equipmentType = key as EquipmentCellType;
-                    if (!lockedSlots[equipmentType]) {
-                        delete newSet[equipmentType];
-                    }
-                });
-                return newSet;
-            });
-
-            setAutoModeView('requirements');
-            return;
+        if (hasUnlockedItems || hasAccessories) {
+            setIsSearchConfirmOpen(true);
+        } else {
+            confirmSearch();
         }
+    };
 
-        // 第二步：执行搜索
-        let fixedWeapon = currentEquipmentSet.weapon?.equipment;
+    const cancelSearch = () => {
+        setIsSearchConfirmOpen(false);
+    };
 
-        if (!fixedWeapon) {
+    const confirmSearch = useCallback(async (): Promise<void> => {
+        setIsSearchConfirmOpen(false);
+
+        const cleanedEquipmentSet: EquipmentSet = {};
+
+        // Process each slot type explicitly to ensure type safety
+        const processEq = (type: EquipmentCellType) => {
+            if (lockedSlots[type] && currentEquipmentSet[type]) {
+                const slottedEq = currentEquipmentSet[type]!;
+                const newSlottedEq = {
+                    equipment: slottedEq.equipment,
+                    accessories: Array(slottedEq.equipment.slots.length).fill(null),
+                };
+                return newSlottedEq;
+            }
+            return undefined;
+        };
+
+        cleanedEquipmentSet.weapon = processEq('weapon') as { equipment: Weapon; accessories: (Accessory | null)[] } | undefined;
+        cleanedEquipmentSet.helm = processEq('helm') as { equipment: Armor; accessories: (Accessory | null)[] } | undefined;
+        cleanedEquipmentSet.body = processEq('body') as { equipment: Armor; accessories: (Accessory | null)[] } | undefined;
+        cleanedEquipmentSet.arm = processEq('arm') as { equipment: Armor; accessories: (Accessory | null)[] } | undefined;
+        cleanedEquipmentSet.waist = processEq('waist') as { equipment: Armor; accessories: (Accessory | null)[] } | undefined;
+        cleanedEquipmentSet.leg = processEq('leg') as { equipment: Armor; accessories: (Accessory | null)[] } | undefined;
+        cleanedEquipmentSet.charm = processEq('charm') as { equipment: Charm; accessories: (Accessory | null)[] } | undefined;
+
+        if (!cleanedEquipmentSet.weapon) {
             const defaultWeapon = weapons.find(w => w.id === 'Rod_075');
             if (!defaultWeapon) {
                 console.error('默认武器 "Rod_075" 未在数据库中找到。请检查数据完整性。');
-                // TODO: 在未来这里应该调用一个Toast通知
                 return;
             }
-            fixedWeapon = defaultWeapon;
+            cleanedEquipmentSet.weapon = {
+                equipment: defaultWeapon,
+                accessories: Array(defaultWeapon.slots.length).fill(null),
+            };
         }
 
-        console.log('Starting a real search for skills:', requiredSkills, 'with weapon:', fixedWeapon.name);
+        setCurrentEquipmentSet(cleanedEquipmentSet);
+
+        console.log('Starting search with fixed equipment:', cleanedEquipmentSet);
         setIsSearching(true);
-        setIsSearchPrimed(false);
         setAutoModeView('results');
 
         try {
             const results = await findOptimalSets(
                 requiredSkills,
-                fixedWeapon,
+                cleanedEquipmentSet,
                 { armors: armor, weapons, accessories, skills, charms },
             );
             console.log('Search completed with results:', results);
             setSearchResults(results);
         } catch (error) {
             console.error("An error occurred during search:", error);
-            setSearchResults([]); // 出错时清空结果
+            setSearchResults([]);
         } finally {
             setIsSearching(false);
         }
-    }, [requiredSkills, currentEquipmentSet, armor, weapons, accessories, skills, charms, isSearchPrimed, lockedSlots]);
+    }, [requiredSkills, currentEquipmentSet, armor, weapons, accessories, skills, charms, lockedSlots]);
 
     const loadSetToBuilder = (finalSet: FinalSet) => {
         console.log('[Debug] loadSetToBuilder received finalSet:', JSON.stringify(finalSet, null, 2));
@@ -277,7 +299,6 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({ children
     const resetBuilder = () => {
         setRequiredSkills([]);
         setSearchResults([]);
-        setIsSearchPrimed(false);
 
         // 只重置未锁定的装备槽
         setCurrentEquipmentSet(prev => {
@@ -302,11 +323,13 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({ children
         isResultsModalOpen,
         lockedSlots,
         autoModeView,
-        isSearchPrimed,
+        isSearchConfirmOpen,
         setMode,
         addRequiredSkill,
         updateRequiredSkillLevel,
         startSearch,
+        confirmSearch,
+        cancelSearch,
         loadSetToBuilder,
         handleEqSlotClick,
         handleEqSelect,
