@@ -325,15 +325,17 @@ export function ArmorList({
 
             {/* 防具表格 */}
             <div className="flex-1 min-h-0 bg-card rounded-lg border shadow-sm">
-                <Table>
+                <Table className="table-fixed w-full">
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-[10%] text-center bg-primary text-primary-foreground rounded-tl-lg">防具系列</TableHead>
-                            <TableHead className="w-[15%] text-center bg-primary text-primary-foreground">头盔</TableHead>
-                            <TableHead className="w-[15%] text-center bg-primary text-primary-foreground">胸甲</TableHead>
-                            <TableHead className="w-[15%] text-center bg-primary text-primary-foreground">臂甲</TableHead>
-                            <TableHead className="w-[15%] text-center bg-primary text-primary-foreground">腰甲</TableHead>
-                            <TableHead className="w-[15%] text-center bg-primary text-primary-foreground">腿甲</TableHead>
+                            {mode !== 'selector' && (
+                                <TableHead className="w-[10%] text-center bg-primary text-primary-foreground rounded-tl-lg">防具系列</TableHead>
+                            )}
+                            <TableHead className={cn("text-center bg-primary text-primary-foreground", mode === 'selector' ? "w-[20%] rounded-tl-lg" : "w-[15%]")}>头盔</TableHead>
+                            <TableHead className={cn("text-center bg-primary text-primary-foreground", mode === 'selector' ? "w-[20%]" : "w-[15%]")}>胸甲</TableHead>
+                            <TableHead className={cn("text-center bg-primary text-primary-foreground", mode === 'selector' ? "w-[20%]" : "w-[15%]")}>臂甲</TableHead>
+                            <TableHead className={cn("text-center bg-primary text-primary-foreground", mode === 'selector' ? "w-[20%]" : "w-[15%]")}>腰甲</TableHead>
+                            <TableHead className={cn("text-center bg-primary text-primary-foreground", mode === 'selector' ? "w-[20%] rounded-tr-lg" : "w-[15%]")}>腿甲</TableHead>
                             {mode !== 'selector' && (
                                 <TableHead className="w-[15%] text-center bg-primary text-primary-foreground rounded-tr-lg">全套技能</TableHead>
                             )}
@@ -349,9 +351,11 @@ export function ArmorList({
                         ) : (
                             filteredAndPaginatedArmor.data.map(group => (
                                 <TableRow key={group.series}>
-                                    <TableCell className="text-center">
-                                        <Badge variant="outline">{group.series}</Badge>
-                                    </TableCell>
+                                    {mode !== 'selector' &&
+                                        <TableCell className="text-center">
+                                            <Badge variant="outline">{group.series}</Badge>
+                                        </TableCell>
+                                    }
                                     {renderArmorPiece(group.helm)}
                                     {renderArmorPiece(group.body)}
                                     {renderArmorPiece(group.arm)}

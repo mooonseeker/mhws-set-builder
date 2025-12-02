@@ -1,5 +1,7 @@
 import { Square } from 'lucide-react';
+import { useLayoutEffect, useRef, useState } from 'react';
 
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useSkills } from '@/contexts';
 import { cn } from '@/lib/utils';
 
@@ -12,12 +14,28 @@ interface SkillItemProps {
 export function SkillItem({ skillId, level, variant = 'default' }: SkillItemProps) {
     const { getSkillById } = useSkills();
     const skill = getSkillById(skillId);
+    const [isTruncated, setIsTruncated] = useState(false);
+    const nameRef = useRef<HTMLSpanElement>(null);
+
+    const name = skill?.name;
+
+    useLayoutEffect(() => {
+        const checkTruncation = () => {
+            if (nameRef.current) {
+                setIsTruncated(nameRef.current.scrollWidth > nameRef.current.offsetWidth);
+            }
+        };
+
+        checkTruncation();
+        window.addEventListener('resize', checkTruncation);
+        return () => window.removeEventListener('resize', checkTruncation);
+    }, [name, variant]);
 
     if (!skill) {
         return null;
     }
 
-    const { name, maxLevel, type, isKey } = skill;
+    const { maxLevel, type, isKey } = skill;
     const isMaxLevel = level >= maxLevel;
 
     // 生成等级方块（使用 lucide Square 图标）
@@ -51,15 +69,27 @@ export function SkillItem({ skillId, level, variant = 'default' }: SkillItemProp
                     )}
                     onError={(e) => { e.currentTarget.style.display = 'none'; }}
                 />
-                <span
-                    className={cn(
-                        "truncate",
-                        variant === 'default' ? "text-sm" : "text-xs",
-                        isKey ? "font-bold" : "font-medium"
-                    )}
-                >
-                    {name}
-                </span>
+                <TooltipProvider>
+                    <Tooltip delayDuration={300}>
+                        <TooltipTrigger asChild>
+                            <span
+                                ref={nameRef}
+                                className={cn(
+                                    "truncate cursor-default",
+                                    variant === 'default' ? "text-sm" : "text-xs",
+                                    isKey ? "font-bold" : "font-medium"
+                                )}
+                            >
+                                {name}
+                            </span>
+                        </TooltipTrigger>
+                        {isTruncated && (
+                            <TooltipContent>
+                                <p>{name}</p>
+                            </TooltipContent>
+                        )}
+                    </Tooltip>
+                </TooltipProvider>
             </div>
             <div className="flex items-center flex-shrink-0">
                 {variant === 'default' ? (
