@@ -1,23 +1,29 @@
 import { useMemo } from 'react';
 
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useSetBuilder } from '@/contexts/SetBuilderContext';
 import { useSkills } from '@/contexts/SkillContext';
 import {
     calculateExtraSkills, evaluateAndSortResults
 } from '@/services/set-search/result-evaluator';
 
-import type { FinalSet, SkillWithLevel, Slot } from "@/types";
+import type { FinalSet, Slot, SlotType } from "@/types";
 
-// Helper function to count remaining slots
-const countSlots = (slots: Slot[]): Record<string, number> => {
-    return slots.reduce<Record<string, number>>((acc, slot) => {
+// Helper function to count remaining slots by type
+const countSlotsByType = (slots: Slot[]) => {
+    const counts: Record<SlotType, Record<string, number>> = {
+        weapon: { '1': 0, '2': 0, '3': 0 },
+        armor: { '1': 0, '2': 0, '3': 0 },
+    };
+
+    slots.forEach((slot) => {
         if (slot.level > 0) {
-            acc[slot.level] = (acc[slot.level] || 0) + 1;
+            counts[slot.type][slot.level] += 1;
         }
-        return acc;
-    }, {});
+    });
+
+    return counts;
 };
 
 export function SearchResultsView() {
@@ -43,68 +49,90 @@ export function SearchResultsView() {
     };
 
     return (
-        <div className="space-y-4">
-            <h2 className="text-xl font-bold">搜索结果</h2>
-            {searchResults.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {sortedResults.map((set, index) => {
-                        const remainingSlotsCount = countSlots(set.remainingSlots);
-                        const extraSkills = calculateExtraSkills(set, requiredSkills, skillDetails);
+        <Card>
+            <CardHeader>
+                <CardTitle>搜索结果</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                    下方搜索结果仅展示剩余孔位及额外技能，点击可加载配装。
+                </p>
+                {searchResults.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-4">
+                        {sortedResults.map((set, index) => {
+                            const remainingSlotsCount = countSlotsByType(set.remainingSlots);
+                            const extraSkills = calculateExtraSkills(set, requiredSkills);
 
-                        return (
-                            <Card
-                                key={index}
-                                className="cursor-pointer hover:border-primary transition-colors flex flex-col"
-                                onClick={() => handleSelectSet(set)}
-                            >
-                                <CardHeader>
-                                    <CardTitle>配装 {index + 1}</CardTitle>
-                                    <CardDescription>点击加载此配装</CardDescription>
-                                </CardHeader>
-                                <CardContent className="flex-grow flex flex-col justify-between">
-                                    <div>
-                                        <h4 className="font-semibold mb-2">额外技能:</h4>
-                                        {extraSkills.length > 0 ? (
-                                            <div className="flex flex-wrap gap-1">
-                                                {extraSkills.map(({ skillId, level }) => {
-                                                    const skill = getSkillById(skillId);
-                                                    return (
-                                                        <Badge key={skillId} variant="secondary">
-                                                            {skill?.name || skillId} Lv{level}
-                                                        </Badge>
-                                                    );
-                                                })}
+                            return (
+                                <div key={index} className="flex items-stretch gap-3 w-full">
+                                    <Badge
+                                        variant="outline"
+                                        className="flex-none self-stretch flex items-center justify-center px-3 font-mono text-lg min-h-[80px] w-16"
+                                    >
+                                        #{index + 1}
+                                    </Badge>
+                                    <Card
+                                        className="flex-1 cursor-pointer hover:border-primary transition-colors"
+                                        onClick={() => handleSelectSet(set)}
+                                    >
+                                        <CardContent className="p-4 space-y-3">
+                                            {/* Remaining Slots Section */}
+                                            <div className="flex flex-wrap gap-x-4 gap-y-2">
+                                                {(['weapon', 'armor'] as SlotType[]).map((type) => (
+                                                    <div key={type} className="flex items-center gap-2 min-w-max">
+                                                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider mr-1">
+                                                            {type}:
+                                                        </span>
+                                                        {[3, 2, 1].map((level) => {
+                                                            const count = remainingSlotsCount[type][level];
+                                                            const isEmpty = count === 0;
+                                                            return (
+                                                                <div key={level} className="flex items-center gap-1">
+                                                                    <img
+                                                                        src={`/slot/${type}-slot-${level}.png`}
+                                                                        alt={`${type} slot lv${level}`}
+                                                                        className={`w-5 h-5 ${isEmpty ? 'opacity-30' : ''}`}
+                                                                    />
+                                                                    <span className={`text-xs ${isEmpty ? 'text-muted-foreground' : 'font-medium'}`}>
+                                                                        {isEmpty ? '—' : `x${count}`}
+                                                                    </span>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                ))}
+                                                {set.remainingSlots.every(slot => slot.level <= 0) && (
+                                                    <p className="text-sm text-muted-foreground col-span-full">无剩余孔位</p>
+                                                )}
                                             </div>
-                                        ) : (
-                                            <p className="text-sm text-muted-foreground">无</p>
-                                        )}
-                                    </div>
-                                    <div className="mt-4">
-                                        <h4 className="font-semibold mb-2">剩余孔位:</h4>
-                                        {Object.keys(remainingSlotsCount).length > 0 ? (
-                                            <div className="flex flex-wrap gap-1">
-                                                {Object.entries(remainingSlotsCount)
-                                                    .sort(([a], [b]) => Number(b) - Number(a))
-                                                    .map(([slot, count]) => (
-                                                        <Badge key={slot} variant="outline">
-                                                            Lv{slot} x{count}
-                                                        </Badge>
-                                                    ))}
-                                            </div>
-                                        ) : (
-                                            <p className="text-sm text-muted-foreground">无</p>
-                                        )}
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        );
-                    })}
-                </div>
-            ) : (
-                <div className="flex items-center justify-center h-32">
-                    <p className="text-muted-foreground">暂无搜索结果。</p>
-                </div>
-            )}
-        </div>
+
+                                            {/* Extra Skills Section */}
+                                            {extraSkills.length > 0 ? (
+                                                <div className="flex flex-wrap gap-1">
+                                                    {extraSkills.map(({ skillId, level }) => {
+                                                        const skill = getSkillById(skillId);
+                                                        return (
+                                                            <Badge key={skillId} variant="secondary">
+                                                                {skill?.name || skillId} Lv{level}
+                                                            </Badge>
+                                                        );
+                                                    })}
+                                                </div>
+                                            ) : (
+                                                <p className="text-sm text-muted-foreground">无额外技能</p>
+                                            )}
+                                        </CardContent>
+                                    </Card>
+                                </div>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <div className="flex items-center justify-center h-32">
+                        <p className="text-muted-foreground">暂无搜索结果。</p>
+                    </div>
+                )}
+            </CardContent>
+        </Card>
     );
 }
