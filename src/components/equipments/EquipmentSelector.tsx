@@ -1,7 +1,5 @@
-import { AccessoryList } from '@/components/accessories';
-import { ArmorList } from '@/components/armor';
 import { CharmList } from '@/components/charms';
-import { WeaponList } from '@/components/weapon';
+import { AccessoryList, ArmorList, WeaponList } from '@/components/database';
 
 import type { Armor, Charm, Weapon, Accessory, Slot } from '@/types';
 import type { EquipmentCellType } from '@/types/set-builder';

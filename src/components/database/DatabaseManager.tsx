@@ -7,12 +7,12 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useAccessories, useArmor, useSkills } from '@/contexts';
 import { generateSkillId } from '@/utils';
 
-import { AccessoryForm } from '../accessories/AccessoryForm';
-import { AccessoryList } from '../accessories/AccessoryList';
-import { ArmorList } from '../armor';
 import { SkillForm } from '../skills/SkillForm';
 import { SkillList } from '../skills/SkillList';
-import { WeaponList } from '../weapon';
+import { AccessoryForm } from './AccessoryForm';
+import { AccessoryList } from './AccessoryList';
+import { ArmorList } from './ArmorList';
+import { WeaponList } from './WeaponList';
 
 import type { Skill, Accessory } from '@/types';
 
