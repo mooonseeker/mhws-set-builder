@@ -90,6 +90,10 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({ children
     const [isSearchConfirmOpen, setIsSearchConfirmOpen] = useState(false);
 
     const handleEqSlotClick = (type: EquipmentCellType) => {
+        if (lockedSlots[type]) {
+            return;
+        }
+
         if (selectionContext?.type === 'equipment' && selectionContext.equipmentType === type) {
             setSelectionContext(null);
         } else {
