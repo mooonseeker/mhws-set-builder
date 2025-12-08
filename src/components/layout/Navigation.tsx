@@ -23,7 +23,7 @@ export function Navigation({ currentTab, onTabChange }: NavigationProps) {
 
     return (
         <nav className="bg-card">
-            <div className="mx-auto w-[80%] px-4 sm:px-6 md:px-8 lg:px-10">
+            <div className="mx-auto w-[98%] 2xl:w-[80%] px-4 sm:px-6 md:px-8 lg:px-10">
                 <div className="flex gap-0.5 sm:gap-1">
                     {tabs.map(({ id, label, icon: Icon }) => (
                         <Button

@@ -34,7 +34,7 @@ export function SetBuilder() {
         <>
             <div className="h-full flex flex-col gap-6">
                 <div className="flex flex-col lg:flex-row gap-8 flex-shrink-0">
-                    <div className="w-full lg:w-9/20 flex items-center justify-between">
+                    <div className="w-full lg:w-2/5 flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <h1 className="text-2xl font-bold">配装器</h1>
                             <ToggleGroup
@@ -52,7 +52,7 @@ export function SetBuilder() {
                                 </ToggleGroupItem>
                                 <ToggleGroupItem
                                     value="auto"
-                                    aria-label="自动模式（开发中）"
+                                    aria-label="自动模式"
                                 >
                                     <Search className="h-4 w-4" />
                                 </ToggleGroupItem>
@@ -60,13 +60,13 @@ export function SetBuilder() {
                         </div>
                         <SetBuilderActions mode={mode} />
                     </div>
-                    <div className="w-full lg:w-11/20 flex items-center justify-end">
+                    <div className="w-full lg:w-3/5 flex items-center justify-end">
                         {mode === 'auto' && <AutoModeViewToggle />}
                     </div>
                 </div>
 
                 <div className="flex-1 min-h-0 flex flex-col lg:flex-row gap-8">
-                    <div className="w-full lg:w-9/20 h-full flex flex-col justify-between items-start gap-2">
+                    <div className="w-full lg:w-2/5 h-full flex flex-col justify-between items-start gap-2">
                         {cellTypes.map(type => (
                             <EquipmentCell
                                 key={type}
@@ -85,7 +85,7 @@ export function SetBuilder() {
                         ))}
                     </div>
 
-                    <div className="w-full lg:w-11/20 h-full overflow-y-auto">
+                    <div className="w-full lg:w-3/5 h-full overflow-y-auto">
                         {selectionContext ? (
                             selectionContext.type === 'equipment' ? (
                                 <EquipmentSelector
