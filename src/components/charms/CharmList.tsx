@@ -161,7 +161,7 @@ export function CharmList({
     return (
         <div className="h-full flex flex-col gap-6">
             {/* 菜单栏 */}
-            <div className="flex-shrink-0 bg-card p-2 sm:p-4 rounded-lg border shadow-sm">
+            <div className="shrink-0 bg-card p-2 sm:p-4 rounded-lg border shadow-sm">
                 <div className="flex flex-wrap justify-between items-center gap-2 sm:gap-3">
                     <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                         <Button
@@ -246,7 +246,7 @@ export function CharmList({
 
             {/* 可折叠筛选器 */}
             {isFilterVisible && (
-                <div className="p-4 sm:p-6 bg-muted rounded-lg space-y-4 flex-shrink-0">
+                <div className="p-4 sm:p-6 bg-muted rounded-lg space-y-4 shrink-0">
                     <h3 className="font-medium text-base sm:text-lg">筛选条件</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                         <div className="space-y-3">
@@ -385,7 +385,7 @@ export function CharmList({
                                                         key={skillWithLevel.skillId}
                                                         skillId={skillWithLevel.skillId}
                                                         level={skillWithLevel.level}
-                                                        variant="default"
+                                                        variant="full"
                                                     />
                                                 ))}
                                                 {/* 小屏幕显示孔位信息 */}

@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/table';
 import { useSkills } from '@/contexts';
 import { useArmor } from '@/contexts/ArmorContext';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
 import { ARMOR_SERIES_PER_PAGE } from '@/types/constants';
 
@@ -54,6 +55,15 @@ export function ArmorList({
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedRarity, setSelectedRarity] = useState<'all' | 'low' | 'high' | 'master'>('all');
+
+    const is2Xl = useMediaQuery('(min-width: 1536px)');
+    const cardVariant = useMemo(() => {
+        if (mode === 'display') {
+            return is2Xl ? 'full' : 'default';
+        }
+        // selector mode
+        return is2Xl ? 'default' : 'compact';
+    }, [mode, is2Xl]);
 
     // 获取技能名称的辅助函数
     const getSkillName = useCallback((skillId: string) => {
@@ -233,7 +243,7 @@ export function ArmorList({
             >
                 <EquipmentCard
                     item={piece}
-                    variant={isSelector ? 'compact' : 'full'}
+                    variant={cardVariant}
                     isSelected={isSelected}
                 />
             </TableCell>
@@ -264,7 +274,7 @@ export function ArmorList({
     return (
         <div className="h-full flex flex-col gap-6">
             {/* 菜单栏 */}
-            <div className="flex-shrink-0 bg-card p-2 sm:p-4 rounded-lg border shadow-sm">
+            <div className="shrink-0 bg-card p-2 sm:p-4 rounded-lg border shadow-sm">
                 <div className="flex flex-nowrap justify-between items-center gap-2 sm:gap-3">
                     <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                         <Button

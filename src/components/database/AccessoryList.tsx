@@ -1,6 +1,7 @@
 import { List, Pencil, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+import { SkillItem } from '@/components/skills/SkillItem';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +11,7 @@ import {
 } from '@/components/ui/table';
 import { useAccessories } from '@/contexts';
 import { useSkills } from '@/contexts/SkillContext';
+import { cn } from '@/lib/utils';
 
 import type { Accessory, SlotLevel } from '@/types';
 
@@ -100,7 +102,7 @@ export function AccessoryList({
     return (
         <div className="h-full flex flex-col gap-6">
             {/* 菜单栏 */}
-            <div className="flex-shrink-0 bg-card p-2 sm:p-4 rounded-lg border shadow-sm">
+            <div className="shrink-0 bg-card p-2 sm:p-4 rounded-lg border shadow-sm">
                 <div className="flex flex-wrap justify-between items-center gap-2 sm:gap-3">
                     <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                         {filterBySlotType ? (
@@ -174,14 +176,23 @@ export function AccessoryList({
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="text-center min-w-[80px] bg-primary text-primary-foreground rounded-tl-lg">孔位</TableHead>
-                            <TableHead className="text-center min-w-[150px] bg-primary text-primary-foreground">装饰品名称</TableHead>
-                            <TableHead className="text-center min-w-[200px] bg-primary text-primary-foreground">技能</TableHead>
+                            <TableHead className={cn(
+                                "text-center bg-primary text-primary-foreground rounded-tl-lg",
+                                mode === 'selector' ? "w-[10%]" : "w-[7%]"
+                            )}>孔位</TableHead>
+                            <TableHead className={cn(
+                                "text-center bg-primary text-primary-foreground",
+                                mode === 'selector' ? "w-[30%]" : "w-[15%]"
+                            )}>装饰品名称</TableHead>
+                            <TableHead className={cn(
+                                "text-center bg-primary text-primary-foreground",
+                                mode === 'selector' ? "w-[60%]" : "w-[60%]"
+                            )}>技能</TableHead>
                             {mode !== 'selector' && (
-                                <TableHead className="text-center min-w-[80px] bg-primary text-primary-foreground">类型</TableHead>
+                                <TableHead className="text-center w-[8%] bg-primary text-primary-foreground">类型</TableHead>
                             )}
                             {mode !== 'selector' && (
-                                <TableHead className="text-right min-w-[80px] bg-primary text-primary-foreground rounded-tr-lg">操作</TableHead>
+                                <TableHead className="text-right w-[10%] bg-primary text-primary-foreground rounded-tr-lg">操作</TableHead>
                             )}
                         </TableRow>
                     </TableHeader>
@@ -202,7 +213,10 @@ export function AccessoryList({
                                     onClick={() => mode === 'selector' && onAccessorySelect?.(accessory)}
                                     className={mode === 'selector' ? 'cursor-pointer hover:bg-muted/50' : ''}
                                 >
-                                    <TableCell className="text-center">
+                                    <TableCell className={cn(
+                                        "text-center",
+                                        mode === 'selector' ? "w-[10%]" : "w-[7%]"
+                                    )}>
                                         <div className="flex items-center justify-center">
                                             <img
                                                 src={getSlotIcon(accessory.type, accessory.slotLevel)}
@@ -214,44 +228,61 @@ export function AccessoryList({
                                             />
                                         </div>
                                     </TableCell>
-                                    <TableCell className="text-center font-medium">
+                                    <TableCell className={cn(
+                                        "text-center font-medium",
+                                        mode === 'selector' ? "w-[30%]" : "w-[15%]"
+                                    )}>
                                         {accessory.name}
                                     </TableCell>
-                                    <TableCell className="text-center text-sm">
-                                        <div className={`flex ${accessory.skills.length === 2 ? 'flex-row justify-center gap-4 items-center' : 'flex-col gap-1 items-center'}`}>
+                                    <TableCell className={cn(
+                                        "text-center text-sm",
+                                        mode === 'selector' ? "w-[60%]" : "w-[60%]"
+                                    )}>
+                                        <div className={cn(
+                                            "w-full",
+                                            accessory.skills.length === 2 ? "grid grid-cols-2 gap-4" : "flex justify-center"
+                                        )}>
                                             {accessory.skills && accessory.skills.length > 0 ? (
-                                                accessory.skills.map((skill, index) => {
-                                                    const foundSkill = getSkill(skill.skillId);
-                                                    return (
-                                                        <div key={index} className="flex items-center gap-1 text-xs">
-                                                            {foundSkill && (
-                                                                <img
-                                                                    src={`/skill-type/${foundSkill.type}.png`}
-                                                                    alt={`${foundSkill.type} icon`}
-                                                                    style={{ width: '1.5rem', height: '1.5rem' }}
-                                                                    onError={(e) => {
-                                                                        e.currentTarget.style.display = 'none';
-                                                                    }}
-                                                                />
-                                                            )}
-                                                            {foundSkill ? foundSkill.name : skill.skillId} Lv.{skill.level}
+                                                accessory.skills.map((skill, index) => (
+                                                    <div
+                                                        key={index}
+                                                        className={cn(
+                                                            "mx-auto",
+                                                            accessory.skills.length === 2 ? "w-2/3" : "w-1/3"
+                                                        )}
+                                                    >
+                                                        {/* < 2xl View */}
+                                                        <div className="block 2xl:hidden">
+                                                            <SkillItem
+                                                                skillId={skill.skillId}
+                                                                level={skill.level}
+                                                                variant={mode === 'display' ? 'default' : 'default'}
+                                                            />
                                                         </div>
-                                                    );
-                                                })
+                                                        {/* >= 2xl View */}
+                                                        <div className="hidden 2xl:block">
+                                                            <SkillItem
+                                                                skillId={skill.skillId}
+                                                                level={skill.level}
+                                                                variant={mode === 'display' ? 'full' : 'default'}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                ))
                                             ) : (
                                                 <span className="text-muted-foreground">—</span>
                                             )}
                                         </div>
                                     </TableCell>
                                     {mode !== 'selector' && (
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center w-[8%]">
                                             <Badge variant="outline" className="text-center text-xs">
                                                 {accessory.type === 'weapon' ? '武器' : '防具'}
                                             </Badge>
                                         </TableCell>
                                     )}
                                     {mode !== 'selector' && (
-                                        <TableCell className="text-right">
+                                        <TableCell className="text-right w-[10%]">
                                             <div className="flex justify-end gap-1 sm:gap-2">
                                                 <Button
                                                     variant="ghost"

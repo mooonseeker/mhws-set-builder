@@ -220,14 +220,14 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
                             {/* 左侧列 */}
                             <ul className="space-y-1">
                                 {skillColumns.left.map((skill) => (
-                                    <SkillItem key={skill.skillId} skillId={skill.skillId} level={skill.level} />
+                                    <SkillItem key={skill.skillId} skillId={skill.skillId} level={skill.level} variant="full" />
                                 ))}
                             </ul>
                             {/* 右侧列 */}
                             {skillColumns.right.length > 0 && (
                                 <ul className="space-y-1">
                                     {skillColumns.right.map((skill) => (
-                                        <SkillItem key={skill.skillId} skillId={skill.skillId} level={skill.level} />
+                                        <SkillItem key={skill.skillId} skillId={skill.skillId} level={skill.level} variant="full" />
                                     ))}
                                 </ul>
                             )}

@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/table';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useWeapon } from '@/hooks';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
 import { groupWeaponsIntoRows } from '@/utils/weapon-grouper';
 
@@ -40,6 +41,15 @@ export function WeaponList({
 
     // 获取武器数据
     const { weapons, loading, error } = useWeapon();
+
+    const is2Xl = useMediaQuery('(min-width: 1536px)');
+    const cardVariant = useMemo(() => {
+        if (mode === 'display') {
+            return is2Xl ? 'full' : 'default';
+        }
+        // selector mode
+        return is2Xl ? 'default' : 'compact';
+    }, [mode, is2Xl]);
 
     // 数据处理：筛选、排序并分组为行
     const weaponRows = useMemo(() => {
@@ -103,7 +113,7 @@ export function WeaponList({
     return (
         <div className="h-full flex flex-col gap-4">
             {/* 菜单栏 */}
-            <div className="bg-card p-2 sm:p-4 rounded-lg border shadow-sm flex-shrink-0">
+            <div className="bg-card p-2 sm:p-4 rounded-lg border shadow-sm shrink-0">
                 <div className="flex flex-wrap justify-between items-center gap-2 sm:gap-3">
                     {/* 武器类型切换 */}
                     <ToggleGroup
@@ -231,7 +241,7 @@ export function WeaponList({
                                                 {weapon ? (
                                                     <EquipmentCard
                                                         item={weapon}
-                                                        variant={mode === 'selector' ? 'compact' : 'full'}
+                                                        variant={cardVariant}
                                                         isSelected={isSelected}
                                                     />
                                                 ) : (
