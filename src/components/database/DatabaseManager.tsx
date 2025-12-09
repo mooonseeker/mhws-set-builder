@@ -160,7 +160,7 @@ export function DatabaseManager() {
 
     return (
         <div className="h-full flex flex-col gap-6">
-            <div className="flex justify-between items-center flex-shrink-0">
+            <div className="flex justify-between items-center shrink-0">
                 <div className="flex items-center space-x-4">
                     <h1 className="font-bold tracking-tight">数据库管理</h1>
                     <ToggleGroup
@@ -170,16 +170,16 @@ export function DatabaseManager() {
                         size="sm"
                         className="border border-border rounded-md p-1"
                     >
-                        <ToggleGroupItem value="skills" aria-label="技能">
+                        <ToggleGroupItem value="skills" tooltip="技能">
                             <Sparkles className="h-4 w-4" />
                         </ToggleGroupItem>
-                        <ToggleGroupItem value="accessories" aria-label="装饰品">
+                        <ToggleGroupItem value="accessories" tooltip="装饰品">
                             <Gem className="h-4 w-4" />
                         </ToggleGroupItem>
-                        <ToggleGroupItem value="armor" aria-label="防具">
+                        <ToggleGroupItem value="armor" tooltip="防具">
                             <Shield className="h-4 w-4" />
                         </ToggleGroupItem>
-                        <ToggleGroupItem value="weapons" aria-label="武器">
+                        <ToggleGroupItem value="weapons" tooltip="武器">
                             <Swords className="h-4 w-4" />
                         </ToggleGroupItem>
                     </ToggleGroup>
@@ -190,10 +190,10 @@ export function DatabaseManager() {
                         size="sm"
                         className="border border-border rounded-md p-1"
                     >
-                        <ToggleGroupItem value="unlocked" aria-label="解锁编辑">
+                        <ToggleGroupItem value="unlocked" tooltip="解锁编辑">
                             <Unlock className="h-4 w-4" />
                         </ToggleGroupItem>
-                        <ToggleGroupItem value="locked" aria-label="锁定编辑">
+                        <ToggleGroupItem value="locked" tooltip="锁定编辑">
                             <Lock className="h-4 w-4" />
                         </ToggleGroupItem>
                     </ToggleGroup>

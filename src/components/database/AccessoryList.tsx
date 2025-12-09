@@ -9,6 +9,7 @@ import { Pagination } from '@/components/ui/pagination';
 import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from '@/components/ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAccessories } from '@/contexts';
 import { useSkills } from '@/contexts/SkillContext';
 import { cn } from '@/lib/utils';
@@ -104,49 +105,75 @@ export function AccessoryList({
             {/* 菜单栏 */}
             <div className="shrink-0 bg-card p-2 sm:p-4 rounded-lg border shadow-sm">
                 <div className="flex flex-wrap justify-between items-center gap-2 sm:gap-3">
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                        {filterBySlotType ? (
-                            <Button
-                                variant="default"
-                                size="icon"
-                                disabled
-                                title={filterBySlotType === 'weapon' ? '武器珠' : '防具珠'}
-                            >
-                                <img
-                                    src={filterBySlotType === 'weapon' ? '/weapon.png' : '/armor.png'}
-                                    alt={filterBySlotType === 'weapon' ? '武器' : '防具'}
-                                    className="h-5 w-5"
-                                />
-                            </Button>
-                        ) : (
-                            <>
-                                <Button
-                                    variant={typeFilter === 'all' ? 'default' : 'outline'}
-                                    size="icon"
-                                    onClick={() => setTypeFilter('all')}
-                                    title="全部"
-                                >
-                                    <List className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                    variant={typeFilter === 'weapon' ? 'default' : 'outline'}
-                                    size="icon"
-                                    onClick={() => setTypeFilter('weapon')}
-                                    title="武器珠"
-                                >
-                                    <img src="/weapon.png" alt="武器" className="h-5 w-5" />
-                                </Button>
-                                <Button
-                                    variant={typeFilter === 'armor' ? 'default' : 'outline'}
-                                    size="icon"
-                                    onClick={() => setTypeFilter('armor')}
-                                    title="防具珠"
-                                >
-                                    <img src="/armor.png" alt="防具" className="h-5 w-5" />
-                                </Button>
-                            </>
-                        )}
-                    </div>
+                    <TooltipProvider>
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                            {filterBySlotType ? (
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant="default"
+                                            size="icon"
+                                            disabled
+                                        >
+                                            <img
+                                                src={filterBySlotType === 'weapon' ? '/weapon.png' : '/armor.png'}
+                                                alt={filterBySlotType === 'weapon' ? '武器' : '防具'}
+                                                className="h-5 w-5"
+                                            />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>{filterBySlotType === 'weapon' ? '武器珠' : '防具珠'}</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            ) : (
+                                <>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                variant={typeFilter === 'all' ? 'default' : 'outline'}
+                                                size="icon"
+                                                onClick={() => setTypeFilter('all')}
+                                            >
+                                                <List className="h-4 w-4" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>全部</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                variant={typeFilter === 'weapon' ? 'default' : 'outline'}
+                                                size="icon"
+                                                onClick={() => setTypeFilter('weapon')}
+                                            >
+                                                <img src="/weapon.png" alt="武器" className="h-5 w-5" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>武器珠</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                variant={typeFilter === 'armor' ? 'default' : 'outline'}
+                                                size="icon"
+                                                onClick={() => setTypeFilter('armor')}
+                                            >
+                                                <img src="/armor.png" alt="防具" className="h-5 w-5" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>防具珠</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </>
+                            )}
+                        </div>
+                    </TooltipProvider>
 
                     <div className="flex items-center gap-4 justify-end">
                         {/* selector模式下隐藏数量信息 */}

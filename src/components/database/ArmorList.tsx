@@ -10,6 +10,7 @@ import { Pagination } from '@/components/ui/pagination';
 import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from '@/components/ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useSkills } from '@/contexts';
 import { useArmor } from '@/contexts/ArmorContext';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
@@ -276,40 +277,66 @@ export function ArmorList({
             {/* 菜单栏 */}
             <div className="shrink-0 bg-card p-2 sm:p-4 rounded-lg border shadow-sm">
                 <div className="flex flex-nowrap justify-between items-center gap-2 sm:gap-3">
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                        <Button
-                            variant={selectedRarity === 'all' ? 'default' : 'outline'}
-                            size="icon"
-                            onClick={() => setSelectedRarity('all')}
-                            title="全部防具"
-                        >
-                            <List className="w-4 h-4" />
-                        </Button>
-                        <Button
-                            variant={selectedRarity === 'low' ? 'default' : 'outline'}
-                            size="icon"
-                            onClick={() => setSelectedRarity('low')}
-                            title="下位防具"
-                        >
-                            <ChevronDown className="w-4 h-4" />
-                        </Button>
-                        <Button
-                            variant={selectedRarity === 'high' ? 'default' : 'outline'}
-                            size="icon"
-                            onClick={() => setSelectedRarity('high')}
-                            title="上位防具"
-                        >
-                            <ChevronsDown className="w-4 h-4" />
-                        </Button>
-                        <Button
-                            variant={selectedRarity === 'master' ? 'default' : 'outline'}
-                            size="icon"
-                            onClick={() => setSelectedRarity('master')}
-                            title="大师位防具"
-                        >
-                            <Award className="w-4 h-4" />
-                        </Button>
-                    </div>
+                    <TooltipProvider>
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant={selectedRarity === 'all' ? 'default' : 'outline'}
+                                        size="icon"
+                                        onClick={() => setSelectedRarity('all')}
+                                    >
+                                        <List className="w-4 h-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>全部防具</p>
+                                </TooltipContent>
+                            </Tooltip>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant={selectedRarity === 'low' ? 'default' : 'outline'}
+                                        size="icon"
+                                        onClick={() => setSelectedRarity('low')}
+                                    >
+                                        <ChevronDown className="w-4 h-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>下位防具</p>
+                                </TooltipContent>
+                            </Tooltip>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant={selectedRarity === 'high' ? 'default' : 'outline'}
+                                        size="icon"
+                                        onClick={() => setSelectedRarity('high')}
+                                    >
+                                        <ChevronsDown className="w-4 h-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>上位防具</p>
+                                </TooltipContent>
+                            </Tooltip>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant={selectedRarity === 'master' ? 'default' : 'outline'}
+                                        size="icon"
+                                        onClick={() => setSelectedRarity('master')}
+                                    >
+                                        <Award className="w-4 h-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>大师位防具</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
+                    </TooltipProvider>
 
                     <div className="flex items-center gap-4 justify-end">
                         {mode !== 'selector' && (

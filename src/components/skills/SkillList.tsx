@@ -9,6 +9,7 @@ import { Pagination } from '@/components/ui/pagination';
 import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from '@/components/ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useSkills } from '@/contexts';
 import { SKILL_CATEGORY_LABELS, SKILLS_PER_PAGE } from '@/types/constants';
 
@@ -89,44 +90,57 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
     return (
         <div className="h-full flex flex-col gap-6">
             {/* 菜单栏 */}
-            <div className="flex-shrink-0 bg-card p-2 sm:p-4 rounded-lg border shadow-sm">
+            <div className="shrink-0 bg-card p-2 sm:p-4 rounded-lg border shadow-sm">
                 <div className="flex flex-wrap justify-between items-center gap-2 sm:gap-3">
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                        <Button
-                            variant={categoryFilter === 'all' ? 'default' : 'outline'}
-                            size="icon"
-                            onClick={() => setCategoryFilter('all')}
-                            title="全部技能"
-                        >
-                            <List className="h-4 w-4" />
-                        </Button>
-                        {(['weapon', 'armor', 'series', 'group'] as SkillCategory[]).map((category) => (
-                            <Button
-                                key={category}
-                                variant={categoryFilter === category ? 'default' : 'outline'}
-                                size="icon"
-                                onClick={() => setCategoryFilter(category)}
-                                title={SKILL_CATEGORY_LABELS[category]}
-                            >
-                                <img
-                                    src={`/skill-category/${category}.png`}
-                                    alt={SKILL_CATEGORY_LABELS[category]}
-                                    className="h-6 w-6"
+                    <TooltipProvider>
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant={categoryFilter === 'all' ? 'default' : 'outline'}
+                                        size="icon"
+                                        onClick={() => setCategoryFilter('all')}
+                                    >
+                                        <List className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>全部技能</p>
+                                </TooltipContent>
+                            </Tooltip>
+                            {(['weapon', 'armor', 'series', 'group'] as SkillCategory[]).map((category) => (
+                                <Tooltip key={category}>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant={categoryFilter === category ? 'default' : 'outline'}
+                                            size="icon"
+                                            onClick={() => setCategoryFilter(category)}
+                                        >
+                                            <img
+                                                src={`/skill-category/${category}.png`}
+                                                alt={SKILL_CATEGORY_LABELS[category]}
+                                                className="h-6 w-6"
+                                            />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>{SKILL_CATEGORY_LABELS[category]}</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            ))}
+                            <div className="w-2"></div>
+                            <div className="flex items-center gap-2">
+                                <Checkbox
+                                    id="key-only"
+                                    checked={keyOnlyFilter}
+                                    onCheckedChange={(checked) => setKeyOnlyFilter(checked === true)}
                                 />
-                            </Button>
-                        ))}
-                        <div className="w-2"></div>
-                        <div className="flex items-center gap-2">
-                            <Checkbox
-                                id="key-only"
-                                checked={keyOnlyFilter}
-                                onCheckedChange={(checked) => setKeyOnlyFilter(checked === true)}
-                            />
-                            <label htmlFor="key-only" className="cursor-pointer text-xs sm:text-sm">
-                                仅核心技能
-                            </label>
+                                <label htmlFor="key-only" className="cursor-pointer text-xs sm:text-sm">
+                                    仅核心技能
+                                </label>
+                            </div>
                         </div>
-                    </div>
+                    </TooltipProvider>
 
                     <div className="flex items-center gap-4 justify-end">
                         <div className="text-muted-foreground text-sm">

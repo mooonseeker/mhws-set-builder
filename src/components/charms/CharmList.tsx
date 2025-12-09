@@ -13,6 +13,7 @@ import {
 import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from '@/components/ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useCharms, useSkills } from '@/contexts';
 import { cn } from '@/lib/utils';
 import { CHARMS_PER_PAGE } from '@/types/constants';
@@ -163,64 +164,90 @@ export function CharmList({
             {/* 菜单栏 */}
             <div className="shrink-0 bg-card p-2 sm:p-4 rounded-lg border shadow-sm">
                 <div className="flex flex-wrap justify-between items-center gap-2 sm:gap-3">
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                        <Button
-                            variant={selectedRarity === 'all' ? 'default' : 'outline'}
-                            size="icon"
-                            onClick={() => setSelectedRarity('all')}
-                            title="全部护石"
-                        >
-                            <List className="w-4 h-4" />
-                        </Button>
-                        <Badge
-                            variant="outline"
-                            className={cn(
-                                "text-xs cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground h-9 w-9 flex items-center justify-center",
-                                selectedRarity === 6 && "bg-primary text-primary-foreground hover:bg-primary/90"
-                            )}
-                            style={{
-                                color: selectedRarity === 6 ? undefined : 'var(--rarity-6)',
-                                borderColor: selectedRarity === 6 ? undefined : 'var(--rarity-6)',
-                                background: selectedRarity === 6 ? undefined : 'transparent'
-                            }}
-                            onClick={() => setSelectedRarity(6)}
-                            title="R6护石"
-                        >
-                            R6
-                        </Badge>
-                        <Badge
-                            variant="outline"
-                            className={cn(
-                                "text-xs cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground h-9 w-9 flex items-center justify-center",
-                                selectedRarity === 7 && "bg-primary text-primary-foreground hover:bg-primary/90"
-                            )}
-                            style={{
-                                color: selectedRarity === 7 ? undefined : 'var(--rarity-7)',
-                                borderColor: selectedRarity === 7 ? undefined : 'var(--rarity-7)',
-                                background: selectedRarity === 7 ? undefined : 'transparent'
-                            }}
-                            onClick={() => setSelectedRarity(7)}
-                            title="R7护石"
-                        >
-                            R7
-                        </Badge>
-                        <Badge
-                            variant="outline"
-                            className={cn(
-                                "text-xs cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground h-9 w-9 flex items-center justify-center",
-                                selectedRarity === 8 && "bg-primary text-primary-foreground hover:bg-primary/90"
-                            )}
-                            style={{
-                                color: selectedRarity === 8 ? undefined : 'var(--rarity-8)',
-                                borderColor: selectedRarity === 8 ? undefined : 'var(--rarity-8)',
-                                background: selectedRarity === 8 ? undefined : 'transparent'
-                            }}
-                            onClick={() => setSelectedRarity(8)}
-                            title="R8护石"
-                        >
-                            R8
-                        </Badge>
-                    </div>
+                    <TooltipProvider>
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant={selectedRarity === 'all' ? 'default' : 'outline'}
+                                        size="icon"
+                                        onClick={() => setSelectedRarity('all')}
+                                    >
+                                        <List className="w-4 h-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>全部护石</p>
+                                </TooltipContent>
+                            </Tooltip>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Badge
+                                        variant="outline"
+                                        className={cn(
+                                            "text-xs cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground h-9 w-9 flex items-center justify-center",
+                                            selectedRarity === 6 && "bg-primary text-primary-foreground hover:bg-primary/90"
+                                        )}
+                                        style={{
+                                            color: selectedRarity === 6 ? undefined : 'var(--rarity-6)',
+                                            borderColor: selectedRarity === 6 ? undefined : 'var(--rarity-6)',
+                                            background: selectedRarity === 6 ? undefined : 'transparent'
+                                        }}
+                                        onClick={() => setSelectedRarity(6)}
+                                    >
+                                        R6
+                                    </Badge>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>R6护石</p>
+                                </TooltipContent>
+                            </Tooltip>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Badge
+                                        variant="outline"
+                                        className={cn(
+                                            "text-xs cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground h-9 w-9 flex items-center justify-center",
+                                            selectedRarity === 7 && "bg-primary text-primary-foreground hover:bg-primary/90"
+                                        )}
+                                        style={{
+                                            color: selectedRarity === 7 ? undefined : 'var(--rarity-7)',
+                                            borderColor: selectedRarity === 7 ? undefined : 'var(--rarity-7)',
+                                            background: selectedRarity === 7 ? undefined : 'transparent'
+                                        }}
+                                        onClick={() => setSelectedRarity(7)}
+                                    >
+                                        R7
+                                    </Badge>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>R7护石</p>
+                                </TooltipContent>
+                            </Tooltip>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Badge
+                                        variant="outline"
+                                        className={cn(
+                                            "text-xs cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground h-9 w-9 flex items-center justify-center",
+                                            selectedRarity === 8 && "bg-primary text-primary-foreground hover:bg-primary/90"
+                                        )}
+                                        style={{
+                                            color: selectedRarity === 8 ? undefined : 'var(--rarity-8)',
+                                            borderColor: selectedRarity === 8 ? undefined : 'var(--rarity-8)',
+                                            background: selectedRarity === 8 ? undefined : 'transparent'
+                                        }}
+                                        onClick={() => setSelectedRarity(8)}
+                                    >
+                                        R8
+                                    </Badge>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>R8护石</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
+                    </TooltipProvider>
 
                     <div className="flex items-center gap-4 justify-end">
                         {mode !== 'selector' && (

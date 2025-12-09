@@ -36,13 +36,13 @@ export function ThemeToggle() {
             }}
             className="border rounded-md p-1"
         >
-            <ToggleGroupItem value="light" aria-label="切换到亮色模式">
+            <ToggleGroupItem value="light" tooltip="亮色模式">
                 <Sun className="h-4 w-4" />
             </ToggleGroupItem>
-            <ToggleGroupItem value="dark" aria-label="切换到暗色模式">
+            <ToggleGroupItem value="dark" tooltip="暗色模式">
                 <Moon className="h-4 w-4" />
             </ToggleGroupItem>
-            <ToggleGroupItem value="system" aria-label="切换到跟随系统">
+            <ToggleGroupItem value="system" tooltip="跟随系统">
                 <Monitor className="h-4 w-4" />
             </ToggleGroupItem>
         </ToggleGroup>

@@ -3,6 +3,7 @@
 import * as React from 'react';
 
 import { toggleVariants } from '@/components/ui/toggle';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 
@@ -26,21 +27,28 @@ const ToggleGroup = React.forwardRef<
     {...props}
   >
     <ToggleGroupContext.Provider value={{ variant, size }}>
-      {children}
+      <TooltipProvider>
+        {children}
+      </TooltipProvider>
     </ToggleGroupContext.Provider>
   </ToggleGroupPrimitive.Root>
 ))
 
 ToggleGroup.displayName = ToggleGroupPrimitive.Root.displayName
 
+interface ToggleGroupItemProps
+  extends React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item>,
+  VariantProps<typeof toggleVariants> {
+  tooltip?: string | React.ReactNode
+}
+
 const ToggleGroupItem = React.forwardRef<
   React.ElementRef<typeof ToggleGroupPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item> &
-  VariantProps<typeof toggleVariants>
->(({ className, children, variant, size, ...props }, ref) => {
+  ToggleGroupItemProps
+>(({ className, children, variant, size, tooltip, ...props }, ref) => {
   const context = React.useContext(ToggleGroupContext)
 
-  return (
+  const item = (
     <ToggleGroupPrimitive.Item
       ref={ref}
       className={cn(
@@ -55,6 +63,23 @@ const ToggleGroupItem = React.forwardRef<
       {children}
     </ToggleGroupPrimitive.Item>
   )
+
+  if (tooltip) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div style={{ display: 'inline-flex' }}>
+            {item}
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          {typeof tooltip === 'string' ? <p>{tooltip}</p> : tooltip}
+        </TooltipContent>
+      </Tooltip>
+    )
+  }
+
+  return item
 })
 
 ToggleGroupItem.displayName = ToggleGroupPrimitive.Item.displayName

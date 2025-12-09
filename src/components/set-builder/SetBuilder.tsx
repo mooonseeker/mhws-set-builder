@@ -33,7 +33,7 @@ export function SetBuilder() {
     return (
         <>
             <div className="h-full flex flex-col gap-6">
-                <div className="flex flex-col lg:flex-row gap-8 flex-shrink-0">
+                <div className="flex flex-col lg:flex-row gap-8 shrink-0">
                     <div className="w-full lg:w-2/5 flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <h1 className="text-2xl font-bold">配装器</h1>
@@ -46,13 +46,13 @@ export function SetBuilder() {
                             >
                                 <ToggleGroupItem
                                     value="manual"
-                                    aria-label="手动模式"
+                                    tooltip="手动模式"
                                 >
                                     <Hand className="h-4 w-4" />
                                 </ToggleGroupItem>
                                 <ToggleGroupItem
                                     value="auto"
-                                    aria-label="自动模式"
+                                    tooltip="自动模式"
                                 >
                                     <Search className="h-4 w-4" />
                                 </ToggleGroupItem>

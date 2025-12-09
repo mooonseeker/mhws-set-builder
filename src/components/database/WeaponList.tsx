@@ -8,6 +8,7 @@ import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from '@/components/ui/table';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useWeapon } from '@/hooks';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
@@ -136,40 +137,66 @@ export function WeaponList({
                     {/* 右侧组合：稀有度筛选 + 搜索框 */}
                     <div className="flex items-center gap-2">
                         {/* 稀有度筛选 */}
-                        <div className="flex items-center gap-2">
-                            <Button
-                                variant={selectedRarity === 'all' ? 'default' : 'outline'}
-                                size="icon"
-                                onClick={() => setSelectedRarity('all')}
-                                title="全部武器"
-                            >
-                                <List className="w-4 h-4" />
-                            </Button>
-                            <Button
-                                variant={selectedRarity === 'low' ? 'default' : 'outline'}
-                                size="icon"
-                                onClick={() => setSelectedRarity('low')}
-                                title="下位武器"
-                            >
-                                <ChevronDown className="w-4 h-4" />
-                            </Button>
-                            <Button
-                                variant={selectedRarity === 'high' ? 'default' : 'outline'}
-                                size="icon"
-                                onClick={() => setSelectedRarity('high')}
-                                title="上位武器"
-                            >
-                                <ChevronsDown className="w-4 h-4" />
-                            </Button>
-                            <Button
-                                variant={selectedRarity === 'master' ? 'default' : 'outline'}
-                                size="icon"
-                                onClick={() => setSelectedRarity('master')}
-                                title="大师位武器"
-                            >
-                                <Award className="w-4 h-4" />
-                            </Button>
-                        </div>
+                        <TooltipProvider>
+                            <div className="flex items-center gap-2">
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant={selectedRarity === 'all' ? 'default' : 'outline'}
+                                            size="icon"
+                                            onClick={() => setSelectedRarity('all')}
+                                        >
+                                            <List className="w-4 h-4" />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>全部武器</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant={selectedRarity === 'low' ? 'default' : 'outline'}
+                                            size="icon"
+                                            onClick={() => setSelectedRarity('low')}
+                                        >
+                                            <ChevronDown className="w-4 h-4" />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>下位武器</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant={selectedRarity === 'high' ? 'default' : 'outline'}
+                                            size="icon"
+                                            onClick={() => setSelectedRarity('high')}
+                                        >
+                                            <ChevronsDown className="w-4 h-4" />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>上位武器</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant={selectedRarity === 'master' ? 'default' : 'outline'}
+                                            size="icon"
+                                            onClick={() => setSelectedRarity('master')}
+                                        >
+                                            <Award className="w-4 h-4" />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>大师位武器</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </div>
+                        </TooltipProvider>
 
                         {/* 搜索框 */}
                         <Input
