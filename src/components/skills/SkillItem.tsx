@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 interface SkillItemProps {
     skillId: string;
     level: number;
-    variant?: 'default' | 'compact';
+    variant?: 'full' | 'default' | 'compact';
 }
 
 export function SkillItem({ skillId, level, variant = 'default' }: SkillItemProps) {
@@ -37,6 +37,7 @@ export function SkillItem({ skillId, level, variant = 'default' }: SkillItemProp
 
     const { maxLevel, type, isKey } = skill;
     const isMaxLevel = level >= maxLevel;
+    const isOverflow = level > maxLevel;
 
     // 生成等级方块（使用 lucide Square 图标）
     const levelBlocks = Array.from({ length: maxLevel }, (_, i) => {
@@ -44,31 +45,36 @@ export function SkillItem({ skillId, level, variant = 'default' }: SkillItemProp
         return (
             <Square
                 key={i}
-                className="w-3 h-3"
-                style={{
-                    fill: isActive ? 'var(--warning)' : 'var(--foreground)',
-                    color: isActive ? 'var(--warning)' : 'var(--foreground)',
-                }}
+                className={cn(
+                    "w-3 h-3",
+                    isActive ? "fill-warning text-warning" : "fill-foreground text-foreground"
+                )}
             />
         );
     });
+
+    // 根据 variant 决定样式
+    const heightClass = variant === 'full' ? 'h-8' : 'h-6';
+    const iconSizeClass = variant === 'full' ? 'w-5 h-5' : 'w-4 h-4';
+    const textSizeClass = variant === 'full' ? 'text-sm' : 'text-xs';
+    const showIcon = variant !== 'compact';
 
     return (
         <div
             className={cn(
                 "flex items-center justify-between gap-2",
-                variant === 'default' ? "h-8" : "h-6"
+                heightClass
             )}
         >
             <div className="flex items-center gap-1.5 min-w-0">
-                <img
-                    src={`/skill-type/${type}.png`}
-                    alt={name}
-                    className={cn(
-                        variant === 'default' ? "w-5 h-5" : "w-4 h-4"
-                    )}
-                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                />
+                {showIcon && (
+                    <img
+                        src={`/skill-type/${type}.png`}
+                        alt={name}
+                        className={cn(iconSizeClass)}
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                )}
                 <TooltipProvider>
                     <Tooltip delayDuration={300}>
                         <TooltipTrigger asChild>
@@ -76,7 +82,7 @@ export function SkillItem({ skillId, level, variant = 'default' }: SkillItemProp
                                 ref={nameRef}
                                 className={cn(
                                     "truncate cursor-default",
-                                    variant === 'default' ? "text-sm" : "text-xs",
+                                    textSizeClass,
                                     isKey ? "font-bold" : "font-medium"
                                 )}
                             >
@@ -91,8 +97,8 @@ export function SkillItem({ skillId, level, variant = 'default' }: SkillItemProp
                     </Tooltip>
                 </TooltipProvider>
             </div>
-            <div className="flex items-center flex-shrink-0">
-                {variant === 'default' ? (
+            <div className="flex items-center shrink-0">
+                {variant === 'full' ? (
                     <>
                         <div
                             className="flex items-center gap-0.5 text-xs"
@@ -103,7 +109,7 @@ export function SkillItem({ skillId, level, variant = 'default' }: SkillItemProp
                         <span
                             className={cn(
                                 "text-sm w-8 text-right",
-                                isMaxLevel && "text-primary font-bold text-base"
+                                isOverflow ? "text-destructive font-bold text-base" : isMaxLevel && "text-accent font-bold text-base"
                             )}
                         >
                             Lv{level}
@@ -114,7 +120,7 @@ export function SkillItem({ skillId, level, variant = 'default' }: SkillItemProp
                         className={cn(
                             "text-xs text-muted-foreground text-right",
                             "w-10",
-                            isMaxLevel && "text-primary font-bold"
+                            isMaxLevel && "text-accent font-bold"
                         )}
                     >
                         Lv {level}/{maxLevel}

@@ -10,7 +10,7 @@ import type { Equipment, Charm, Armor, Weapon } from '@/types';
 export interface EquipmentCardProps {
     item: Equipment;
     className?: string;
-    variant?: 'full' | 'compact';
+    variant?: 'full' | 'default' | 'compact';
     isSelected?: boolean;
 }
 
@@ -73,7 +73,7 @@ export function EquipmentCard({ item, className, variant = 'full', isSelected }:
                     className="equipment-icon w-6 h-6"
                 />
                 {!isCharm(item) && <h3 className="text-xs font-semibold flex-1 text-center">{item.name}</h3>}
-                {isCharm(item) && variant === 'full' && (
+                {isCharm(item) && variant !== 'compact' && (
                     <Badge
                         variant="outline"
                         className="text-xs"
@@ -89,7 +89,7 @@ export function EquipmentCard({ item, className, variant = 'full', isSelected }:
             </div>
 
             {/* Stats: 核心属性 */}
-            {variant === 'full' && (
+            {variant !== 'compact' && (
                 <>
                     {isWeapon(item) && (
                         <div className="card-stats grid grid-cols-2 gap-2 mb-3 text-xs">
@@ -162,7 +162,7 @@ export function EquipmentCard({ item, className, variant = 'full', isSelected }:
                 })}
             </div>
 
-            {/* Skills: 技能列表 (使用 SkillItem 紧凑模式) */}
+            {/* Skills: 技能列表 (根据 variant 传递) */}
             <div className="card-skills space-y-1">
                 <ul className="space-y-1">
                     {item.skills.map((skillWithLevel) => (
@@ -170,7 +170,7 @@ export function EquipmentCard({ item, className, variant = 'full', isSelected }:
                             key={skillWithLevel.skillId}
                             skillId={skillWithLevel.skillId}
                             level={skillWithLevel.level}
-                            variant="compact"
+                            variant={variant}
                         />
                     ))}
                 </ul>
