@@ -1,6 +1,6 @@
 /**
  * MHWS护石管理器 - 核心类型定义
- * 
+ *
  * 本文件包含应用的所有核心TypeScript类型和接口定义
  */
 
@@ -12,7 +12,7 @@
  * - series: 系列技能
  * - group: 组合技能
  */
-export type SkillCategory = 'weapon' | 'armor' | 'series' | 'group';
+export type SkillCategory = "weapon" | "armor" | "series" | "group";
 
 /**
  * 技能完整定义
@@ -28,26 +28,26 @@ export type SkillCategory = 'weapon' | 'armor' | 'series' | 'group';
  * @property sortId - 排序ID
  */
 export interface Skill {
-    id: string;
-    name: string;
-    category: SkillCategory;
-    maxLevel: number;
-    accessoryLevel: SlotLevel;
-    isKey: boolean;
-    description: string;
-    type: string;
-    sortId: number;
+  id: string;
+  name: string;
+  category: SkillCategory;
+  maxLevel: number;
+  accessoryLevel: SlotLevel;
+  isKey: boolean;
+  description: string;
+  type: string;
+  sortId: number;
 }
 
 /**
  * 带等级的技能引用
- * 
+ *
  * @property skillId - 技能ID（引用Skill.id）
  * @property level - 当前等级（1-maxLevel）
  */
 export interface SkillWithLevel {
-    skillId: string;
-    level: number;
+  skillId: string;
+  level: number;
 }
 
 /* 孔位&装饰品相关 */
@@ -56,7 +56,7 @@ export interface SkillWithLevel {
  * - weapon: 武器孔位
  * - armor: 防具孔位
  */
-export type SlotType = 'weapon' | 'armor';
+export type SlotType = "weapon" | "armor";
 
 /**
  * 孔位等级（1-3级，-1表示特殊技能无装饰品）
@@ -65,15 +65,15 @@ export type SlotLevel = -1 | 1 | 2 | 3;
 
 /**
  * 孔位定义
- * 
+ *
  * @property type - 孔位类型（武器/防具）
  * @property level - 孔位等级（1-3）
  */
 export interface Slot {
-    type: SlotType;
-    level: SlotLevel;
-    /** 孔位的来源装备ID（可选），用于回溯和结果组装 */
-    sourceId?: string;
+  type: SlotType;
+  level: SlotLevel;
+  /** 孔位的来源装备ID（可选），用于回溯和结果组装 */
+  sourceId?: string;
 }
 
 /**
@@ -90,15 +90,15 @@ export interface Slot {
  * @property color - 图标颜色
  */
 export interface Accessory {
-    id: string;
-    name: string;
-    type: SlotType;
-    description: string;
-    sortID: number;
-    skills: SkillWithLevel[];
-    rarity: number;
-    slotLevel: SlotLevel;
-    color: string;
+  id: string;
+  name: string;
+  type: SlotType;
+  description: string;
+  sortID: number;
+  skills: SkillWithLevel[];
+  rarity: number;
+  slotLevel: SlotLevel;
+  color: string;
 }
 
 /* 防具相关 */
@@ -110,7 +110,7 @@ export interface Accessory {
  * - waist: 腰部防具
  * - leg: 腿部防具
  */
-export type ArmorType = 'helm' | 'body' | 'arm' | 'waist' | 'leg';
+export type ArmorType = "helm" | "body" | "arm" | "waist" | "leg";
 
 /**
  * 属性耐性
@@ -133,22 +133,22 @@ export type Resistance = [number, number, number, number, number];
  * @property series - 防具系列
  */
 export interface Armor {
-    id: string;
-    name: string;
-    type: ArmorType;
-    description: string;
-    skills: SkillWithLevel[];
-    slots: Slot[];
-    rarity: number;
-    defense: number;
-    resistance: Resistance;
-    series: string;
+  id: string;
+  name: string;
+  type: ArmorType;
+  description: string;
+  skills: SkillWithLevel[];
+  slots: Slot[];
+  rarity: number;
+  defense: number;
+  resistance: Resistance;
+  series: string;
 }
 
 /* 护石相关 */
 /**
  * 护石完整定义
- * 
+ *
  * @property id - 护石唯一ID
  * @property rarity - 稀有度（1-12）
  * @property skills - 技能列表（1-3个）
@@ -158,20 +158,20 @@ export interface Armor {
  * @property createdAt - 创建时间（ISO 8601格式）
  */
 export interface Charm {
-    id: string;
-    rarity: number;
-    skills: SkillWithLevel[];
-    slots: Slot[];
-    equivalentSlots: EquivalentSlots;
-    keySkillValue: number;
-    createdAt: string;
+  id: string;
+  rarity: number;
+  skills: SkillWithLevel[];
+  slots: Slot[];
+  equivalentSlots: EquivalentSlots;
+  keySkillValue: number;
+  createdAt: string;
 }
 
 /**
  * 等效孔位统计
- * 
+ *
  * 用于统计护石技能和孔位转换后的等效孔位数量
- * 
+ *
  * @property weaponSlot1 - 1级武器孔位数量
  * @property weaponSlot2 - 2级武器孔位数量
  * @property weaponSlot3 - 3级武器孔位数量
@@ -180,12 +180,12 @@ export interface Charm {
  * @property armorSlot3 - 3级防具孔位数量
  */
 export interface EquivalentSlots {
-    weaponSlot1: number;
-    weaponSlot2: number;
-    weaponSlot3: number;
-    armorSlot1: number;
-    armorSlot2: number;
-    armorSlot3: number;
+  weaponSlot1: number;
+  weaponSlot2: number;
+  weaponSlot3: number;
+  armorSlot1: number;
+  armorSlot2: number;
+  armorSlot3: number;
 }
 
 /**
@@ -199,12 +199,12 @@ export interface EquivalentSlots {
  * - `REJECTED_AS_INFERIOR`: 因存在绝对更优的护石而被拒绝
  */
 export type CharmValidationStatus =
-    | 'ACCEPTED_AS_FIRST'
-    | 'ACCEPTED_BY_MAX_VALUE'
-    | 'ACCEPTED_BY_MAX_SLOTS'
-    | 'ACCEPTED_AS_UNIQUE_SKILL'
-    | 'ACCEPTED'
-    | 'REJECTED_AS_INFERIOR';
+  | "ACCEPTED_AS_FIRST"
+  | "ACCEPTED_BY_MAX_VALUE"
+  | "ACCEPTED_BY_MAX_SLOTS"
+  | "ACCEPTED_AS_UNIQUE_SKILL"
+  | "ACCEPTED"
+  | "REJECTED_AS_INFERIOR";
 
 /**
  * 护石验证结果
@@ -216,16 +216,16 @@ export type CharmValidationStatus =
  * @property outclassedCharms - （可选）当找到被完爆的护石时提供
  */
 export interface CharmValidationResult {
-    isValid: boolean;
-    status: CharmValidationStatus;
-    warnings?: string[];
-    betterCharm?: Charm;
-    outclassedCharms?: Charm[];
+  isValid: boolean;
+  status: CharmValidationStatus;
+  warnings?: string[];
+  betterCharm?: Charm;
+  outclassedCharms?: Charm[];
 }
 
 /**
  * 护石排序字段
- * 
+ *
  * - keySkillValue: 核心技能价值
  * - rarity: 稀有度
  * - createdAt: 创建时间
@@ -233,46 +233,72 @@ export interface CharmValidationResult {
  * - armorSlot1/2/3: 防具孔位1/2/3级数量
  */
 export type CharmSortField =
-    | 'keySkillValue'
-    | 'rarity'
-    | 'createdAt'
-    | 'weaponSlot1'
-    | 'weaponSlot2'
-    | 'weaponSlot3'
-    | 'armorSlot1'
-    | 'armorSlot2'
-    | 'armorSlot3';
+  | "keySkillValue"
+  | "rarity"
+  | "createdAt"
+  | "weaponSlot1"
+  | "weaponSlot2"
+  | "weaponSlot3"
+  | "armorSlot1"
+  | "armorSlot2"
+  | "armorSlot3";
 
 /* 武器相关 */
 /**
  * 武器类型
  */
 export type WeaponType =
-    | 'hammer' | 'lance' | 'long-sword' | 'short-sword' | 'tachi' | 'twin-sword'
-    | 'charge-axe' | 'gun-lance' | 'rod' | 'slash-axe' | 'whistle'
-    | 'bow' | 'heavy-bowgun' | 'light-bowgun';
+  | "hammer"
+  | "lance"
+  | "long-sword"
+  | "short-sword"
+  | "tachi"
+  | "twin-sword"
+  | "charge-axe"
+  | "gun-lance"
+  | "rod"
+  | "slash-axe"
+  | "whistle"
+  | "bow"
+  | "heavy-bowgun"
+  | "light-bowgun";
 
 /**
  * 属性/异常类型
  */
 export type AttributeType =
-    | 'fire' | 'water' | 'ice' | 'elec' | 'dragon'
-    | 'poison' | 'sleep' | 'blast' | 'paralyse';
+  | "fire"
+  | "water"
+  | "ice"
+  | "elec"
+  | "dragon"
+  | "poison"
+  | "sleep"
+  | "blast"
+  | "paralyse";
 
 /**
  * 斩味定义
  * 斩味数组长度为7，依次代表 红、橙、黄、绿、蓝、白、紫 斩味的长度
  * 匠数组长度为4，依次代表匠技能(50刀)斩味的分布
  */
-export type Sharpness = [number, number, number, number, number, number, number];
+export type Sharpness = [
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+];
 export type Takumi = [number, number, number, number];
 
 /**
  * 武器基础定义
- * 
+ *
  * 适用武器：大剑、片手、大锤、太刀、长枪、双刀
  * 其它武器具有独有属性，但此版本先忽略独有属性
- * 
+ *
  * @property id - 武器id
  * @property name - 武器名称
  * @property type - 武器类型
@@ -292,23 +318,23 @@ export type Takumi = [number, number, number, number];
  * @property takumi - 匠（可选：远程武器无此属性）
  */
 export interface Weapon {
-    id: string;
-    name: string;
-    type: WeaponType;
-    description: string;
-    sortId: number;
-    skills: SkillWithLevel[];
-    slots: Slot[];
-    rarity: number;
-    attack: number;
-    critical: number;
-    defense: number;
-    attribute?: AttributeType;
-    attributeValue?: number;
-    subattribute?: AttributeType;
-    subattributeValue?: number;
-    sharpness?: Sharpness;
-    takumi?: Takumi;
+  id: string;
+  name: string;
+  type: WeaponType;
+  description: string;
+  sortId: number;
+  skills: SkillWithLevel[];
+  slots: Slot[];
+  rarity: number;
+  attack: number;
+  critical: number;
+  defense: number;
+  attribute?: AttributeType;
+  attributeValue?: number;
+  subattribute?: AttributeType;
+  subattributeValue?: number;
+  sharpness?: Sharpness;
+  takumi?: Takumi;
 }
 
 /* 其它类型 */
@@ -317,12 +343,12 @@ export interface Weapon {
  * - asc: 升序
  * - desc: 降序
  */
-export type SortDirection = 'asc' | 'desc';
+export type SortDirection = "asc" | "desc";
 
 /**
  * 支持的数据库ID类型
  */
-export type DataId = 'skills' | 'accessories' | 'armor' | 'charms' | 'weapons';
+export type DataId = "skills" | "accessories" | "armor" | "charms" | "weapons";
 
 /**
  * 各种数据类型的联合类型

@@ -1,17 +1,17 @@
 /**
  * MHWS护石管理器 - 应用Context
- * 
+ *
  * 组合所有Context Provider，提供统一的应用状态管理
  */
 
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
-import { AccessoryProvider } from './AccessoryContext';
-import { ArmorProvider } from './ArmorContext';
-import { CharmProvider } from './CharmContext';
-import { SkillProvider } from './SkillContext';
-import { ThemeProvider } from './ThemeContext';
-import { WeaponProvider } from './WeaponContext';
+import { AccessoryProvider } from "./AccessoryContext";
+import { ArmorProvider } from "./ArmorContext";
+import { CharmProvider } from "./CharmContext";
+import { SkillProvider } from "./SkillContext";
+import { ThemeProvider } from "./ThemeContext";
+import { WeaponProvider } from "./WeaponContext";
 
 /**
  * 应用的根Context Provider
@@ -40,19 +40,17 @@ import { WeaponProvider } from './WeaponContext';
  * ```
  */
 export function AppProvider({ children }: { children: ReactNode }) {
-    return (
-        <ThemeProvider>
-            <SkillProvider>
-                <AccessoryProvider>
-                    <ArmorProvider>
-                        <WeaponProvider>
-                            <CharmProvider>
-                                {children}
-                            </CharmProvider>
-                        </WeaponProvider>
-                    </ArmorProvider>
-                </AccessoryProvider>
-            </SkillProvider>
-        </ThemeProvider>
-    );
+  return (
+    <ThemeProvider>
+      <SkillProvider>
+        <AccessoryProvider>
+          <ArmorProvider>
+            <WeaponProvider>
+              <CharmProvider>{children}</CharmProvider>
+            </WeaponProvider>
+          </ArmorProvider>
+        </AccessoryProvider>
+      </SkillProvider>
+    </ThemeProvider>
+  );
 }

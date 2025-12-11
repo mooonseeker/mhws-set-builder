@@ -1,31 +1,31 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { CharmManager } from '@/components/charms';
-import { DatabaseManager } from '@/components/database';
-import { MainLayout } from '@/components/layout';
-import { SetBuilder } from '@/components/set-builder';
-import { Settings } from '@/components/settings';
-import { AppProvider } from '@/contexts';
-import { SetBuilderProvider } from '@/contexts/SetBuilderContext';
+import { CharmManager } from "@/components/charms";
+import { DatabaseManager } from "@/components/database";
+import { MainLayout } from "@/components/layout";
+import { SetBuilder } from "@/components/set-builder";
+import { Settings } from "@/components/settings";
+import { AppProvider } from "@/contexts";
+import { SetBuilderProvider } from "@/contexts/SetBuilderContext";
 
-import type { NavigationTab } from '@/components/layout';
+import type { NavigationTab } from "@/components/layout";
 
 function App() {
-  const [currentTab, setCurrentTab] = useState<NavigationTab>('database');
+  const [currentTab, setCurrentTab] = useState<NavigationTab>("database");
 
   const renderContent = () => {
     switch (currentTab) {
-      case 'database':
+      case "database":
         return <DatabaseManager />;
-      case 'charms':
+      case "charms":
         return <CharmManager />;
-      case 'set-builder':
+      case "set-builder":
         return (
           <SetBuilderProvider>
             <SetBuilder />
           </SetBuilderProvider>
         );
-      case 'settings':
+      case "settings":
         return <Settings />;
       default:
         return null;

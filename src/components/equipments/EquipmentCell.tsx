@@ -1,187 +1,205 @@
-import { Lock, Unlock, X } from 'lucide-react';
-import { useState } from 'react';
+import { Lock, Unlock, X } from "lucide-react";
+import { useState } from "react";
 
-import { Card, CardContent } from '@/components/ui/card';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
-import { EquipmentCard } from './EquipmentCard';
+import { EquipmentCard } from "./EquipmentCard";
 
-import type { Slot, Weapon, Armor, Charm } from '@/types';
-import type { EquipmentCellType, SlottedEquipment } from '@/types/set-builder';
+import type { Slot, Weapon, Armor, Charm } from "@/types";
+import type { EquipmentCellType, SlottedEquipment } from "@/types/set-builder";
 
 export interface EquipmentCellProps {
-    type: EquipmentCellType;
-    isSelected?: boolean;
-    slottedEquipment?: SlottedEquipment<Weapon | Armor | Charm>;
-    onEquipmentClick: () => void;
-    onSlotClick: (slotIndex: number, slot: Slot) => void;
-    isLocked?: boolean;
-    onToggleLock?: () => void;
-    onClear?: () => void;
+  type: EquipmentCellType;
+  isSelected?: boolean;
+  slottedEquipment?: SlottedEquipment<Weapon | Armor | Charm>;
+  onEquipmentClick: () => void;
+  onSlotClick: (slotIndex: number, slot: Slot) => void;
+  isLocked?: boolean;
+  onToggleLock?: () => void;
+  onClear?: () => void;
 }
 
 const typeToLabel: Record<EquipmentCellType, string> = {
-    weapon: '武器',
-    helm: '头盔',
-    body: '胸甲',
-    arm: '臂甲',
-    waist: '腰甲',
-    leg: '腿甲',
-    charm: '护石',
+  weapon: "武器",
+  helm: "头盔",
+  body: "胸甲",
+  arm: "臂甲",
+  waist: "腰甲",
+  leg: "腿甲",
+  charm: "护石",
 };
 
 const getIconPath = (type: EquipmentCellType): string => {
-    if (type === 'weapon') return '/weapon.png';
-    if (type === 'charm') return '/charm.png';
-    return `/armor-type/${type}.png`;
+  if (type === "weapon") return "/weapon.png";
+  if (type === "charm") return "/charm.png";
+  return `/armor-type/${type}.png`;
 };
 
-const getAccessoryIcon = (slotType: 'weapon' | 'armor', level: number) => {
-    const validLevel = Math.min(level, 3);
-    return `/slot/${slotType}-slot-${validLevel}.png`;
+const getAccessoryIcon = (slotType: "weapon" | "armor", level: number) => {
+  const validLevel = Math.min(level, 3);
+  return `/slot/${slotType}-slot-${validLevel}.png`;
 };
 
 export function EquipmentCell({
-    type,
-    isSelected,
-    slottedEquipment,
-    onEquipmentClick,
-    onSlotClick,
-    isLocked = false,
-    onToggleLock,
-    onClear
+  type,
+  isSelected,
+  slottedEquipment,
+  onEquipmentClick,
+  onSlotClick,
+  isLocked = false,
+  onToggleLock,
+  onClear,
 }: EquipmentCellProps) {
-    const label = typeToLabel[type];
-    const iconPath = getIconPath(type);
-    const { equipment, accessories } = slottedEquipment || {};
-    const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const label = typeToLabel[type];
+  const iconPath = getIconPath(type);
+  const { equipment, accessories } = slottedEquipment || {};
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
-    const handleToggleLock = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        onToggleLock?.();
-    };
+  const handleToggleLock = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onToggleLock?.();
+  };
 
-    return (
-        <Card className={cn(
-            "h-full w-full relative", // 占满父容器，添加 relative 定位
-            isSelected && 'ring-2 ring-primary ring-offset-2 ring-offset-background'
-        )}>
-            {/* 清除按钮 - 位于卡片右上角 */}
-            {onClear && slottedEquipment && (
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onClear();
-                    }}
-                    className="absolute -top-2 -right-2 z-20 p-1 rounded-full bg-background border border-border shadow-sm hover:bg-destructive hover:text-destructive-foreground transition-colors"
-                    aria-label="清除装备"
+  return (
+    <Card
+      className={cn(
+        "relative h-full w-full", // 占满父容器，添加 relative 定位
+        isSelected &&
+          "ring-primary ring-offset-background ring-2 ring-offset-2",
+      )}
+    >
+      {/* 清除按钮 - 位于卡片右上角 */}
+      {onClear && slottedEquipment && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onClear();
+          }}
+          className="bg-background border-border hover:bg-destructive hover:text-destructive-foreground absolute -top-2 -right-2 z-20 rounded-full border p-1 shadow-sm transition-colors"
+          aria-label="清除装备"
+        >
+          <X className="h-3 w-3" />
+        </button>
+      )}
+      <CardContent
+        className="flex h-full w-full items-stretch gap-2 p-2"
+        onClick={onEquipmentClick}
+      >
+        {/* 左侧图标区 */}
+        <div className="relative flex aspect-square w-12 shrink-0 items-center justify-center self-center p-1">
+          {/* 锁定图标 - 移至左侧图标右上角 */}
+          {onToggleLock && (
+            <button
+              onClick={handleToggleLock}
+              className="bg-background/80 hover:bg-background absolute -top-1 -right-1 z-10 rounded-md p-0.5 transition-colors"
+              aria-label={isLocked ? "解锁" : "锁定"}
+            >
+              {isLocked ? (
+                <Lock className="text-destructive h-6 w-6" />
+              ) : (
+                <Unlock className="text-muted-foreground h-4 w-4" />
+              )}
+            </button>
+          )}
+          {equipment ? (
+            <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+              <PopoverTrigger asChild>
+                <div
+                  onMouseEnter={() => setIsPopoverOpen(true)}
+                  onMouseLeave={() => setIsPopoverOpen(false)}
                 >
-                    <X className="h-3 w-3" />
-                </button>
-            )}
-            <CardContent className="p-2 h-full w-full flex items-stretch gap-2" onClick={onEquipmentClick}>
-                {/* 左侧图标区 */}
-                <div className="relative w-12 aspect-square self-center flex items-center justify-center p-1 shrink-0">
-                    {/* 锁定图标 - 移至左侧图标右上角 */}
-                    {onToggleLock && (
-                        <button
-                            onClick={handleToggleLock}
-                            className="absolute -top-1 -right-1 z-10 p-0.5 rounded-md bg-background/80 hover:bg-background transition-colors"
-                            aria-label={isLocked ? "解锁" : "锁定"}
-                        >
-                            {isLocked ? (
-                                <Lock className="h-6 w-6 text-destructive" />
-                            ) : (
-                                <Unlock className="h-4 w-4 text-muted-foreground" />
-                            )}
-                        </button>
-                    )}
-                    {equipment ? (
-                        <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-                            <PopoverTrigger asChild>
-                                <div
-                                    onMouseEnter={() => setIsPopoverOpen(true)}
-                                    onMouseLeave={() => setIsPopoverOpen(false)}
-                                >
-                                    <img
-                                        src={iconPath}
-                                        alt={label}
-                                        className="max-w-full max-h-full object-contain"
-                                    />
-                                </div>
-                            </PopoverTrigger>
-                            <PopoverContent
-                                onMouseEnter={() => setIsPopoverOpen(true)}
-                                onMouseLeave={() => setIsPopoverOpen(false)}
-                                className="w-80"
-                                align="start"
-                                sideOffset={5}
-                            >
-                                <EquipmentCard item={equipment} variant="full" />
-                            </PopoverContent>
-                        </Popover>
-                    ) : (
-                        <img src={iconPath} alt={label} className="max-w-full max-h-full object-contain" />
-                    )}
+                  <img
+                    src={iconPath}
+                    alt={label}
+                    className="max-h-full max-w-full object-contain"
+                  />
                 </div>
-                <div className="border-l border-border/50" />
+              </PopoverTrigger>
+              <PopoverContent
+                onMouseEnter={() => setIsPopoverOpen(true)}
+                onMouseLeave={() => setIsPopoverOpen(false)}
+                className="w-80"
+                align="start"
+                sideOffset={5}
+              >
+                <EquipmentCard item={equipment} variant="full" />
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <img
+              src={iconPath}
+              alt={label}
+              className="max-h-full max-w-full object-contain"
+            />
+          )}
+        </div>
+        <div className="border-border/50 border-l" />
 
-                {/* 右侧内容区 */}
-                <div className="flex-1 flex flex-col min-w-0">
-                    {/* 上半部分: Label + Name */}
-                    <div className="flex-1 flex items-center gap-2" >
-                        <div className="flex-[1] flex justify-center items-center">
-                            <p className="text-sm text-muted-foreground">{label}</p>
-                        </div>
-                        <div className="border-l border-border/20 self-stretch my-1" />
-                        <div className="flex-[5] flex items-center px-2">
-                            <h3 className="font-semibold truncate text-sm">
-                                {equipment ? ('name' in equipment ? equipment.name : '收藏护石') : '点击选择...'}
-                            </h3>
-                        </div>
-                    </div>
+        {/* 右侧内容区 */}
+        <div className="flex min-w-0 flex-1 flex-col">
+          {/* 上半部分: Label + Name */}
+          <div className="flex flex-1 items-center gap-2">
+            <div className="flex flex-1 items-center justify-center">
+              <p className="text-muted-foreground text-sm">{label}</p>
+            </div>
+            <div className="border-border/20 my-1 self-stretch border-l" />
+            <div className="flex flex-5 items-center px-2">
+              <h3 className="truncate text-sm font-semibold">
+                {equipment
+                  ? "name" in equipment
+                    ? equipment.name
+                    : "收藏护石"
+                  : "点击选择..."}
+              </h3>
+            </div>
+          </div>
 
-                    <div className="border-t border-border/50" />
+          <div className="border-border/50 border-t" />
 
-                    {/* 下半部分: 孔位 */}
-                    <div className="flex-1 flex items-center justify-around gap-1 p-1">
-                        {Array.from({ length: 3 }).map((_, index) => {
-                            const slot = equipment?.slots[index];
-                            const accessory = accessories?.[index];
-                            const canClick = !!slot;
+          {/* 下半部分: 孔位 */}
+          <div className="flex flex-1 items-center justify-around gap-1 p-1">
+            {Array.from({ length: 3 }).map((_, index) => {
+              const slot = equipment?.slots[index];
+              const accessory = accessories?.[index];
+              const canClick = !!slot;
 
-                            return (
-                                <div
-                                    key={index}
-                                    onClick={(e) => {
-                                        if (!canClick) return;
-                                        e.stopPropagation(); // 阻止冒泡到 CardContent 的 onEquipmentClick
-                                        onSlotClick(index, slot as Slot);
-                                    }}
-                                    className={`flex-1 h-full flex items-center gap-1 rounded-sm bg-muted/30 ${canClick ? 'cursor-pointer hover:bg-muted' : ''}`}
-                                >
-                                    <div className="w-6 h-6 flex items-center justify-center shrink-0">
-                                        {slot && (
-                                            <img
-                                                src={getAccessoryIcon(slot.type, slot.level)}
-                                                alt={`孔位 ${slot.level}`}
-                                                className="max-w-full max-h-full object-contain"
-                                            />
-                                        )}
-                                    </div>
+              return (
+                <div
+                  key={index}
+                  onClick={(e) => {
+                    if (!canClick) return;
+                    e.stopPropagation(); // 阻止冒泡到 CardContent 的 onEquipmentClick
+                    onSlotClick(index, slot as Slot);
+                  }}
+                  className={`bg-muted/30 flex h-full flex-1 items-center gap-1 rounded-sm ${canClick ? "hover:bg-muted cursor-pointer" : ""}`}
+                >
+                  <div className="flex h-6 w-6 shrink-0 items-center justify-center">
+                    {slot && (
+                      <img
+                        src={getAccessoryIcon(slot.type, slot.level)}
+                        alt={`孔位 ${slot.level}`}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    )}
+                  </div>
 
-                                    <div className="flex-1 flex justify-center items-center min-w-0">
-                                        <span className="text-xs truncate">
-                                            {slot ? (accessory ? accessory.name : '————') : ''}
-                                        </span>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
+                  <div className="flex min-w-0 flex-1 items-center justify-center">
+                    <span className="truncate text-xs">
+                      {slot ? (accessory ? accessory.name : "————") : ""}
+                    </span>
+                  </div>
                 </div>
-            </CardContent>
-        </Card>
-    );
+              );
+            })}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 }

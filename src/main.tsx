@@ -1,11 +1,11 @@
-import './index.css';
+import "./index.css";
 
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 
-import { DataStorage } from '@/services/DataStorage';
+import { DataStorage } from "@/services/DataStorage";
 
-import App from './App.tsx';
+import App from "./App.tsx";
 
 async function main() {
   try {
@@ -13,15 +13,15 @@ async function main() {
     await DataStorage.initialize();
 
     // Render the React application
-    createRoot(document.getElementById('root')!).render(
+    createRoot(document.getElementById("root")!).render(
       <StrictMode>
         <App />
       </StrictMode>,
     );
   } catch (error) {
     // Display error message if initialization fails
-    console.error('Application initialization failed:', error);
-    const rootEl = document.getElementById('root');
+    console.error("Application initialization failed:", error);
+    const rootEl = document.getElementById("root");
     if (rootEl) {
       rootEl.innerHTML = `
         <div style="display: flex; align-items: center; justify-content: center; height: 100vh; font-family: system-ui, -apple-system, sans-serif;">

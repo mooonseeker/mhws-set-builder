@@ -4,12 +4,12 @@
  * 包含应用中使用的所有常量
  */
 
-import type { SkillCategory, SlotLevel } from './index';
+import type { SkillCategory, SlotLevel } from "./index";
 
 /**
  * 应用名称
  */
-export const APP_NAME = 'mhws-charm-manager';
+export const APP_NAME = "mhws-charm-manager";
 
 /**
  * 稀有度最小值
@@ -45,20 +45,20 @@ export const CHARM_SLOTS_MAX = 3;
  * 技能分类标签映射
  */
 export const SKILL_CATEGORY_LABELS: Record<SkillCategory, string> = {
-    weapon: '武器技能',
-    armor: '防具技能',
-    series: '系列技能',
-    group: '组合技能',
+  weapon: "武器技能",
+  armor: "防具技能",
+  series: "系列技能",
+  group: "组合技能",
 };
 
 /**
  * 孔位等级标签映射
  */
 export const SLOT_LEVEL_LABELS: Record<SlotLevel, string> = {
-    [-1]: '无',
-    1: '一级',
-    2: '二级',
-    3: '三级',
+  [-1]: "无",
+  1: "一级",
+  2: "二级",
+  3: "三级",
 };
 
 /**
@@ -86,12 +86,12 @@ export const CHARMS_PER_PAGE = 16;
 /**
  * 数据存储的键名映射
  */
-export const STORAGE_KEYS: Record<import('./index').DataId, string> = {
-    skills: `${APP_NAME}-skills`,
-    accessories: `${APP_NAME}-accessories`,
-    armor: `${APP_NAME}-armor`,
-    weapons: `${APP_NAME}-weapons`,
-    charms: `${APP_NAME}-charms`,
+export const STORAGE_KEYS: Record<import("./index").DataId, string> = {
+  skills: `${APP_NAME}-skills`,
+  accessories: `${APP_NAME}-accessories`,
+  armor: `${APP_NAME}-armor`,
+  weapons: `${APP_NAME}-weapons`,
+  charms: `${APP_NAME}-charms`,
 } as const;
 
 /**
@@ -99,7 +99,7 @@ export const STORAGE_KEYS: Record<import('./index').DataId, string> = {
  *
  * 用于标识数据结构的版本，仅在数据结构发生不兼容变更时更新
  */
-export const DATABASE_VERSION = '1.03.0';
+export const DATABASE_VERSION = "1.03.0";
 
 /**
  * 数据库版本号存储键

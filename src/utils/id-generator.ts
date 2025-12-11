@@ -4,7 +4,7 @@
  * 提供唯一ID生成功能
  */
 
-import hash from 'string-hash';
+import hash from "string-hash";
 
 /**
  * 为技能名称生成确定性ID
@@ -19,8 +19,8 @@ import hash from 'string-hash';
  * generateSkillId('防御') // 返回: "skill-67890"
  */
 export function generateSkillId(name: string): string {
-    const uniqueHash = hash(name);
-    return `skill-${uniqueHash}`;
+  const uniqueHash = hash(name);
+  return `skill-${uniqueHash}`;
 }
 
 /**
@@ -34,11 +34,10 @@ export function generateSkillId(name: string): string {
  * generateCharmId() // 返回: "charm-1634567890123-abcd"
  */
 export function generateCharmId(): string {
-    const timestamp = Date.now();
-    const random = Math.random().toString(36).substring(2, 6); // 缩短至4位
-    return `charm-${timestamp}-${random}`;
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).substring(2, 6); // 缩短至4位
+  return `charm-${timestamp}-${random}`;
 }
-
 
 /**
  * 验证ID格式是否正确
@@ -54,42 +53,46 @@ export function generateCharmId(): string {
  * validateIdFormat("invalid-id") // 返回: false
  */
 export function validateIdFormat(id: string): boolean {
-    if (!id || typeof id !== 'string') {
-        return false;
-    }
-
-    // 检查官方技能ID格式: HunterSkill_XXX 或 NONE 等
-    if (id.startsWith('HunterSkill_') || id === 'NONE' || /^[A-Z][a-zA-Z]*_\d+$/.test(id)) {
-        return true;
-    }
-
-    // 检查用户自定义技能ID格式: skill-{数字}
-    if (id.startsWith('skill-')) {
-        const hashPart = id.substring(6); // 移除 'skill-'
-        return /^\d+$/.test(hashPart);
-    }
-
-    // 检查护石ID格式: charm-{时间戳}-{4位随机串}
-    if (id.startsWith('charm-')) {
-        const parts = id.split('-');
-        if (parts.length !== 3) {
-            return false;
-        }
-
-        const [, timestamp, random] = parts;
-
-        // 验证时间戳：应该是13位数字（毫秒级时间戳）
-        if (!/^\d{13}$/.test(timestamp)) {
-            return false;
-        }
-
-        // 验证随机字符串：应该是4位36进制字符（0-9, a-z）
-        if (!/^[0-9a-z]{4}$/.test(random)) {
-            return false;
-        }
-
-        return true;
-    }
-
+  if (!id || typeof id !== "string") {
     return false;
+  }
+
+  // 检查官方技能ID格式: HunterSkill_XXX 或 NONE 等
+  if (
+    id.startsWith("HunterSkill_") ||
+    id === "NONE" ||
+    /^[A-Z][a-zA-Z]*_\d+$/.test(id)
+  ) {
+    return true;
+  }
+
+  // 检查用户自定义技能ID格式: skill-{数字}
+  if (id.startsWith("skill-")) {
+    const hashPart = id.substring(6); // 移除 'skill-'
+    return /^\d+$/.test(hashPart);
+  }
+
+  // 检查护石ID格式: charm-{时间戳}-{4位随机串}
+  if (id.startsWith("charm-")) {
+    const parts = id.split("-");
+    if (parts.length !== 3) {
+      return false;
+    }
+
+    const [, timestamp, random] = parts;
+
+    // 验证时间戳：应该是13位数字（毫秒级时间戳）
+    if (!/^\d{13}$/.test(timestamp)) {
+      return false;
+    }
+
+    // 验证随机字符串：应该是4位36进制字符（0-9, a-z）
+    if (!/^[0-9a-z]{4}$/.test(random)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  return false;
 }
