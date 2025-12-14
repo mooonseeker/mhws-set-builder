@@ -108,7 +108,7 @@ export function CharmForm({
                 <div
                   key={`empty-skill-${skillWithLevel.skillId}`}
                   className="h-10"
-                ></div>
+                />
               );
 
             return (
@@ -138,14 +138,15 @@ export function CharmForm({
             );
           })}
           {/* 填充空槽位 */}
-          {[...Array(Math.max(0, 3 - selectedSkills.length))].map(
-            (_, index) => (
-              <div
-                key={`empty-skill-${selectedSkills.length + index}`}
-                className="bg-muted h-10 rounded-md"
-              ></div>
-            ),
-          )}
+          {Array.from(
+            { length: Math.max(0, 3 - selectedSkills.length) },
+            (_unused, index) => index,
+          ).map((index) => (
+            <div
+              key={`empty-skill-${selectedSkills.length + index}`}
+              className="bg-muted h-10 rounded-md"
+            />
+          ))}
 
           {/* 技能选择器 */}
           <SkillSelector
@@ -206,11 +207,14 @@ export function CharmForm({
             </div>
           ))}
           {/* 填充空槽位 */}
-          {[...Array(Math.max(0, 3 - slots.length))].map((_, index) => (
+          {Array.from(
+            { length: Math.max(0, 3 - slots.length) },
+            (_unused, index) => index,
+          ).map((index) => (
             <div
               key={`empty-slot-${slots.length + index}`}
               className="bg-muted h-10 rounded-md"
-            ></div>
+            />
           ))}
 
           {/* 添加孔位按钮 */}

@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -8,7 +8,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Popover,
@@ -49,21 +48,19 @@ export function CharmManager() {
   const [selectedSkills, setSelectedSkills] = useState<SkillWithLevel[]>([]);
   const [slots, setSlots] = useState<Slot[]>([]);
 
-  // 编辑模式：用传入的护石数据初始化表单
-  useEffect(() => {
-    if (isFormOpen) {
-      if (charmToEdit) {
-        setRarity(charmToEdit.rarity);
-        setSelectedSkills(charmToEdit.skills);
-        setSlots(charmToEdit.slots);
-      } else {
-        // 添加模式：重置表单
-        setRarity(7);
-        setSelectedSkills([]);
-        setSlots([]);
-      }
-    }
-  }, [isFormOpen, charmToEdit]);
+  // 重置表单
+  const resetForm = () => {
+    setRarity(7);
+    setSelectedSkills([]);
+    setSlots([]);
+  };
+
+  // 初始化表单
+  const initializeForm = (charm: Charm) => {
+    setRarity(charm.rarity);
+    setSelectedSkills(charm.skills);
+    setSlots(charm.slots);
+  };
 
   // 实时计算等效孔位和核心技能价值
   const { equivalentSlots, keySkillValue } = useMemo(() => {
@@ -177,12 +174,17 @@ export function CharmManager() {
           <p className="text-foreground">管理你的护石收藏，智能评估护石价值</p>
         </div>
         <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-          <DialogTrigger asChild>
-            <Button size="lg" onClick={() => setCharmToEdit(null)}>
-              <Plus className="mr-2 h-5 w-5" />
-              添加护石
-            </Button>
-          </DialogTrigger>
+          <Button
+            size="lg"
+            onClick={() => {
+              resetForm();
+              setCharmToEdit(null);
+              setIsFormOpen(true);
+            }}
+          >
+            <Plus className="mr-2 h-5 w-5" />
+            添加护石
+          </Button>
           {/* 调整 DialogContent 宽度以适应 Popover 浮窗 */}
           <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto p-6 sm:p-8">
             <DialogHeader>
@@ -234,6 +236,7 @@ export function CharmManager() {
       <div className="min-h-0 flex-1">
         <CharmList
           onEdit={(charm) => {
+            initializeForm(charm);
             setCharmToEdit(charm);
             setIsFormOpen(true);
           }}
