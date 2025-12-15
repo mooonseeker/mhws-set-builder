@@ -1,5 +1,5 @@
 import { List, Pencil, Star, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -92,10 +92,21 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
     currentPage * SKILLS_PER_PAGE,
   );
 
-  // 当筛选条件变化时，重置到第一页
-  useEffect(() => {
+  // 筛选条件变化时，重置到第一页并更新筛选
+  const handleCategoryChange = (category: SkillCategory | "all") => {
+    setCategoryFilter(category);
     setCurrentPage(1);
-  }, [categoryFilter, keyOnlyFilter, searchQuery]);
+  };
+
+  const handleKeyOnlyFilterChange = (checked: boolean | "indeterminate") => {
+    setKeyOnlyFilter(checked === true);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
 
   const handleDelete = (skill: Skill) => {
     if (confirm(`确定要删除技能"${skill.name}"吗？`)) {
@@ -115,7 +126,7 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
                   <Button
                     variant={categoryFilter === "all" ? "default" : "outline"}
                     size="icon"
-                    onClick={() => setCategoryFilter("all")}
+                    onClick={() => handleCategoryChange("all")}
                   >
                     <List className="h-4 w-4" />
                   </Button>
@@ -133,7 +144,7 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
                           categoryFilter === category ? "default" : "outline"
                         }
                         size="icon"
-                        onClick={() => setCategoryFilter(category)}
+                        onClick={() => handleCategoryChange(category)}
                       >
                         <img
                           src={`/skill-category/${category}.png`}
@@ -153,9 +164,7 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
                 <Checkbox
                   id="key-only"
                   checked={keyOnlyFilter}
-                  onCheckedChange={(checked) =>
-                    setKeyOnlyFilter(checked === true)
-                  }
+                  onCheckedChange={handleKeyOnlyFilterChange}
                 />
                 <label
                   htmlFor="key-only"
@@ -176,7 +185,7 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
               placeholder="搜索技能名称..."
               className="h-9 max-w-40"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
             />
             <Pagination
               currentPage={currentPage}

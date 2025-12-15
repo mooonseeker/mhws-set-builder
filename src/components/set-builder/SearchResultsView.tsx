@@ -122,7 +122,7 @@ export function SearchResultsView() {
                             const skill = getSkillById(skillId);
                             return (
                               <Badge key={skillId} variant="secondary">
-                                {skill?.name || skillId} Lv{level}
+                                {skill?.name ?? skillId} Lv{level}
                               </Badge>
                             );
                           })}

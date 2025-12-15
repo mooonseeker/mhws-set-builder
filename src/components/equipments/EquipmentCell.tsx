@@ -58,7 +58,7 @@ export function EquipmentCell({
 }: EquipmentCellProps) {
   const label = typeToLabel[type];
   const iconPath = getIconPath(type);
-  const { equipment, accessories } = slottedEquipment || {};
+  const { equipment, accessories } = slottedEquipment ?? {};
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const handleToggleLock = (e: React.MouseEvent) => {
@@ -175,7 +175,7 @@ export function EquipmentCell({
                   onClick={(e) => {
                     if (!canClick) return;
                     e.stopPropagation(); // 阻止冒泡到 CardContent 的 onEquipmentClick
-                    onSlotClick(index, slot as Slot);
+                    onSlotClick(index, slot);
                   }}
                   className={`bg-muted/30 flex h-full flex-1 items-center gap-1 rounded-sm ${canClick ? "hover:bg-muted cursor-pointer" : ""}`}
                 >

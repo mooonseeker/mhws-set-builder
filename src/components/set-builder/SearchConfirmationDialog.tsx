@@ -33,7 +33,7 @@ export function SearchConfirmationDialog() {
           >
             取消
           </Button>
-          <Button onClick={confirmSearch} disabled={isSearching}>
+          <Button onClick={() => void confirmSearch()} disabled={isSearching}>
             确认
           </Button>
         </DialogFooter>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -31,6 +31,61 @@ interface SkillFormProps {
   skills: Skill[];
 }
 
+// Define the state for the form
+interface SkillFormState {
+  name: string;
+  category: SkillCategory;
+  maxLevel: number;
+  accessoryLevel: SlotLevel;
+  isKey: boolean;
+  localError: string | null;
+}
+
+// Define action types for the reducer
+type SkillFormAction =
+  | {
+      type: "SET_FIELD";
+      field: keyof SkillFormState;
+      value: SkillFormState[keyof SkillFormState];
+    }
+  | { type: "RESET_FORM"; skill?: Skill }
+  | { type: "SET_LOCAL_ERROR"; error: string | null };
+
+// Reducer function
+function skillFormReducer(
+  state: SkillFormState,
+  action: SkillFormAction,
+): SkillFormState {
+  switch (action.type) {
+    case "SET_FIELD":
+      return { ...state, [action.field]: action.value };
+    case "RESET_FORM":
+      if (action.skill) {
+        return {
+          name: action.skill.name,
+          category: action.skill.category,
+          maxLevel: action.skill.maxLevel,
+          accessoryLevel: action.skill.accessoryLevel,
+          isKey: action.skill.isKey,
+          localError: null,
+        };
+      } else {
+        return {
+          name: "",
+          category: "armor",
+          maxLevel: 3,
+          accessoryLevel: 2,
+          isKey: false,
+          localError: null,
+        };
+      }
+    case "SET_LOCAL_ERROR":
+      return { ...state, localError: action.error };
+    default:
+      return state;
+  }
+}
+
 /**
  * 技能表单组件
  * 用于添加或编辑技能
@@ -43,28 +98,22 @@ export function SkillForm({
   error,
   skills,
 }: SkillFormProps) {
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState<SkillCategory>("armor");
-  const [maxLevel, setMaxLevel] = useState(3);
-  const [accessoryLevel, setAccessoryLevel] = useState<SlotLevel>(-1);
-  const [isKey, setIsKey] = useState(false);
-  const [localError, setLocalError] = useState<string | null>(null);
+  // Initial state for useReducer
+  const initialFormState: SkillFormState = {
+    name: "",
+    category: "armor",
+    maxLevel: 3,
+    accessoryLevel: 2,
+    isKey: false,
+    localError: null,
+  };
+
+  const [state, dispatch] = useReducer(skillFormReducer, initialFormState);
+
+  const { name, category, maxLevel, accessoryLevel, isKey, localError } = state;
 
   useEffect(() => {
-    if (skill) {
-      setName(skill.name);
-      setCategory(skill.category);
-      setMaxLevel(skill.maxLevel);
-      setAccessoryLevel(skill.accessoryLevel);
-      setIsKey(skill.isKey);
-    } else {
-      setName("");
-      setCategory("armor");
-      setMaxLevel(3);
-      setAccessoryLevel(2);
-      setIsKey(false);
-    }
-    setLocalError(null);
+    dispatch({ type: "RESET_FORM", skill });
   }, [skill, open]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -85,10 +134,13 @@ export function SkillForm({
     });
 
     if (isDuplicate) {
-      setLocalError(`技能 "${trimmedName}" 已存在。`);
+      dispatch({
+        type: "SET_LOCAL_ERROR",
+        error: `技能 "${trimmedName}" 已存在。`,
+      });
       return;
     }
-    setLocalError(null);
+    dispatch({ type: "SET_LOCAL_ERROR", error: null });
 
     onSubmit({
       name: trimmedName,
@@ -118,16 +170,20 @@ export function SkillForm({
                 id="name"
                 value={name}
                 onChange={(e) => {
-                  setName(e.target.value);
-                  setLocalError(null); // 输入时清除错误
+                  dispatch({
+                    type: "SET_FIELD",
+                    field: "name",
+                    value: e.target.value,
+                  });
+                  dispatch({ type: "SET_LOCAL_ERROR", error: null }); // 输入时清除错误
                 }}
                 placeholder="输入技能名称"
                 required
-                className={localError || error ? "pr-20" : ""}
+                className={(localError ?? error) ? "pr-20" : ""}
               />
-              {(localError || error) && (
+              {(localError ?? error) && (
                 <span className="text-destructive absolute top-1/2 right-3 -translate-y-1/2 transform text-sm">
-                  {localError || error}
+                  {localError ?? error}
                 </span>
               )}
             </div>
@@ -137,7 +193,13 @@ export function SkillForm({
             <Label htmlFor="category">技能分类</Label>
             <Select
               value={category}
-              onValueChange={(v) => setCategory(v as SkillCategory)}
+              onValueChange={(v) =>
+                dispatch({
+                  type: "SET_FIELD",
+                  field: "category",
+                  value: v as SkillCategory,
+                })
+              }
             >
               <SelectTrigger id="category">
                 <SelectValue />
@@ -162,7 +224,13 @@ export function SkillForm({
                 min={1}
                 max={10}
                 value={maxLevel}
-                onChange={(e) => setMaxLevel(parseInt(e.target.value))}
+                onChange={(e) =>
+                  dispatch({
+                    type: "SET_FIELD",
+                    field: "maxLevel",
+                    value: parseInt(e.target.value),
+                  })
+                }
                 required
               />
             </div>
@@ -172,7 +240,11 @@ export function SkillForm({
               <Select
                 value={accessoryLevel.toString()}
                 onValueChange={(v) =>
-                  setAccessoryLevel(parseInt(v) as SlotLevel)
+                  dispatch({
+                    type: "SET_FIELD",
+                    field: "accessoryLevel",
+                    value: parseInt(v) as SlotLevel,
+                  })
                 }
               >
                 <SelectTrigger id="accessoryLevel">
@@ -192,7 +264,13 @@ export function SkillForm({
             <Checkbox
               id="isKey"
               checked={isKey}
-              onCheckedChange={(checked) => setIsKey(checked as boolean)}
+              onCheckedChange={(checked) =>
+                dispatch({
+                  type: "SET_FIELD",
+                  field: "isKey",
+                  value: checked as boolean,
+                })
+              }
             />
             <Label htmlFor="isKey" className="cursor-pointer">
               标记为核心技能

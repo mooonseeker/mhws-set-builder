@@ -4,8 +4,15 @@ import { SkillItem } from "@/components/skills";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSkills } from "@/contexts";
 
-import type { EquipmentSet } from "@/types/set-builder";
-import type { SkillWithLevel, Accessory, Weapon, Armor, Skill } from "@/types";
+import type { EquipmentSet, SlottedEquipment } from "@/types/set-builder";
+import type {
+  SkillWithLevel,
+  Accessory,
+  Weapon,
+  Armor,
+  Skill,
+  Charm,
+} from "@/types";
 
 export interface SetSummaryProps {
   equipmentSet: EquipmentSet;
@@ -23,23 +30,26 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
       0, 0, 0, 0, 0,
     ];
 
-    Object.values(equipmentSet).forEach((slottedPiece) => {
+    (
+      Object.values(equipmentSet) as (
+        | SlottedEquipment<Weapon | Armor | Charm>
+        | undefined
+      )[]
+    ).forEach((slottedPiece) => {
       if (slottedPiece) {
         const equipment = slottedPiece.equipment;
 
         // 武器属性
         if ("attack" in equipment) {
-          const weapon = equipment as Weapon;
-          totalAttack += weapon.attack;
-          totalCritical += weapon.critical;
-          totalDefense += weapon.defense || 0;
+          totalAttack += equipment.attack;
+          totalCritical += equipment.critical;
+          totalDefense += equipment.defense || 0;
         }
 
         // 防具属性
         if ("defense" in equipment && "resistance" in equipment) {
-          const armor = equipment as Armor;
-          totalDefense += armor.defense;
-          armor.resistance.forEach((res, index) => {
+          totalDefense += equipment.defense;
+          equipment.resistance.forEach((res, index) => {
             totalResistance[index] += res;
           });
         }
@@ -68,7 +78,12 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
     >();
 
     // 遍历所有装备部件
-    Object.values(equipmentSet).forEach((slottedPiece) => {
+    (
+      Object.values(equipmentSet) as (
+        | SlottedEquipment<Weapon | Armor | Charm>
+        | undefined
+      )[]
+    ).forEach((slottedPiece) => {
       if (slottedPiece) {
         // 累加装备自带的技能
         slottedPiece.equipment.skills.forEach((skill: SkillWithLevel) => {
@@ -80,9 +95,9 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
             skillMap.set(skill.skillId, {
               skillId: skill.skillId,
               level: skill.level,
-              name: skillData?.name || "未知技能",
-              maxLevel: skillData?.maxLevel || 1,
-              category: skillData?.category || "armor",
+              name: skillData?.name ?? "未知技能",
+              maxLevel: skillData?.maxLevel ?? 1,
+              category: skillData?.category ?? "armor",
               skillData,
             });
           }
@@ -101,9 +116,9 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
                 skillMap.set(skill.skillId, {
                   skillId: skill.skillId,
                   level: skill.level,
-                  name: skillData?.name || "未知技能",
-                  maxLevel: skillData?.maxLevel || 1,
-                  category: skillData?.category || "armor",
+                  name: skillData?.name ?? "未知技能",
+                  maxLevel: skillData?.maxLevel ?? 1,
+                  category: skillData?.category ?? "armor",
                   skillData,
                 });
               }
@@ -130,8 +145,8 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
       }
 
       // 同等级按sortID排序（升序）
-      const aSortId = a.skillData?.sortId || 0;
-      const bSortId = b.skillData?.sortId || 0;
+      const aSortId = a.skillData?.sortId ?? 0;
+      const bSortId = b.skillData?.sortId ?? 0;
       return aSortId - bSortId;
     });
   }, [equipmentSet, allSkillsData]);

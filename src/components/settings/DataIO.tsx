@@ -60,8 +60,10 @@ export function DataIO() {
       switch (actionId) {
         case "validate": {
           const currentItems = DataStorage.loadData(itemId);
-          const initialData = await import(`../../data/initial-${itemId}.json`);
-          const initialItems = (initialData.default[itemId] ||
+          const initialData = (await import(
+            `../../data/initial-${itemId}.json`
+          )) as { default: Record<string, unknown[]> };
+          const initialItems = (initialData.default[itemId] ??
             []) as typeof currentItems;
           const result = validateData(currentItems, initialItems);
           if (result.isValid) {
@@ -152,7 +154,7 @@ export function DataIO() {
           ref={fileInputRef}
           className="hidden"
           accept=".json"
-          onChange={handleFileImport}
+          onChange={(e) => void handleFileImport(e)}
         />
         <Table>
           <TableHeader>
@@ -184,7 +186,7 @@ export function DataIO() {
                           !!processing ||
                           (item.id === "charms" && action.id === "validate")
                         }
-                        onClick={() => handleAction(item.id, action.id)}
+                        onClick={() => void handleAction(item.id, action.id)}
                       >
                         <action.icon
                           className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
