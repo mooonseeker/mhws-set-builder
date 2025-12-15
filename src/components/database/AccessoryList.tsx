@@ -1,5 +1,5 @@
 import { List, Pencil, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { SkillItem } from "@/components/skills/SkillItem";
 import { Badge } from "@/components/ui/badge";
@@ -113,11 +113,6 @@ export function AccessoryList({
     currentPage * ACCESSORIES_PER_PAGE,
   );
 
-  // 当筛选条件变化时，重置到第一页
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [typeFilter, searchQuery]);
-
   const handleDelete = (accessory: Accessory) => {
     if (confirm(`确定要删除装饰品"${accessory.name}"吗？`)) {
       deleteAccessory(accessory.id);
@@ -157,7 +152,10 @@ export function AccessoryList({
                       <Button
                         variant={typeFilter === "all" ? "default" : "outline"}
                         size="icon"
-                        onClick={() => setTypeFilter("all")}
+                        onClick={() => {
+                          setTypeFilter("all");
+                          setCurrentPage(1);
+                        }}
                       >
                         <List className="h-4 w-4" />
                       </Button>
@@ -173,7 +171,10 @@ export function AccessoryList({
                           typeFilter === "weapon" ? "default" : "outline"
                         }
                         size="icon"
-                        onClick={() => setTypeFilter("weapon")}
+                        onClick={() => {
+                          setTypeFilter("weapon");
+                          setCurrentPage(1);
+                        }}
                       >
                         <img src="/weapon.png" alt="武器" className="h-5 w-5" />
                       </Button>
@@ -187,7 +188,10 @@ export function AccessoryList({
                       <Button
                         variant={typeFilter === "armor" ? "default" : "outline"}
                         size="icon"
-                        onClick={() => setTypeFilter("armor")}
+                        onClick={() => {
+                          setTypeFilter("armor");
+                          setCurrentPage(1);
+                        }}
                       >
                         <img src="/armor.png" alt="防具" className="h-5 w-5" />
                       </Button>
@@ -213,7 +217,10 @@ export function AccessoryList({
               placeholder="搜索装饰品名称或技能..."
               className="h-9 max-w-40"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
             />
             <Pagination
               currentPage={currentPage}

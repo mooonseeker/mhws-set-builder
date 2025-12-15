@@ -56,7 +56,7 @@ export function DatabaseManager() {
   const [formError, setFormError] = useState<string | null>(null);
 
   const loading = skillsLoading || accessoriesLoading || armorLoading;
-  const error = skillsError || accessoriesError || armorError;
+  const error = skillsError ?? accessoriesError ?? armorError;
 
   const handleAdd = () => {
     setFormError(null); // 打开表单时清除旧错误

@@ -1,4 +1,3 @@
-import { Award, ChevronDown, ChevronsDown, List } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { EquipmentCard } from "@/components/equipments/EquipmentCard";
@@ -22,10 +21,18 @@ import {
 import { useWeapon } from "@/hooks";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
+import { RARITY_FILTERS, RARITY_RANGES, WEAPON_TYPES } from "@/types/constants";
 import { groupWeaponsIntoRows } from "@/utils/weapon-grouper";
 
 import type { Weapon, WeaponType } from "@/types";
 import type { EquipmentCellType } from "@/types/set-builder";
+
+const RARITY_COLUMNS_MAP = {
+  low: [1, 2, 3, 4],
+  high: [5, 6, 7, 8],
+  master: [9, 10, 11, 12],
+  all: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+};
 
 export interface WeaponListProps {
   mode?: "display" | "selector";
@@ -49,9 +56,8 @@ export function WeaponList({
   const [selectedWeaponType, setSelectedWeaponType] =
     useState<WeaponType>("rod");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedRarity, setSelectedRarity] = useState<
-    "all" | "low" | "high" | "master"
-  >("all");
+  const [selectedRarity, setSelectedRarity] =
+    useState<keyof typeof RARITY_RANGES>("all");
 
   // 获取武器数据
   const { weapons, loading, error } = useWeapon();
@@ -72,17 +78,9 @@ export function WeaponList({
     // 筛选：根据武器类型、稀有度和搜索查询
     const filteredWeapons = weapons.filter((weapon) => {
       // 稀有度筛选
+      const range = RARITY_RANGES[selectedRarity];
       const rankMatch =
-        selectedRarity === "all" ||
-        (selectedRarity === "low" &&
-          weapon.rarity >= 1 &&
-          weapon.rarity <= 4) ||
-        (selectedRarity === "high" &&
-          weapon.rarity >= 5 &&
-          weapon.rarity <= 8) ||
-        (selectedRarity === "master" &&
-          weapon.rarity >= 9 &&
-          weapon.rarity <= 12);
+        weapon.rarity >= range.min && weapon.rarity <= range.max;
 
       if (!rankMatch) return false;
 
@@ -103,17 +101,7 @@ export function WeaponList({
 
   // 根据选择的稀有度确定要显示的列
   const rarityColumns = useMemo(() => {
-    switch (selectedRarity) {
-      case "low":
-        return [1, 2, 3, 4];
-      case "high":
-        return [5, 6, 7, 8];
-      case "master":
-        return [9, 10, 11, 12];
-      case "all":
-      default:
-        return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-    }
+    return RARITY_COLUMNS_MAP[selectedRarity];
   }, [selectedRarity]);
 
   // 加载状态
@@ -132,24 +120,6 @@ export function WeaponList({
     );
   }
 
-  // 武器类型选项（14个武器类型）
-  const weaponTypes: WeaponType[] = [
-    "hammer",
-    "lance",
-    "long-sword",
-    "short-sword",
-    "tachi",
-    "twin-sword",
-    "charge-axe",
-    "gun-lance",
-    "rod",
-    "slash-axe",
-    "whistle",
-    "bow",
-    "heavy-bowgun",
-    "light-bowgun",
-  ];
-
   return (
     <div className="flex h-full flex-col gap-4">
       {/* 菜单栏 */}
@@ -164,7 +134,7 @@ export function WeaponList({
             }
             className="flex-wrap justify-start gap-0"
           >
-            {weaponTypes.map((type) => (
+            {WEAPON_TYPES.map((type) => (
               <ToggleGroupItem key={type} value={type} className="text-xs">
                 <img
                   src={`/weapon-type/${type}.png`}
@@ -180,66 +150,24 @@ export function WeaponList({
             {/* 稀有度筛选 */}
             <TooltipProvider>
               <div className="flex items-center gap-2">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant={selectedRarity === "all" ? "default" : "outline"}
-                      size="icon"
-                      onClick={() => setSelectedRarity("all")}
-                    >
-                      <List className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>全部武器</p>
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant={selectedRarity === "low" ? "default" : "outline"}
-                      size="icon"
-                      onClick={() => setSelectedRarity("low")}
-                    >
-                      <ChevronDown className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>下位武器</p>
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant={
-                        selectedRarity === "high" ? "default" : "outline"
-                      }
-                      size="icon"
-                      onClick={() => setSelectedRarity("high")}
-                    >
-                      <ChevronsDown className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>上位武器</p>
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant={
-                        selectedRarity === "master" ? "default" : "outline"
-                      }
-                      size="icon"
-                      onClick={() => setSelectedRarity("master")}
-                    >
-                      <Award className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>大师位武器</p>
-                  </TooltipContent>
-                </Tooltip>
+                {RARITY_FILTERS.map(({ value, icon: Icon, label }) => (
+                  <Tooltip key={value}>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant={
+                          selectedRarity === value ? "default" : "outline"
+                        }
+                        size="icon"
+                        onClick={() => setSelectedRarity(value)}
+                      >
+                        <Icon className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{label}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                ))}
               </div>
             </TooltipProvider>
 
@@ -329,7 +257,9 @@ export function WeaponList({
                             isSelected={isSelected}
                           />
                         ) : (
-                          <span className="text-muted-foreground">—</span>
+                          <span className="text-muted-foreground block text-center">
+                            —
+                          </span>
                         )}
                       </TableCell>
                     );

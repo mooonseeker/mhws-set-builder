@@ -145,6 +145,19 @@ export interface Armor {
   series: string;
 }
 
+/**
+ * 按系列分组的防具数据结构
+ */
+export interface GroupedArmor {
+  series: string;
+  helm?: Armor;
+  body?: Armor;
+  arm?: Armor;
+  waist?: Armor;
+  leg?: Armor;
+  fullSetSkills: SkillWithLevel[];
+}
+
 /* 护石相关 */
 /**
  * 护石完整定义

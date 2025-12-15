@@ -1,5 +1,4 @@
-import { Award, ChevronDown, ChevronsDown, List } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { ErrorMessage, Loading } from "@/components/common";
 import { EquipmentCard } from "@/components/equipments";
@@ -25,23 +24,23 @@ import { useSkills } from "@/contexts";
 import { useArmor } from "@/contexts/ArmorContext";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
-import { ARMOR_SERIES_PER_PAGE } from "@/types/constants";
+import {
+  ARMOR_SERIES_PER_PAGE,
+  RARITY_FILTERS,
+  RARITY_RANGES,
+} from "@/types/constants";
+import { groupArmorBySeries } from "@/utils/armor-grouper";
 
-import type { Armor, SkillWithLevel } from "@/types";
+import type { Armor, ArmorType, GroupedArmor, SkillWithLevel } from "@/types";
 import type { EquipmentCellType } from "@/types/set-builder";
 
-/**
- * 按系列分组的防具数据结构
- */
-interface GroupedArmor {
-  series: string;
-  helm?: Armor;
-  body?: Armor;
-  arm?: Armor;
-  waist?: Armor;
-  leg?: Armor;
-  fullSetSkills: SkillWithLevel[];
-}
+const ARMOR_COLUMNS: { key: ArmorType; label: string }[] = [
+  { key: "helm", label: "头盔" },
+  { key: "body", label: "胸甲" },
+  { key: "arm", label: "臂甲" },
+  { key: "waist", label: "腰甲" },
+  { key: "leg", label: "腿甲" },
+];
 
 /**
  * ArmorList 组件
@@ -65,9 +64,8 @@ export function ArmorList({
   const { skills } = useSkills();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRarity, setSelectedRarity] = useState<
-    "all" | "low" | "high" | "master"
-  >("all");
+  const [selectedRarity, setSelectedRarity] =
+    useState<keyof typeof RARITY_RANGES>("all");
 
   const is2Xl = useMediaQuery("(min-width: 1536px)");
   const cardVariant = useMemo(() => {
@@ -82,7 +80,7 @@ export function ArmorList({
   const getSkillName = useCallback(
     (skillId: string) => {
       const skill = skills.find((s) => s.id === skillId);
-      return skill?.name || "未知技能";
+      return skill?.name ?? "未知技能";
     },
     [skills],
   );
@@ -91,64 +89,7 @@ export function ArmorList({
    * 将防具数组按系列分组，并计算全套技能
    */
   const groupedArmor = useMemo((): GroupedArmor[] => {
-    const groups = new Map<string, GroupedArmor>();
-
-    armor.forEach((piece: Armor) => {
-      if (!groups.has(piece.series)) {
-        groups.set(piece.series, {
-          series: piece.series,
-          fullSetSkills: [],
-        });
-      }
-
-      const group = groups.get(piece.series)!;
-
-      // 根据防具类型分配到对应字段
-      switch (piece.type) {
-        case "helm":
-          group.helm = piece;
-          break;
-        case "body":
-          group.body = piece;
-          break;
-        case "arm":
-          group.arm = piece;
-          break;
-        case "waist":
-          group.waist = piece;
-          break;
-        case "leg":
-          group.leg = piece;
-          break;
-      }
-    });
-
-    // 计算每个系列的全套技能
-    groups.forEach((group) => {
-      const allSkills = [
-        ...(group.helm?.skills || []),
-        ...(group.body?.skills || []),
-        ...(group.arm?.skills || []),
-        ...(group.waist?.skills || []),
-        ...(group.leg?.skills || []),
-      ];
-
-      const skillMap = new Map<string, number>();
-
-      allSkills.forEach((skill) => {
-        const currentLevel = skillMap.get(skill.skillId) || 0;
-        skillMap.set(skill.skillId, currentLevel + skill.level);
-      });
-
-      group.fullSetSkills = Array.from(skillMap.entries()).map(
-        ([skillId, level]) => ({
-          skillId,
-          level,
-        }),
-      );
-    });
-
-    return Array.from(groups.values());
+    return groupArmorBySeries(armor);
   }, [armor]);
 
   /**
@@ -186,6 +127,7 @@ export function ArmorList({
 
     // 稀有度筛选
     if (selectedRarity !== "all") {
+      const range = RARITY_RANGES[selectedRarity];
       filtered = filtered.filter((group) => {
         const pieces = [
           group.helm,
@@ -198,17 +140,7 @@ export function ArmorList({
         // 检查系列中是否有符合稀有度要求的防具
         return pieces.some((piece) => {
           if (!piece) return false;
-
-          switch (selectedRarity) {
-            case "low":
-              return piece.rarity >= 1 && piece.rarity <= 4;
-            case "high":
-              return piece.rarity >= 5 && piece.rarity <= 8;
-            case "master":
-              return piece.rarity >= 9 && piece.rarity <= 12;
-            default:
-              return true;
-          }
+          return piece.rarity >= range.min && piece.rarity <= range.max;
         });
       });
     }
@@ -226,11 +158,6 @@ export function ArmorList({
     };
   }, [groupedArmor, searchQuery, currentPage, getSkillName, selectedRarity]);
 
-  // 当搜索条件或稀有度筛选变化时，重置到第一页
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedRarity]);
-
   if (loading) {
     return <Loading />;
   }
@@ -242,9 +169,9 @@ export function ArmorList({
   /**
    * 渲染防具部件列
    */
-  const renderArmorPiece = (piece?: Armor) => {
+  const renderArmorPiece = (piece: Armor | undefined, key: string) => {
     if (!piece) {
-      return <TableCell>-</TableCell>;
+      return <TableCell key={key}>-</TableCell>;
     }
 
     const isSelector = mode === "selector";
@@ -253,6 +180,7 @@ export function ArmorList({
 
     return (
       <TableCell
+        key={key}
         className={cn(
           isSelector && "transition-colors",
           isSelector && isMatchingSlot && "hover:bg-accent/50 cursor-pointer",
@@ -305,64 +233,25 @@ export function ArmorList({
         <div className="flex flex-nowrap items-center justify-between gap-2 sm:gap-3">
           <TooltipProvider>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant={selectedRarity === "all" ? "default" : "outline"}
-                    size="icon"
-                    onClick={() => setSelectedRarity("all")}
-                  >
-                    <List className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>全部防具</p>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant={selectedRarity === "low" ? "default" : "outline"}
-                    size="icon"
-                    onClick={() => setSelectedRarity("low")}
-                  >
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>下位防具</p>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant={selectedRarity === "high" ? "default" : "outline"}
-                    size="icon"
-                    onClick={() => setSelectedRarity("high")}
-                  >
-                    <ChevronsDown className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>上位防具</p>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant={
-                      selectedRarity === "master" ? "default" : "outline"
-                    }
-                    size="icon"
-                    onClick={() => setSelectedRarity("master")}
-                  >
-                    <Award className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>大师位防具</p>
-                </TooltipContent>
-              </Tooltip>
+              {RARITY_FILTERS.map(({ value, icon: Icon, label }) => (
+                <Tooltip key={value}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant={selectedRarity === value ? "default" : "outline"}
+                      size="icon"
+                      onClick={() => {
+                        setSelectedRarity(value);
+                        setCurrentPage(1);
+                      }}
+                    >
+                      <Icon className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{label}</p>
+                  </TooltipContent>
+                </Tooltip>
+              ))}
             </div>
           </TooltipProvider>
 
@@ -377,7 +266,10 @@ export function ArmorList({
               placeholder="搜索系列、防具或技能..."
               className="h-9 max-w-64 flex-1"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
             />
             <Pagination
               currentPage={currentPage}
@@ -398,46 +290,21 @@ export function ArmorList({
                   防具系列
                 </TableHead>
               )}
-              <TableHead
-                className={cn(
-                  "bg-primary text-primary-foreground text-center",
-                  mode === "selector" ? "w-[20%] rounded-tl-lg" : "w-[15%]",
-                )}
-              >
-                头盔
-              </TableHead>
-              <TableHead
-                className={cn(
-                  "bg-primary text-primary-foreground text-center",
-                  mode === "selector" ? "w-[20%]" : "w-[15%]",
-                )}
-              >
-                胸甲
-              </TableHead>
-              <TableHead
-                className={cn(
-                  "bg-primary text-primary-foreground text-center",
-                  mode === "selector" ? "w-[20%]" : "w-[15%]",
-                )}
-              >
-                臂甲
-              </TableHead>
-              <TableHead
-                className={cn(
-                  "bg-primary text-primary-foreground text-center",
-                  mode === "selector" ? "w-[20%]" : "w-[15%]",
-                )}
-              >
-                腰甲
-              </TableHead>
-              <TableHead
-                className={cn(
-                  "bg-primary text-primary-foreground text-center",
-                  mode === "selector" ? "w-[20%] rounded-tr-lg" : "w-[15%]",
-                )}
-              >
-                腿甲
-              </TableHead>
+              {ARMOR_COLUMNS.map(({ key, label }, index) => (
+                <TableHead
+                  key={key}
+                  className={cn(
+                    "bg-primary text-primary-foreground text-center",
+                    mode === "selector" ? "w-[20%]" : "w-[15%]",
+                    mode === "selector" && index === 0 && "rounded-tl-lg",
+                    mode === "selector" &&
+                      index === ARMOR_COLUMNS.length - 1 &&
+                      "rounded-tr-lg",
+                  )}
+                >
+                  {label}
+                </TableHead>
+              ))}
               {mode !== "selector" && (
                 <TableHead className="bg-primary text-primary-foreground w-[15%] rounded-tr-lg text-center">
                   全套技能
@@ -463,11 +330,9 @@ export function ArmorList({
                       <Badge variant="outline">{group.series}</Badge>
                     </TableCell>
                   )}
-                  {renderArmorPiece(group.helm)}
-                  {renderArmorPiece(group.body)}
-                  {renderArmorPiece(group.arm)}
-                  {renderArmorPiece(group.waist)}
-                  {renderArmorPiece(group.leg)}
+                  {ARMOR_COLUMNS.map(({ key }) =>
+                    renderArmorPiece(group[key], key),
+                  )}
                   {mode !== "selector" &&
                     renderFullSetSkills(group.fullSetSkills)}
                 </TableRow>

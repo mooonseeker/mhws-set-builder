@@ -4,7 +4,9 @@
  * 包含应用中使用的所有常量
  */
 
-import type { SkillCategory, SlotLevel } from "./index";
+import { Award, ChevronDown, ChevronsDown, List } from "lucide-react";
+
+import type { SkillCategory, SlotLevel, WeaponType } from "./index";
 
 /**
  * 应用名称
@@ -105,3 +107,45 @@ export const DATABASE_VERSION = "1.03.0";
  * 数据库版本号存储键
  */
 export const DATABASE_VERSION_KEY = `${APP_NAME}-db-version`;
+
+/**
+ * 武器类型列表
+ */
+/**
+ * 稀有度范围定义
+ */
+export const RARITY_RANGES = {
+  low: { min: 1, max: 4 },
+  high: { min: 5, max: 8 },
+  master: { min: 9, max: 12 },
+  all: { min: 1, max: 12 },
+} as const;
+
+export type RarityRangeKey = keyof typeof RARITY_RANGES;
+
+export const RARITY_FILTERS = [
+  { value: "all", icon: List, label: "全部" },
+  { value: "low", icon: ChevronDown, label: "下位" },
+  { value: "high", icon: ChevronsDown, label: "上位" },
+  { value: "master", icon: Award, label: "大师位" },
+] as const;
+
+/**
+ * 武器类型列表
+ */
+export const WEAPON_TYPES: WeaponType[] = [
+  "hammer",
+  "lance",
+  "long-sword",
+  "short-sword",
+  "tachi",
+  "twin-sword",
+  "charge-axe",
+  "gun-lance",
+  "rod",
+  "slash-axe",
+  "whistle",
+  "bow",
+  "heavy-bowgun",
+  "light-bowgun",
+];
