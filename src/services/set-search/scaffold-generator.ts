@@ -25,7 +25,7 @@ function findSeriesSkillCombosWithConstraints(
   const solutions: EquipmentSet[] = [];
   const availableTypes = [...armorProvidersByPart.keys()].filter(
     (type) =>
-      (armorProvidersByPart.get(type)?.length || 0) > 0 &&
+      (armorProvidersByPart.get(type)?.length ?? 0) > 0 &&
       !occupiedTypes.has(type),
   );
 
@@ -71,7 +71,7 @@ function generateEquipmentSetsForPartCombo(
 
   for (const type of partCombo) {
     const nextSolutions: EquipmentSet[] = [];
-    const armorsForType = armorProvidersByPart.get(type) || [];
+    const armorsForType = armorProvidersByPart.get(type) ?? [];
 
     for (const armor of armorsForType) {
       for (const solution of currentSolutions) {
@@ -110,7 +110,7 @@ function findGroupSkillCombos(
   // 遍历所有group技能，找到它们的提供者
   for (const skillId of requiredSkillIds) {
     const providers =
-      preprocessedData.skillProviderMap.get(skillId)?.armors || [];
+      preprocessedData.skillProviderMap.get(skillId)?.armors ?? [];
     for (const armor of providers) {
       if (candidateArmors.has(armor.type)) {
         // 避免重复添加
@@ -132,7 +132,7 @@ function findGroupSkillCombos(
     if (typeIndex >= availableTypes.length) {
       // 检查当前组合是否满足所有group技能需求
       const isSuccess = skillsToProcess.every(
-        (target) => (currentSkills.get(target.skillId) || 0) >= target.level,
+        (target) => (currentSkills.get(target.skillId) ?? 0) >= target.level,
       );
 
       if (isSuccess) {
@@ -142,7 +142,7 @@ function findGroupSkillCombos(
     }
 
     const currentType = availableTypes[typeIndex];
-    const armorsForType = candidateArmors.get(currentType) || [];
+    const armorsForType = candidateArmors.get(currentType) ?? [];
 
     // 选择1: 不为该部位选择防具
     backtrack(typeIndex + 1, currentScaffold, currentSkills);
@@ -152,7 +152,7 @@ function findGroupSkillCombos(
       // a. 更新状态
       currentScaffold[currentType] = { equipment: armor, accessories: [] };
       armor.skills.forEach((skill) => {
-        const currentLevel = currentSkills.get(skill.skillId) || 0;
+        const currentLevel = currentSkills.get(skill.skillId) ?? 0;
         currentSkills.set(skill.skillId, currentLevel + skill.level);
       });
 
@@ -162,7 +162,7 @@ function findGroupSkillCombos(
       // c. 回溯
       delete currentScaffold[currentType];
       armor.skills.forEach((skill) => {
-        const currentLevel = currentSkills.get(skill.skillId) || 0;
+        const currentLevel = currentSkills.get(skill.skillId) ?? 0;
         currentSkills.set(skill.skillId, currentLevel - skill.level);
       });
     }
@@ -185,9 +185,9 @@ function resolveCombinedSeriesScaffolds(
   // 按满足难度排序，提供者越少的技能越难满足，优先处理
   const sortedSeriesSkills = [...seriesSkills].sort((a, b) => {
     const providersA =
-      preprocessedData.skillProviderMap.get(a.skillId)?.armors.length || 0;
+      preprocessedData.skillProviderMap.get(a.skillId)?.armors.length ?? 0;
     const providersB =
-      preprocessedData.skillProviderMap.get(b.skillId)?.armors.length || 0;
+      preprocessedData.skillProviderMap.get(b.skillId)?.armors.length ?? 0;
     return providersA - providersB;
   });
 
@@ -204,7 +204,7 @@ function resolveCombinedSeriesScaffolds(
 
     const currentSkill = sortedSeriesSkills[skillIndex];
     const armorProviders =
-      preprocessedData.skillProviderMap.get(currentSkill.skillId)?.armors || [];
+      preprocessedData.skillProviderMap.get(currentSkill.skillId)?.armors ?? [];
 
     // 按部位对当前技能的防具提供者进行分组
     const providersByPart = new Map<ArmorType, Armor[]>();
@@ -278,12 +278,10 @@ export function generateArmorScaffolds(
       const requiredGroupSkillIds = new Set(groupSkills.map((s) => s.skillId));
       const equipmentToScan = { ...context.equipment, ...baseScaffold };
 
-      (
-        Object.values(equipmentToScan) as {
-          equipment: Armor;
-          accessories: [];
-        }[]
-      ).forEach(({ equipment }) => {
+      Object.values(equipmentToScan).forEach((item) => {
+        if (!item) return;
+        const { equipment } = item;
+
         if (
           equipment &&
           "type" in equipment &&
@@ -291,7 +289,7 @@ export function generateArmorScaffolds(
         ) {
           equipment.skills.forEach((skill: SkillWithLevel) => {
             if (requiredGroupSkillIds.has(skill.skillId)) {
-              const existing = currentGroupLevels.get(skill.skillId) || 0;
+              const existing = currentGroupLevels.get(skill.skillId) ?? 0;
               currentGroupLevels.set(skill.skillId, existing + skill.level);
             }
           });
@@ -302,7 +300,7 @@ export function generateArmorScaffolds(
       const remainingGroupDeficits = groupSkills
         .map((target) => ({
           skillId: target.skillId,
-          level: target.level - (currentGroupLevels.get(target.skillId) || 0),
+          level: target.level - (currentGroupLevels.get(target.skillId) ?? 0),
         }))
         .filter((skill) => skill.level > 0);
 
