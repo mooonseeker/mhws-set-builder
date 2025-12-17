@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { SkillItem } from "@/components/skills";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSkills } from "@/contexts";
+import { compareSkills } from "@/utils";
 
 import type { EquipmentSet, SlottedEquipment } from "@/types/set-builder";
 import type {
@@ -128,27 +129,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
       }
     });
 
-    // 按照分类排序：武器技能、防具技能、系列技能、组合技能
-    const categoryOrder = ["weapon", "armor", "series", "group"];
-    return Array.from(skillMap.values()).sort((a, b) => {
-      const aCategoryIndex = categoryOrder.indexOf(a.category);
-      const bCategoryIndex = categoryOrder.indexOf(b.category);
-
-      // 先按分类排序
-      if (aCategoryIndex !== bCategoryIndex) {
-        return aCategoryIndex - bCategoryIndex;
-      }
-
-      // 同分类按等级排序（降序）
-      if (a.level !== b.level) {
-        return b.level - a.level;
-      }
-
-      // 同等级按sortID排序（升序）
-      const aSortId = a.skillData?.sortId ?? 0;
-      const bSortId = b.skillData?.sortId ?? 0;
-      return aSortId - bSortId;
-    });
+    return Array.from(skillMap.values()).sort(compareSkills);
   }, [equipmentSet, allSkillsData]);
 
   // 计算技能列表的两列布局
@@ -159,18 +140,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
       return { left: [], right: [] };
     }
 
-    if (totalSkills <= 10) {
-      return { left: aggregatedSkills, right: [] };
-    }
-
-    if (totalSkills <= 20) {
-      return {
-        left: aggregatedSkills.slice(0, 10),
-        right: aggregatedSkills.slice(10),
-      };
-    }
-
-    // 总数 > 20 时，均分到两列
+    // 始终均分到两列
     const leftCount = Math.ceil(totalSkills / 2);
     return {
       left: aggregatedSkills.slice(0, leftCount),

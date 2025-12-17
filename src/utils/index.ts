@@ -33,6 +33,9 @@ export {
   filterAndSortBySkill,
 } from "./charm-sorter";
 
+// 技能排序工具
+export { compareSkills } from "./skill-sorter";
+
 // 通用数据IO工具
 export { exportData, importData, validateData } from "./data-io";
 
