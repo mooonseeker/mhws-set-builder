@@ -20,7 +20,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useSkills } from "@/contexts";
+import { useSkills } from "@/hooks";
 import { SKILL_CATEGORY_LABELS, SKILLS_PER_PAGE } from "@/types/constants";
 
 import type { Skill, SkillCategory, SlotLevel } from "@/types";

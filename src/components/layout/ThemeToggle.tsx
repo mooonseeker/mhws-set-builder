@@ -7,7 +7,7 @@
 import { Monitor, Moon, Sun } from "lucide-react";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useTheme } from "@/contexts";
+import { useTheme } from "@/hooks";
 
 /**
  * 主题切换按钮组件

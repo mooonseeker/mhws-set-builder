@@ -12,7 +12,7 @@ import { useState } from "react";
 import { ErrorMessage, Loading } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useAccessories, useArmor, useSkills } from "@/contexts";
+import { useAccessories, useArmor, useSkills } from "@/hooks";
 import { generateSkillId } from "@/utils";
 
 import { SkillForm } from "../skills/SkillForm";

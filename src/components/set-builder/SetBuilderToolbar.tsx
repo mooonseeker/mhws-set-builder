@@ -9,7 +9,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useSetBuilder } from "@/contexts/SetBuilderContext";
+import { useSetBuilder } from "@/hooks";
 
 interface SetBuilderActionsProps {
   mode: "manual" | "auto";

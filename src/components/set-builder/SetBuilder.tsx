@@ -6,7 +6,7 @@ import {
   EquipmentSelector,
 } from "@/components/equipments";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useSetBuilder } from "@/contexts/SetBuilderContext";
+import { useSetBuilder } from "@/hooks";
 
 import { SearchConfirmationDialog } from "./SearchConfirmationDialog";
 import { SearchResultsView } from "./SearchResultsView";

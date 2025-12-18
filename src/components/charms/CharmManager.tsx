@@ -14,8 +14,7 @@ import {
   PopoverAnchor,
   PopoverContent,
 } from "@/components/ui/popover";
-import { useCharms, useSkills } from "@/contexts";
-import { useCharmOperations } from "@/hooks";
+import { useCharms, useSkills, useCharmOperations } from "@/hooks";
 import {
   calculateCharmEquivalentSlots,
   calculateKeySkillValue,

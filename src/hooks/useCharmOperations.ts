@@ -6,7 +6,7 @@
 
 import { useCallback } from "react";
 
-import { useCharms, useSkills } from "@/contexts";
+import { useCharms, useSkills } from "@/hooks";
 import {
   calculateCharmEquivalentSlots,
   calculateKeySkillValue,

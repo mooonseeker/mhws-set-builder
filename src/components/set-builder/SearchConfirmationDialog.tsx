@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useSetBuilder } from "@/contexts/SetBuilderContext";
+import { useSetBuilder } from "@/hooks";
 
 export function SearchConfirmationDialog() {
   const { isSearchConfirmOpen, confirmSearch, cancelSearch, isSearching } =

@@ -19,7 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useCharms, useSkills } from "@/contexts";
+import { useCharms, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { CHARMS_PER_PAGE } from "@/types/constants";
 import { sortCharms } from "@/utils";

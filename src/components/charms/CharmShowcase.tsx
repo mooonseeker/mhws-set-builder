@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useCharms } from "@/contexts";
+import { useCharms } from "@/hooks";
 import { sortCharms } from "@/utils";
 
 import { EquipmentCard } from "../equipments/EquipmentCard";

@@ -2,8 +2,7 @@ import { useMemo } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useSetBuilder } from "@/contexts/SetBuilderContext";
-import { useSkills } from "@/contexts/SkillContext";
+import { useSetBuilder, useSkills } from "@/hooks";
 import {
   calculateExtraSkills,
   evaluateAndSortResults,

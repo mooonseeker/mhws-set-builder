@@ -20,8 +20,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useAccessories } from "@/contexts";
-import { useSkills } from "@/contexts/SkillContext";
+import { useAccessories, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
 
 import type { Accessory, SlotLevel } from "@/types";

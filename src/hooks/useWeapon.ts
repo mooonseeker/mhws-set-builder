@@ -1,31 +1,31 @@
-import { useMemo } from "react";
-
-import { DataStorage } from "@/services/DataStorage";
-
-import type { Weapon } from "@/types";
+import { useContext } from "react";
+import { WeaponContext } from "@/contexts/WeaponContext";
 
 /**
- * 武器数据管理 Hook
+ * 使用武器Context的Hook
  *
- * 提供武器数据的加载和管理
+ * @returns 武器Context
+ * @throws {Error} 如果在WeaponProvider外部使用
+ *
+ * @example
+ * ```tsx
+ * function WeaponList() {
+ *   const { weapons, loading, addWeapon } = useWeapon();
+ *
+ *   if (loading) return <div>加载中...</div>;
+ *
+ *   return (
+ *     <div>
+ *       {weapons.map(weapon => <div key={weapon.id}>{weapon.name}</div>)}
+ *     </div>
+ *   );
+ * }
+ * ```
  */
 export function useWeapon() {
-  return useMemo(() => {
-    try {
-      const weapons = DataStorage.loadData<Weapon>("weapons");
-      return {
-        weapons,
-        loading: false,
-        error: null,
-      };
-    } catch (error) {
-      console.error("Failed to load weapons:", error);
-      return {
-        weapons: [],
-        loading: false,
-        error:
-          error instanceof Error ? error : new Error("Failed to load weapons"),
-      };
-    }
-  }, []);
+  const context = useContext(WeaponContext);
+  if (!context) {
+    throw new Error("useWeapon must be used within WeaponProvider");
+  }
+  return context;
 }

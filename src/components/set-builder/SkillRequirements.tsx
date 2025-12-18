@@ -4,8 +4,7 @@ import { useMemo } from "react";
 import { SkillSelector } from "@/components/skills";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useSkills } from "@/contexts";
-import { useSetBuilder } from "@/contexts/SetBuilderContext";
+import { useSetBuilder, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { compareSkills } from "@/utils";
 

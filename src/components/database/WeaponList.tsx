@@ -115,7 +115,7 @@ export function WeaponList({
   if (error) {
     return (
       <div className="flex items-center justify-center p-8 text-red-500">
-        加载武器数据失败: {error.message}
+        加载武器数据失败: {error}
       </div>
     );
   }

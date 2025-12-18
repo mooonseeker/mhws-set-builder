@@ -1,27 +1,30 @@
 /**
  * MHWS护石管理器 - Context统一导出
  *
- * 集中导出所有Context和相关Hooks
+ * 集中导出所有Context Provider
  */
 
 // 技能Context
-export { SkillProvider, useSkills } from "./SkillContext";
+export { SkillProvider } from "./SkillProvider";
 
 // 装饰品Context
-export { AccessoryProvider, useAccessories } from "./AccessoryContext";
+export { AccessoryProvider } from "./AccessoryProvider";
 
 // 防具Context
-export { ArmorProvider, useArmor } from "./ArmorContext";
+export { ArmorProvider } from "./ArmorProvider";
 
 // 武器Context
-export { WeaponProvider, useWeapon } from "./WeaponContext";
+export { WeaponProvider } from "./WeaponProvider";
 
 // 护石Context
-export { CharmProvider, useCharms } from "./CharmContext";
+export { CharmProvider } from "./CharmProvider";
+
+// 配装器Context
+export { SetBuilderProvider } from "./SetBuilderProvider";
 
 // 应用Context
 export { AppProvider } from "./AppContext";
 
 // 主题相关
-export { useTheme } from "./ThemeContext";
+export { ThemeProvider } from "./ThemeProvider";
 export type { Theme, ThemeContextType } from "./ThemeContext";

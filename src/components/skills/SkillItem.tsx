@@ -7,7 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useSkills } from "@/contexts";
+import { useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
 
 interface SkillItemProps {

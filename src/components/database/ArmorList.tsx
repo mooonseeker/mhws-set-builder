@@ -20,9 +20,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useSkills } from "@/contexts";
-import { useArmor } from "@/contexts/ArmorContext";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useArmor, useSkills, useMediaQuery } from "@/hooks";
 import { cn } from "@/lib/utils";
 import {
   ARMOR_SERIES_PER_PAGE,

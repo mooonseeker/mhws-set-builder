@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import { SkillItem } from "@/components/skills";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useSkills } from "@/contexts";
+import { useSkills } from "@/hooks";
 import { compareSkills } from "@/utils";
 
 import type { EquipmentSet, SlottedEquipment } from "@/types/set-builder";

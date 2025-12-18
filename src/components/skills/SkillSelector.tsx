@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useSkills } from "@/contexts";
+import { useSkills } from "@/hooks";
 
 import type { SkillWithLevel } from "@/types";
 

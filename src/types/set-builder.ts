@@ -7,10 +7,19 @@ import type {
   Slot,
   Weapon,
   ArmorType,
-} from "@/types";
+} from "./core";
 
 /** 装备栏类型 */
 export type EquipmentCellType = ArmorType | "weapon" | "charm";
+
+export type SelectionContext =
+  | { type: "equipment"; equipmentType: EquipmentCellType }
+  | {
+      type: "accessory";
+      slotType: EquipmentCellType;
+      slotIndex: number;
+      slot: Slot;
+    };
 
 /** 带有镶嵌信息的装备槽 */
 export interface SlottedEquipment<T extends Weapon | Armor | Charm> {
