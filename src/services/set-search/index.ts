@@ -13,6 +13,7 @@ import type {
   Skill,
   SkillWithLevel,
   Slot,
+  SlottedEquipment,
   Weapon,
 } from "@/types";
 import type { SearchContext, SkillDeficit } from "@/types/set-builder";
@@ -47,7 +48,7 @@ interface AllGameData {
  * @param allData - All game data including armors, weapons, accessories, skills, and charms.
  * @returns A promise that resolves to an array of final, sorted sets.
  */
-export const findOptimalSets = async (
+export const findOptimalSets = (
   requiredSkills: SkillWithLevel[],
   fixedEquipment: EquipmentSet,
   allData: AllGameData,
@@ -60,7 +61,7 @@ export const findOptimalSets = async (
   const preprocessedData = preprocess(
     allData.armors,
     allData.weapons,
-    allData.charms as Charm[],
+    allData.charms,
     allData.accessories,
     allData.skills,
   );
@@ -99,7 +100,7 @@ export const findOptimalSets = async (
 
   // 3. 主搜索循环: 根据情况遍历护石或直接处理
   const charmsToIterate = fixedEquipment.charm
-    ? [fixedEquipment.charm.equipment as Charm]
+    ? [fixedEquipment.charm.equipment]
     : allData.charms;
   const totalCharms = charmsToIterate.length;
 
@@ -118,32 +119,33 @@ export const findOptimalSets = async (
     };
 
     // 如果 charm 不在 fixedEquipment 中，则添加到 context
-    if (!context.equipment.charm) {
-      context.equipment.charm = {
-        equipment: charm,
-        accessories: Array(charm.slots.length).fill(null),
-      };
-    }
+    context.equipment.charm ??= {
+      equipment: charm,
+      accessories: Array(charm.slots.length).fill(null) as (Accessory | null)[],
+    };
 
     // 累加所有固定装备的技能和孔位
-    Object.values(context.equipment).forEach((slottedEq) => {
-      if (!slottedEq) return;
-      const eq = slottedEq.equipment;
-      eq.skills.forEach((skill: SkillWithLevel) => {
-        context.currentSkills.set(
-          skill.skillId,
-          (context.currentSkills.get(skill.skillId) || 0) + skill.level,
-        );
-      });
-      eq.slots.forEach((slot: Slot) => {
-        const slotWithSource = { ...slot, sourceId: eq.id };
-        if (slot.type === "weapon") {
-          context.availableSlots.weapon.push(slotWithSource);
-        } else {
-          context.availableSlots.armor.push(slotWithSource);
-        }
-      });
-    });
+    (Object.keys(context.equipment) as (keyof EquipmentSet)[]).forEach(
+      (key) => {
+        const slottedEq = context.equipment[key];
+        if (!slottedEq) return;
+        const eq = slottedEq.equipment;
+        eq.skills.forEach((skill: SkillWithLevel) => {
+          context.currentSkills.set(
+            skill.skillId,
+            (context.currentSkills.get(skill.skillId) ?? 0) + skill.level,
+          );
+        });
+        eq.slots.forEach((slot: Slot) => {
+          const slotWithSource = { ...slot, sourceId: eq.id };
+          if (slot.type === "weapon") {
+            context.availableSlots.weapon.push(slotWithSource);
+          } else {
+            context.availableSlots.armor.push(slotWithSource);
+          }
+        });
+      },
+    );
 
     // 3b. 求解 Weapon-Skills
     const weaponSkillDeficits: SkillDeficit[] =
@@ -152,7 +154,7 @@ export const findOptimalSets = async (
           skillId: targetSkill.skillId,
           missingLevel:
             targetSkill.level -
-            (context.currentSkills.get(targetSkill.skillId) || 0),
+            (context.currentSkills.get(targetSkill.skillId) ?? 0),
         }))
         .filter((deficit) => deficit.missingLevel > 0);
 
@@ -190,14 +192,16 @@ export const findOptimalSets = async (
           sourceId,
           foundAccessories,
         ] of solution.placement.entries()) {
-          const equipmentToUpdate = Object.values(branchContext.equipment).find(
-            (eq) => eq && eq.equipment.id === sourceId,
-          );
+          const equipmentToUpdate = (
+            Object.values(branchContext.equipment) as SlottedEquipment<
+              Weapon | Armor | Charm
+            >[]
+          ).find((eq) => eq?.equipment.id === sourceId);
 
           if (equipmentToUpdate) {
             const newAccessories: (Accessory | null)[] = Array(
               equipmentToUpdate.equipment.slots.length,
-            ).fill(null);
+            ).fill(null) as (Accessory | null)[];
             const originalSlots = equipmentToUpdate.equipment.slots;
             // 优先放置需要高级孔位的珠子
             const accessoriesToPlace = [...foundAccessories].sort(
@@ -232,7 +236,7 @@ export const findOptimalSets = async (
             foundAccessories.forEach((acc) => {
               acc.skills.forEach((skill) => {
                 const current =
-                  branchContext.currentSkills.get(skill.skillId) || 0;
+                  branchContext.currentSkills.get(skill.skillId) ?? 0;
                 branchContext.currentSkills.set(
                   skill.skillId,
                   current + skill.level,
@@ -272,7 +276,7 @@ export const findOptimalSets = async (
               // b1. 累加技能
               armorPiece.equipment.skills.forEach((skill) => {
                 const current =
-                  scaffoldContext.currentSkills.get(skill.skillId) || 0;
+                  scaffoldContext.currentSkills.get(skill.skillId) ?? 0;
                 scaffoldContext.currentSkills.set(
                   skill.skillId,
                   current + skill.level,
@@ -332,7 +336,7 @@ export const findOptimalSets = async (
             // b1. 累加技能
             armorPiece.equipment.skills.forEach((skill) => {
               const current =
-                scaffoldContext.currentSkills.get(skill.skillId) || 0;
+                scaffoldContext.currentSkills.get(skill.skillId) ?? 0;
               scaffoldContext.currentSkills.set(
                 skill.skillId,
                 current + skill.level,
@@ -393,5 +397,5 @@ export const findOptimalSets = async (
     "[Debug] Final sets to be returned to UI:",
     JSON.stringify(finalResults.slice(0, SEARCH_LIMIT), null, 2),
   );
-  return finalResults.slice(0, SEARCH_LIMIT);
+  return Promise.resolve(finalResults.slice(0, SEARCH_LIMIT));
 };

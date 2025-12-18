@@ -102,11 +102,11 @@ export function preprocess(
       for (const armor of armorsOfType) {
         // a. 计算自带技能潜力
         const innatePotential =
-          armor.skills.find((s) => s.skillId === skill.id)?.level || 0;
+          armor.skills.find((s) => s.skillId === skill.id)?.level ?? 0;
 
         // b. 计算孔位技能潜力
         let slotPotential = 0;
-        const relevantAccessories = accessoriesBySkill.get(skill.id) || [];
+        const relevantAccessories = accessoriesBySkill.get(skill.id) ?? [];
 
         // 遍历防具的每一个孔
         for (const slot of armor.slots) {
@@ -116,7 +116,7 @@ export function preprocess(
             // 如果珠子可以放入该孔
             if (acc.slotLevel !== -1 && acc.slotLevel <= slot.level) {
               const accSkillLevel =
-                acc.skills.find((s) => s.skillId === skill.id)?.level || 0;
+                acc.skills.find((s) => s.skillId === skill.id)?.level ?? 0;
               maxSkillForThisSlot = Math.max(
                 maxSkillForThisSlot,
                 accSkillLevel,

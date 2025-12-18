@@ -27,20 +27,23 @@ function computeTotalSkills(set: FinalSet): Map<string, number> {
   const totalSkills = new Map<string, number>();
 
   // 装备自带技能
-  Object.values(set.equipment).forEach((slottedEq) => {
-    if (slottedEq?.equipment?.skills) {
-      slottedEq.equipment.skills.forEach((skill: SkillWithLevel) => {
-        const current = totalSkills.get(skill.skillId) || 0;
-        totalSkills.set(skill.skillId, current + skill.level);
-      });
-    }
-  });
+  (Object.keys(set.equipment) as (keyof FinalSet["equipment"])[]).forEach(
+    (key) => {
+      const slottedEq = set.equipment[key];
+      if (slottedEq?.equipment?.skills) {
+        slottedEq.equipment.skills.forEach((skill: SkillWithLevel) => {
+          const current = totalSkills.get(skill.skillId) ?? 0;
+          totalSkills.set(skill.skillId, current + skill.level);
+        });
+      }
+    },
+  );
 
   // 装饰品技能
   set.accessories.forEach((accessoryList) => {
     accessoryList.forEach((accessory: Accessory) => {
       accessory.skills.forEach((skill: SkillWithLevel) => {
-        const current = totalSkills.get(skill.skillId) || 0;
+        const current = totalSkills.get(skill.skillId) ?? 0;
         totalSkills.set(skill.skillId, current + skill.level);
       });
     });
@@ -65,7 +68,7 @@ export function calculateExtraSkills(
 
   totalSkills.forEach((totalLevel, skillId) => {
     const required = requiredSkills.find((s) => s.skillId === skillId);
-    const requiredLevel = required?.level || 0;
+    const requiredLevel = required?.level ?? 0;
     if (totalLevel > requiredLevel) {
       extraSkills.push({
         skillId,

@@ -95,7 +95,7 @@ class DataStorageService {
     }
 
     const data = this.dataCache.get(id);
-    return (data || []) as T[];
+    return (data ?? []) as T[];
   }
 
   /**
@@ -230,7 +230,7 @@ class DataStorageService {
 
       // 从 module.default 中提取对应类型的数据
       // 例如: { skills: [...] } 或 { accessories: [...] }
-      const data = (module.default[id] || []) as DataItem[];
+      const data = (module.default[id] ?? []) as DataItem[];
 
       // 更新内存缓存
       this.dataCache.set(id, data);
@@ -297,7 +297,7 @@ class DataStorageService {
         ...charm,
         skills: charm.skills.map((skillRef) => ({
           ...skillRef,
-          skillId: idMap.get(skillRef.skillId) || skillRef.skillId,
+          skillId: idMap.get(skillRef.skillId) ?? skillRef.skillId,
         })),
       }));
 

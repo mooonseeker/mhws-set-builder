@@ -88,13 +88,13 @@ function abstractSlots(availableSlots: {
 
   // 统计武器孔位
   for (const slot of availableSlots.weapon) {
-    const current = slotCounts.weapon.get(slot.level) || 0;
+    const current = slotCounts.weapon.get(slot.level) ?? 0;
     slotCounts.weapon.set(slot.level, current + 1);
   }
 
   // 统计防具孔位
   for (const slot of availableSlots.armor) {
-    const current = slotCounts.armor.get(slot.level) || 0;
+    const current = slotCounts.armor.get(slot.level) ?? 0;
     slotCounts.armor.set(slot.level, current + 1);
   }
 
@@ -121,8 +121,8 @@ function sortDeficits(
     }
 
     // 计算组合方式数量（近似于可选珠子种类数量）
-    const aCandidates = accessoriesBySkill.get(a.skillId) || [];
-    const bCandidates = accessoriesBySkill.get(b.skillId) || [];
+    const aCandidates = accessoriesBySkill.get(a.skillId) ?? [];
+    const bCandidates = accessoriesBySkill.get(b.skillId) ?? [];
 
     // 去重后的珠子种类数量（按slotLevel和提供的技能等级组合）
     const aUniqueTypes = new Set(
@@ -191,7 +191,7 @@ function findCombinations(
     for (const accessory of way) {
       const slotType = accessory.type; // 直接使用装饰品的type属性
       const slotLevel = accessory.slotLevel;
-      const currentCount = newSlotCounts[slotType].get(slotLevel) || 0;
+      const currentCount = newSlotCounts[slotType].get(slotLevel) ?? 0;
 
       if (currentCount <= 0) {
         isValid = false;
@@ -236,7 +236,7 @@ function findWaysToSatisfyDeficit(
   }
 
   const slotType = skill.category === "weapon" ? "weapon" : "armor";
-  const candidates = accessoriesBySkill.get(deficit.skillId) || [];
+  const candidates = accessoriesBySkill.get(deficit.skillId) ?? [];
   const typeFilteredCandidates = candidates.filter(
     (acc) => acc.type === slotType,
   );
@@ -257,7 +257,7 @@ function findWaysToSatisfyDeficit(
     for (let i = startIndex; i < typeFilteredCandidates.length; i++) {
       const accessory = typeFilteredCandidates[i];
       const skillLevel =
-        accessory.skills.find((s) => s.skillId === deficit.skillId)?.level || 0;
+        accessory.skills.find((s) => s.skillId === deficit.skillId)?.level ?? 0;
 
       if (skillLevel > 0) {
         // 检查孔位是否足够
@@ -293,13 +293,13 @@ function countRequiredSlots(
 
   for (const accessory of accessories) {
     const level = accessory.slotLevel;
-    const current = slotDemand.get(level) || 0;
+    const current = slotDemand.get(level) ?? 0;
     slotDemand.set(level, current + 1);
   }
 
   // 检查每个等级的需求是否不超过供给
   for (const [level, demand] of slotDemand.entries()) {
-    const supply = slotCounts[slotType].get(level) || 0;
+    const supply = slotCounts[slotType].get(level) ?? 0;
     if (demand > supply) {
       return false;
     }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 /**
  * 检测媒体查询的自定义Hook
@@ -11,25 +11,27 @@ import { useEffect, useState } from "react";
  * const isTablet = useMediaQuery('(min-width: 768px) and (max-width: 1024px)');
  */
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(() => {
-    if (typeof window !== "undefined") {
-      return window.matchMedia(query).matches;
-    }
+  const subscribe = useCallback(
+    (callback: () => void) => {
+      const matchMedia = window.matchMedia(query);
+
+      matchMedia.addEventListener("change", callback);
+
+      return () => {
+        matchMedia.removeEventListener("change", callback);
+      };
+    },
+    [query],
+  );
+
+  const getSnapshot = () => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia(query).matches;
+  };
+
+  const getServerSnapshot = () => {
     return false;
-  });
+  };
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia(query);
-    const handler = (event: MediaQueryListEvent) => setMatches(event.matches);
-
-    // 设置初始值
-    setMatches(mediaQuery.matches);
-
-    // 监听变化
-    mediaQuery.addEventListener("change", handler);
-
-    return () => mediaQuery.removeEventListener("change", handler);
-  }, [query]);
-
-  return matches;
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

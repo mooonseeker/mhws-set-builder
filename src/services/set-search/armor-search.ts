@@ -2,6 +2,7 @@ import type {
   Accessory,
   Armor,
   ArmorType,
+  EquipmentSet,
   FinalSet,
   PreprocessedData,
   SearchContext,
@@ -106,7 +107,7 @@ function backtrack(
     const armorSkillDeficits: SkillDeficit[] = context.skillDeficits.armorSkills
       .map((s: SkillWithLevel) => ({
         skillId: s.skillId,
-        missingLevel: s.level - (context.currentSkills.get(s.skillId) || 0),
+        missingLevel: s.level - (context.currentSkills.get(s.skillId) ?? 0),
       }))
       .filter((d) => d.missingLevel > 0);
 
@@ -178,8 +179,9 @@ function backtrack(
           if (armorType) {
             const equipmentSlot = solutionEquipment[armorType]!;
             const totalSlots = equipmentSlot.equipment.slots.length;
-            const newAccessories: (Accessory | null)[] =
-              Array(totalSlots).fill(null);
+            const newAccessories: (Accessory | null)[] = Array(totalSlots).fill(
+              null,
+            ) as (Accessory | null)[];
             const originalSlots = equipmentSlot.equipment.slots;
             // 优先放置需要高级孔位的珠子
             const accessoriesToPlace = [...placedAccessories].sort(
@@ -214,16 +216,19 @@ function backtrack(
 
         // 步骤 7: 创建最终方案，使用已填充的 solutionEquipment，并反向生成 accessories
         const finalAccessories = new Map<string, Accessory[]>();
-        Object.values(solutionEquipment).forEach((slottedEq) => {
-          if (slottedEq?.accessories) {
-            const accessories = slottedEq.accessories.filter(
-              (a: Accessory | null): a is Accessory => a !== null,
-            );
-            if (accessories.length > 0) {
-              finalAccessories.set(slottedEq.equipment.id, accessories);
+        (Object.keys(solutionEquipment) as (keyof EquipmentSet)[]).forEach(
+          (key) => {
+            const slottedEq = solutionEquipment[key];
+            if (slottedEq?.accessories) {
+              const accessories = slottedEq.accessories.filter(
+                (a: Accessory | null): a is Accessory => a !== null,
+              );
+              if (accessories.length > 0) {
+                finalAccessories.set(slottedEq.equipment.id, accessories);
+              }
             }
-          }
-        });
+          },
+        );
 
         const finalSet: FinalSet = {
           equipment: solutionEquipment,
@@ -268,7 +273,7 @@ function backtrack(
     }
   } else {
     // 如果该部位为空，则对此部位的所有可用防具进行遍历填充
-    const availableArmors = armorsByType.get(currentArmorType) || [];
+    const availableArmors = armorsByType.get(currentArmorType) ?? [];
     for (const armorPiece of availableArmors) {
       // 1. Mutate state forward
       // 将孔位与来源ID关联
@@ -284,7 +289,7 @@ function backtrack(
       armorPiece.skills.forEach((skill) => {
         const oldLevel = context.currentSkills.get(skill.skillId);
         oldSkillLevels.set(skill.skillId, oldLevel);
-        context.currentSkills.set(skill.skillId, (oldLevel || 0) + skill.level);
+        context.currentSkills.set(skill.skillId, (oldLevel ?? 0) + skill.level);
       });
       const slotsAddedCount = armorPiece.slots.length;
       context.availableSlots.armor.push(...slotsWithSource);

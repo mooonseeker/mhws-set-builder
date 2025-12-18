@@ -34,7 +34,7 @@ export function shouldPrune(
 
   for (const targetSkill of skillsToEvaluate) {
     const { skillId, level: requiredLevel } = targetSkill;
-    const currentLevel = currentSkills.get(skillId) || 0;
+    const currentLevel = currentSkills.get(skillId) ?? 0;
 
     // 如果当前技能等级已满足需求，则跳过此技能的潜力计算
     if (currentLevel >= requiredLevel) {
@@ -47,7 +47,7 @@ export function shouldPrune(
       const potentialOnType =
         preprocessedData.maxPotentialPerArmorType.get(armorType);
       if (potentialOnType) {
-        remainingPotential += potentialOnType.get(skillId) || 0;
+        remainingPotential += potentialOnType.get(skillId) ?? 0;
       }
     }
 
@@ -55,7 +55,7 @@ export function shouldPrune(
     let currentSlotsPotential = 0;
     if (availableSlots && preprocessedData.accessoriesBySkill.has(skillId)) {
       const accessories =
-        preprocessedData.accessoriesBySkill.get(skillId) || [];
+        preprocessedData.accessoriesBySkill.get(skillId) ?? [];
       if (accessories.length > 0) {
         // 简单的贪心估算：所有可用孔位都插上该技能最好的珠子
         // 注意：这里不区分 weapon/armor 孔位类型限制，因为大多数 armorSkill 珠子都可以插
@@ -67,7 +67,7 @@ export function shouldPrune(
           for (const acc of accessories) {
             if (acc.slotLevel <= slot.level) {
               const skillVal =
-                acc.skills.find((s) => s.skillId === skillId)?.level || 0;
+                acc.skills.find((s) => s.skillId === skillId)?.level ?? 0;
               maxLevelForSlot = Math.max(maxLevelForSlot, skillVal);
             }
           }
