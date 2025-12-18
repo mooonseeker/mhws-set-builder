@@ -26,7 +26,7 @@ class DataStorageService {
    * 内部数据缓存
    * 在 initialize() 后，所有数据都会被加载到这里
    */
-  private dataCache: Map<DataId, DataItem[]> = new Map();
+  private dataCache: Map<DataId, DataItem[]> = new Map<DataId, DataItem[]>();
 
   /**
    * 初始化状态标记
@@ -226,7 +226,9 @@ class DataStorageService {
 
     try {
       // 使用相对路径进行动态导入
-      const module = await import(`../data/initial-${id}.json`);
+      const module = (await import(`../data/initial-${id}.json`)) as {
+        default: Record<string, unknown[]>;
+      };
 
       // 从 module.default 中提取对应类型的数据
       // 例如: { skills: [...] } 或 { accessories: [...] }

@@ -142,11 +142,13 @@ export function validateData(
     const itemKeys = Object.keys(currentItem);
     for (const key of itemKeys) {
       // 深比较，处理对象和数组
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if (
-        JSON.stringify((currentItem as any)[key]) !==
-        JSON.stringify((initialItem as any)[key])
-      ) {
+      const currentVal = (currentItem as unknown as Record<string, unknown>)[
+        key
+      ];
+      const initialVal = (initialItem as unknown as Record<string, unknown>)[
+        key
+      ];
+      if (JSON.stringify(currentVal) !== JSON.stringify(initialVal)) {
         errors.push(
           `ID为 "${currentItem.id}" 的项目属性 "${String(key)}" 不匹配`,
         );

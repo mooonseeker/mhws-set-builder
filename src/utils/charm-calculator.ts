@@ -196,7 +196,7 @@ export function calculateKeySkillValue(
     // 查找技能定义
     const skill = skillsData.find((s) => s.id === skillWithLevel.skillId);
 
-    if (skill && skill.isKey) {
+    if (skill?.isKey) {
       // 如果是核心技能，直接累加其等级
       keySkillValue += skillWithLevel.level;
     }

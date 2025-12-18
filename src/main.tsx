@@ -37,4 +37,4 @@ async function main() {
 }
 
 // Start the application
-main();
+void main().catch(console.error);

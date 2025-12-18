@@ -174,7 +174,7 @@ export function sortCharmsMultiple(
 export function filterAndSortBySkill(
   charms: Charm[],
   skillId: string,
-  isKeySkill: boolean = false,
+  isKeySkill = false,
 ): Charm[] {
   // 筛选包含指定技能的护石
   const filtered = charms.filter((charm) =>
