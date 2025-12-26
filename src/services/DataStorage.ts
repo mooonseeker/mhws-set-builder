@@ -9,12 +9,13 @@
  * @module DataStorage
  */
 
-import type { Accessory, Charm, Skill, DataId, DataItem } from "@/types";
+import type { DataId, DataItem } from "@/types";
 import {
   DATABASE_VERSION,
   DATABASE_VERSION_KEY,
   STORAGE_KEYS,
 } from "@/types/constants";
+import { type MigrationStats, reconcileData } from "@/utils/data-io";
 
 /**
  * DataStorage 类
@@ -27,6 +28,12 @@ class DataStorageService {
    * 在 initialize() 后，所有数据都会被加载到这里
    */
   private dataCache: Map<DataId, DataItem[]> = new Map<DataId, DataItem[]>();
+
+  /**
+   * 迁移报告缓存
+   * 存储最近一次迁移的统计信息，供 UI 展示
+   */
+  private migrationReport: Map<DataId, MigrationStats> | null = null;
 
   /**
    * 初始化状态标记
@@ -162,6 +169,17 @@ class DataStorageService {
   }
 
   /**
+   * 获取并清除迁移报告
+   *
+   * @returns 迁移报告（如果有），否则返回 null
+   */
+  getAndClearMigrationReport(): Map<DataId, MigrationStats> | null {
+    const report = this.migrationReport;
+    this.migrationReport = null;
+    return report;
+  }
+
+  /**
    * 加载现有数据到缓存
    */
   private async loadExistingData(): Promise<void> {
@@ -252,6 +270,8 @@ class DataStorageService {
   /**
    * 执行数据迁移
    *
+   * 遍历所有数据类型，将本地数据与官方初始数据进行对比和合并。
+   *
    * @param oldVersion - 旧版本号
    */
   private async migrateData(oldVersion: string): Promise<void> {
@@ -259,82 +279,62 @@ class DataStorageService {
       `[DataStorage] 执行数据迁移: ${oldVersion} -> ${DATABASE_VERSION}`,
     );
 
+    this.migrationReport = new Map<DataId, MigrationStats>();
+    const dataIds: DataId[] = [
+      "skills",
+      "accessories",
+      "armor",
+      "weapons",
+      "charms",
+    ];
+
     try {
-      // 从 localStorage 加载旧数据
-      const oldCharmsKey = STORAGE_KEYS.charms;
-      const oldSkillsKey = STORAGE_KEYS.skills;
-      const oldAccessoriesKey = STORAGE_KEYS.accessories;
+      for (const id of dataIds) {
+        // 1. 获取本地旧数据
+        const key = STORAGE_KEYS[id];
+        const stored = localStorage.getItem(key);
+        const currentData = stored ? (JSON.parse(stored) as DataItem[]) : [];
 
-      const oldCharmsData = localStorage.getItem(oldCharmsKey);
-      const oldSkillsData = localStorage.getItem(oldSkillsKey);
-
-      // 加载新版本的技能数据
-      const newSkillsModule = await import("../data/initial-skills.json");
-      const newskills = newSkillsModule.default.skills as Skill[];
-
-      // 如果没有旧数据，直接加载初始数据
-      if (!oldCharmsData || !oldSkillsData) {
-        console.log("[DataStorage] 没有旧数据，加载初始数据");
-        await this.loadInitialData();
-        return;
-      }
-
-      // 解析旧数据
-      const oldCharms = JSON.parse(oldCharmsData) as Charm[];
-      const oldSkills = JSON.parse(oldSkillsData) as Skill[];
-
-      // 基于技能名称创建 ID 映射表
-      const idMap = new Map<string, string>(); // <旧ID, 新ID>
-      const v2SkillMap = new Map(newskills.map((s) => [s.name, s]));
-
-      oldSkills.forEach((oldSkill) => {
-        const newSkill = v2SkillMap.get(oldSkill.name);
-        if (newSkill) {
-          idMap.set(oldSkill.id, newSkill.id);
+        // 2. 获取官方新数据
+        let officialData: DataItem[] = [];
+        if (id === "charms") {
+          // 护石没有官方初始数据，视为空数组
+          officialData = [];
+        } else {
+          try {
+            const module = (await import(`../data/initial-${id}.json`)) as {
+              default: Record<string, unknown[]>;
+            };
+            officialData = (module.default[id] ?? []) as DataItem[];
+          } catch (e) {
+            console.warn(`[DataStorage] 无法加载 ${id} 的初始数据`, e);
+          }
         }
-      });
 
-      // 遍历并更新护石数据中的技能ID
-      const migratedCharms = oldCharms.map((charm) => ({
-        ...charm,
-        skills: charm.skills.map((skillRef) => ({
-          ...skillRef,
-          skillId: idMap.get(skillRef.skillId) ?? skillRef.skillId,
-        })),
-      }));
+        // 3. 执行对比与合并
+        const stats = reconcileData(currentData, officialData);
 
-      // 保存迁移后的数据到缓存和 localStorage
-      this.dataCache.set("skills", newskills);
-      this.dataCache.set("charms", migratedCharms);
+        // 4. 保存结果
+        this.dataCache.set(id, stats.mergedData);
+        localStorage.setItem(key, JSON.stringify(stats.mergedData));
 
-      // 保存到 localStorage（不使用 saveData 以避免重复写入缓存）
-      localStorage.setItem(oldSkillsKey, JSON.stringify(newskills));
-      localStorage.setItem(oldCharmsKey, JSON.stringify(migratedCharms));
-
-      // 加载饰品数据（如果存在则保留，否则加载初始数据）
-      const oldAccessoriesData = localStorage.getItem(oldAccessoriesKey);
-      if (oldAccessoriesData) {
-        try {
-          const accessories = JSON.parse(oldAccessoriesData) as Accessory[];
-          this.dataCache.set("accessories", accessories);
-        } catch (parseError) {
-          console.error(
-            "[DataStorage] 解析旧饰品数据失败，加载初始数据:",
-            parseError,
-          );
-          await this.loadInitialDataForType("accessories");
+        // 5. 记录报告（仅当有变化时）
+        if (
+          stats.officialAdded > 0 ||
+          stats.officialUpdated > 0 ||
+          stats.userRetainedIds.length > 0
+        ) {
+          this.migrationReport.set(id, stats);
+          console.log(`[DataStorage] ${id} 迁移:`, stats);
         }
-      } else {
-        await this.loadInitialDataForType("accessories");
       }
 
       console.log("[DataStorage] 数据迁移完成");
-      console.log(`  - 技能: ${newskills.length} 条`);
-      console.log(`  - 护石: ${migratedCharms.length} 条`);
     } catch (error) {
       console.error("[DataStorage] 数据迁移失败:", error);
       // 如果迁移失败，回退到加载初始数据
       console.log("[DataStorage] 回退到加载初始数据");
+      this.migrationReport = null;
       await this.loadInitialData();
     }
   }

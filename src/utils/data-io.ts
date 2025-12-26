@@ -1,7 +1,7 @@
 /**
  * MHWS护石管理器 - 通用数据IO工具
  *
- * 提供与具体数据类型无关的、统一的数据导入、导出和验证功能。
+ * 提供与具体数据类型无关的、统一的数据导入、导出、对比和验证功能。
  */
 import type { DataId, DataItem } from "@/types";
 import { DataStorage } from "@/services/DataStorage";
@@ -18,11 +18,130 @@ export interface ExportPayload {
 }
 
 /**
- * 统一的验证结果
+ * 数据迁移统计信息
+ * 描述了将本地数据迁移到官方版本时发生的变化
  */
-export interface ValidationResult {
+export interface MigrationStats {
+  mergedData: DataItem[];
+  // 官方新增的条目数（本地没有，从官方数据添加）
+  officialAdded: number;
+  // 官方更新的条目数（本地有但不同，被官方数据覆盖）
+  officialUpdated: number;
+  // 用户保留的条目ID列表（官方没有，本地保留）
+  userRetainedIds: string[];
+}
+
+/**
+ * 数据验证结果
+ * 描述了当前本地数据与官方标准数据的差异
+ */
+export interface VerificationResult {
   isValid: boolean;
+  // 缺失的官方条目数
+  missingOfficial: number;
+  // 与官方不一致的条目数
+  mismatched: number;
+  // 用户私有的额外条目数
+  userPrivate: number;
+  // 详细的错误/差异描述
   errors: string[];
+}
+
+/**
+ * 核心数据对比与合并函数 (Reconcile)
+ *
+ * 逻辑：
+ * 1. 官方数据 (officialData) 具有最高优先级：官方新增或修改的条目将直接采用。
+ * 2. 用户私有数据 (仅在 currentData 中存在) 将被保留。
+ * 3. 稳定性假设：条目 ID 在跨版本间是稳定不变的。
+ *
+ * @param currentData - 当前本地存储的数据
+ * @param officialData - 官方最新的初始数据
+ * @returns 迁移统计信息 (包含合并后的最终数据)
+ */
+export function reconcileData(
+  currentData: DataItem[],
+  officialData: DataItem[],
+): MigrationStats {
+  const currentMap = new Map(currentData.map((item) => [item.id, item]));
+  const officialMap = new Map(officialData.map((item) => [item.id, item]));
+
+  // 默认包含所有官方数据（这涵盖了“官方新增”和“官方更新”的情况）
+  const mergedData: DataItem[] = [...officialData];
+
+  let officialAdded = 0;
+  let officialUpdated = 0;
+  const userRetainedIds: string[] = [];
+
+  // 1. 统计官方数据的变化
+  officialData.forEach((officialItem) => {
+    const currentItem = currentMap.get(officialItem.id);
+
+    if (!currentItem) {
+      // 本地不存在，视为官方新增
+      officialAdded++;
+    } else if (JSON.stringify(currentItem) !== JSON.stringify(officialItem)) {
+      // 本地存在但内容不同，视为官方更新
+      officialUpdated++;
+    }
+  });
+
+  // 2. 处理用户私有数据
+  currentData.forEach((currentItem) => {
+    // 如果官方数据中没有这个ID，说明是用户私有数据，需要保留
+    if (!officialMap.has(currentItem.id)) {
+      mergedData.push(currentItem);
+      userRetainedIds.push(currentItem.id);
+    }
+  });
+
+  return {
+    mergedData,
+    officialAdded,
+    officialUpdated,
+    userRetainedIds,
+  };
+}
+
+/**
+ * 验证数据库数据与初始数据的一致性
+ *
+ * 复用 reconcileData 的逻辑，但从“验证”的角度解释结果：
+ * - officialAdded -> 缺失官方数据
+ * - officialUpdated -> 数据不匹配
+ * - userRetainedIds -> 包含非官方数据
+ *
+ * @param currentData - 当前应用内的数据
+ * @param initialData - 从JSON文件加载的初始数据
+ * @returns 验证结果
+ */
+export function validateData(
+  currentData: DataItem[],
+  initialData: DataItem[],
+): VerificationResult {
+  const stats = reconcileData(currentData, initialData);
+
+  const errors: string[] = [];
+  if (stats.officialAdded > 0) {
+    errors.push(`缺失官方数据: ${stats.officialAdded} 条`);
+  }
+  if (stats.officialUpdated > 0) {
+    errors.push(`与官方数据不一致: ${stats.officialUpdated} 条`);
+  }
+  if (stats.userRetainedIds.length > 0) {
+    errors.push(`包含非官方(用户)数据: ${stats.userRetainedIds.length} 条`);
+  }
+
+  return {
+    isValid:
+      stats.officialAdded === 0 &&
+      stats.officialUpdated === 0 &&
+      stats.userRetainedIds.length === 0,
+    missingOfficial: stats.officialAdded,
+    mismatched: stats.officialUpdated,
+    userPrivate: stats.userRetainedIds.length,
+    errors,
+  };
 }
 
 /**
@@ -102,69 +221,4 @@ export async function importData(file: File): Promise<void> {
 
     reader.readAsText(file);
   });
-}
-
-/**
- * 验证数据库数据与初始数据的一致性
- *
- * @param currentData - 当前应用内的数据
- * @param initialData - 从JSON文件加载的初始数据
- * @returns 验证结果
- */
-export function validateData(
-  currentData: DataItem[],
-  initialData: DataItem[],
-): ValidationResult {
-  const errors: string[] = [];
-
-  // 1. 检查数量是否一致
-  if (currentData.length !== initialData.length) {
-    errors.push(
-      `数量不匹配：当前 ${currentData.length} 个, 初始 ${initialData.length} 个`,
-    );
-  }
-
-  // 2. 创建初始数据的ID映射以便快速查找
-  const initialDataMap = new Map<string, DataItem>(
-    initialData.map((item) => [item.id, item]),
-  );
-
-  // 3. 检查当前数据中的每一项
-  currentData.forEach((currentItem) => {
-    const initialItem = initialDataMap.get(currentItem.id);
-
-    if (!initialItem) {
-      errors.push(`ID为 "${currentItem.id}" 的项目在初始数据中不存在`);
-      return;
-    }
-
-    // 深度比较所有属性
-    const itemKeys = Object.keys(currentItem);
-    for (const key of itemKeys) {
-      // 深比较，处理对象和数组
-      const currentVal = (currentItem as unknown as Record<string, unknown>)[
-        key
-      ];
-      const initialVal = (initialItem as unknown as Record<string, unknown>)[
-        key
-      ];
-      if (JSON.stringify(currentVal) !== JSON.stringify(initialVal)) {
-        errors.push(
-          `ID为 "${currentItem.id}" 的项目属性 "${String(key)}" 不匹配`,
-        );
-      }
-    }
-  });
-
-  // 4. 反向检查：确保所有初始数据都存在于当前数据中
-  initialData.forEach((initialItem) => {
-    if (!currentData.some((item) => item.id === initialItem.id)) {
-      errors.push(`初始项目 "${initialItem.id}" 在当前数据中不存在`);
-    }
-  });
-
-  return {
-    isValid: errors.length === 0,
-    errors,
-  };
 }

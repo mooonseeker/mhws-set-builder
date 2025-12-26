@@ -4,6 +4,7 @@ import { CharmManager } from "@/components/charms";
 import { DatabaseManager } from "@/components/database";
 import { MainLayout } from "@/components/layout";
 import { SetBuilder } from "@/components/set-builder";
+import { MigrationReportDialog } from "@/components/settings/MigrationReportDialog";
 import { Settings } from "@/components/settings";
 import { AppProvider } from "@/contexts";
 
@@ -29,6 +30,7 @@ function App() {
 
   return (
     <AppProvider>
+      <MigrationReportDialog />
       <MainLayout currentTab={currentTab} onTabChange={setCurrentTab}>
         {renderContent()}
       </MainLayout>
