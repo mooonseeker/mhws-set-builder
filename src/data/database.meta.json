@@ -1,12 +1,12 @@
 {
-  "version": "1.03.0",
+  "version": "1.04.0",
   "dataType": "meta",
   "skillsData": "./skills.csv",
-  "skillsLastModified": "2025-10-30T01:51:20.106Z",
+  "skillsLastModified": "2025-12-26T07:29:58.897Z",
   "accessoriesData": "./accessories.csv",
-  "accessoriesLastModified": "2025-10-30T01:51:20.106Z",
+  "accessoriesLastModified": "2025-10-30T01:19:08.257Z",
   "armorData": "./armor.csv",
-  "armorLastModified": "2025-10-30T01:51:20.106Z",
+  "armorLastModified": "2025-12-26T12:10:42.828Z",
   "weaponsData": "./weapon.csv",
-  "weaponsLastModified": "2025-11-04T07:55:00.000Z"
+  "weaponsLastModified": "2025-12-26T16:51:49.363Z"
 }

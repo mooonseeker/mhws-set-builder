@@ -98,10 +98,8 @@ export const STORAGE_KEYS: Record<import("./index").DataId, string> = {
 
 /**
  * 数据库版本号
- *
- * 用于标识数据结构的版本，仅在数据结构发生不兼容变更时更新
  */
-export const DATABASE_VERSION = "1.03.0";
+export const DATABASE_VERSION = "1.04.0";
 
 /**
  * 数据库版本号存储键
