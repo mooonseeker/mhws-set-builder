@@ -22,14 +22,21 @@ import {
 } from "@/components/ui/tooltip";
 import { useArmor, useSkills, useMediaQuery } from "@/hooks";
 import { cn } from "@/lib/utils";
+import { DataStorage } from "@/services/DataStorage";
 import {
-  ARMOR_SERIES_PER_PAGE,
+  DEFAULT_ARMOR_SERIES_PER_PAGE,
   RARITY_FILTERS,
   RARITY_RANGES,
 } from "@/types/constants";
 import { groupArmorBySeries } from "@/utils/armor-grouper";
 
-import type { Armor, ArmorType, GroupedArmor, SkillWithLevel } from "@/types";
+import type {
+  AppSettings,
+  Armor,
+  ArmorType,
+  GroupedArmor,
+  SkillWithLevel,
+} from "@/types";
 import type { EquipmentCellType } from "@/types/set-builder";
 
 const ARMOR_COLUMNS: { key: ArmorType; label: string }[] = [
@@ -64,6 +71,10 @@ export function ArmorList({
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRarity, setSelectedRarity] =
     useState<keyof typeof RARITY_RANGES>("all");
+
+  const armorSeriesPerPage =
+    DataStorage.loadData<AppSettings>("settings")[0]?.armorSeriesPerPage ??
+    DEFAULT_ARMOR_SERIES_PER_PAGE;
 
   const is2Xl = useMediaQuery("(min-width: 1536px)");
   const cardVariant = useMemo(() => {
@@ -144,9 +155,9 @@ export function ArmorList({
     }
 
     // 分页
-    const totalPages = Math.ceil(filtered.length / ARMOR_SERIES_PER_PAGE);
-    const startIndex = (currentPage - 1) * ARMOR_SERIES_PER_PAGE;
-    const endIndex = startIndex + ARMOR_SERIES_PER_PAGE;
+    const totalPages = Math.ceil(filtered.length / armorSeriesPerPage);
+    const startIndex = (currentPage - 1) * armorSeriesPerPage;
+    const endIndex = startIndex + armorSeriesPerPage;
     const paginated = filtered.slice(startIndex, endIndex);
 
     return {
@@ -154,7 +165,14 @@ export function ArmorList({
       totalCount: filtered.length,
       totalPages,
     };
-  }, [groupedArmor, searchQuery, currentPage, getSkillName, selectedRarity]);
+  }, [
+    groupedArmor,
+    searchQuery,
+    currentPage,
+    getSkillName,
+    selectedRarity,
+    armorSeriesPerPage,
+  ]);
 
   if (loading) {
     return <Loading />;

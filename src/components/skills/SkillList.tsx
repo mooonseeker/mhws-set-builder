@@ -21,9 +21,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useSkills } from "@/hooks";
-import { SKILL_CATEGORY_LABELS, SKILLS_PER_PAGE } from "@/types/constants";
+import { DataStorage } from "@/services/DataStorage";
+import {
+  DEFAULT_SKILLS_PER_PAGE,
+  SKILL_CATEGORY_LABELS,
+} from "@/types/constants";
 
-import type { Skill, SkillCategory, SlotLevel } from "@/types";
+import type { AppSettings, Skill, SkillCategory, SlotLevel } from "@/types";
 
 interface SkillListProps {
   onEdit: (skill: Skill) => void;
@@ -43,6 +47,10 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
   const [keyOnlyFilter, setKeyOnlyFilter] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+
+  const skillsPerPage =
+    DataStorage.loadData<AppSettings>("settings")[0]?.skillsPerPage ??
+    DEFAULT_SKILLS_PER_PAGE;
 
   // 获取装饰品等级图标
   const getAccessoryIcon = (
@@ -86,10 +94,10 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
   });
 
   // 分页计算
-  const totalPages = Math.ceil(filteredSkills.length / SKILLS_PER_PAGE);
+  const totalPages = Math.ceil(filteredSkills.length / skillsPerPage);
   const paginatedSkills = filteredSkills.slice(
-    (currentPage - 1) * SKILLS_PER_PAGE,
-    currentPage * SKILLS_PER_PAGE,
+    (currentPage - 1) * skillsPerPage,
+    currentPage * skillsPerPage,
   );
 
   // 筛选条件变化时，重置到第一页并更新筛选

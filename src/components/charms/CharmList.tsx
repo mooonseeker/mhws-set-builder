@@ -21,12 +21,18 @@ import {
 } from "@/components/ui/tooltip";
 import { useCharms, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
-import { CHARMS_PER_PAGE } from "@/types/constants";
+import { DataStorage } from "@/services/DataStorage";
+import { DEFAULT_CHARMS_PER_PAGE } from "@/types/constants";
 import { sortCharms } from "@/utils";
 
 import { CharmTable } from "./CharmTable";
 
-import type { Charm, CharmSortField, SortDirection } from "@/types";
+import type {
+  AppSettings,
+  Charm,
+  CharmSortField,
+  SortDirection,
+} from "@/types";
 import type { EquipmentCellType } from "@/types/set-builder";
 
 interface CharmListProps {
@@ -71,6 +77,10 @@ export function CharmList({
   // 分页和搜索状态
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+
+  const charmsPerPage =
+    DataStorage.loadData<AppSettings>("settings")[0]?.charmsPerPage ??
+    DEFAULT_CHARMS_PER_PAGE;
 
   // 筛选护石
   const searchedCharms = useMemo(() => {
@@ -127,13 +137,13 @@ export function CharmList({
 
     // 分页
     return sorted.slice(
-      (currentPage - 1) * CHARMS_PER_PAGE,
-      currentPage * CHARMS_PER_PAGE,
+      (currentPage - 1) * charmsPerPage,
+      currentPage * charmsPerPage,
     );
-  }, [searchedCharms, sortField, sortDirection, currentPage]);
+  }, [searchedCharms, sortField, sortDirection, currentPage, charmsPerPage]);
 
   // 计算总页数
-  const totalPages = Math.ceil(searchedCharms.length / CHARMS_PER_PAGE);
+  const totalPages = Math.ceil(searchedCharms.length / charmsPerPage);
 
   // 切换排序字段
   const handleSortFieldChange = (field: CharmSortField) => {

@@ -71,19 +71,24 @@ export const SLOT_LEVEL_LABELS: Record<SlotLevel, string> = {
 export const KEY_SKILL_VALUE_THRESHOLD = 2;
 
 /**
- * 技能列表每页显示数量
+ * 默认设置：技能列表每页显示数量
  */
-export const SKILLS_PER_PAGE = 16;
+export const DEFAULT_SKILLS_PER_PAGE = 16;
 
 /**
- * 防具列表每页显示数量（系列数）
+ * 默认设置：防具列表每页显示数量（系列数）
  */
-export const ARMOR_SERIES_PER_PAGE = 32;
+export const DEFAULT_ARMOR_SERIES_PER_PAGE = 32;
 
 /**
- * 护石列表每页显示数量
+ * 默认设置：护石列表每页显示数量
  */
-export const CHARMS_PER_PAGE = 16;
+export const DEFAULT_CHARMS_PER_PAGE = 16;
+
+/**
+ * 默认设置：装饰品列表每页显示数量
+ */
+export const DEFAULT_ACCESSORIES_PER_PAGE = 16;
 
 /**
  * 数据存储的键名映射
@@ -94,6 +99,7 @@ export const STORAGE_KEYS: Record<import("./index").DataId, string> = {
   armor: `${APP_NAME}-armor`,
   weapons: `${APP_NAME}-weapons`,
   charms: `${APP_NAME}-charms`,
+  settings: `${APP_NAME}-settings`,
 } as const;
 
 /**

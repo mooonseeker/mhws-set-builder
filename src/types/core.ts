@@ -359,14 +359,32 @@ export interface Weapon {
 export type SortDirection = "asc" | "desc";
 
 /**
+ * 应用设置接口
+ */
+export interface AppSettings {
+  id: "app-settings"; // 固定ID，用于DataStorage统一处理
+  enableLimitBreak: boolean; // 是否开启防具极限突破
+  skillsPerPage: number; // 技能列表每页显示数量
+  armorSeriesPerPage: number; // 防具列表每页显示数量
+  charmsPerPage: number; // 护石列表每页显示数量
+  accessoriesPerPage: number; // 装饰品列表每页显示数量
+}
+
+/**
  * 支持的数据库ID类型
  */
-export type DataId = "skills" | "accessories" | "armor" | "charms" | "weapons";
+export type DataId =
+  | "skills"
+  | "accessories"
+  | "armor"
+  | "charms"
+  | "weapons"
+  | "settings";
 
 /**
  * 各种数据类型的联合类型
  */
-export type DataItem = Skill | Accessory | Armor | Charm | Weapon;
+export type DataItem = Skill | Accessory | Armor | Charm | Weapon | AppSettings;
 
 /**
  * 通用装备类型联合类型

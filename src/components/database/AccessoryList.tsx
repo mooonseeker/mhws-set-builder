@@ -22,8 +22,10 @@ import {
 } from "@/components/ui/tooltip";
 import { useAccessories, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
+import { DataStorage } from "@/services/DataStorage";
+import { DEFAULT_ACCESSORIES_PER_PAGE } from "@/types/constants";
 
-import type { Accessory, SlotLevel } from "@/types";
+import type { Accessory, AppSettings, SlotLevel } from "@/types";
 
 export interface AccessoryListProps {
   onEdit?: (accessory: Accessory) => void;
@@ -56,7 +58,9 @@ export function AccessoryList({
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const ACCESSORIES_PER_PAGE = 10;
+  const accessoriesPerPage =
+    DataStorage.loadData<AppSettings>("settings")[0]?.accessoriesPerPage ??
+    DEFAULT_ACCESSORIES_PER_PAGE;
 
   // 获取技能对象
   const getSkill = (skillId: string) => {
@@ -104,12 +108,10 @@ export function AccessoryList({
   });
 
   // 分页计算
-  const totalPages = Math.ceil(
-    filteredAccessories.length / ACCESSORIES_PER_PAGE,
-  );
+  const totalPages = Math.ceil(filteredAccessories.length / accessoriesPerPage);
   const paginatedAccessories = filteredAccessories.slice(
-    (currentPage - 1) * ACCESSORIES_PER_PAGE,
-    currentPage * ACCESSORIES_PER_PAGE,
+    (currentPage - 1) * accessoriesPerPage,
+    currentPage * accessoriesPerPage,
   );
 
   const handleDelete = (accessory: Accessory) => {
