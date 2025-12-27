@@ -13,6 +13,10 @@ import type { DataId, DataItem } from "@/types";
 import {
   DATABASE_VERSION,
   DATABASE_VERSION_KEY,
+  DEFAULT_ARMOR_SERIES_PER_PAGE,
+  DEFAULT_CHARMS_PER_PAGE,
+  DEFAULT_SKILLS_PER_PAGE,
+  DEFAULT_ACCESSORIES_PER_PAGE,
   STORAGE_KEYS,
 } from "@/types/constants";
 import { type MigrationStats, reconcileData } from "@/utils/data-io";
@@ -189,6 +193,7 @@ class DataStorageService {
       "armor",
       "weapons",
       "charms",
+      "settings",
     ];
 
     for (const id of dataIds) {
@@ -222,6 +227,7 @@ class DataStorageService {
       "armor",
       "weapons",
       "charms",
+      "settings",
     ];
 
     for (const id of dataIds) {
@@ -239,6 +245,25 @@ class DataStorageService {
       const key = STORAGE_KEYS[id];
       localStorage.setItem(key, JSON.stringify([]));
       console.log(`[DataStorage] 已初始化空 ${id} 数据`);
+      return;
+    }
+
+    // 特殊处理：设置数据使用默认值初始化
+    if (id === "settings") {
+      const defaultSettings: DataItem[] = [
+        {
+          id: "app-settings",
+          enableLimitBreak: false,
+          skillsPerPage: DEFAULT_SKILLS_PER_PAGE,
+          armorSeriesPerPage: DEFAULT_ARMOR_SERIES_PER_PAGE,
+          charmsPerPage: DEFAULT_CHARMS_PER_PAGE,
+          accessoriesPerPage: DEFAULT_ACCESSORIES_PER_PAGE,
+        },
+      ];
+      this.dataCache.set(id, defaultSettings);
+      const key = STORAGE_KEYS[id];
+      localStorage.setItem(key, JSON.stringify(defaultSettings));
+      console.log(`[DataStorage] 已初始化默认 ${id} 数据`);
       return;
     }
 
@@ -286,6 +311,7 @@ class DataStorageService {
       "armor",
       "weapons",
       "charms",
+      "settings",
     ];
 
     try {
@@ -300,6 +326,18 @@ class DataStorageService {
         if (id === "charms") {
           // 护石没有官方初始数据，视为空数组
           officialData = [];
+        } else if (id === "settings") {
+          // 设置数据没有官方初始文件，使用默认值
+          officialData = [
+            {
+              id: "app-settings",
+              enableLimitBreak: false,
+              skillsPerPage: DEFAULT_SKILLS_PER_PAGE,
+              armorSeriesPerPage: DEFAULT_ARMOR_SERIES_PER_PAGE,
+              charmsPerPage: DEFAULT_CHARMS_PER_PAGE,
+              accessoriesPerPage: DEFAULT_ACCESSORIES_PER_PAGE,
+            },
+          ] as DataItem[];
         } else {
           try {
             const module = (await import(`../data/initial-${id}.json`)) as {
