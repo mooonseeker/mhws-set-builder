@@ -22,7 +22,7 @@ import { useWeapon } from "@/hooks";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import { RARITY_FILTERS } from "@/constants";
-import { WEAPON_TYPES, RARITY_RANGES } from "@/types";
+import { WEAPON_TYPES, RARITY_RANGES, type RarityRangeKey } from "@/types";
 import { groupWeaponsIntoRows } from "@/utils/weapon-grouper";
 
 import type { Weapon, WeaponType } from "@/types";
@@ -57,8 +57,7 @@ export function WeaponList({
   const [selectedWeaponType, setSelectedWeaponType] =
     useState<WeaponType>("rod");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedRarity, setSelectedRarity] =
-    useState<keyof typeof RARITY_RANGES>("all");
+  const [selectedRarity, setSelectedRarity] = useState<RarityRangeKey>("all");
 
   // 获取武器数据
   const { weapons, loading, error } = useWeapon();

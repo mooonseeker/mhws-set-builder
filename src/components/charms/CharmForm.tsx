@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 
+import { RARITY_MAX, RARITY_MIN } from "@/types";
 import type {
   Skill,
   SkillWithLevel,
@@ -84,8 +85,8 @@ export function CharmForm({
           <Slider
             value={[rarity]}
             onValueChange={(values) => setRarity(values[0])}
-            min={1}
-            max={12}
+            min={RARITY_MIN}
+            max={RARITY_MAX}
             step={1}
           />
         </div>

@@ -24,7 +24,7 @@ import { useArmor, useSkills, useMediaQuery } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { DataStorage } from "@/services/DataStorage";
 import { DEFAULT_ARMOR_SERIES_PER_PAGE, RARITY_FILTERS } from "@/constants";
-import { RARITY_RANGES } from "@/types";
+import { RARITY_RANGES, type RarityRangeKey } from "@/types";
 import { groupArmorBySeries } from "@/utils/armor-grouper";
 
 import type {
@@ -66,8 +66,7 @@ export function ArmorList({
   const { skills } = useSkills();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRarity, setSelectedRarity] =
-    useState<keyof typeof RARITY_RANGES>("all");
+  const [selectedRarity, setSelectedRarity] = useState<RarityRangeKey>("all");
 
   const armorSeriesPerPage =
     DataStorage.loadData<AppSettings>("settings")[0]?.armorSeriesPerPage ??

@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { RARITY_MAX, RARITY_MIN } from "@/types";
 import type { Accessory, SlotLevel } from "@/types";
 
 interface AccessoryFormProps {
@@ -140,8 +141,8 @@ function AccessoryFormContent({
           <Input
             id="rarity"
             type="number"
-            min={1}
-            max={12}
+            min={RARITY_MIN}
+            max={RARITY_MAX}
             value={rarity}
             onChange={(e) => setRarity(parseInt(e.target.value))}
             required

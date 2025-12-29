@@ -63,9 +63,7 @@ export function CharmList({
   const { skills } = useSkills();
 
   // 筛选状态
-  const [selectedRarity, setSelectedRarity] = useState<"all" | 6 | 7 | 8>(
-    "all",
-  );
+  const [selectedRarity, setSelectedRarity] = useState<"all" | number>("all");
   const [minKeySkillValue, setMinKeySkillValue] = useState<number | null>(null);
   const [filterSkillId, setFilterSkillId] = useState<string>("");
   const [isFilterVisible, setIsFilterVisible] = useState(false);
