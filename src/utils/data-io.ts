@@ -5,7 +5,7 @@
  */
 import type { DataId, DataItem } from "@/types";
 import { DataStorage } from "@/services/DataStorage";
-import { DATABASE_VERSION } from "@/types/constants";
+import { DATABASE_VERSION } from "@/constants";
 
 /**
  * 统一的导出数据结构
@@ -35,7 +35,7 @@ export interface MigrationStats {
  * 数据验证结果
  * 描述了当前本地数据与官方标准数据的差异
  */
-export interface VerificationResult {
+export interface ValidationResult {
   isValid: boolean;
   // 缺失的官方条目数
   missingOfficial: number;
@@ -118,7 +118,7 @@ export function reconcileData(
 export function validateData(
   currentData: DataItem[],
   initialData: DataItem[],
-): VerificationResult {
+): ValidationResult {
   const stats = reconcileData(currentData, initialData);
 
   const errors: string[] = [];

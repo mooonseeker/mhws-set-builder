@@ -20,7 +20,7 @@ import {
   DEFAULT_ARMOR_SERIES_PER_PAGE,
   DEFAULT_CHARMS_PER_PAGE,
   DEFAULT_SKILLS_PER_PAGE,
-} from "@/types/constants";
+} from "@/constants";
 import { toggleLimitBreakGlobal } from "@/utils/limit-break";
 
 import type { AppSettings, Charm, Skill } from "@/types";

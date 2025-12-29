@@ -12,7 +12,8 @@
  * - series: 系列技能
  * - group: 组合技能
  */
-export type SkillCategory = "weapon" | "armor" | "series" | "group";
+export const SKILL_CATEGORIES = ["weapon", "armor", "series", "group"] as const;
+export type SkillCategory = (typeof SKILL_CATEGORIES)[number];
 
 /**
  * 技能完整定义
@@ -56,7 +57,8 @@ export interface SkillWithLevel {
  * - weapon: 武器孔位
  * - armor: 防具孔位
  */
-export type SlotType = "weapon" | "armor";
+export const SLOT_TYPES = ["weapon", "armor"] as const;
+export type SlotType = (typeof SLOT_TYPES)[number];
 
 /**
  * 孔位等级（1-3级，-1表示特殊技能无装饰品）
@@ -110,7 +112,8 @@ export interface Accessory {
  * - waist: 腰部防具
  * - leg: 腿部防具
  */
-export type ArmorType = "helm" | "body" | "arm" | "waist" | "leg";
+export const ARMOR_TYPES = ["helm", "body", "arm", "waist", "leg"] as const;
+export type ArmorType = (typeof ARMOR_TYPES)[number];
 
 /**
  * 属性耐性
@@ -179,6 +182,33 @@ export interface Charm {
   keySkillValue: number;
   createdAt: string;
 }
+
+/**
+ * 护石技能数量最小值
+ */
+export const CHARM_SKILLS_MIN = 1;
+
+/**
+ * 护石技能数量最大值
+ */
+export const CHARM_SKILLS_MAX = 3;
+
+/**
+ * 护石孔位数量最小值
+ */
+export const CHARM_SLOTS_MIN = 0;
+
+/**
+ * 护石孔位数量最大值
+ */
+export const CHARM_SLOTS_MAX = 3;
+
+/**
+ * 核心技能价值阈值
+ *
+ * 用于判断护石是否低于平均水平
+ */
+export const KEY_SKILL_VALUE_THRESHOLD = 2;
 
 /**
  * 等效孔位统计
@@ -260,35 +290,39 @@ export type CharmSortField =
 /**
  * 武器类型
  */
-export type WeaponType =
-  | "hammer"
-  | "lance"
-  | "long-sword"
-  | "short-sword"
-  | "tachi"
-  | "twin-sword"
-  | "charge-axe"
-  | "gun-lance"
-  | "rod"
-  | "slash-axe"
-  | "whistle"
-  | "bow"
-  | "heavy-bowgun"
-  | "light-bowgun";
+export const WEAPON_TYPES = [
+  "hammer",
+  "lance",
+  "long-sword",
+  "short-sword",
+  "tachi",
+  "twin-sword",
+  "charge-axe",
+  "gun-lance",
+  "rod",
+  "slash-axe",
+  "whistle",
+  "bow",
+  "heavy-bowgun",
+  "light-bowgun",
+] as const;
+export type WeaponType = (typeof WEAPON_TYPES)[number];
 
 /**
  * 属性/异常类型
  */
-export type AttributeType =
-  | "fire"
-  | "water"
-  | "ice"
-  | "elec"
-  | "dragon"
-  | "poison"
-  | "sleep"
-  | "blast"
-  | "paralyse";
+export const ATTRIBUTE_TYPES = [
+  "fire",
+  "water",
+  "ice",
+  "elec",
+  "dragon",
+  "poison",
+  "sleep",
+  "blast",
+  "paralyse",
+] as const;
+export type AttributeType = (typeof ATTRIBUTE_TYPES)[number];
 
 /**
  * 斩味定义
@@ -350,6 +384,25 @@ export interface Weapon {
   takumi?: Takumi;
 }
 
+/* 装备通用 */
+/**
+ * 通用装备类型联合类型
+ */
+export type Equipment = Charm | Armor | Weapon;
+
+/**
+ * 稀有度范围定义
+ */
+export const RARITY_MIN = 1;
+export const RARITY_MAX = 12;
+export const RARITY_RANGES = {
+  low: { min: 1, max: 4 },
+  high: { min: 5, max: 8 },
+  master: { min: 9, max: 12 },
+  all: { min: 1, max: 12 },
+} as const;
+export type RarityRangeKey = keyof typeof RARITY_RANGES;
+
 /* 其它类型 */
 /**
  * 排序方向
@@ -373,20 +426,17 @@ export interface AppSettings {
 /**
  * 支持的数据库ID类型
  */
-export type DataId =
-  | "skills"
-  | "accessories"
-  | "armor"
-  | "charms"
-  | "weapons"
-  | "settings";
+export const ALL_DATA_IDS = [
+  "skills",
+  "accessories",
+  "armor",
+  "weapons",
+  "charms",
+  "settings",
+] as const;
+export type DataId = (typeof ALL_DATA_IDS)[number];
 
 /**
  * 各种数据类型的联合类型
  */
 export type DataItem = Skill | Accessory | Armor | Charm | Weapon | AppSettings;
-
-/**
- * 通用装备类型联合类型
- */
-export type Equipment = Charm | Armor | Weapon;

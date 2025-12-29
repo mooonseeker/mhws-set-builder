@@ -13,7 +13,7 @@ import type {
   EquivalentSlots,
   CharmValidationStatus,
 } from "@/types";
-import { KEY_SKILL_VALUE_THRESHOLD } from "@/types/constants";
+import { KEY_SKILL_VALUE_THRESHOLD } from "@/types";
 
 type SlotComparisonResult = "superior" | "inferior" | "equal" | "incomparable";
 

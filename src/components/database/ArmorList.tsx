@@ -23,11 +23,8 @@ import {
 import { useArmor, useSkills, useMediaQuery } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { DataStorage } from "@/services/DataStorage";
-import {
-  DEFAULT_ARMOR_SERIES_PER_PAGE,
-  RARITY_FILTERS,
-  RARITY_RANGES,
-} from "@/types/constants";
+import { DEFAULT_ARMOR_SERIES_PER_PAGE, RARITY_FILTERS } from "@/constants";
+import { RARITY_RANGES } from "@/types";
 import { groupArmorBySeries } from "@/utils/armor-grouper";
 
 import type {

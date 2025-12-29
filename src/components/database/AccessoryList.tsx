@@ -23,7 +23,7 @@ import {
 import { useAccessories, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { DataStorage } from "@/services/DataStorage";
-import { DEFAULT_ACCESSORIES_PER_PAGE } from "@/types/constants";
+import { DEFAULT_ACCESSORIES_PER_PAGE } from "@/constants";
 
 import type { Accessory, AppSettings, SlotLevel } from "@/types";
 

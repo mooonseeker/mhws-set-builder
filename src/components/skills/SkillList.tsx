@@ -22,10 +22,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useSkills } from "@/hooks";
 import { DataStorage } from "@/services/DataStorage";
-import {
-  DEFAULT_SKILLS_PER_PAGE,
-  SKILL_CATEGORY_LABELS,
-} from "@/types/constants";
+import { DEFAULT_SKILLS_PER_PAGE, SKILL_CATEGORY_LABELS } from "@/constants";
 
 import type { AppSettings, Skill, SkillCategory, SlotLevel } from "@/types";
 

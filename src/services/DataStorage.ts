@@ -10,8 +10,8 @@
  */
 
 import type { DataId, DataItem } from "@/types";
+import { ALL_DATA_IDS } from "@/types";
 import {
-  ALL_DATA_IDS,
   DATABASE_VERSION,
   DATABASE_VERSION_KEY,
   DEFAULT_ARMOR_SERIES_PER_PAGE,
@@ -19,7 +19,7 @@ import {
   DEFAULT_SKILLS_PER_PAGE,
   DEFAULT_ACCESSORIES_PER_PAGE,
   STORAGE_KEYS,
-} from "@/types/constants";
+} from "@/constants";
 import { type MigrationStats, reconcileData } from "@/utils/data-io";
 
 /**

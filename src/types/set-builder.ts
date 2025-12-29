@@ -1,16 +1,22 @@
-import type {
-  Accessory,
-  Armor,
-  Charm,
-  Skill,
-  SkillWithLevel,
-  Slot,
-  Weapon,
-  ArmorType,
+import {
+  type Accessory,
+  type Armor,
+  type Charm,
+  type Skill,
+  type SkillWithLevel,
+  type Slot,
+  type Weapon,
+  type ArmorType,
+  ARMOR_TYPES,
 } from "./core";
 
 /** 装备栏类型 */
-export type EquipmentCellType = ArmorType | "weapon" | "charm";
+export const EQUIPMENT_CELL_TYPES = [
+  ...ARMOR_TYPES,
+  "weapon",
+  "charm",
+] as const;
+export type EquipmentCellType = (typeof EQUIPMENT_CELL_TYPES)[number];
 
 export type SelectionContext =
   | { type: "equipment"; equipmentType: EquipmentCellType }

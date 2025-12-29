@@ -21,7 +21,8 @@ import {
 import { useWeapon } from "@/hooks";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
-import { RARITY_FILTERS, RARITY_RANGES, WEAPON_TYPES } from "@/types/constants";
+import { RARITY_FILTERS } from "@/constants";
+import { WEAPON_TYPES, RARITY_RANGES } from "@/types";
 import { groupWeaponsIntoRows } from "@/utils/weapon-grouper";
 
 import type { Weapon, WeaponType } from "@/types";

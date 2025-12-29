@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SKILL_CATEGORY_LABELS, SLOT_LEVEL_LABELS } from "@/types/constants";
+import { SKILL_CATEGORY_LABELS, SLOT_LEVEL_LABELS } from "@/constants";
 
 import type { Skill, SkillCategory, SlotLevel } from "@/types";
 

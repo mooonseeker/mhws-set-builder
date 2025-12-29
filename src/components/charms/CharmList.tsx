@@ -22,7 +22,7 @@ import {
 import { useCharms, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { DataStorage } from "@/services/DataStorage";
-import { DEFAULT_CHARMS_PER_PAGE } from "@/types/constants";
+import { DEFAULT_CHARMS_PER_PAGE } from "@/constants";
 import { sortCharms } from "@/utils";
 
 import { CharmTable } from "./CharmTable";

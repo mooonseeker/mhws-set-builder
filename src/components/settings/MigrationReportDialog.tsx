@@ -33,6 +33,7 @@ export function MigrationReportDialog() {
     armor: "防具",
     weapons: "武器",
     charms: "护石",
+    settings: "设置",
   };
 
   return (

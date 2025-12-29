@@ -1,5 +1,5 @@
 import { ThemeToggle } from "@/components/layout";
-import { DATABASE_VERSION } from "@/types/constants";
+import { DATABASE_VERSION } from "@/constants";
 
 /**
  * 应用头部组件
