@@ -6,12 +6,24 @@
 
 import { Award, ChevronDown, ChevronsDown, List } from "lucide-react";
 
-import type { SkillCategory, SlotLevel, WeaponType } from "./index";
+import type { DataId, SkillCategory, SlotLevel, WeaponType } from "./index";
+
+/**
+ * 所有数据类型ID列表
+ */
+export const ALL_DATA_IDS: DataId[] = [
+  "skills",
+  "accessories",
+  "armor",
+  "weapons",
+  "charms",
+  "settings",
+];
 
 /**
  * 应用名称
  */
-export const APP_NAME = "mhws-charm-manager";
+export const APP_NAME = "mhws-set-builder";
 
 /**
  * 稀有度最小值

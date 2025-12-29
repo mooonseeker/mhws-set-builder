@@ -11,6 +11,7 @@
 
 import type { DataId, DataItem } from "@/types";
 import {
+  ALL_DATA_IDS,
   DATABASE_VERSION,
   DATABASE_VERSION_KEY,
   DEFAULT_ARMOR_SERIES_PER_PAGE,
@@ -187,16 +188,7 @@ class DataStorageService {
    * 加载现有数据到缓存
    */
   private async loadExistingData(): Promise<void> {
-    const dataIds: DataId[] = [
-      "skills",
-      "accessories",
-      "armor",
-      "weapons",
-      "charms",
-      "settings",
-    ];
-
-    for (const id of dataIds) {
+    for (const id of ALL_DATA_IDS) {
       const key = STORAGE_KEYS[id];
       const stored = localStorage.getItem(key);
 
@@ -221,16 +213,7 @@ class DataStorageService {
    * 加载所有初始数据
    */
   private async loadInitialData(): Promise<void> {
-    const dataIds: DataId[] = [
-      "skills",
-      "accessories",
-      "armor",
-      "weapons",
-      "charms",
-      "settings",
-    ];
-
-    for (const id of dataIds) {
+    for (const id of ALL_DATA_IDS) {
       await this.loadInitialDataForType(id);
     }
   }
@@ -305,17 +288,9 @@ class DataStorageService {
     );
 
     this.migrationReport = new Map<DataId, MigrationStats>();
-    const dataIds: DataId[] = [
-      "skills",
-      "accessories",
-      "armor",
-      "weapons",
-      "charms",
-      "settings",
-    ];
 
     try {
-      for (const id of dataIds) {
+      for (const id of ALL_DATA_IDS) {
         // 1. 获取本地旧数据
         const key = STORAGE_KEYS[id];
         const stored = localStorage.getItem(key);
