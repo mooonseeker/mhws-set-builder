@@ -8,7 +8,7 @@ import {
 import { useCharms } from "@/hooks";
 import { sortCharms } from "@/utils";
 
-import { EquipmentCard } from "../equipments/EquipmentCard";
+import { EquipmentCard } from "@/components/entities";
 
 import type { Charm } from "@/types";
 /**

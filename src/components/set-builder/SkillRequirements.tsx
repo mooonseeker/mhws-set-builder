@@ -1,7 +1,7 @@
 import { Search } from "lucide-react";
 import { useMemo } from "react";
 
-import { SkillSelector } from "@/components/skills";
+import { SkillSelector } from "@/components/entities/";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSetBuilder, useSkills } from "@/hooks";

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-import { EquipmentCard } from "@/components/equipments/EquipmentCard";
+import { EquipmentCard } from "@/components/entities/";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {

@@ -1,7 +1,7 @@
 import { List, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 
-import { SkillItem } from "@/components/skills/SkillItem";
+import { SkillItem } from "@/components/entities/";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

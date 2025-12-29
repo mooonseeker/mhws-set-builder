@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { SkillItem } from "@/components/skills";
+import { SkillItem } from "@/components/entities/";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSkills } from "@/hooks";
 import { compareSkills } from "@/utils";

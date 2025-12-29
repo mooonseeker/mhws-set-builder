@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 
-import { SkillSelector } from "@/components/skills";
+import { SkillSelector } from "@/components/entities/";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";

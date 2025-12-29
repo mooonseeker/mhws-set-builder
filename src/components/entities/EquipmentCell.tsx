@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-import { EquipmentCard } from "./EquipmentCard";
+import { EquipmentCard } from "@/components/entities";
 
 import type { Slot, Weapon, Armor, Charm } from "@/types";
 import type { EquipmentCellType, SlottedEquipment } from "@/types/set-builder";

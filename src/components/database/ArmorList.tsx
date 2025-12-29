@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 
 import { ErrorMessage, Loading } from "@/components/common";
-import { EquipmentCard } from "@/components/equipments";
+import { EquipmentCard } from "@/components/entities";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

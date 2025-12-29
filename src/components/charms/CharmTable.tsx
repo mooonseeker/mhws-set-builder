@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronUp, Filter, Pencil, Trash2 } from "lucide-react";
 
-import { SkillItem } from "@/components/skills/SkillItem";
+import { SkillItem } from "@/components/entities/";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

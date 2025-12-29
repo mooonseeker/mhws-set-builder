@@ -1,4 +1,4 @@
-import { SkillItem } from "@/components/skills";
+import { SkillItem } from "@/components/entities/";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 

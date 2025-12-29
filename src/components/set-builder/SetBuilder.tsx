@@ -4,7 +4,7 @@ import {
   AccessorySelector,
   EquipmentCell,
   EquipmentSelector,
-} from "@/components/equipments";
+} from "@/components/entities";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useSetBuilder } from "@/hooks";
 

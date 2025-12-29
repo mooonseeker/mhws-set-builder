@@ -15,8 +15,8 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useAccessories, useArmor, useSkills } from "@/hooks";
 import { generateSkillId } from "@/utils";
 
-import { SkillForm } from "../skills/SkillForm";
-import { SkillList } from "../skills/SkillList";
+import { SkillForm } from "./SkillForm";
+import { SkillList } from "./SkillList";
 import { AccessoryForm } from "./AccessoryForm";
 import { AccessoryList } from "./AccessoryList";
 import { ArmorList } from "./ArmorList";

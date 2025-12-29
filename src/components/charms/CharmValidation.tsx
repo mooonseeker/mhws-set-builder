@@ -1,7 +1,7 @@
 import { AlertTriangle, CheckCircle, Info } from "lucide-react";
 import { useMemo } from "react";
 
-import { EquipmentCard } from "../equipments/EquipmentCard";
+import { EquipmentCard } from "@/components/entities";
 
 import type { LucideIcon } from "lucide-react";
 import type { CharmValidationResult, CharmValidationStatus } from "@/types";
