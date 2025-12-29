@@ -276,7 +276,7 @@ function validateCharm(newCharm, existingCharms):
 
   // Phase 2: 确定接受理由 (Acceptance Status)
   status = 'ACCEPTED'
-  
+
   if newCharm.keySkillValue > max(existingCharms.keySkillValue):
     status = 'ACCEPTED_BY_MAX_VALUE'
   else if newCharm.equivalentSlots is strictly superior to max(existingCharms.equivalentSlots):
@@ -368,13 +368,13 @@ graph TD
     subgraph "User Interaction"
         A[用户操作] --> B[组件事件处理]
     end
-    
+
     subgraph "State Management (Context)"
         B --> C[调用Context Action]
         C --> D[Reducer处理Action]
         D --> E[更新State]
     end
-    
+
     subgraph "Side Effects"
        E --> F[自动保存到LocalStorage]
     end
