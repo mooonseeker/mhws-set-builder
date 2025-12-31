@@ -30,6 +30,17 @@ export const STORAGE_KEYS = {
 } as const;
 
 /**
+ * 差异化数据存储的键名映射
+ */
+export const STORAGE_KEYS_DELTA = {
+  skills: `${APP_NAME}-skills-delta`,
+  accessories: `${APP_NAME}-accessories-delta`,
+  armor: `${APP_NAME}-armor-delta`,
+  weapons: `${APP_NAME}-weapons-delta`,
+  charms: `${APP_NAME}-charms-delta`,
+} as const;
+
+/**
  * 默认设置：技能列表每页显示数量
  */
 export const DEFAULT_SKILLS_PER_PAGE = 16;

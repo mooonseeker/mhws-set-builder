@@ -7,7 +7,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useReducer, useRef } from "react";
 
-import { DataStorage } from "@/services/DataStorage";
+import { DataStorage } from "@/services/storage";
 import type { Accessory } from "@/types";
 
 import { AccessoryContext } from "./AccessoryContext";
@@ -115,11 +115,9 @@ export function AccessoryProvider({ children }: { children: ReactNode }) {
     }
 
     if (!state.loading) {
-      try {
-        DataStorage.saveData("accessories", state.accessories);
-      } catch (error) {
+      DataStorage.saveData("accessories", state.accessories).catch((error) => {
         console.error("保存装饰品数据失败:", error);
-      }
+      });
     }
   }, [state.accessories, state.loading]);
 

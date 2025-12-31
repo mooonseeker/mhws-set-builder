@@ -7,7 +7,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useReducer, useRef } from "react";
 
-import { DataStorage } from "@/services/DataStorage";
+import { DataStorage } from "@/services/storage";
 import type { Armor } from "@/types";
 
 import { ArmorContext } from "./ArmorContext";
@@ -112,11 +112,9 @@ export function ArmorProvider({ children }: { children: ReactNode }) {
     }
 
     if (!state.loading) {
-      try {
-        DataStorage.saveData("armor", state.armor);
-      } catch (error) {
+      DataStorage.saveData("armor", state.armor).catch((error) => {
         console.error("保存防具数据失败:", error);
-      }
+      });
     }
   }, [state.armor, state.loading]);
 

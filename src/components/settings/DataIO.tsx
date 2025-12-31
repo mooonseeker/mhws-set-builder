@@ -17,8 +17,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DataStorage } from "@/services/DataStorage";
-import { exportData, importData, validateData } from "@/utils/data-io";
+import { DataStorage } from "@/services/storage";
+import { exportData, importData } from "@/services/storage/transfer";
+import { validateData } from "@/utils/data-io";
 
 import type { DataId } from "@/types";
 /**

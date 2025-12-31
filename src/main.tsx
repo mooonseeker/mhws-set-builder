@@ -3,7 +3,7 @@ import "./index.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
-import { DataStorage } from "@/services/DataStorage";
+import { DataStorage } from "@/services/storage";
 
 import App from "./App.tsx";
 

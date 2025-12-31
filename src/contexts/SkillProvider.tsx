@@ -7,7 +7,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useReducer, useRef } from "react";
 
-import { DataStorage } from "@/services/DataStorage";
+import { DataStorage } from "@/services/storage";
 import type { Skill } from "@/types";
 
 import { SkillContext } from "./SkillContext";
@@ -106,11 +106,9 @@ export function SkillProvider({ children }: { children: ReactNode }) {
     }
 
     if (!state.loading) {
-      try {
-        DataStorage.saveData("skills", state.skills);
-      } catch (error) {
+      DataStorage.saveData("skills", state.skills).catch((error) => {
         console.error("保存技能数据失败:", error);
-      }
+      });
     }
   }, [state.skills, state.loading]);
 

@@ -37,7 +37,7 @@ export {
 export { compareSkills } from "./skill-sorter";
 
 // 通用数据IO工具
-export { exportData, importData, validateData } from "./data-io";
+export { validateData } from "./data-io";
 
 // 通用数据IO类型
-export type { ExportPayload, ValidationResult } from "./data-io";
+export type { ValidationResult } from "./data-io";

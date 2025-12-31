@@ -21,7 +21,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useSkills } from "@/hooks";
-import { DataStorage } from "@/services/DataStorage";
+import { DataStorage } from "@/services/storage";
 import { DEFAULT_SKILLS_PER_PAGE, SKILL_CATEGORY_LABELS } from "@/constants";
 
 import type { AppSettings, Skill, SkillCategory, SlotLevel } from "@/types";

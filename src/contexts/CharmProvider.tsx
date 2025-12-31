@@ -7,7 +7,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useReducer } from "react";
 
-import { DataStorage } from "@/services/DataStorage";
+import { DataStorage } from "@/services/storage";
 import type { Charm } from "@/types";
 
 import { CharmContext } from "./CharmContext";
@@ -115,11 +115,9 @@ export function CharmProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    try {
-      DataStorage.saveData("charms", state.charms);
-    } catch (error) {
+    DataStorage.saveData("charms", state.charms).catch((error) => {
       console.error("保存护石数据失败:", error);
-    }
+    });
   }, [state.charms, state.loading]);
 
   /**

@@ -1,5 +1,5 @@
 import { cloneDeep } from "lodash-es";
-import { DataStorage } from "@/services/DataStorage";
+import { DataStorage } from "@/services/storage";
 import type { AppSettings, Armor, SlotLevel } from "@/types";
 
 /**
@@ -79,7 +79,7 @@ export async function toggleLimitBreakGlobal(enable: boolean): Promise<void> {
     // 开启：读取当前防具 -> 升级 -> 保存
     const currentArmors = DataStorage.loadData<Armor>("armor");
     const upgradedArmors = currentArmors.map(upgradeArmor);
-    DataStorage.saveData("armor", upgradedArmors);
+    DataStorage.saveData("armor", upgradedArmors).catch(console.error);
   } else {
     // 关闭：重置防具数据回初始状态
     await DataStorage.resetData("armor");
@@ -87,5 +87,5 @@ export async function toggleLimitBreakGlobal(enable: boolean): Promise<void> {
 
   // 3. 更新设置状态
   settings.enableLimitBreak = enable;
-  DataStorage.saveData("settings", [settings]);
+  DataStorage.saveData("settings", [settings]).catch(console.error);
 }

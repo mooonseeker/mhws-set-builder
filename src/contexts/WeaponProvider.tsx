@@ -7,7 +7,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useReducer, useRef } from "react";
 
-import { DataStorage } from "@/services/DataStorage";
+import { DataStorage } from "@/services/storage";
 import type { Weapon } from "@/types";
 
 import { WeaponContext } from "./WeaponContext";
@@ -112,11 +112,9 @@ export function WeaponProvider({ children }: { children: ReactNode }) {
     }
 
     if (!state.loading) {
-      try {
-        DataStorage.saveData("weapons", state.weapons);
-      } catch (error) {
+      DataStorage.saveData("weapons", state.weapons).catch((error) => {
         console.error("保存武器数据失败:", error);
-      }
+      });
     }
   }, [state.weapons, state.loading]);
 

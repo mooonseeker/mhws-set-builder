@@ -1,21 +1,9 @@
 /**
  * MHWS护石管理器 - 通用数据IO工具
  *
- * 提供与具体数据类型无关的、统一的数据导入、导出、对比和验证功能。
+ * 提供与具体数据类型无关的、统一的数据对比和验证功能。
  */
-import type { DataId, DataItem } from "@/types";
-import { DataStorage } from "@/services/DataStorage";
-import { DATABASE_VERSION } from "@/constants";
-
-/**
- * 统一的导出数据结构
- */
-export interface ExportPayload {
-  version: string;
-  exportedAt: string;
-  dataType: DataId | "all";
-  data: DataItem[];
-}
+import type { DataItem } from "@/types";
 
 /**
  * 数据迁移统计信息
@@ -45,6 +33,105 @@ export interface ValidationResult {
   userPrivate: number;
   // 详细的错误/差异描述
   errors: string[];
+}
+
+/**
+ * 描述一组数据相对于其基准版本的变化。
+ * T 必须是包含 `id: string` 的对象类型。
+ */
+export interface DataDelta<T extends { id: string }> {
+  /**
+   * 新增的条目。
+   * 这些是不存在于基准数据中的全新条目。
+   */
+  added: T[];
+
+  /**
+   * 被修改的条目。
+   * 这些条目的 `id` 存在于基准数据中，但内容已发生变化。
+   * 我们存储完整的对象以简化 Patch 逻辑。
+   */
+  modified: T[];
+
+  /**
+   * 被删除的条目ID。
+   * 这些条目的 `id` 存在于基准数据中，但已被用户删除。
+   * 只存储 ID 以节省空间。
+   */
+  deleted: string[];
+}
+
+/**
+ * Diff 算法: 对比基准数据和当前数据，生成 DataDelta 对象。
+ *
+ * @param baseData - 基准数据数组
+ * @param currentData - 当前数据数组
+ * @returns DataDelta<T> - 描述变化的差异对象
+ */
+export function createDiff<T extends { id: string }>(
+  baseData: T[],
+  currentData: T[],
+): DataDelta<T> {
+  const baseMap = new Map(baseData.map((item) => [item.id, item]));
+  const currentMap = new Map(currentData.map((item) => [item.id, item]));
+
+  const added: T[] = [];
+  const modified: T[] = [];
+  const deleted: string[] = [];
+
+  // 遍历当前数据，查找新增和修改项
+  for (const currentItem of currentData) {
+    const baseItem = baseMap.get(currentItem.id);
+    if (!baseItem) {
+      // 在基准数据中不存在 -> 新增
+      added.push(currentItem);
+    } else if (JSON.stringify(currentItem) !== JSON.stringify(baseItem)) {
+      // 存在但内容不同 -> 修改
+      modified.push(currentItem);
+    }
+  }
+
+  // 遍历基准数据，查找删除项
+  for (const baseItem of baseData) {
+    if (!currentMap.has(baseItem.id)) {
+      // 在当前数据中不存在 -> 删除
+      deleted.push(baseItem.id);
+    }
+  }
+
+  return { added, modified, deleted };
+}
+
+/**
+ * Patch 算法: 将 DataDelta 应用于基准数据，生成合并后的完整数据。
+ *
+ * @param baseData - 基准数据数组
+ * @param delta - 描述变化的差异对象
+ * @returns T[] - 合并后的完整数据数组
+ */
+export function patch<T extends { id: string }>(
+  baseData: T[],
+  delta: DataDelta<T>,
+): T[] {
+  // 1. 从基准数据开始
+  const patchedMap = new Map(baseData.map((item) => [item.id, item]));
+
+  // 2. 应用删除
+  for (const id of delta.deleted) {
+    patchedMap.delete(id);
+  }
+
+  // 3. 应用修改
+  for (const item of delta.modified) {
+    patchedMap.set(item.id, item);
+  }
+
+  // 4. 应用新增
+  for (const item of delta.added) {
+    patchedMap.set(item.id, item);
+  }
+
+  return Array.from(patchedMap.values());
 }
 
 /**
@@ -142,83 +229,4 @@ export function validateData(
     userPrivate: stats.userRetainedIds.length,
     errors,
   };
-}
-
-/**
- * 将任何类型的数据导出为JSON文件
- *
- * @param id - 要导出的数据ID
- */
-export function exportData(id: DataId): void {
-  const data = DataStorage.loadData(id);
-  const payload: ExportPayload = {
-    version: DATABASE_VERSION,
-    exportedAt: new Date().toISOString(),
-    dataType: id,
-    data,
-  };
-
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {
-    type: "application/json",
-  });
-
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-
-  // 根据数据类型生成文件名
-  const dateStr = new Date().toISOString().split("T")[0];
-  const fileName = `mhws-charms-${id}-${dateStr}.json`;
-
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-}
-
-/**
- * 从JSON文件导入数据，并进行基础验证
- *
- * @param file - 要导入的JSON文件
- * @throws 当文件读取失败或格式不正确时抛出错误
- */
-export async function importData(file: File): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      try {
-        const content = e.target?.result as string;
-        const payload = JSON.parse(content) as ExportPayload;
-
-        // 基础结构验证
-        if (
-          !payload.version ||
-          !payload.dataType ||
-          !Array.isArray(payload.data)
-        ) {
-          throw new Error(
-            "无效的数据结构: 缺少 version, dataType 或 data 字段",
-          );
-        }
-
-        // 将数据保存到 DataStorage
-        DataStorage.saveData(payload.dataType as DataId, payload.data);
-        resolve();
-      } catch (error) {
-        reject(
-          new Error(
-            `导入失败：文件格式不正确或内容无效。(${error instanceof Error ? error.message : String(error)})`,
-          ),
-        );
-      }
-    };
-
-    reader.onerror = () => {
-      reject(new Error("读取文件失败"));
-    };
-
-    reader.readAsText(file);
-  });
 }

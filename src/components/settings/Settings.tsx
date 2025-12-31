@@ -14,7 +14,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DataStorage } from "@/services/DataStorage";
+import { DataStorage } from "@/services/storage";
 import {
   DEFAULT_ACCESSORIES_PER_PAGE,
   DEFAULT_ARMOR_SERIES_PER_PAGE,
@@ -67,7 +67,7 @@ export function Settings() {
   ) => {
     const newSettings = { ...settings, [key]: value };
     setSettings(newSettings);
-    DataStorage.saveData("settings", [newSettings]);
+    DataStorage.saveData("settings", [newSettings]).catch(console.error);
   };
 
   // 重置数据

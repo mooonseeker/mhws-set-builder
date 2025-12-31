@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useCharms, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
-import { DataStorage } from "@/services/DataStorage";
+import { DataStorage } from "@/services/storage";
 import { DEFAULT_CHARMS_PER_PAGE } from "@/constants";
 import { sortCharms } from "@/utils";
 

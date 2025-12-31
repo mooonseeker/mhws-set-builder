@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useAccessories, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
-import { DataStorage } from "@/services/DataStorage";
+import { DataStorage } from "@/services/storage";
 import { DEFAULT_ACCESSORIES_PER_PAGE } from "@/constants";
 
 import type { Accessory, AppSettings, SlotLevel } from "@/types";

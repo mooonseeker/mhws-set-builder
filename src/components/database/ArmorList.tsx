@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useArmor, useSkills, useMediaQuery } from "@/hooks";
 import { cn } from "@/lib/utils";
-import { DataStorage } from "@/services/DataStorage";
+import { DataStorage } from "@/services/storage";
 import { DEFAULT_ARMOR_SERIES_PER_PAGE, RARITY_FILTERS } from "@/constants";
 import { RARITY_RANGES, type RarityRangeKey } from "@/types";
 import { groupArmorBySeries } from "@/utils/armor-grouper";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DataStorage } from "@/services/DataStorage";
+import { DataStorage } from "@/services/storage";
 import {
   Dialog,
   DialogContent,
