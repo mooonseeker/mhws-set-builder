@@ -5,6 +5,8 @@ import type {
   Armor,
   ArmorType,
   AttributeType,
+  Charm,
+  EquivalentSlots,
   Resistance,
   Sharpness,
   Skill,
@@ -54,6 +56,7 @@ export const databaseMetaSchema = z
     accessoriesData: z.string().min(1),
     armorData: z.string().min(1),
     weaponsData: z.string().min(1),
+    charmsData: z.string().min(1).optional(),
 
     // optional fields (kept for forward compatibility)
     dataType: z.string().optional(),
@@ -206,6 +209,26 @@ function parseOptionalFixedLengthTuple(
     );
   }
   return arr;
+}
+
+export function parseEquivalentSlots(value: string): EquivalentSlots {
+  const parts = splitCsvList(value);
+  if (parts.length !== 6) {
+    throw new Error(
+      `Invalid equivalentSlots: expected 6 parts, got ${parts.length}`,
+    );
+  }
+  const numbers = parts.map((p, idx) =>
+    parseIntStrict(p, `equivalentSlots[${idx}]`),
+  );
+  return {
+    weaponSlot1: numbers[0],
+    weaponSlot2: numbers[1],
+    weaponSlot3: numbers[2],
+    armorSlot1: numbers[3],
+    armorSlot2: numbers[4],
+    armorSlot3: numbers[5],
+  };
 }
 
 /**
@@ -386,4 +409,33 @@ export const weaponRowSchema: z.ZodType<Weapon> = z
     subattributeValue: row.subattributeValue,
     sharpness: row.sharpness,
     takumi: row.takumi,
+  }));
+
+export const charmRowSchema: z.ZodType<Charm> = z
+  .object({
+    id: z.string(),
+    name: z.string(),
+    rarity: intField("rarity"),
+    createdAt: z.string(),
+    keySkillValue: intField("keySkillValue"),
+    skills: z
+      .string()
+      .optional()
+      .transform((v) => parseSkillPairs(v)),
+    slots: z
+      .string()
+      .optional()
+      .transform((v) => parseSlotList(v, "armor")),
+    equivalentSlots: z.string().transform((v) => parseEquivalentSlots(v)),
+  })
+  .passthrough()
+  .transform((row) => ({
+    id: row.id,
+    name: row.name,
+    rarity: row.rarity,
+    skills: row.skills,
+    slots: row.slots,
+    equivalentSlots: row.equivalentSlots,
+    keySkillValue: row.keySkillValue,
+    createdAt: row.createdAt,
   }));

@@ -17,6 +17,9 @@ try {
   console.log("Generating weapons...");
   execSync("ts-node scripts/generate-initial-weapons.ts", { stdio: "inherit" });
 
+  console.log("Generating charms...");
+  execSync("ts-node scripts/generate-initial-charms.ts", { stdio: "inherit" });
+
   console.log("Database generation completed successfully!");
 } catch (error) {
   console.error("Error during database generation:", error);
