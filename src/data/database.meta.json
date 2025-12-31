@@ -7,6 +7,8 @@
   "accessoriesLastModified": "2025-10-30T01:19:08.257Z",
   "armorData": "./armor.csv",
   "armorLastModified": "2025-12-26T12:10:42.828Z",
-  "weaponsData": "./weapon.csv",
-  "weaponsLastModified": "2025-12-26T16:51:49.363Z"
+  "weaponsData": "./weapons.csv",
+  "weaponsLastModified": "2025-12-26T16:51:49.363Z",
+  "charmsData": "./charms.csv",
+  "charmsLastModified": "2025-12-26T16:51:49.363Z"
 }

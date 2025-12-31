@@ -1,16 +1,12 @@
 {
   "name": "mhws-set-builder",
   "private": true,
-  "version": "1.2.2",
+  "version": "1.2.3",
   "type": "module",
   "scripts": {
     "dev": "npm run generate && vite",
     "build": "npm run generate && tsc -b && vite build",
     "generate": "ts-node scripts/generate-database.ts",
-    "generate:skills": "ts-node scripts/generate-initial-skills.ts",
-    "generate:acc": "ts-node scripts/generate-initial-accessories.ts",
-    "generate:armor": "ts-node scripts/generate-initial-armor.ts",
-    "generate:weapons": "ts-node scripts/generate-initial-weapons.ts",
     "lint": "eslint .",
     "preview": "vite preview"
   },

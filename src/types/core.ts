@@ -175,6 +175,7 @@ export interface GroupedArmor {
  */
 export interface Charm {
   id: string;
+  name: string;
   rarity: number;
   skills: SkillWithLevel[];
   slots: Slot[];
