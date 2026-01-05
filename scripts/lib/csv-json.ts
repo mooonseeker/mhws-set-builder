@@ -1,8 +1,17 @@
+/**
+ * @fileoverview Provides a generic utility to generate JSON data from a CSV file.
+ * It uses a metadata file to locate the CSV, validates the data using Zod schemas,
+ * and handles errors gracefully.
+ */
+
 import csv from "csv-parser";
 import fs from "fs";
 import path from "path";
 import type { ZodError, ZodIssue, ZodType } from "zod";
 
+/**
+ * A simplified shape for a Zod issue for consistent error reporting.
+ */
 interface IssueShape {
   path: string;
   code: string;
@@ -12,6 +21,11 @@ interface IssueShape {
   options?: unknown;
 }
 
+/**
+ * Formats a ZodIssue into a simplified, consistent shape.
+ * @param issue The Zod issue to format.
+ * @returns A formatted issue object.
+ */
 function formatIssue(issue: ZodIssue): IssueShape {
   const base: IssueShape = {
     path: issue.path.length ? issue.path.join(".") : "(root)",
@@ -28,10 +42,19 @@ function formatIssue(issue: ZodIssue): IssueShape {
   return base;
 }
 
+/**
+ * Formats a ZodError into an array of simplified issue shapes.
+ * @param error The ZodError to format.
+ * @returns An array of formatted issue objects.
+ */
 function formatZodError(error: ZodError): IssueShape[] {
   return error.issues.map(formatIssue);
 }
 
+/**
+ * Custom error class for handling errors during CSV-to-JSON processing.
+ * It includes contextual information like the script name, file path, and line number.
+ */
 export class CsvJsonError extends Error {
   public readonly scriptName: string;
   public readonly filePath: string;
@@ -57,19 +80,35 @@ export class CsvJsonError extends Error {
   }
 }
 
+/**
+ * Options for the `generateFromCsv` function.
+ * @template TItem The type of a single item parsed from a CSV row.
+ * @template TMeta The type of the metadata object.
+ */
 export interface GenerateFromCsvOptions<TItem, TMeta> {
+  /** The name of the script calling this function, for error reporting. */
   scriptName: string;
+  /** The path to the JSON metadata file. */
   metaFilePath: string;
+  /** The Zod schema for validating the metadata file. */
   metaSchema: ZodType<TMeta>;
+  /** The Zod schema for validating each row of the CSV file. */
   rowSchema: ZodType<TItem>;
   /**
-   * Resolve CSV path from parsed meta.
-   *
-   * The returned path can be relative; it will be resolved against metaFile's directory.
+   * A function that resolves the CSV file path from the parsed metadata.
+   * The returned path can be relative; it will be resolved against the metaFile's directory.
    */
   getCsvPathFromMeta: (meta: TMeta) => string;
 }
 
+/**
+ * Generates an array of strongly-typed items from a CSV file.
+ * @template TItem The type of a single item parsed from a CSV row.
+ * @template TMeta The type of the metadata object.
+ * @param options The configuration options for the generation process.
+ * @returns A promise that resolves to an object containing the parsed metadata,
+ *   the path to the CSV file, and the array of parsed items.
+ */
 export async function generateFromCsv<TItem, TMeta>(
   options: GenerateFromCsvOptions<TItem, TMeta>,
 ): Promise<{ meta: TMeta; csvFilePath: string; items: TItem[] }> {
@@ -81,7 +120,7 @@ export async function generateFromCsv<TItem, TMeta>(
     getCsvPathFromMeta,
   } = options;
 
-  // 1) meta
+  // 1. Read and parse the metadata file.
   let meta: TMeta;
   try {
     const metaText = fs.readFileSync(metaFilePath, "utf-8");
@@ -101,20 +140,20 @@ export async function generateFromCsv<TItem, TMeta>(
     });
   }
 
-  // 2) csv path
+  // 2. Resolve the CSV file path from the metadata.
   const csvPathFromMeta = getCsvPathFromMeta(meta);
   const csvFilePath = path.resolve(path.dirname(metaFilePath), csvPathFromMeta);
 
-  // 3) stream csv rows -> parse -> collect
+  // 3. Stream, parse, and validate CSV rows.
   const items: TItem[] = [];
   await new Promise<void>((resolve, reject) => {
-    let rowIndex = 0; // data rows only (excluding header)
+    let rowIndex = 0; // Data rows only (excluding header)
 
     fs.createReadStream(csvFilePath, { encoding: "utf8" })
       .pipe(csv())
       .on("data", (row: unknown) => {
         rowIndex += 1;
-        const line = rowIndex + 1; // + header line
+        const line = rowIndex + 1; // Add 1 for the header line
 
         const parsed = rowSchema.safeParse(row);
         if (!parsed.success) {
