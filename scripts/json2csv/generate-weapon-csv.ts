@@ -1,16 +1,29 @@
+/**
+ * @fileoverview
+ * This script processes weapon data from a directory of proprietary JSON formats
+ * (`.user.json` and `.msg.json`) and converts it into a single, standardized CSV file.
+ * It reads all weapon-related files, merges translations, extracts detailed stats for
+ * each weapon, and outputs a comprehensive dataset.
+ *
+ * Before running, ensure the `WEAPON_DATA_DIR` in the "Configuration" section
+ * points to the correct directory containing the source JSON files.
+ */
+
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { cleanValue, cleanText, escapeCsv } from "./utils.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Define paths
+// MARK: Configuration
 const ROOT_DIR = path.resolve(__dirname, "../../");
 const WEAPON_DATA_DIR = path.join(ROOT_DIR, "path/to/weapon-data");
 const OUTPUT_FILE = path.join(ROOT_DIR, "scripts/json2csv/weapon.csv");
+const LANG_INDEX = 13; // Simplified Chinese
 
-// Interfaces
+/** Represents the core data for a single weapon. */
 interface WeaponData {
   _Attack: number;
   _Critical: number;
@@ -29,7 +42,7 @@ interface WeaponData {
   _SkillLevel: number[];
   _SharpnessValList: number[];
   _TakumiValList: number[];
-  // Weapon-specific ID fields
+  // Weapon-specific ID fields, only one will be present for each weapon.
   _Bow?: string;
   _LongSword?: string;
   _ShortSword?: string;
@@ -46,6 +59,7 @@ interface WeaponData {
   _LightBowgun?: string;
 }
 
+/** Represents the nested structure of a weapon data file. */
 interface WeaponDataWrapper {
   "app.user_data.WeaponData": {
     _Values: {
@@ -54,15 +68,18 @@ interface WeaponDataWrapper {
   };
 }
 
+/** Represents a single translation entry in a message file. */
 interface MsgEntry {
   guid: string;
   content: string[];
 }
 
+/** Represents the structure of a message file. */
 interface MsgFile {
   entries: MsgEntry[];
 }
 
+/** Maps raw weapon type strings to standardized slugs. */
 const WEAPON_TYPE_MAP: Record<string, string> = {
   "[1]LIGHT_BOWGUN": "light-bowgun",
   "[2]HEAVY_BOWGUN": "heavy-bowgun",
@@ -80,6 +97,7 @@ const WEAPON_TYPE_MAP: Record<string, string> = {
   "[14]LONG_SWORD": "long-sword",
 };
 
+/** A list of possible keys that hold the unique weapon ID. */
 const WEAPON_ID_KEYS: (keyof WeaponData)[] = [
   "_Bow",
   "_LongSword",
@@ -97,6 +115,7 @@ const WEAPON_ID_KEYS: (keyof WeaponData)[] = [
   "_LightBowgun",
 ];
 
+/** Maps raw attribute strings to standardized slugs. */
 const ATTRIBUTE_MAP: Record<string, string> = {
   NONE: "",
   FIRE: "fire",
@@ -110,26 +129,11 @@ const ATTRIBUTE_MAP: Record<string, string> = {
   PARALYSE: "paralyse",
 };
 
-// Helpers
-const cleanValue = (val: string): string => {
-  if (!val) return "";
-  const match = /^\[-?\d+\](.*)$/.exec(val);
-  return match ? match[1] : val;
-};
-
-const cleanText = (val: string): string => {
-  if (!val) return "";
-  return val.replace(/<[^>]*>/g, "").replace(/[\r\n]+/g, "");
-};
-
-const escapeCsv = (field: string | number): string => {
-  const str = String(field);
-  return `"${str.replace(/"/g, '""')}"`;
-};
-
+/**
+ * The main function to execute the script.
+ */
 const main = () => {
   try {
-    console.log("Reading and processing weapon data...");
     const files = fs.readdirSync(WEAPON_DATA_DIR);
     const userFiles = files.filter(
       (f) => f.includes(".user.") && f.endsWith(".json"),
@@ -138,10 +142,8 @@ const main = () => {
       (f) => f.includes(".msg.") && f.endsWith(".json"),
     );
 
-    // 1. Build Translation Map from all msg files
+    // Build translation map from all message files.
     const translationMap = new Map<string, string>();
-    const LANG_INDEX = 13; // Simplified Chinese
-
     for (const msgFile of msgFiles) {
       const msgContent = fs.readFileSync(
         path.join(WEAPON_DATA_DIR, msgFile),
@@ -155,9 +157,8 @@ const main = () => {
       });
     }
 
-    // 2. Process all user files
+    // Process all weapon data files.
     const allRows: string[][] = [];
-
     for (const userFile of userFiles) {
       const dataContent = fs.readFileSync(
         path.join(WEAPON_DATA_DIR, userFile),
@@ -169,7 +170,6 @@ const main = () => {
         wrapper["app.user_data.WeaponData"]._Values.forEach((v) => {
           const data = v["app.user_data.WeaponData.cData"];
 
-          // Find weapon ID and Type
           let weaponId = "";
           let weaponTypeKey = "";
           for (const key of WEAPON_ID_KEYS) {
@@ -181,10 +181,10 @@ const main = () => {
             }
           }
 
-          if (!weaponId) return;
+          if (!weaponId) return; // Skip if no valid ID found
 
           const name = cleanText(translationMap.get(data._Name) ?? "");
-          if (!name || name.startsWith("#Rejected#")) return;
+          if (!name || name.startsWith("#Rejected#")) return; // Skip invalid entries
 
           const type = WEAPON_TYPE_MAP[weaponTypeKey] ?? "";
           const description = cleanText(
@@ -229,6 +229,7 @@ const main = () => {
               )
             ] ?? "";
           const attributeValue = attribute ? data._AttributeValue : "";
+
           const subattribute =
             ATTRIBUTE_MAP[
               cleanValue(
@@ -266,10 +267,9 @@ const main = () => {
       });
     }
 
-    // 3. Sort and Write CSV
+    // Sort and write to CSV.
     allRows.sort((a, b) => {
-      // Sort by ID in alphabetical order
-      // Since the ID format is "Bow_000", alphabetical order will automatically sort by weapon name first, then by number
+      // Sort by ID alphabetically (e.g., "Bow_001", "Hammer_001").
       return a[0].localeCompare(b[0]);
     });
 

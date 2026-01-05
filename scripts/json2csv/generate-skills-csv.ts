@@ -1,17 +1,28 @@
+/**
+ * @fileoverview
+ * This script processes skill data from proprietary JSON formats (`.user.json` and `.msg.json`)
+ * and converts it into a standardized CSV file. It extracts, translates, and maps data fields,
+ * handling special cases and data cleaning to create a comprehensive skill dataset.
+ *
+ * Before running, ensure the paths in the "Configuration" section are correctly set.
+ */
+
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { cleanValue, cleanText, escapeCsv } from "./utils.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Define paths
+// MARK: Configuration
 const ROOT_DIR = path.resolve(__dirname, "../../");
 const DATA_FILE = path.join(ROOT_DIR, "path/to/SkillCommonData.user.json");
 const MSG_FILE = path.join(ROOT_DIR, "path/to/SkillCommon.msg.json");
 const OUTPUT_FILE = path.join(ROOT_DIR, "scripts/json2csv/skills.csv");
+const LANG_INDEX = 13; // Simplified Chinese
 
-// Interfaces for JSON structures
+/** Represents the nested structure of the main skill data file. */
 interface SkillDataWrapper {
   "app.user_data.SkillCommonData": {
     _Values: {
@@ -20,6 +31,7 @@ interface SkillDataWrapper {
   };
 }
 
+/** Represents the core data for a single skill. */
 interface SkillData {
   _skillId: string;
   _skillName: string;
@@ -29,41 +41,22 @@ interface SkillData {
   _SkillIconType: string;
 }
 
+/** Represents a single translation entry in the message file. */
 interface MsgEntry {
   guid: string;
   content: string[];
 }
 
+/** Represents the structure of the message file. */
 interface MsgFile {
   entries: MsgEntry[];
 }
 
-// Helper to clean strings (remove [number] prefix)
-const cleanValue = (val: string): string => {
-  const match = /^\[-?\d+\](.*)$/.exec(val);
-  return match ? match[1] : val;
-};
-
-// Helper to clean text (remove newlines and tags)
-const cleanText = (val: string): string => {
-  if (!val) return "";
-  // Remove HTML tags
-  let text = val.replace(/<[^>]*>/g, "");
-  // Remove newlines
-  text = text.replace(/[\r\n]+/g, "");
-  return text;
-};
-
-// Helper to escape CSV fields
-const escapeCsv = (field: string | number | boolean): string => {
-  const str = String(field);
-  // Always quote fields to match src/data/skills.csv
-  return `"${str.replace(/"/g, '""')}"`;
-};
-
+/**
+ * The main function to execute the script.
+ */
 const main = () => {
   try {
-    console.log("Reading data files...");
     if (!fs.existsSync(DATA_FILE)) {
       throw new Error(`Data file not found: ${DATA_FILE}`);
     }
@@ -77,21 +70,15 @@ const main = () => {
     const rawData = JSON.parse(dataContent) as SkillDataWrapper[];
     const msgData = JSON.parse(msgContent) as MsgFile;
 
-    // Create a map for translations
-    // Index 13 is for Simplified Chinese as per instructions
-    const LANG_INDEX = 13;
+    // Create a map for translations.
     const translationMap = new Map<string, string>();
-
     msgData.entries.forEach((entry) => {
       if (entry.content && entry.content.length > LANG_INDEX) {
         translationMap.set(entry.guid, entry.content[LANG_INDEX]);
       }
     });
 
-    console.log("Processing skills...");
-
-    // Flatten the data structure
-    // The root is an array, but usually contains one object with the wrapper
+    // Flatten the data structure.
     const skillsList: SkillData[] = [];
     rawData.forEach((wrapper) => {
       const values = wrapper["app.user_data.SkillCommonData"]._Values;
@@ -100,7 +87,7 @@ const main = () => {
       });
     });
 
-    // CSV Header
+    // Process and generate CSV rows.
     const headers = [
       "id",
       "name",
@@ -113,7 +100,6 @@ const main = () => {
       "isKey",
     ];
 
-    // Header row is NOT quoted
     const rows: string[] = [headers.join(",")];
 
     skillsList.forEach((skill) => {
@@ -127,27 +113,29 @@ const main = () => {
       const sortId = skill._SortId;
       let category = cleanValue(skill._skillCategory).toLowerCase();
 
-      // Remove "#Rejected# " prefix from description if present
+      // Clean up rejected/placeholder text
       if (description.startsWith("#Rejected#")) {
         description = description.replace("#Rejected#", "").trim();
       }
 
-      // Skip entries starting with #Rejected# but keep the first one (NONE)
+      // Skip entries that are marked as rejected, but keep the essential "NONE" skill.
       if (name.startsWith("#Rejected#") && id !== "NONE") {
         return;
       }
 
-      // Handle "NONE" skill specifically to match src/data/skills.csv
+      // Default values, can be overridden by specific logic below.
       let maxLevel = 10;
       const accessoryLevel = -1;
       const isKey = false;
 
+      // Handle the "NONE" skill specifically to match existing data format.
       if (id === "NONE") {
-        name = "SkillCommon_0"; // As per src/data/skills.csv
-        description = "占位技能"; // As per src/data/skills.csv
-        maxLevel = 1; // As per src/data/skills.csv
+        name = "SkillCommon_0";
+        description = "占位技能";
+        maxLevel = 1;
       }
 
+      // Normalize category names.
       if (category === "equip") {
         category = "armor";
       }
@@ -173,7 +161,6 @@ const main = () => {
 
     console.log(`Generated ${rows.length - 1} skill rows.`);
 
-    // Ensure directory exists
     const outputDir = path.dirname(OUTPUT_FILE);
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });

@@ -1,17 +1,28 @@
+/**
+ * @fileoverview
+ * This script processes accessory data from proprietary JSON formats (`.user.json` and `.msg.json`)
+ * and converts it into a standardized CSV file. It extracts, transforms, and maps data fields
+ * to create a clean, relational dataset.
+ *
+ * Before running, ensure the paths in the "Configuration" section are correctly set.
+ */
+
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { cleanValue, cleanText, escapeCsv } from "./utils.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Define paths
+// MARK: Configuration
 const ROOT_DIR = path.resolve(__dirname, "../../");
 const DATA_FILE = path.join(ROOT_DIR, "path/to/AccessoryData.user.json");
 const MSG_FILE = path.join(ROOT_DIR, "path/to/Accessory.msg.json");
 const OUTPUT_FILE = path.join(ROOT_DIR, "scripts/json2csv/accessories.csv");
+const LANG_INDEX = 13; // Simplified Chinese
 
-// Interfaces for JSON structures
+/** Represents the nested structure of the main data file. */
 interface AccessoryDataWrapper {
   "app.user_data.AccessoryData": {
     _Values: {
@@ -20,12 +31,13 @@ interface AccessoryDataWrapper {
   };
 }
 
+/** Represents the core data for a single accessory. */
 interface AccessoryData {
   _AccessoryId: {
     "app.EquipDef.ACCESSORY_ID_Serializable": { _Value: string };
   };
-  _Name: string; // GUID
-  _Explain: string; // GUID
+  _Name: string; // GUID for the name
+  _Explain: string; // GUID for the description
   _AccessoryType: {
     "app.EquipDef.ACCESSORY_TYPE_Serializable": { _Value: string };
   };
@@ -38,41 +50,22 @@ interface AccessoryData {
   _SkillLevel: number[];
 }
 
+/** Represents a single translation entry in the message file. */
 interface MsgEntry {
   guid: string;
   content: string[];
 }
 
+/** Represents the structure of the message file. */
 interface MsgFile {
   entries: MsgEntry[];
 }
 
-// Helper to clean strings (remove [number] prefix)
-const cleanValue = (val: string): string => {
-  if (!val) return "";
-  const match = /^\[-?\d+\](.*)$/.exec(val);
-  return match ? match[1] : val;
-};
-
-// Helper to clean text (remove newlines and tags)
-const cleanText = (val: string): string => {
-  if (!val) return "";
-  // Remove HTML tags
-  let text = val.replace(/<[^>]*>/g, "");
-  // Remove newlines
-  text = text.replace(/[\r\n]+/g, "");
-  return text;
-};
-
-// Helper to escape CSV fields
-const escapeCsv = (field: string | number | boolean): string => {
-  const str = String(field);
-  return `"${str.replace(/"/g, '""')}"`;
-};
-
+/**
+ * Main function to read, process, and write accessory data to a CSV file.
+ */
 const main = () => {
   try {
-    console.log("Reading data files...");
     if (!fs.existsSync(DATA_FILE)) {
       throw new Error(`Data file not found: ${DATA_FILE}`);
     }
@@ -86,7 +79,6 @@ const main = () => {
     const rawData = JSON.parse(dataContent) as AccessoryDataWrapper[];
     const msgData = JSON.parse(msgContent) as MsgFile;
 
-    const LANG_INDEX = 13; // Simplified Chinese
     const translationMap = new Map<string, string>();
 
     msgData.entries.forEach((entry) => {
@@ -94,8 +86,6 @@ const main = () => {
         translationMap.set(entry.guid, entry.content[LANG_INDEX]);
       }
     });
-
-    console.log("Processing accessories...");
 
     const accessoriesList: AccessoryData[] = [];
     rawData.forEach((wrapper) => {
@@ -133,7 +123,7 @@ const main = () => {
 
       const sortID = acc._SortId;
 
-      // Skills format: SkillId1,Level1,SkillId2,Level2
+      // Format skills as "SkillId1,Level1,SkillId2,Level2"
       const skillsParts: string[] = [];
       for (let i = 0; i < 2; i++) {
         const skillId = cleanValue(

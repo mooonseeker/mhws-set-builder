@@ -1,17 +1,29 @@
+/**
+ * @fileoverview
+ * This script processes charm data from proprietary JSON formats (`.user.json` and `.msg.json`)
+ * and converts it into a standardized CSV file. It extracts, transforms, and maps data fields,
+ * and includes a filtering logic to keep only the most relevant charms (multi-skill charms
+ * or the highest-level single-skill charms).
+ *
+ * Before running, ensure the paths in the "Configuration" section are correctly set.
+ */
+
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { cleanValue, cleanText, escapeCsv } from "./utils.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Define paths
+// MARK: Configuration
 const ROOT_DIR = path.resolve(__dirname, "../../");
 const CHARM_DATA_FILE = path.join(ROOT_DIR, "path/to/AmuletData.user.json");
 const CHARM_MSG_FILE = path.join(ROOT_DIR, "path/to/Amulet.msg.json");
 const OUTPUT_FILE = path.join(ROOT_DIR, "scripts/json2csv/charms.csv");
+const LANG_INDEX = 13; // Simplified Chinese
 
-// Interfaces
+/** Represents the nested structure of the main charm data file. */
 interface CharmDataWrapper {
   "app.user_data.AmuletData": {
     _Values: {
@@ -20,10 +32,11 @@ interface CharmDataWrapper {
   };
 }
 
+/** Represents the core data for a single charm from the source file. */
 interface CharmData {
   _DataId: number; // ID
-  _Name: string; // GUID
-  _Explain: string; // GUID
+  _Name: string; // GUID for the name
+  _Explain: string; // GUID for the description
   _Rare: {
     "app.ItemDef.RARE_Serializable": { _Value: string };
   };
@@ -33,16 +46,19 @@ interface CharmData {
   _SkillLevel: number[];
 }
 
+/** Represents a single translation entry in a message file. */
 interface MsgEntry {
   guid?: string;
   name?: string;
   content: string[];
 }
 
+/** Represents the structure of a message file. */
 interface MsgFile {
   entries: MsgEntry[];
 }
 
+/** Represents a processed charm with cleaned and structured data, ready for CSV conversion. */
 interface ProcessedCharm {
   id: string;
   name: string;
@@ -55,28 +71,11 @@ interface ProcessedCharm {
   createdAt: string;
 }
 
-// Helpers
-const cleanValue = (val: string): string => {
-  if (!val) return "";
-  const match = /^\[-?\d+\](.*)$/.exec(val);
-  return match ? match[1] : val;
-};
-
-const cleanText = (val: string): string => {
-  if (!val) return "";
-  let text = val.replace(/<[^>]*>/g, ""); // Basic HTML tag removal if needed
-  text = text.replace(/[\r\n]+/g, "");
-  return text;
-};
-
-const escapeCsv = (field: string | number | boolean): string => {
-  const str = String(field);
-  return `"${str.replace(/"/g, '""')}"`;
-};
-
+/**
+ * The main function to execute the script.
+ */
 const main = () => {
   try {
-    console.log("Reading data files...");
     const files = [CHARM_DATA_FILE, CHARM_MSG_FILE];
     files.forEach((f) => {
       if (!fs.existsSync(f)) throw new Error(`File not found: ${f}`);
@@ -89,9 +88,7 @@ const main = () => {
       fs.readFileSync(CHARM_MSG_FILE, "utf-8"),
     ) as MsgFile;
 
-    const LANG_INDEX = 13; // Simplified Chinese
-
-    // 1. Build Maps
+    // Build translation map.
     const charmMsgMap = new Map<string, string>();
     charmMsgRaw.entries.forEach((entry) => {
       if (entry.guid && entry.content.length > LANG_INDEX) {
@@ -99,10 +96,8 @@ const main = () => {
       }
     });
 
-    // 2. Process Charm Data
-    console.log("Processing charm data...");
-
-    // Fixed values
+    // Process charm data.
+    // Fixed values for the output CSV, as they are not present in the source data.
     const createdAt = "2025-02-27T16:00:00.000Z"; // Beijing 2025/2/28 00:00:00
     const slots = "0,0,0";
     const equivalentSlots = "0,0,0,0,0,0";
@@ -116,22 +111,18 @@ const main = () => {
       wrapper["app.user_data.AmuletData"]._Values.forEach((v) => {
         const data = v["app.user_data.AmuletData.cData"];
 
-        // ID
         const idNum = data._DataId;
         const id = `CHARM_ID_${idNum.toString().padStart(4, "0")}`;
 
-        // Name
         const name = cleanText(charmMsgMap.get(data._Name) ?? "");
         if (!name) return; // Skip if no name
 
-        // Rarity
         const rareRaw = cleanValue(
           data._Rare["app.ItemDef.RARE_Serializable"]._Value,
         );
         const rareNum = parseInt(rareRaw.replace("RARE", ""), 10) + 1;
         const rarity = rareNum.toString();
 
-        // Skills
         const skills: { name: string; level: number }[] = [];
         const skillsList: string[] = [];
         data._Skill.forEach((s, idx) => {
@@ -162,12 +153,8 @@ const main = () => {
       });
     });
 
-    // 3. Filter Charms
-    // Strategy:
-    // - If a charm has > 1 skill, keep it.
-    // - If a charm has exactly 1 skill, group by that skill name.
-    // - For each single-skill group, keep only the one with the highest skill level.
-
+    // Filter charms: Keep all multi-skill charms, but only the highest-level
+    // version of each single-skill charm.
     const singleSkillCharms = new Map<string, ProcessedCharm[]>();
     const multiSkillCharms: ProcessedCharm[] = [];
 
@@ -185,21 +172,18 @@ const main = () => {
 
     const filteredSingleSkillCharms: ProcessedCharm[] = [];
     singleSkillCharms.forEach((charms) => {
-      // Sort descending by level
+      // Sort by level (desc) and keep only the highest-level charm.
       charms.sort((a, b) => b.skills[0].level - a.skills[0].level);
-      // Keep the first one (highest level)
       if (charms.length > 0) {
         filteredSingleSkillCharms.push(charms[0]);
       }
     });
 
-    // Combine and sort by ID
+    // Combine and sort by ID for consistent output.
     const finalCharms = [...multiSkillCharms, ...filteredSingleSkillCharms];
     finalCharms.sort((a, b) => a.id.localeCompare(b.id));
 
-    // 4. Generate CSV Rows
     const rows: string[] = [];
-    // Columns: id,name,rarity,skills,slots,equivalentSlots,keySkillValue,createdAt
     const headers = [
       "id",
       "name",
@@ -230,7 +214,6 @@ const main = () => {
       `Generated ${rows.length - 1} charm rows (filtered from ${allCharms.length}).`,
     );
 
-    // Write File
     const outputDir = path.dirname(OUTPUT_FILE);
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });

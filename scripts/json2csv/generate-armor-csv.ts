@@ -1,11 +1,22 @@
+/**
+ * @fileoverview
+ * This script processes armor and armor series data from multiple proprietary JSON
+ * formats (`.user.json` and `.msg.json`) and converts it into a single,
+ * standardized CSV file. It handles the complexity of merging data from four
+ * different source files to create a comprehensive armor dataset.
+ *
+ * Before running, ensure the paths in the "Configuration" section are correctly set.
+ */
+
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { cleanValue, cleanText, escapeCsv } from "./utils.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Define paths
+// MARK: Configuration
 const ROOT_DIR = path.resolve(__dirname, "../../");
 const ARMOR_DATA_FILE = path.join(ROOT_DIR, "path/to/ArmorData.user.json");
 const ARMOR_MSG_FILE = path.join(ROOT_DIR, "path/to/Armor.msg.json");
@@ -15,8 +26,9 @@ const SERIES_DATA_FILE = path.join(
 );
 const SERIES_MSG_FILE = path.join(ROOT_DIR, "path/to/ArmorSeries.msg.json");
 const OUTPUT_FILE = path.join(ROOT_DIR, "scripts/json2csv/armor.csv");
+const LANG_INDEX = 13; // Simplified Chinese
 
-// Interfaces
+/** Represents the nested structure of the main armor data file. */
 interface ArmorDataWrapper {
   "app.user_data.ArmorData": {
     _Values: {
@@ -25,6 +37,7 @@ interface ArmorDataWrapper {
   };
 }
 
+/** Represents the core data for a single armor piece. */
 interface ArmorData {
   _DataValue: number; // ID
   _Name: string; // GUID
@@ -46,6 +59,7 @@ interface ArmorData {
   _SkillLevel: number[];
 }
 
+/** Represents the nested structure of the armor series data file. */
 interface ArmorSeriesDataWrapper {
   "app.user_data.ArmorSeriesData": {
     _Values: {
@@ -54,6 +68,7 @@ interface ArmorSeriesDataWrapper {
   };
 }
 
+/** Represents the core data for a single armor series entry. */
 interface ArmorSeriesData {
   _Series: {
     "app.ArmorDef.SERIES_Serializable": { _Value: string };
@@ -63,44 +78,34 @@ interface ArmorSeriesData {
   };
 }
 
+/** Represents a single translation entry in a message file. */
 interface MsgEntry {
   guid?: string;
   name?: string;
   content: string[];
 }
 
+/** Represents the structure of a message file. */
 interface MsgFile {
   entries: MsgEntry[];
 }
 
-// Helpers
-const cleanValue = (val: string): string => {
-  if (!val) return "";
-  const match = /^\[-?\d+\](.*)$/.exec(val);
-  return match ? match[1] : val;
-};
-
+/**
+ * Extracts the numeric index from a string (e.g., "[-123]Value" -> -123).
+ * @param val The string to extract from.
+ * @returns The extracted number or null if not found.
+ */
 const extractIndex = (val: string): number | null => {
   if (!val) return null;
   const match = /^\[(-?\d+)\]/.exec(val);
   return match ? parseInt(match[1], 10) : null;
 };
 
-const cleanText = (val: string): string => {
-  if (!val) return "";
-  let text = val.replace(/<[^>]*>/g, "");
-  text = text.replace(/[\r\n]+/g, "");
-  return text;
-};
-
-const escapeCsv = (field: string | number | boolean): string => {
-  const str = String(field);
-  return `"${str.replace(/"/g, '""')}"`;
-};
-
+/**
+ * Main function to read, process, and write armor data to a CSV file.
+ */
 const main = () => {
   try {
-    console.log("Reading data files...");
     const files = [
       ARMOR_DATA_FILE,
       ARMOR_MSG_FILE,
@@ -124,9 +129,7 @@ const main = () => {
       fs.readFileSync(SERIES_MSG_FILE, "utf-8"),
     ) as MsgFile;
 
-    const LANG_INDEX = 13; // Simplified Chinese
-
-    // 1. Build Maps
+    // Build translation and rarity maps for efficient lookup.
     const armorMsgMap = new Map<string, string>();
     armorMsgRaw.entries.forEach((entry) => {
       if (entry.guid && entry.content.length > LANG_INDEX) {
@@ -155,8 +158,7 @@ const main = () => {
       });
     });
 
-    // 2. Process Armor Data
-    console.log("Processing armor data...");
+    // Process armor data.
     const rows: string[] = [];
     const headers = [
       "id",
@@ -176,22 +178,18 @@ const main = () => {
       wrapper["app.user_data.ArmorData"]._Values.forEach((v) => {
         const data = v["app.user_data.ArmorData.cData"];
 
-        // ID
         const idNum = data._DataValue;
         const id = `ARMOR_ID_${idNum.toString().padStart(4, "0")}`;
 
-        // Name & Description
         const name = cleanText(armorMsgMap.get(data._Name) ?? "");
         if (name === "无装备") return;
         const description = cleanText(armorMsgMap.get(data._Explain) ?? "");
 
-        // Type
         const typeRaw = cleanValue(
           data._PartsType["app.ArmorDef.ARMOR_PARTS_Serializable"]._Value,
         );
-        const type = typeRaw.toLowerCase(); // HELM -> helm
+        const type = typeRaw.toLowerCase(); // e.g. HELM -> helm
 
-        // Series & Rarity
         const seriesKey =
           data._Series["app.ArmorDef.SERIES_Serializable"]._Value;
         const seriesIndex = extractIndex(seriesKey);
@@ -209,13 +207,10 @@ const main = () => {
         const series = cleanText(seriesMsgMap.get(seriesNameKey) ?? "");
         const rarity = seriesRarityMap.get(seriesKey) ?? "1";
 
-        // Defense
         const defense = data._Defense;
 
-        // Resistance
         const resistance = `[${data._Resistance.join(",")}]`;
 
-        // Skills
         const skillsList: string[] = [];
         data._Skill.forEach((s, idx) => {
           const skillVal = s["app.HunterDef.Skill_Serializable"]._Value;
@@ -228,28 +223,24 @@ const main = () => {
         });
         const skills = skillsList.join(",");
 
-        // Slots
         const slotsList: number[] = [];
         data._SlotLevel.forEach((s) => {
           const slotVal = cleanValue(
             s["app.EquipDef.SlotLevel_Serializable"]._Value,
           );
-          // Assuming NONE=0, and others might be Lv1, Lv2? Or just 0 if no slots in example.
-          // Based on armor.csv having "0,0,0", we default to 0 if NONE.
-          // If we see "Lv1", we parse 1.
+          // Default to 0 for "NONE" or unparsable values.
           if (slotVal === "NONE") {
             slotsList.push(0);
           } else {
-            // Try to parse "Lv1" -> 1
+            // Parse "Lv1" to 1.
             const match = /Lv(\d+)/.exec(slotVal);
             slotsList.push(match ? parseInt(match[1]) : 0);
           }
         });
-        // Ensure 3 slots
+        // Ensure 3 slots for consistency.
         while (slotsList.length < 3) slotsList.push(0);
         const slots = slotsList.slice(0, 3).join(",");
 
-        // Construct Row
         const row = [
           escapeCsv(id),
           escapeCsv(name),
@@ -268,7 +259,6 @@ const main = () => {
 
     console.log(`Generated ${rows.length - 1} armor rows.`);
 
-    // Write File
     const outputDir = path.dirname(OUTPUT_FILE);
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
