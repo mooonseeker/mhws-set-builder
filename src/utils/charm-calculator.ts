@@ -1,39 +1,29 @@
 /**
- * MHWS护石管理器 - 护石计算工具
+ * @fileoverview Charm calculation utilities for MHWS Set Builder.
  *
- * 提供等效孔位和核心技能价值的计算功能
+ * Provides functions to calculate equivalent slots and key skill value for charms.
  */
 
-import type { Skill, SkillWithLevel, Slot, EquivalentSlots } from "@/types";
+import type { EquivalentSlots, Skill, SkillWithLevel, Slot } from "@/types";
 
 /**
- * 计算单个技能的等效孔位
+ * Calculates the equivalent slots for a single skill.
  *
- * 根据技能分类、装饰品等级和技能等级，计算该技能等效的孔位数量
+ * The number of equivalent slots is determined by the skill's category,
+ * accessory level, and current level.
  *
- * 规则：
- * - 武器技能：level个对应装饰品等级的武器孔位
- * - 防具技能：level个对应装饰品等级的防具孔位
+ * Rules:
+ * - Weapon Skill: `level` slots of the corresponding accessory level for weapons.
+ * - Armor Skill: `level` slots of the corresponding accessory level for armor.
  *
- * @param skill - 技能定义
- * @param level - 技能等级
- * @returns 等效孔位统计对象
- *
- * @example
- * // 武器技能，2级装饰品，等级3
- * calculateSkillEquivalentSlots(skill, 3)
- * // 返回: { weaponSlot2: 3, 其他为0 }
- *
- * @example
- * // 防具技能"精神抖擞"，2级装饰品，等级2
- * calculateSkillEquivalentSlots(skill, 2)
- * // 返回: { armorSlot2: 2, 其他为0 }
+ * @param skill - The skill definition.
+ * @param level - The level of the skill.
+ * @returns An object representing the equivalent slots.
  */
 export function calculateSkillEquivalentSlots(
   skill: Skill,
   level: number,
 ): EquivalentSlots {
-  // 初始化等效孔位为全0
   const equivalentSlots: EquivalentSlots = {
     weaponSlot1: 0,
     weaponSlot2: 0,
@@ -43,21 +33,20 @@ export function calculateSkillEquivalentSlots(
     armorSlot3: 0,
   };
 
-  // 边界检查：等级必须在有效范围内
+  // Boundary check: level must be within a valid range.
   if (level <= 0 || level > skill.maxLevel) {
     return equivalentSlots;
   }
 
-  // 检查装饰品等级是否有效
+  // Check for valid accessory level.
   if (skill.accessoryLevel <= 0) {
     return equivalentSlots;
   }
 
-  // 根据技能分类和装饰品等级，累加对应的孔位
-  const accessoryLevel = skill.accessoryLevel;
+  // Accumulate slots based on skill category and accessory level.
+  const { accessoryLevel } = skill;
 
   if (skill.category === "weapon") {
-    // 武器技能对应武器孔位
     if (accessoryLevel === 1) {
       equivalentSlots.weaponSlot1 = level;
     } else if (accessoryLevel === 2) {
@@ -66,7 +55,6 @@ export function calculateSkillEquivalentSlots(
       equivalentSlots.weaponSlot3 = level;
     }
   } else if (skill.category === "armor") {
-    // 防具技能对应防具孔位
     if (accessoryLevel === 1) {
       equivalentSlots.armorSlot1 = level;
     } else if (accessoryLevel === 2) {
@@ -80,27 +68,20 @@ export function calculateSkillEquivalentSlots(
 }
 
 /**
- * 计算护石的总等效孔位
+ * Calculates the total equivalent slots for a charm.
  *
- * 将护石的所有技能转换为等效孔位，并加上护石自身的实际孔位
+ * This includes the equivalent slots from all its skills plus its own actual slots.
  *
- * @param skills - 护石的技能列表
- * @param slots - 护石的孔位列表
- * @param skillsData - 完整的技能数据（用于查找技能定义）
- * @returns 总等效孔位统计对象
- *
- * @example
- * const skills = [{ skillId: 'skill1', level: 2 }];
- * const slots = [{ type: 'weapon', level: 1 }];
- * calculateCharmEquivalentSlots(skills, slots, skillsData)
- * // 返回技能等效孔位 + 实际孔位的总和
+ * @param skills - The list of skills on the charm.
+ * @param slots - The list of slots on the charm.
+ * @param skillsData - The complete skill data for lookup.
+ * @returns An object representing the total equivalent slots.
  */
 export function calculateCharmEquivalentSlots(
   skills: SkillWithLevel[],
   slots: Slot[],
   skillsData: Skill[],
 ): EquivalentSlots {
-  // 初始化总等效孔位为全0
   const totalEquivalentSlots: EquivalentSlots = {
     weaponSlot1: 0,
     weaponSlot2: 0,
@@ -110,24 +91,20 @@ export function calculateCharmEquivalentSlots(
     armorSlot3: 0,
   };
 
-  // 1. 累加技能的等效孔位
+  // 1. Accumulate equivalent slots from skills.
   for (const skillWithLevel of skills) {
-    // 查找技能定义
     const skill = skillsData.find((s) => s.id === skillWithLevel.skillId);
 
     if (!skill) {
-      // 技能不存在，跳过
-      console.warn(`技能ID ${skillWithLevel.skillId} 未找到`);
+      console.warn(`Skill ID ${skillWithLevel.skillId} not found.`);
       continue;
     }
 
-    // 计算该技能的等效孔位
     const skillSlots = calculateSkillEquivalentSlots(
       skill,
       skillWithLevel.level,
     );
 
-    // 累加到总等效孔位
     totalEquivalentSlots.weaponSlot1 += skillSlots.weaponSlot1;
     totalEquivalentSlots.weaponSlot2 += skillSlots.weaponSlot2;
     totalEquivalentSlots.weaponSlot3 += skillSlots.weaponSlot3;
@@ -136,10 +113,9 @@ export function calculateCharmEquivalentSlots(
     totalEquivalentSlots.armorSlot3 += skillSlots.armorSlot3;
   }
 
-  // 2. 累加护石自身的实际孔位
+  // 2. Add the charm's own actual slots.
   for (const slot of slots) {
     if (slot.type === "weapon") {
-      // 武器孔位
       if (slot.level === 1) {
         totalEquivalentSlots.weaponSlot1 += 1;
       } else if (slot.level === 2) {
@@ -148,7 +124,6 @@ export function calculateCharmEquivalentSlots(
         totalEquivalentSlots.weaponSlot3 += 1;
       }
     } else if (slot.type === "armor") {
-      // 防具孔位
       if (slot.level === 1) {
         totalEquivalentSlots.armorSlot1 += 1;
       } else if (slot.level === 2) {
@@ -163,26 +138,18 @@ export function calculateCharmEquivalentSlots(
 }
 
 /**
- * 计算核心技能价值
+ * Calculates the key skill value of a charm.
  *
- * 根据护石的技能和孔位直接计算核心技能价值。
+ * Rules:
+ * 1. Key Skill Value: Sum of levels of key skills (isKey=true).
+ * 2. Slot Value:
+ *    - Weapon Slots: Level 1=1, Level 2=2, Level 3=3
+ *    - Armor Slots: Level 1=0, Level 2=1, Level 3=1
  *
- * 规则：
- * 1. 核心技能价值：只计算核心技能（isKey=true）的等级，直接累加。
- * 2. 孔位价值：
- *    - 武器孔位：1级=1, 2级=2, 3级=3
- *    - 防具孔位：1级=0, 2级=1, 3级=1
- *
- * @param skills - 护石的技能列表
- * @param slots - 护石的孔位列表
- * @param skillsData - 完整的技能数据（用于查找技能定义）
- * @returns 核心技能价值（整数）
- *
- * @example
- * // 护石有 2 级核心技能 A，3 级非核心技能 B，以及一个 2 级武器孔位
- * // 核心技能价值 = (A 技能等级 2) + (2 级武器孔位价值 2) = 4
- * calculateKeySkillValue(skills, slots, skillsData)
- * // 返回: 4
+ * @param skills - The list of skills on the charm.
+ * @param slots - The list of slots on the charm.
+ * @param skillsData - The complete skill data for lookup.
+ * @returns The integer key skill value.
  */
 export function calculateKeySkillValue(
   skills: SkillWithLevel[],
@@ -191,24 +158,22 @@ export function calculateKeySkillValue(
 ): number {
   let keySkillValue = 0;
 
-  // 1. 计算核心技能的价值 (直接累加技能等级)
+  // 1. Calculate value from key skills by summing their levels.
   for (const skillWithLevel of skills) {
-    // 查找技能定义
     const skill = skillsData.find((s) => s.id === skillWithLevel.skillId);
 
     if (skill?.isKey) {
-      // 如果是核心技能，直接累加其等级
       keySkillValue += skillWithLevel.level;
     }
   }
 
-  // 2. 计算孔位的价值
+  // 2. Calculate value from slots.
   for (const slot of slots) {
     if (slot.type === "weapon") {
-      // 武器孔位：1级=1, 2级=2, 3级=3
+      // Weapon slots: L1=1, L2=2, L3=3
       keySkillValue += slot.level;
     } else if (slot.type === "armor") {
-      // 防具孔位：2级=1, 3级=1（1级不计入）
+      // Armor slots: L1=0, L2=1, L3=1
       if (slot.level === 2 || slot.level === 3) {
         keySkillValue += 1;
       }

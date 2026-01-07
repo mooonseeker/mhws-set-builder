@@ -1,9 +1,13 @@
+/**
+ * @fileoverview Utility functions for grouping armor pieces in MHWS Set Builder.
+ */
+
 import type { Armor, GroupedArmor } from "@/types";
 
 /**
- * 将防具数组按系列分组，并计算全套技能
- * @param armorList - 防具列表
- * @returns 按系列分组后的防具列表
+ * Groups an array of armor pieces by series and calculates the skills for the full set.
+ * @param armorList - The list of armor pieces.
+ * @returns A list of armor pieces grouped by series.
  */
 export function groupArmorBySeries(armorList: Armor[]): GroupedArmor[] {
   const groups = new Map<string, GroupedArmor>();
@@ -18,7 +22,7 @@ export function groupArmorBySeries(armorList: Armor[]): GroupedArmor[] {
 
     const group = groups.get(piece.series)!;
 
-    // 根据防具类型分配到对应字段
+    // Assign the piece to the corresponding field based on its type.
     switch (piece.type) {
       case "helm":
         group.helm = piece;
@@ -38,7 +42,7 @@ export function groupArmorBySeries(armorList: Armor[]): GroupedArmor[] {
     }
   });
 
-  // 计算每个系列的全套技能
+  // Calculate the full set skills for each series.
   groups.forEach((group) => {
     const allSkills = [
       ...(group.helm?.skills ?? []),

@@ -1,28 +1,28 @@
 /**
- * MHWS护石管理器 - 护石验证工具
+ * @fileoverview Charm validation utilities for MHWS Set Builder.
  *
- * 提供护石验证和比较功能，判断新护石是否值得添加
+ * Provides functions to validate and compare charms to decide if a new
+ * charm is worth keeping.
  */
 
-import type {
-  Charm,
-  SkillWithLevel,
-  Slot,
-  CharmValidationResult,
-  Skill,
-  EquivalentSlots,
-  CharmValidationStatus,
+import {
+  KEY_SKILL_VALUE_THRESHOLD,
+  type Charm,
+  type CharmValidationResult,
+  type CharmValidationStatus,
+  type EquivalentSlots,
+  type Skill,
+  type SkillWithLevel,
+  type Slot,
 } from "@/types";
-import { KEY_SKILL_VALUE_THRESHOLD } from "@/types";
 
 type SlotComparisonResult = "superior" | "inferior" | "equal" | "incomparable";
 
 /**
- * 比较两组等效孔位
- *
- * @param newSlots - 新护石的等效孔位
- * @param existingSlots - 现有护石的等效孔位
- * @returns 'superior', 'inferior', 'equal', 或 'incomparable'
+ * Compares two sets of equivalent slots.
+ * @param newSlots The equivalent slots of the new charm.
+ * @param existingSlots The equivalent slots of the existing charm.
+ * @returns 'superior', 'inferior', 'equal', or 'incomparable'.
  */
 function compareEquivalentSlots(
   newSlots: EquivalentSlots,
@@ -54,11 +54,11 @@ function compareEquivalentSlots(
 }
 
 /**
- * 检查一个护石是否在所有方面都优于或等于另一个护石（“完爆”/ "Dominate"）
- *
- * @param dominator - 潜在的优胜护石
- * @param dominated - 潜在的劣势护石
- * @returns 如果 dominator 全方位优于或等于 dominated 且至少有一项严格更优，则返回 true
+ * Checks if a charm dominates another, meaning it is better or equal in all
+ * aspects and strictly better in at least one.
+ * @param dominator The potential dominating charm.
+ * @param dominated The potential dominated charm.
+ * @returns True if the dominator charm is strictly better.
  */
 function isDominating(
   dominator: Omit<Charm, "id" | "createdAt">,
@@ -69,7 +69,7 @@ function isDominating(
     dominated.equivalentSlots,
   );
 
-  // 1. 孔位不能比对方差
+  // 1. Slots cannot be inferior.
   if (slotComparison === "inferior") {
     return false;
   }
@@ -79,10 +79,11 @@ function isDominating(
   );
   let isSkillStrictlySuperior = false;
 
-  // 2. 检查 dominator 是否覆盖 dominated 的所有技能，且等级不低于对方
+  // 2. Check if the dominator covers all skills of the dominated charm
+  //    with at least the same level.
   for (const dominatedSkill of dominated.skills) {
     const dominatorLevel = dominatorSkillsMap.get(dominatedSkill.skillId);
-    // 如果 dominator 缺少 dominated 的某个技能，或者等级更低，则不能完爆
+    // If the dominator is missing a skill or has a lower level, it can't dominate.
     if (!dominatorLevel || dominatorLevel < dominatedSkill.level) {
       return false;
     }
@@ -91,38 +92,37 @@ function isDominating(
     }
   }
 
-  // 如果 dominator 的技能数量比 dominated 多，也算技能更优
-  // （前提是它已经包含了 dominated 的所有技能，这一点已在上面的循环中确认）
+  // If the dominator has more skills, it's also considered superior in skills.
+  // (This assumes it already covers all of the dominated charm's skills).
   if (dominator.skills.length > dominated.skills.length) {
     isSkillStrictlySuperior = true;
   }
 
-  // 3. 两者不能完全相同，必须至少有一项严格更优
+  // 3. The charms cannot be identical; at least one aspect must be strictly superior.
   const isSlotStrictlySuperior = slotComparison === "superior";
 
   return isSlotStrictlySuperior || isSkillStrictlySuperior;
 }
 
 /**
- * 验证护石是否应该添加（V3版 - 采用完爆检查逻辑）
- *
- * @param newCharm - 新护石（需包含计算好的`equivalentSlots`和`keySkillValue`）
- * @param existingCharms - 现有护石列表
- * @param skillsData - 完整的技能数据
- * @returns 详细的验证结果
+ * Validates if a new charm should be added to the collection using a domination check.
+ * @param newCharm The new charm (with pre-calculated `equivalentSlots` and `keySkillValue`).
+ * @param existingCharms The list of existing charms.
+ * @param skillsData Complete skill data for lookups.
+ * @returns A detailed validation result.
  */
 export function validateCharm(
   newCharm: Omit<Charm, "id" | "createdAt">,
   existingCharms: Charm[],
   skillsData: Skill[],
 ): CharmValidationResult {
-  // Phase 0: 如果数据库为空，直接接受
+  // Phase 0: If the database is empty, accept it.
   if (existingCharms.length === 0) {
     return { isValid: true, status: "ACCEPTED_AS_FIRST" };
   }
 
-  // Phase 1: 全面完爆检查
-  // 1.1: 检查新护石是否被任何现有护石完爆（绝对劣势）
+  // Phase 1: Domination Check
+  // 1.1: Check if the new charm is dominated by any existing charm.
   for (const existingCharm of existingCharms) {
     if (isDominating(existingCharm, newCharm as Charm)) {
       return {
@@ -133,12 +133,12 @@ export function validateCharm(
     }
   }
 
-  // 1.2: 检查新护石完爆了哪些现有护石（绝对优势）
+  // 1.2: Find which existing charms are dominated by the new charm.
   const outclassedCharms = existingCharms.filter((existingCharm) =>
     isDominating(newCharm, existingCharm),
   );
 
-  // Phase 2: 确定接受理由（不再提前返回）
+  // Phase 2: Determine acceptance reason.
   let status: CharmValidationStatus = "ACCEPTED";
 
   const stats = existingCharms.reduce(
@@ -200,7 +200,7 @@ export function validateCharm(
   ) {
     status = "ACCEPTED_BY_MAX_SLOTS";
   } else {
-    // 检查是否拥有独特技能（基于旧的锚点技能逻辑）
+    // Check for unique skills (based on old anchor skill logic).
     const newCharmSkillsWithData = newCharm.skills.map((s) => ({
       ...s,
       skillData: skillsData.find((sd) => sd.id === s.skillId),
@@ -228,18 +228,18 @@ export function validateCharm(
     }
   }
 
-  // Phase 3: 生成警告
+  // Phase 3: Generate warnings.
   const warnings: string[] = [];
   if (existingCharms.length > 0) {
     const avgKeySkillValue = stats.totalKeySkillValue / existingCharms.length;
     if (newCharm.keySkillValue < avgKeySkillValue - KEY_SKILL_VALUE_THRESHOLD) {
       warnings.push(
-        `该护石核心价值(${newCharm.keySkillValue.toFixed(1)})明显低于平均值(${avgKeySkillValue.toFixed(1)})`,
+        `Key skill value (${newCharm.keySkillValue.toFixed(1)}) is significantly below average (${avgKeySkillValue.toFixed(1)}).`,
       );
     }
   }
 
-  // Phase 4: 组装并返回最终结果
+  // Phase 4: Assemble and return the final result.
   return {
     isValid: true,
     status,
@@ -250,13 +250,10 @@ export function validateCharm(
 }
 
 /**
- * 检查技能是否完全相同
- *
- * 辅助函数，用于判断两个护石的技能列表是否完全相同（包括等级）
- *
- * @param skills1 - 第一个技能列表
- * @param skills2 - 第二个技能列表
- * @returns true表示技能完全相同
+ * Checks if two skill lists are identical (including levels).
+ * @param skills1 The first list of skills.
+ * @param skills2 The second list of skills.
+ * @returns True if the skill lists are identical.
  */
 export function areSkillsIdentical(
   skills1: SkillWithLevel[],
@@ -266,10 +263,9 @@ export function areSkillsIdentical(
     return false;
   }
 
-  // 对每个技能进行比较
   for (const skill1 of skills1) {
     const skill2 = skills2.find((s) => s.skillId === skill1.skillId);
-    if (!skill2 || skill2.level !== skill1.level) {
+    if (skill2?.level !== skill1.level) {
       return false;
     }
   }
@@ -278,20 +274,16 @@ export function areSkillsIdentical(
 }
 
 /**
- * 检查孔位是否完全相同
- *
- * 辅助函数，用于判断两个护石的孔位列表是否完全相同
- *
- * @param slots1 - 第一个孔位列表
- * @param slots2 - 第二个孔位列表
- * @returns true表示孔位完全相同
+ * Checks if two slot lists are identical.
+ * @param slots1 The first list of slots.
+ * @param slots2 The second list of slots.
+ * @returns True if the slot lists are identical.
  */
 export function areSlotsIdentical(slots1: Slot[], slots2: Slot[]): boolean {
   if (slots1.length !== slots2.length) {
     return false;
   }
 
-  // 统计孔位
   const counts1 = {
     weapon1: 0,
     weapon2: 0,
@@ -319,7 +311,6 @@ export function areSlotsIdentical(slots1: Slot[], slots2: Slot[]): boolean {
     counts2[key]++;
   }
 
-  // 比较每个类型等级的数量
   for (const key in counts1) {
     if (
       counts1[key as keyof typeof counts1] !==

@@ -1,3 +1,12 @@
+/**
+ * @fileoverview Solves for optimal accessory (decoration) combinations.
+ * This service is a core part of the search algorithm, used to find all
+ * possible accessory sets that satisfy a given list of skill deficits.
+ * It is called in two main places:
+ * 1. Early in the main search loop to solve for weapon-specific skills.
+ * 2. At the end of the armor search to fill remaining skills using armor/charm slots.
+ */
+
 import type {
   Accessory,
   AccessorySolution,
@@ -7,29 +16,24 @@ import type {
 } from "@/types";
 
 /**
- * 孔位计数类型，用于匿名化孔位
+ * A counter for abstracted slot levels.
+ * This is used to anonymize slots to prevent duplicate combinations based on sourceId.
  */
 interface SlotCounts {
-  weapon: Map<number, number>; // 等级 -> 数量
-  armor: Map<number, number>; // 等级 -> 数量
+  weapon: Map<number, number>; // Level -> Count
+  armor: Map<number, number>; // Level -> Count
 }
 
 /**
- * 装饰品填充求解器
- * 使用回溯算法找出所有可行的装饰品组合方案
- * 现在支持多种组合方式和多次镶嵌满足单一技能缺口
+ * The main solver for accessory placements.
+ * It uses a backtracking algorithm to find all viable decoration combinations.
+ * Supports multiple accessories to fill a single skill deficit.
  *
- * 算法策略：
- * 1. 孔位匿名化：将孔位按类型和等级计数，避免因sourceId产生重复组合
- * 2. 技能缺口排序：优先处理组合方式少的技能，其次是需要高级孔位的技能
- * 3. 回溯搜索：递归找出所有满足技能缺口的装饰品组合
- * 4. 结果具象化：将抽象组合映射回具体的孔位来源
- *
- * @param deficits - 技能缺口列表
- * @param availableSlots - 可用孔位对象，包含武器和防具孔位
- * @param accessoriesBySkill - 按技能分组的装饰品映射
- * @param skillDetails - 技能详情映射，用于获取技能类型
- * @returns 所有可行的装饰品填充方案数组
+ * @param deficits A list of skills and levels that need to be filled.
+ * @param availableSlots The weapon and armor slots available for accessories.
+ * @param accessoriesBySkill A map of accessories, grouped by the skills they provide.
+ * @param skillDetails A map containing details for each skill.
+ * @returns An array of all valid accessory solutions.
  */
 export function solveAccessories(
   deficits: SkillDeficit[],
@@ -37,17 +41,17 @@ export function solveAccessories(
   accessoriesBySkill: Map<string, Accessory[]>,
   skillDetails: Map<string, Skill>,
 ): AccessorySolution[] {
-  // 1. 孔位匿名化
+  // 1. Abstract slots into counts by type and level.
   const slotCounts = abstractSlots(availableSlots);
 
-  // 2. 技能缺口排序
+  // 2. Sort skill deficits to prioritize more constrained skills first.
   const sortedDeficits = sortDeficits(
     deficits,
     accessoriesBySkill,
     skillDetails,
   );
 
-  // 3. 核心回溯计算
+  // 3. Core backtracking search for accessory combinations.
   const accessoryLists = findCombinations(
     sortedDeficits,
     slotCounts,
@@ -55,7 +59,7 @@ export function solveAccessories(
     skillDetails,
   );
 
-  // 4. 结果具象化
+  // 4. Map abstract combinations back to concrete slot placements.
   const solutions: AccessorySolution[] = [];
   for (const accessoryList of accessoryLists) {
     const solution = mapAccessoriesToSlots(accessoryList, availableSlots);
@@ -69,7 +73,7 @@ export function solveAccessories(
 }
 
 /**
- * 孔位匿名化：将孔位按类型和等级转换为计数
+ * Abstracts available slots into a count of slots by level for each type (weapon, armor).
  */
 function abstractSlots(availableSlots: {
   weapon: Slot[];
@@ -80,19 +84,19 @@ function abstractSlots(availableSlots: {
     armor: new Map<number, number>(),
   };
 
-  // 初始化所有可能的等级（1-3）
+  // Initialize counts for all possible levels (1-3) to 0.
   for (let level = 1; level <= 3; level++) {
     slotCounts.weapon.set(level, 0);
     slotCounts.armor.set(level, 0);
   }
 
-  // 统计武器孔位
+  // Count weapon slots.
   for (const slot of availableSlots.weapon) {
     const current = slotCounts.weapon.get(slot.level) ?? 0;
     slotCounts.weapon.set(slot.level, current + 1);
   }
 
-  // 统计防具孔位
+  // Count armor slots.
   for (const slot of availableSlots.armor) {
     const current = slotCounts.armor.get(slot.level) ?? 0;
     slotCounts.armor.set(slot.level, current + 1);
@@ -102,10 +106,11 @@ function abstractSlots(availableSlots: {
 }
 
 /**
- * 技能缺口排序：按照失败优先策略排序
- * 1. 组合方式数量（升序） - 可选珠子种类少的优先
- * 2. accessoryLevel（降序） - 需要高级孔位的优先
- * 3. missingLevel（降序） - 缺口大的优先
+ * Sorts skill deficits using a fail-fast strategy.
+ * The sort order is:
+ * 1. Number of unique accessory types available (ascending) - Prioritizes skills with fewer options.
+ * 2. Required accessory level (descending) - Prioritizes skills needing high-level slots.
+ * 3. Missing skill level (descending) - Prioritizes larger deficits.
  */
 function sortDeficits(
   deficits: SkillDeficit[],
@@ -120,11 +125,11 @@ function sortDeficits(
       return 0;
     }
 
-    // 计算组合方式数量（近似于可选珠子种类数量）
+    // --- Sort Criterion 1: Number of unique combination ways ---
+    // Approximated by the number of unique accessory types (by slot level and skill level provided).
     const aCandidates = accessoriesBySkill.get(a.skillId) ?? [];
     const bCandidates = accessoriesBySkill.get(b.skillId) ?? [];
 
-    // 去重后的珠子种类数量（按slotLevel和提供的技能等级组合）
     const aUniqueTypes = new Set(
       aCandidates.map(
         (acc) =>
@@ -139,23 +144,22 @@ function sortDeficits(
       ),
     ).size;
 
-    // 1. 组合方式数量（升序）
     if (aUniqueTypes !== bUniqueTypes) {
       return aUniqueTypes - bUniqueTypes;
     }
 
-    // 2. accessoryLevel（降序）
+    // --- Sort Criterion 2: Required accessory level (descending) ---
     if (skillA.accessoryLevel !== skillB.accessoryLevel) {
       return skillB.accessoryLevel - skillA.accessoryLevel;
     }
 
-    // 3. missingLevel（降序）
+    // --- Sort Criterion 3: Missing level (descending) ---
     return b.missingLevel - a.missingLevel;
   });
 }
 
 /**
- * 核心回溯函数：找出所有满足技能缺口的装饰品组合
+ * The core backtracking function to find all accessory combinations that satisfy the skill deficits.
  */
 function findCombinations(
   deficits: SkillDeficit[],
@@ -163,15 +167,15 @@ function findCombinations(
   accessoriesBySkill: Map<string, Accessory[]>,
   skillDetails: Map<string, Skill>,
 ): Accessory[][] {
-  // 基线条件：所有缺口都已满足
+  // Base case: If all deficits are met, return an empty combination.
   if (deficits.length === 0) {
-    return [[]]; // 返回一个空组合
+    return [[]];
   }
 
   const [currentDeficit, ...remainingDeficits] = deficits;
   const allSolutions: Accessory[][] = [];
 
-  // 获取满足当前缺口的所有方式
+  // Find all possible ways to satisfy the current deficit.
   const ways = findWaysToSatisfyDeficit(
     currentDeficit,
     slotCounts,
@@ -180,16 +184,16 @@ function findCombinations(
   );
 
   for (const way of ways) {
-    // 为这种方式创建新的slotCounts副本
+    // Create a new copy of slot counts for this path.
     const newSlotCounts = {
       weapon: new Map(slotCounts.weapon),
       armor: new Map(slotCounts.armor),
     };
 
-    // 消耗孔位
+    // Consume the slots required for the current 'way'.
     let isValid = true;
     for (const accessory of way) {
-      const slotType = accessory.type; // 直接使用装饰品的type属性
+      const slotType = accessory.type;
       const slotLevel = accessory.slotLevel;
       const currentCount = newSlotCounts[slotType].get(slotLevel) ?? 0;
 
@@ -204,7 +208,7 @@ function findCombinations(
       continue;
     }
 
-    // 递归处理剩余缺口
+    // Recurse to solve for the remaining deficits.
     const solutionsForRest = findCombinations(
       remainingDeficits,
       newSlotCounts,
@@ -212,7 +216,7 @@ function findCombinations(
       skillDetails,
     );
 
-    // 组合结果
+    // Combine the current way with solutions for the rest.
     for (const restSolution of solutionsForRest) {
       allSolutions.push([...way, ...restSolution]);
     }
@@ -222,7 +226,7 @@ function findCombinations(
 }
 
 /**
- * 找出满足单个技能缺口的所有装饰品组合方式
+ * Finds all combinations of accessories that can satisfy a single skill deficit.
  */
 function findWaysToSatisfyDeficit(
   deficit: SkillDeficit,
@@ -243,7 +247,7 @@ function findWaysToSatisfyDeficit(
 
   const ways: Accessory[][] = [];
 
-  // 使用回溯找出所有能满足缺口的装饰品组合
+  // Inner recursive function to find combinations for the deficit.
   function findWaysRecursive(
     currentLevel: number,
     currentCombination: Accessory[],
@@ -260,17 +264,17 @@ function findWaysToSatisfyDeficit(
         accessory.skills.find((s) => s.skillId === deficit.skillId)?.level ?? 0;
 
       if (skillLevel > 0) {
-        // 检查孔位是否足够
-        const requiredSlots = countRequiredSlots(
+        // Check if there are enough slots for the current combination.
+        const hasEnoughSlots = checkSlotAvailability(
           [...currentCombination, accessory],
           slotType,
           slotCounts,
         );
-        if (requiredSlots) {
+        if (hasEnoughSlots) {
           findWaysRecursive(
             currentLevel + skillLevel,
             [...currentCombination, accessory],
-            i, // 允许重复选择同种装饰品
+            i, // Allow reusing the same accessory type.
           );
         }
       }
@@ -282,22 +286,23 @@ function findWaysToSatisfyDeficit(
 }
 
 /**
- * 计算装饰品组合所需的孔位是否可用
+ * Checks if the required slots for a given combination of accessories are available.
  */
-function countRequiredSlots(
+function checkSlotAvailability(
   accessories: Accessory[],
   slotType: "weapon" | "armor",
   slotCounts: SlotCounts,
 ): boolean {
   const slotDemand = new Map<number, number>();
 
+  // Count the demand for each slot level.
   for (const accessory of accessories) {
     const level = accessory.slotLevel;
     const current = slotDemand.get(level) ?? 0;
     slotDemand.set(level, current + 1);
   }
 
-  // 检查每个等级的需求是否不超过供给
+  // Check if demand exceeds supply for any level.
   for (const [level, demand] of slotDemand.entries()) {
     const supply = slotCounts[slotType].get(level) ?? 0;
     if (demand > supply) {
@@ -309,18 +314,20 @@ function countRequiredSlots(
 }
 
 /**
- * 将装饰品组合映射回具体的孔位来源
+ * Maps an abstract list of accessories to concrete slot placements.
+ * This function tries to fit accessories into the smallest possible available slots.
+ * @returns An `AccessorySolution` if successful, or `null` if placement is not possible.
  */
 function mapAccessoriesToSlots(
   accessoryList: Accessory[],
   originalSlots: { weapon: Slot[]; armor: Slot[] },
 ): AccessorySolution | null {
-  // 复制原始孔位
+  // Create mutable copies of the original slots.
   const remainingWeaponSlots = [...originalSlots.weapon];
   const remainingArmorSlots = [...originalSlots.armor];
   const placement = new Map<string, Accessory[]>();
 
-  // 按孔位等级排序，优先使用小孔位
+  // Sort slots by level (ascending) to use smaller slots first.
   remainingWeaponSlots.sort((a, b) => a.level - b.level);
   remainingArmorSlots.sort((a, b) => a.level - b.level);
 
@@ -329,13 +336,13 @@ function mapAccessoriesToSlots(
     const targetSlots =
       slotType === "weapon" ? remainingWeaponSlots : remainingArmorSlots;
 
-    // 寻找能容纳该装饰品的最小孔位
+    // Find the smallest available slot that can fit the accessory.
     const slotIndex = targetSlots.findIndex(
       (slot) => slot.level >= accessory.slotLevel,
     );
 
     if (slotIndex === -1) {
-      // 找不到合适孔位，该方案无效
+      // No suitable slot found, this combination is invalid.
       return null;
     }
 
@@ -348,13 +355,13 @@ function mapAccessoriesToSlots(
       return null;
     }
 
-    // 记录放置信息
+    // Record the placement.
     if (!placement.has(slot.sourceId)) {
       placement.set(slot.sourceId, []);
     }
     placement.get(slot.sourceId)!.push(accessory);
 
-    // 移除已使用的孔位
+    // Remove the used slot.
     targetSlots.splice(slotIndex, 1);
   }
 

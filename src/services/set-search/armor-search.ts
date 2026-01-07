@@ -1,3 +1,12 @@
+/**
+ * @fileoverview Fills armor scaffolds to find complete equipment sets.
+ * This service is the main backtracking engine for the armor search. It takes a
+ * pre-generated scaffold (or an empty one) and recursively tries to fill the
+ * remaining empty armor slots to satisfy all remaining skill requirements.
+ */
+
+import { cloneDeep } from "lodash-es";
+
 import type {
   Accessory,
   Armor,
@@ -10,7 +19,6 @@ import type {
   SkillWithLevel,
   Slot,
 } from "@/types";
-import { cloneDeep } from "lodash-es";
 
 import { solveAccessories } from "./accessory-solver";
 import { shouldPrune, validateBaseSkills } from "./helpers";
@@ -18,12 +26,14 @@ import { shouldPrune, validateBaseSkills } from "./helpers";
 const ARMOR_TYPES: ArmorType[] = ["helm", "body", "arm", "waist", "leg"];
 
 /**
- * v7.2 防具骨架填充主函数
+ * Main function to fill an armor scaffold using backtracking.
  *
- * @param context - 包含骨架信息的搜索上下文
- * @param allArmors - 所有可用防具的列表（用于填充空位）
- * @param preprocessedData - 预处理数据
- * @returns {boolean} - 返回 false 以中止搜索
+ * @param context The search context, including the initial armor scaffold.
+ * @param allArmors A list of all available armors to fill empty slots.
+ * @param preprocessedData Pre-processed game data for efficient lookups.
+ * @param finalResults An array to store the discovered valid sets.
+ * @param limit The maximum number of results to find before stopping.
+ * @returns `false` to signal that the search should be aborted (e.g., limit reached).
  */
 export function fillArmorScaffold(
   context: SearchContext,
@@ -32,9 +42,7 @@ export function fillArmorScaffold(
   finalResults: FinalSet[],
   limit: number,
 ): boolean {
-  // console.log(`    [>>] Entering scaffold filler...`);
-
-  // 预先将所有防具按部位分组，供回溯时快速查询
+  // Group all armors by type for quick lookup during backtracking.
   const armorsByType = new Map<ArmorType, Armor[]>();
   ARMOR_TYPES.forEach((type) => {
     armorsByType.set(
@@ -52,20 +60,19 @@ export function fillArmorScaffold(
     limit,
   );
 
-  // console.log(`    [<<] Exiting scaffold filler.`);
   return shouldContinue;
 }
 
 /**
- * v7.2 递归回溯填充函数
+ * Recursive backtracking function to fill empty armor slots.
  *
- * @param armorTypeIndex - 当前处理的防具部位索引 (0-4: helm -> leg)
- * @param context - 当前的搜索状态
- * @param finalResults - 存储有效解决方案的数组 (global)
- * @param armorsByType - 按部位分组的防具池
- * @param preprocessedData - 预处理数据
- * @param limit - 解决方案数量上限
- * @returns {boolean} - 返回 false 表示已达到上限，应中止所有搜索
+ * @param armorTypeIndex The index of the current armor type being processed (0-4: helm -> leg).
+ * @param context The current search state.
+ * @param finalResults The global array to store valid solutions.
+ * @param armorsByType A pool of available armors, grouped by type.
+ * @param preprocessedData Pre-processed game data.
+ * @param limit The maximum number of solutions to find.
+ * @returns `false` if the search limit is reached and all searches should stop.
  */
 function backtrack(
   armorTypeIndex: number,
@@ -76,10 +83,7 @@ function backtrack(
   limit: number,
 ): boolean {
   const remainingArmorTypes = ARMOR_TYPES.slice(armorTypeIndex);
-
-  const indent = "    ".repeat(armorTypeIndex + 2);
-
-  // 1. 剪枝检查
+  // MARK: Pruning Check
   if (
     shouldPrune(
       context.currentSkills,
@@ -89,21 +93,18 @@ function backtrack(
       context.availableSlots,
     )
   ) {
-    return true; // Prune this branch, but continue searching siblings
+    return true; // Prune this branch, but continue searching siblings.
   }
 
-  // 2. 终止条件：5件防具都已选择
+  // MARK: Termination Condition
+  // When all 5 armor pieces have been selected.
   if (armorTypeIndex === 5) {
-    // 终止条件: 5件防具都已选择或指定
-    // console.log(`${indent}[*] Reached level 5. All armor pieces selected. Attempting to solve...`);
-
-    // [v7.2]BUG修复的核心：在求解珠子前，验证所有基础技能（Series/Group）是否满足
+    // First, validate that base skills (Series/Group) are satisfied before solving for accessories.
     if (!validateBaseSkills(context.equipment, context.skillDeficits)) {
-      // console.log(`${indent}  -> FAILED: Base skills (Series/Group) not satisfied.`);
-      return true; // 此组合无效，剪枝
+      return true; // This combination is invalid, prune the branch.
     }
 
-    // a. 计算 armorSkills 的最终缺口
+    // Calculate the final deficit for skills that can be filled by accessories.
     const armorSkillDeficits: SkillDeficit[] = context.skillDeficits.armorSkills
       .map((s: SkillWithLevel) => ({
         skillId: s.skillId,
@@ -111,37 +112,24 @@ function backtrack(
       }))
       .filter((d) => d.missingLevel > 0);
 
-    // 如果没有 armorSkills 缺口，则该组合已满足所有技能，直接生成方案
+    // If there are no deficits, a valid set has been found.
     if (armorSkillDeficits.length === 0) {
       const finalSet: FinalSet = {
         equipment: cloneDeep(context.equipment),
-        accessories: new Map(), // No accessories are added here
+        accessories: new Map(), // No accessories are needed.
         remainingSlots: [
           ...context.availableSlots.armor,
           ...context.availableSlots.weapon,
         ],
       };
-      console.log(
-        `${indent}  -> Success: No armor skill deficits. Solution found.`,
-      );
       finalResults.push(finalSet);
-      console.log(
-        "[Debug] Found a solution (no armor skill deficits):",
-        JSON.stringify(finalSet, null, 2),
-      );
       if (finalResults.length >= limit) {
-        console.log(`${indent}  -> Search limit reached!`);
-        return false; // Stop searching
+        return false; // Stop searching.
       }
-      return true; // Continue searching
+      return true; // Continue searching.
     }
 
-    // b. 调用珠子求解器来填充 armorSkills
-    console.log(
-      `${indent}  -> Calling accessory solver for ${armorSkillDeficits.length} deficits...`,
-    );
-
-    // 步骤 3 & 4: 收集所有防具孔位并确保 sourceId,然后调用求解器
+    // If there are deficits, call the accessory solver.
     const allArmorSlots: Slot[] = [];
     for (const armorType of ARMOR_TYPES) {
       const armorItem = context.equipment[armorType];
@@ -155,22 +143,18 @@ function backtrack(
 
     const accessorySolutions = solveAccessories(
       armorSkillDeficits,
-      { weapon: [], armor: allArmorSlots }, // 只使用防具孔
+      { weapon: [], armor: allArmorSlots }, // Use only armor slots.
       preprocessedData.accessoriesBySkill,
       preprocessedData.skillDetails,
     );
 
-    // c. 如果填充成功，则生成最终配装方案
+    // If the solver finds solutions, create final set configurations.
     if (accessorySolutions.length > 0) {
-      console.log(
-        `${indent}  -> Success: Accessory solver found ${accessorySolutions.length} solution(s).`,
-      );
-
       for (const solution of accessorySolutions) {
-        // 为每个解决方案创建独立的 equipment 副本
+        // Create a deep copy of the equipment for this specific solution.
         const solutionEquipment = cloneDeep(context.equipment);
 
-        // 步骤 6: 将计算出的装饰品填充回 solutionEquipment
+        // Place the found accessories into the equipment slots.
         solution.placement.forEach((placedAccessories, equipmentId) => {
           const armorType = ARMOR_TYPES.find(
             (type) => solutionEquipment[type]?.equipment.id === equipmentId,
@@ -179,18 +163,19 @@ function backtrack(
           if (armorType) {
             const equipmentSlot = solutionEquipment[armorType]!;
             const totalSlots = equipmentSlot.equipment.slots.length;
-            const newAccessories: (Accessory | null)[] = Array(totalSlots).fill(
-              null,
-            ) as (Accessory | null)[];
+            const newAccessories: (Accessory | null)[] = Array.from(
+              { length: totalSlots },
+              () => null,
+            );
             const originalSlots = equipmentSlot.equipment.slots;
-            // 优先放置需要高级孔位的珠子
+            // Prioritize placing accessories that require higher-level slots first.
             const accessoriesToPlace = [...placedAccessories].sort(
               (a, b) => b.slotLevel - a.slotLevel,
             );
 
             for (const accessory of accessoriesToPlace) {
               let placed = false;
-              // 寻找第一个能容纳该珠子的空孔位
+              // Find the first available slot that can fit the accessory.
               for (let i = 0; i < originalSlots.length; i++) {
                 if (
                   newAccessories[i] === null &&
@@ -214,7 +199,7 @@ function backtrack(
           }
         });
 
-        // 步骤 7: 创建最终方案，使用已填充的 solutionEquipment，并反向生成 accessories
+        // Create the final set object.
         const finalAccessories = new Map<string, Accessory[]>();
         (Object.keys(solutionEquipment) as (keyof EquipmentSet)[]).forEach(
           (key) => {
@@ -240,26 +225,20 @@ function backtrack(
         };
         finalResults.push(finalSet);
         if (finalResults.length >= limit) {
-          console.log(`${indent}  -> Search limit reached!`);
-          return false; // Stop searching
+          return false; // Stop searching.
         }
       }
     } else {
-      console.log(
-        `${indent}  -> Failure: Accessory solver could not find a solution.`,
-      );
+      // If solver fails, this combination is invalid.
     }
-    // 如果失败，则此组合无效，直接返回
-    return true; // Continue searching this branch's siblings
+    return true; // Continue searching this branch's siblings.
   }
 
-  // 3. [v7.2] 递归遍历或直接进入下一层
+  // MARK: Recursion
   const currentArmorType = ARMOR_TYPES[armorTypeIndex];
 
-  // 检查骨架是否已经为此部位指定了防具 (通过检查传入的 context)
+  // If an armor piece is already fixed for this type, skip to the next type.
   if (context.equipment[currentArmorType]) {
-    // 如果已指定，则不进行遍历，直接进入下一层级的回溯
-    // console.log(`${indent}[S] Using scaffolded piece for ${currentArmorType}.`);
     const shouldContinue = backtrack(
       armorTypeIndex + 1,
       context,
@@ -272,11 +251,10 @@ function backtrack(
       return false;
     }
   } else {
-    // 如果该部位为空，则对此部位的所有可用防具进行遍历填充
+    // If the slot is empty, iterate through all available armors for this type.
     const availableArmors = armorsByType.get(currentArmorType) ?? [];
     for (const armorPiece of availableArmors) {
       // 1. Mutate state forward
-      // 将孔位与来源ID关联
       const slotsWithSource = armorPiece.slots.map((s) => ({
         ...s,
         sourceId: armorPiece.id,
@@ -311,8 +289,11 @@ function backtrack(
       );
       armorPiece.skills.forEach((skill) => {
         const oldLevel = oldSkillLevels.get(skill.skillId);
-        if (oldLevel === undefined) context.currentSkills.delete(skill.skillId);
-        else context.currentSkills.set(skill.skillId, oldLevel);
+        if (oldLevel === undefined) {
+          context.currentSkills.delete(skill.skillId);
+        } else {
+          context.currentSkills.set(skill.skillId, oldLevel);
+        }
       });
       delete context.equipment[currentArmorType];
 
@@ -320,5 +301,5 @@ function backtrack(
       if (!shouldContinue) return false;
     }
   }
-  return true; // Continue searching siblings
+  return true; // Continue searching siblings.
 }

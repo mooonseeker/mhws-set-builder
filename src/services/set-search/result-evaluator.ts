@@ -1,9 +1,16 @@
+/**
+ * @fileoverview Evaluates and sorts final equipment sets.
+ * This service provides functions to calculate scores for generated sets
+ * and sort them based on criteria like remaining slots and extra skills.
+ */
+
 import type { Accessory, FinalSet, Skill, SkillWithLevel, Slot } from "@/types";
 
 /**
- * Calculates the slot value score for remaining slots.
- * @param slots Array of remaining slots
- * @returns Total slot value score (level 3 = 4, level 2 = 2, level 1 = 1)
+ * Calculates a score based on the value of remaining slots.
+ * The scoring is weighted: level 3 = 4, level 2 = 2, level 1 = 1.
+ * @param slots An array of remaining slots.
+ * @returns The total slot value score.
  */
 function calculateSlotValue(slots: Slot[]): number {
   return slots.reduce((total, slot) => {
@@ -21,12 +28,14 @@ function calculateSlotValue(slots: Slot[]): number {
 }
 
 /**
- * 计算套装的总技能等级
+ * Computes the total levels for every skill present in a final set.
+ * @param set The final equipment set.
+ * @returns A map of skill IDs to their total accumulated level.
  */
 function computeTotalSkills(set: FinalSet): Map<string, number> {
   const totalSkills = new Map<string, number>();
 
-  // 装备自带技能
+  // 1. Accumulate skills from equipment pieces.
   (Object.keys(set.equipment) as (keyof FinalSet["equipment"])[]).forEach(
     (key) => {
       const slottedEq = set.equipment[key];
@@ -39,7 +48,7 @@ function computeTotalSkills(set: FinalSet): Map<string, number> {
     },
   );
 
-  // 装饰品技能
+  // 2. Accumulate skills from accessories.
   set.accessories.forEach((accessoryList) => {
     accessoryList.forEach((accessory: Accessory) => {
       accessory.skills.forEach((skill: SkillWithLevel) => {
@@ -53,11 +62,10 @@ function computeTotalSkills(set: FinalSet): Map<string, number> {
 }
 
 /**
- * 计算溢出技能
- * @param set 配装方案
- * @param requiredSkills 所需技能
- * @param skillDetails 技能详情Map
- * @returns 溢出技能列表
+ * Calculates the extra skills in a set that are beyond the user's requirements.
+ * @param set The final equipment set.
+ * @param requiredSkills The list of skills requested by the user.
+ * @returns A list of skills and their levels that exceed the requirements.
  */
 export function calculateExtraSkills(
   set: FinalSet,
@@ -81,11 +89,12 @@ export function calculateExtraSkills(
 }
 
 /**
- * Evaluates and sorts a list of final sets based on comprehensive criteria.
- * @param sets The list of sets to evaluate.
- * @param requiredSkills 用户所需技能
- * @param skillDetails 技能详情映射
- * @returns A sorted list of evaluated sets.
+ * Evaluates and sorts a list of final sets based on a comprehensive set of criteria.
+ * The primary sorting goals are to maximize useful remaining slots and minimize unwanted extra skills.
+ * @param sets The list of sets to evaluate and sort.
+ * @param requiredSkills The user's required skills.
+ * @param skillDetails A map of skill details for reference.
+ * @returns A new array of sorted `FinalSet` objects.
  */
 export function evaluateAndSortResults(
   sets: FinalSet[],
@@ -96,16 +105,17 @@ export function evaluateAndSortResults(
     return sets;
   }
 
-  // Sort using multi-level comparison
+  // Sort using a multi-level comparison.
   return sets.sort((a, b) => {
-    // 1. 剩余孔位价值 (高 -> 低)
+    // 1. Sort by remaining slot value (descending).
     const aSlotValue = calculateSlotValue(a.remainingSlots);
     const bSlotValue = calculateSlotValue(b.remainingSlots);
     if (aSlotValue !== bSlotValue) {
       return bSlotValue - aSlotValue;
     }
 
-    // 2. 溢出核心技能总等级 (低 -> 高)
+    // 2. Sort by the total level of extra "key" skills (ascending).
+    // This penalizes sets with more unwanted high-value skills.
     const aExtraSkills = calculateExtraSkills(a, requiredSkills);
     const bExtraSkills = calculateExtraSkills(b, requiredSkills);
 

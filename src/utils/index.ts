@@ -1,31 +1,33 @@
 /**
- * MHWS护石管理器 - 工具函数统一导出
+ * @fileoverview Barrel file for exporting all utility functions in MHWS Set Builder.
  *
- * 集中导出所有工具函数，方便其他模块引用
+ * This file centralizes exports for all utility modules, making them
+ * easily accessible from other parts of the application.
  */
 
-// 护石计算工具
+// Charm calculation utilities
 export {
   calculateSkillEquivalentSlots,
   calculateCharmEquivalentSlots,
   calculateKeySkillValue,
 } from "./charm-calculator";
 
-// 护石验证工具
+// Charm validation utilities
 export {
   validateCharm,
   areSkillsIdentical,
   areSlotsIdentical,
 } from "./charm-validator";
 
-// ID生成工具
+// ID generation utilities
 export {
   validateIdFormat,
   generateSkillId,
   generateCharmId,
+  isOfficialCharmId,
 } from "./id-generator";
 
-// 护石排序工具
+// Charm sorting utilities
 export {
   sortCharms,
   sortCharmsDefault,
@@ -33,11 +35,11 @@ export {
   filterAndSortBySkill,
 } from "./charm-sorter";
 
-// 技能排序工具
+// Skill sorting utilities
 export { compareSkills } from "./skill-sorter";
 
-// 通用数据IO工具
+// General-purpose data I/O utilities
 export { validateData } from "./data-io";
 
-// 通用数据IO类型
+// General-purpose data I/O types
 export type { ValidationResult } from "./data-io";

@@ -1,34 +1,36 @@
 /**
- * MHWS护石管理器 - 统一数据存储服务
- *
- * 这是应用的核心数据持久化服务，负责：
- * - 应用启动时的版本检查和数据迁移
- * - 所有数据的加载和保存
- * - localStorage 的统一管理
- *
- * @module DataStorage
+ * @fileoverview
+ * This file provides a unified data storage service for the MHWS Set Builder.
+ * It handles core data persistence tasks, including:
+ * - Version checking and data migration on application startup.
+ * - Loading and saving all application data.
+ * - Centralized management of localStorage.
  */
 
-import type { DataId, DataItem, AppSettings } from "@/types";
-import { ALL_DATA_IDS } from "@/types";
 import {
   DATABASE_VERSION,
   DATABASE_VERSION_KEY,
+  DEFAULT_ACCESSORIES_PER_PAGE,
   DEFAULT_ARMOR_SERIES_PER_PAGE,
   DEFAULT_CHARMS_PER_PAGE,
   DEFAULT_SKILLS_PER_PAGE,
-  DEFAULT_ACCESSORIES_PER_PAGE,
   STORAGE_KEYS,
   STORAGE_KEYS_DELTA,
 } from "@/constants";
 import {
-  type MigrationStats,
+  ALL_DATA_IDS,
+  type AppSettings,
+  type DataId,
+  type DataItem,
+} from "@/types";
+import {
   createDiff,
   patch,
   type DataDelta,
+  type MigrationStats,
 } from "@/utils/data-io";
 
-// 定义需要进行差异化存储的数据类型
+// Define data types that require differential storage.
 const DIFFERENTIAL_DATA_IDS = ALL_DATA_IDS.filter((id) => id !== "settings");
 
 const EMPTY_DELTA: DataDelta<DataItem> = {
@@ -38,39 +40,36 @@ const EMPTY_DELTA: DataDelta<DataItem> = {
 };
 
 /**
- * DataStorage 类
- *
- * 单例模式，管理应用所有持久化数据
+ * Manages all persistent data for the application in a singleton pattern.
  */
 class DataStorageService {
   /**
-   * 内部数据缓存
-   * 在 initialize() 后，所有数据都会被加载到这里
+   * Internal data cache. All data is loaded here after `initialize()` is called.
    */
   private dataCache: Map<DataId, DataItem[]> = new Map<DataId, DataItem[]>();
 
   /**
-   * 迁移报告缓存
-   * 存储最近一次迁移的统计信息，供 UI 展示
+   * Cache for the migration report.
+   * Stores stats from the last migration for UI display.
    */
   private migrationReport: Map<DataId, MigrationStats> | null = null;
 
   /**
-   * 初始化状态标记
+   * Flag to indicate if the service has been initialized.
    */
   private initialized = false;
 
   /**
-   * 初始化 DataStorage
+   * Initializes the DataStorage service.
    *
-   * 此方法应在应用启动时调用，在任何 Context 初始化之前完成。
-   * 它会执行以下操作：
-   * 1. 检查 localStorage 中的版本号
-   * 2. 如果是新用户或版本不匹配，加载初始数据或执行迁移
-   * 3. 将所有数据加载到内存缓存中
+   * This method should be called on application startup before any other
+   * data-dependent context is initialized. It performs the following steps:
+   * 1. Checks the version number in localStorage.
+   * 2. Loads initial data or performs migration if the user is new or the version mismatches.
+   * 3. Loads all data into the in-memory cache.
    *
-   * @returns Promise<void>
-   * @throws {Error} 如果初始化失败
+   * @returns A promise that resolves when initialization is complete.
+   * @throws {Error} If initialization fails.
    */
   async initialize(): Promise<void> {
     if (this.initialized) {
@@ -84,37 +83,37 @@ class DataStorageService {
       const storedVersion = this.getStoredVersion();
 
       if (storedVersion === DATABASE_VERSION) {
-        // 版本匹配，加载差异化数据
-        console.log("[DataStorage] 版本匹配，加载现有数据");
+        // Version matches, load differential data.
+        console.log("[DataStorage] Version match. Loading existing data.");
         await this.loadDifferentialData();
       } else if (storedVersion === null) {
-        // 新用户，加载初始数据
-        console.log("[DataStorage] 新用户，加载初始数据");
+        // New user, load initial data.
+        console.log("[DataStorage] New user. Loading initial data.");
         await this.loadInitialData();
       } else {
-        // 版本不匹配，执行迁移
+        // Version mismatch, perform migration.
         console.log(
-          `[DataStorage] 版本升级: ${storedVersion} -> ${DATABASE_VERSION}`,
+          `[DataStorage] Upgrading version: ${storedVersion} -> ${DATABASE_VERSION}`,
         );
         await this.migrateToDifferential(storedVersion);
       }
 
-      // 更新版本号
+      // Update the version number in storage.
       this.setStoredVersion(DATABASE_VERSION);
 
       this.initialized = true;
       console.log("[DataStorage] 初始化完成");
     } catch (error) {
-      console.error("[DataStorage] 初始化失败:", error);
-      throw new Error("数据存储初始化失败");
+      console.error("[DataStorage] Initialization failed:", error);
+      throw new Error("Data storage initialization failed");
     }
   }
 
   /**
-   * 加载指定类型的数据
+   * Loads data of a specific type from the cache.
    *
-   * @param id - 数据类型ID
-   * @returns 数据数组
+   * @param id The ID of the data type to load.
+   * @returns An array of data items.
    */
   loadData<T extends DataItem>(id: DataId): T[] {
     if (!this.initialized) {
@@ -126,10 +125,10 @@ class DataStorageService {
   }
 
   /**
-   * 保存指定类型的数据
+   * Saves data of a specific type.
    *
-   * @param id - 数据类型ID
-   * @param data - 要保存的数据
+   * @param id The ID of the data type to save.
+   * @param data The data array to save.
    */
   async saveData<T extends DataItem>(id: DataId, data: T[]): Promise<void> {
     if (!this.initialized) {
@@ -137,42 +136,42 @@ class DataStorageService {
     }
 
     try {
-      // 1. 更新内存缓存
+      // 1. Update the in-memory cache.
       this.dataCache.set(id, data);
 
-      // 2. 根据数据类型执行不同保存策略
+      // 2. Apply different save strategies based on data type.
       if (id === "settings") {
-        // 对于设置，执行全量保存
+        // For settings, perform a full save.
         const key = STORAGE_KEYS.settings;
         localStorage.setItem(key, JSON.stringify(data));
-        console.log(`[DataStorage] 已全量保存 ${id}`);
+        console.log(`[DataStorage] Full-saved ${id}`);
       } else {
-        // 对于其他数据，执行差异化保存
-        // 2a. 加载基准数据
+        // For other data types, perform a differential save.
+        // 2a. Load the base data.
         const baseData = await this.loadBaseDataForType(id);
 
-        // 2b. 计算差异
+        // 2b. Calculate the diff.
         const delta = createDiff(baseData, data);
 
-        // 2c. 持久化差异到 localStorage
+        // 2c. Persist the diff to localStorage.
         const deltaKey = STORAGE_KEYS_DELTA[id];
         localStorage.setItem(deltaKey, JSON.stringify(delta));
-        console.log(`[DataStorage] 已差异化保存 ${id}:`, {
+        console.log(`[DataStorage] Diff-saved ${id}:`, {
           added: delta.added.length,
           modified: delta.modified.length,
           deleted: delta.deleted.length,
         });
       }
     } catch (error) {
-      console.error(`[DataStorage] 保存 ${id} 失败:`, error);
-      throw new Error(`保存 ${id} 数据失败`);
+      console.error(`[DataStorage] Failed to save ${id}:`, error);
+      throw new Error(`Failed to save ${id} data`);
     }
   }
 
   /**
-   * 重置指定类型的数据到初始状态
+   * Resets data of a specific type to its initial state.
    *
-   * @param id - 数据类型ID
+   * @param id The ID of the data type to reset.
    */
   public async resetData(id: DataId): Promise<void> {
     if (!this.initialized) {
@@ -180,38 +179,38 @@ class DataStorageService {
     }
 
     try {
-      console.log(`[DataStorage] 重置 ${id} 数据到初始状态`);
+      console.log(`[DataStorage] Resetting ${id} data to initial state`);
       await this.loadInitialDataForType(id);
-      console.log(`[DataStorage] ${id} 数据重置完成`);
+      console.log(`[DataStorage] ${id} data reset complete`);
     } catch (error) {
-      console.error(`[DataStorage] 重置 ${id} 数据失败:`, error);
-      throw new Error(`重置 ${id} 数据失败`);
+      console.error(`[DataStorage] Failed to reset ${id} data:`, error);
+      throw new Error(`Failed to reset ${id} data`);
     }
   }
 
   /**
-   * 清除所有存储数据
+   * Clears all stored data from both localStorage and memory.
    */
   clearAll(): void {
-    console.log("[DataStorage] 清除所有数据");
+    console.log("[DataStorage] Clearing all data");
 
-    // 清除 localStorage
-    // 清除全量和差异数据
+    // Clear localStorage.
+    // Clear full and differential data.
     Object.values(STORAGE_KEYS).forEach((key) => localStorage.removeItem(key));
     Object.values(STORAGE_KEYS_DELTA).forEach((key) =>
       localStorage.removeItem(key),
     );
     localStorage.removeItem(DATABASE_VERSION_KEY);
 
-    // 清除内存缓存
+    // Clear the in-memory cache.
     this.dataCache.clear();
     this.initialized = false;
   }
 
   /**
-   * 获取并清除迁移报告
+   * Retrieves and clears the migration report.
    *
-   * @returns 迁移报告（如果有），否则返回 null
+   * @returns The migration report if it exists, otherwise null.
    */
   getAndClearMigrationReport(): Map<DataId, MigrationStats> | null {
     const report = this.migrationReport;
@@ -220,38 +219,38 @@ class DataStorageService {
   }
 
   /**
-   * 加载差异化数据（版本匹配时调用）
+   * Loads data differentially, called when the stored version matches the database version.
    */
   private async loadDifferentialData(): Promise<void> {
-    // 1. 全量加载设置
+    // 1. Load settings data fully.
     await this.loadInitialDataForType("settings");
 
-    // 2. 差异化加载其他数据
+    // 2. Load other data types differentially.
     for (const id of DIFFERENTIAL_DATA_IDS) {
-      // 2a. 加载基准数据
+      // 2a. Load the base data.
       const baseData = await this.loadBaseDataForType(id);
 
-      // 2b. 加载差异数据
+      // 2b. Load the diff data from storage.
       const deltaKey = STORAGE_KEYS_DELTA[id];
       const storedDelta = localStorage.getItem(deltaKey);
       const delta = storedDelta
         ? (JSON.parse(storedDelta) as DataDelta<DataItem>)
         : EMPTY_DELTA;
 
-      // 2c. 应用 Patch 生成完整数据
+      // 2c. Apply the patch to generate the full dataset.
       const fullData = patch(baseData, delta);
       this.dataCache.set(id, fullData);
 
       console.log(
-        `[DataStorage] 已加载 ${id} (差异化):`,
+        `[DataStorage] Loaded ${id} (differential):`,
         fullData.length,
-        "条",
+        "items",
       );
     }
   }
 
   /**
-   * 加载所有初始数据
+   * Loads initial data for all data types.
    */
   private async loadInitialData(): Promise<void> {
     for (const id of ALL_DATA_IDS) {
@@ -260,11 +259,11 @@ class DataStorageService {
   }
 
   /**
-   * 加载指定类型的初始数据
+   * Loads initial data for a specific data type.
    */
   private async loadInitialDataForType(id: DataId): Promise<void> {
     if (id === "settings") {
-      // 设置数据使用默认值初始化并全量保存
+      // Settings are initialized with default values and saved fully.
       const key = STORAGE_KEYS.settings;
       const stored = localStorage.getItem(key);
       let settings: AppSettings[];
@@ -284,100 +283,108 @@ class DataStorageService {
         localStorage.setItem(key, JSON.stringify(settings));
       }
       this.dataCache.set("settings", settings);
-      console.log("[DataStorage] 已加载设置数据");
+      console.log("[DataStorage] Loaded settings data.");
       return;
     }
 
-    // 对于差异化数据类型，加载基准数据并保存一个空的 delta
+    // For differential data types, load base data and save an empty delta.
     const baseData = await this.loadBaseDataForType(id);
     this.dataCache.set(id, baseData);
 
     const deltaKey = STORAGE_KEYS_DELTA[id];
     localStorage.setItem(deltaKey, JSON.stringify(EMPTY_DELTA));
 
-    console.log(`[DataStorage] 已加载初始 ${id}:`, baseData.length, "条记录");
+    console.log(
+      `[DataStorage] Loaded initial ${id}:`,
+      baseData.length,
+      "records",
+    );
   }
 
   /**
-   * 迁移到差异化存储（一次性）
+   * Performs a one-time migration to differential storage.
    */
   private async migrateToDifferential(oldVersion: string): Promise<void> {
     console.log(
-      `[DataStorage] 执行到差异化存储的迁移: ${oldVersion} -> ${DATABASE_VERSION}`,
+      `[DataStorage] Migrating to differential storage: ${oldVersion} -> ${DATABASE_VERSION}`,
     );
 
     try {
-      // 1. 迁移/加载设置
+      // 1. Migrate/load settings.
       await this.loadInitialDataForType("settings");
 
-      // 2. 迁移其他数据类型
+      // 2. Migrate other data types.
       for (const id of DIFFERENTIAL_DATA_IDS) {
-        // 2a. 加载旧的全量数据
+        // 2a. Load the old full data from storage.
         const oldKey = STORAGE_KEYS[id];
         const oldStoredData = localStorage.getItem(oldKey);
         const oldFullData = oldStoredData
           ? (JSON.parse(oldStoredData) as DataItem[])
           : [];
 
-        // 2b. 加载新的基准数据
+        // 2b. Load the new base data.
         const newBaseData = await this.loadBaseDataForType(id);
 
-        // 2c. 计算差异
+        // 2c. Calculate the diff between the new base and old full data.
         const delta = createDiff(newBaseData, oldFullData);
 
-        // 2d. 保存新的差异数据
+        // 2d. Save the new diff data.
         const deltaKey = STORAGE_KEYS_DELTA[id];
         localStorage.setItem(deltaKey, JSON.stringify(delta));
 
-        // 2e. 将合并后的数据加载到缓存
+        // 2e. Load the merged data into the cache.
         const mergedData = patch(newBaseData, delta);
         this.dataCache.set(id, mergedData);
 
-        // 2f. [重要] 删除旧的全量数据
+        // 2f. [IMPORTANT] Remove the old full data from storage.
         localStorage.removeItem(oldKey);
 
-        console.log(`[DataStorage] ${id} 已成功迁移到差异化存储`);
+        console.log(
+          `[DataStorage] ${id} migrated to differential storage successfully`,
+        );
       }
-      console.log("[DataStorage] 数据迁移完成");
+      console.log("[DataStorage] Data migration complete");
     } catch (error) {
-      console.error("[DataStorage] 数据迁移失败:", error);
-      // 迁移失败时回退，清空所有内容并加载初始数据
-      console.log("[DataStorage] 迁移失败，回退到加载初始数据");
+      console.error("[DataStorage] Data migration failed:", error);
+      // On migration failure, roll back by clearing everything and loading initial data.
+      console.log(
+        "[DataStorage] Migration failed, rolling back to initial data",
+      );
       this.clearAll();
       await this.loadInitialData();
     }
   }
 
   /**
-   * 加载指定类型的基准数据
+   * Loads the base data for a specific data type from its JSON file.
    */
   private async loadBaseDataForType(id: DataId): Promise<DataItem[]> {
-    // `settings` 没有基准数据文件
+    // `settings` does not have a base data file.
     if (id === "settings") return [];
 
     try {
-      // 注意：这里需要调整 import 路径，因为文件位置变了
-      // 从 src/services/storage/index.ts 到 src/data/initial-xxx.json
-      // 需要向上跳两级: ../../data/
+      // Note: The import path needs adjustment due to the file's location change.
+      // From src/services/storage/index.ts to src/data/initial-xxx.json
+      // This requires going up two levels: ../../data/
       const module = (await import(`../../data/initial-${id}.json`)) as {
         default: Record<string, unknown[]>;
       };
       return (module.default[id] ?? []) as DataItem[];
     } catch (error) {
-      console.error(`[DataStorage] 加载基准 ${id} 数据失败:`, error);
-      return []; // 加载失败时返回空数组
+      console.error(`[DataStorage] Failed to load base data for ${id}:`, error);
+      return []; // Return an empty array on failure.
     }
   }
 
   /**
-   * 获取存储的版本号
+   * Gets the stored database version from localStorage.
    */
   private getStoredVersion(): string | null {
     return localStorage.getItem(DATABASE_VERSION_KEY);
   }
 
   /**
-   * 设置存储的版本号
+   * Sets the database version in localStorage.
    */
   private setStoredVersion(version: string): void {
     localStorage.setItem(DATABASE_VERSION_KEY, version);
@@ -385,6 +392,6 @@ class DataStorageService {
 }
 
 /**
- * DataStorage 单例实例
+ * Singleton instance of the DataStorageService.
  */
 export const DataStorage = new DataStorageService();

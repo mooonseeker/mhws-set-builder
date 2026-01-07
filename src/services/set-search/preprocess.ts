@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Pre-processes raw game data for efficient use in the set search algorithm.
+ * It converts data arrays into Maps and calculates potential skill values for pruning.
+ */
+
 import type {
   Accessory,
   Armor,
@@ -10,12 +15,18 @@ import type {
 } from "@/types";
 
 /**
- * v7.1 数据预处理函数
- * 根据 automode-new-plan.md 规范重写。
- * 将原始数据数组转换为高效的Map结构，用于配装搜索算法。
- * 主要产出：
- * - skillProviderMap: 详尽的技能来源索引
- * - maxPotentialPerArmorType: [核心] 各防具部位对各技能的理论最大潜力
+ * Pre-processes raw game data into efficient Map-based structures for the search algorithm.
+ * Key outputs include:
+ * - `skillProviderMap`: A detailed index of all sources for each skill.
+ * - `maxPotentialPerArmorType`: The theoretical maximum skill points achievable for each skill on each armor type,
+ *   which is crucial for pruning.
+ *
+ * @param allArmors Raw list of all armors.
+ * @param allWeapons Raw list of all weapons.
+ * @param allCharms Raw list of all charms.
+ * @param allAccessories Raw list of all accessories.
+ * @param allSkills Raw list of all skills.
+ * @returns A `PreprocessedData` object containing the structured data.
  */
 export function preprocess(
   allArmors: Armor[],
@@ -24,13 +35,13 @@ export function preprocess(
   allAccessories: Accessory[],
   allSkills: Skill[],
 ): PreprocessedData {
-  // 初始化所有核心Map对象
+  // Initialize the core data structures.
   const skillProviderMap = new Map<string, SkillProviders>();
   const maxPotentialPerArmorType = new Map<ArmorType, Map<string, number>>();
   const accessoriesBySkill = new Map<string, Accessory[]>();
   const skillDetails = new Map<string, Skill>();
 
-  // 1. 初始化基础Map结构
+  // 1. Initialize base Map structures.
   const armorTypes: ArmorType[] = ["helm", "body", "arm", "waist", "leg"];
   armorTypes.forEach((type) => {
     maxPotentialPerArmorType.set(type, new Map<string, number>());
@@ -38,7 +49,7 @@ export function preprocess(
 
   allSkills.forEach((skill) => {
     skillDetails.set(skill.id, skill);
-    // 初始化 skillProviderMap，确保每个技能都有一个条目
+    // Ensure every skill has an entry in the provider map.
     skillProviderMap.set(skill.id, {
       armors: [],
       weapons: [],
@@ -47,7 +58,7 @@ export function preprocess(
     });
   });
 
-  // 2. 构建 accessoriesBySkill 和填充 skillProviderMap for accessories
+  // 2. Build `accessoriesBySkill` map and populate `skillProviderMap` for accessories.
   allAccessories.forEach((accessory) => {
     accessory.skills.forEach((skill) => {
       if (!accessoriesBySkill.has(skill.skillId)) {
@@ -55,7 +66,7 @@ export function preprocess(
       }
       accessoriesBySkill.get(skill.skillId)!.push(accessory);
 
-      // 同时填充到 skillProviderMap
+      // Also add to the main provider map.
       const providers = skillProviderMap.get(skill.skillId);
       if (providers) {
         providers.accessories.push(accessory);
@@ -63,35 +74,26 @@ export function preprocess(
     });
   });
 
-  // 3. 填充 skillProviderMap for armors, weapons, charms
+  // 3. Populate `skillProviderMap` for armors, weapons, and charms.
   allArmors.forEach((armor) => {
     armor.skills.forEach((skill) => {
-      const providers = skillProviderMap.get(skill.skillId);
-      if (providers) {
-        providers.armors.push(armor);
-      }
+      skillProviderMap.get(skill.skillId)?.armors.push(armor);
     });
   });
 
   allWeapons.forEach((weapon) => {
     weapon.skills.forEach((skill) => {
-      const providers = skillProviderMap.get(skill.skillId);
-      if (providers) {
-        providers.weapons.push(weapon);
-      }
+      skillProviderMap.get(skill.skillId)?.weapons.push(weapon);
     });
   });
 
   allCharms.forEach((charm) => {
     charm.skills.forEach((skill) => {
-      const providers = skillProviderMap.get(skill.skillId);
-      if (providers) {
-        providers.charms.push(charm);
-      }
+      skillProviderMap.get(skill.skillId)?.charms.push(charm);
     });
   });
 
-  // 4. [核心] 计算 maxPotentialPerArmorType
+  // 4. [CORE] Calculate `maxPotentialPerArmorType`.
   armorTypes.forEach((armorType) => {
     const armorsOfType = allArmors.filter((a) => a.type === armorType);
     const skillPotentialMap = maxPotentialPerArmorType.get(armorType)!;
@@ -100,20 +102,19 @@ export function preprocess(
       let maxPotential = 0;
 
       for (const armor of armorsOfType) {
-        // a. 计算自带技能潜力
+        // a. Calculate potential from innate skills on the armor piece.
         const innatePotential =
           armor.skills.find((s) => s.skillId === skill.id)?.level ?? 0;
 
-        // b. 计算孔位技能潜力
+        // b. Calculate potential from slots on the armor piece.
         let slotPotential = 0;
         const relevantAccessories = accessoriesBySkill.get(skill.id) ?? [];
 
-        // 遍历防具的每一个孔
+        // Iterate over each slot on the armor.
         for (const slot of armor.slots) {
           let maxSkillForThisSlot = 0;
-          // 遍历所有能提供该技能的珠子
+          // Find the best accessory that can fit in this slot.
           for (const acc of relevantAccessories) {
-            // 如果珠子可以放入该孔
             if (acc.slotLevel !== -1 && acc.slotLevel <= slot.level) {
               const accSkillLevel =
                 acc.skills.find((s) => s.skillId === skill.id)?.level ?? 0;
@@ -126,10 +127,10 @@ export function preprocess(
           slotPotential += maxSkillForThisSlot;
         }
 
-        // c. 计算当前防具的总潜力
+        // c. Calculate the total potential for this single armor piece.
         const totalPotential = innatePotential + slotPotential;
 
-        // d. 更新该部位对该技能的最大潜力
+        // d. Update the maximum potential for this armor type and skill.
         maxPotential = Math.max(maxPotential, totalPotential);
       }
 
@@ -137,7 +138,7 @@ export function preprocess(
     });
   });
 
-  // 5. 返回构建完成的PreprocessedData对象 (移除了废弃的 armorsBySeries 和 armorsByType)
+  // 5. Return the completed pre-processed data object.
   return {
     skillProviderMap,
     maxPotentialPerArmorType,

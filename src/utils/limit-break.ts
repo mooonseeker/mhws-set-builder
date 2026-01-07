@@ -1,22 +1,32 @@
+/**
+ * @fileoverview Limit break utilities for MHWS Set Builder.
+ *
+ * Provides functions to upgrade armor and toggle the global limit break status.
+ */
+
 import { cloneDeep } from "lodash-es";
+
 import { DataStorage } from "@/services/storage";
 import type { AppSettings, Armor, SlotLevel } from "@/types";
 
 /**
- * 升级单个防具至极限突破状态
+ * Upgrades a single piece of armor to its limit-broken state.
  *
- * 规则：
- * - 稀有度 5: 三个孔位依次增加 1 级（上限 3 级）
- * - 稀有度 6: 前两个孔位依次增加 1 级（上限 3 级）
- * - 名字: 增加 "+" 后缀
+ * Rules:
+ * - Rarity 5: Each of the three slots increases by 1 level (max 3).
+ * - Rarity 6: Each of the first two slots increases by 1 level (max 3).
+ * - Name: Appends a "+" suffix.
+ *
+ * @param armor The armor piece to upgrade.
+ * @returns The upgraded armor piece.
  */
 export function upgradeArmor(armor: Armor): Armor {
-  // 仅处理 R5 和 R6 防具
+  // Only process R5 and R6 armor.
   if (armor.rarity !== 5 && armor.rarity !== 6) {
     return armor;
   }
 
-  // 如果名字已经包含 "+" 后缀，说明已经升级过，直接返回
+  // If the name already has a "+" suffix, it's already upgraded.
   if (armor.name.endsWith("+")) {
     return armor;
   }
@@ -24,7 +34,7 @@ export function upgradeArmor(armor: Armor): Armor {
   const newArmor = cloneDeep(armor);
   newArmor.name = `${newArmor.name}+`;
 
-  // 1. 标准化孔位为等级数组，不足3个的用0补齐
+  // 1. Standardize slots to an array of levels, padding with 0s to 3 slots.
   const currentSlotLevels: number[] = [
     ...newArmor.slots.map((s) => s.level),
     0,
@@ -32,24 +42,24 @@ export function upgradeArmor(armor: Armor): Armor {
     0,
   ].slice(0, 3);
 
-  // 2. 应用升级规则
+  // 2. Apply upgrade rules.
   let upgradedLevels: number[];
   if (newArmor.rarity === 5) {
-    // R5: 三个孔位依次增加 1 级
+    // R5: All three slots increase by 1.
     upgradedLevels = currentSlotLevels.map((level) => Math.min(level + 1, 3));
   } else {
-    // R6: 前两个孔位依次增加 1 级
+    // R6: The first two slots increase by 1.
     upgradedLevels = currentSlotLevels.map((level, index) =>
       index < 2 ? Math.min(level + 1, 3) : level,
     );
   }
 
-  // 3. 重新生成 slots 数组，过滤掉0级孔位，并按等级降序排序
+  // 3. Regenerate the slots array, filtering out level 0 slots and sorting descending.
   newArmor.slots = upgradedLevels
     .filter((level): level is 1 | 2 | 3 => level > 0)
     .sort((a, b) => b - a)
     .map((level) => ({
-      type: "armor", // 假设防具孔位类型固定为 "armor"
+      type: "armor", // Assume armor slots are always of type "armor".
       level: level as SlotLevel,
     }));
 
@@ -57,35 +67,35 @@ export function upgradeArmor(armor: Armor): Armor {
 }
 
 /**
- * 全局切换极限突破状态
+ * Toggles the global limit break status for all armor.
  *
- * @param enable - 是否开启
+ * @param enable - Whether to enable or disable limit break.
  */
 export async function toggleLimitBreakGlobal(enable: boolean): Promise<void> {
-  // 1. 获取当前设置
+  // 1. Get current settings.
   const settingsData = DataStorage.loadData<AppSettings>("settings");
   if (!settingsData || settingsData.length === 0) {
     throw new Error("Settings not initialized");
   }
   const settings = settingsData[0];
 
-  // 如果状态未改变，直接返回
+  // If the state hasn't changed, do nothing.
   if (settings.enableLimitBreak === enable) {
     return;
   }
 
-  // 2. 更新 Armor 数据
+  // 2. Update armor data.
   if (enable) {
-    // 开启：读取当前防具 -> 升级 -> 保存
+    // Enable: Load current armor -> upgrade -> save.
     const currentArmors = DataStorage.loadData<Armor>("armor");
     const upgradedArmors = currentArmors.map(upgradeArmor);
     DataStorage.saveData("armor", upgradedArmors).catch(console.error);
   } else {
-    // 关闭：重置防具数据回初始状态
+    // Disable: Reset armor data to its initial state.
     await DataStorage.resetData("armor");
   }
 
-  // 3. 更新设置状态
+  // 3. Update the setting.
   settings.enableLimitBreak = enable;
   DataStorage.saveData("settings", [settings]).catch(console.error);
 }

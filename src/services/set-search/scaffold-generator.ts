@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Generates armor "scaffolds" based on high-priority skill requirements.
+ * This module is a crucial pre-step to the main armor search. It identifies all possible
+ * partial armor combinations (scaffolds) that satisfy the highly-constrained "Series" and "Group"
+ * skills. The main search then uses these scaffolds as starting points.
+ */
+
 import { cloneDeep } from "lodash-es";
 
 import type {
@@ -12,10 +19,12 @@ import type {
 const ARMOR_TYPES: ArmorType[] = ["helm", "body", "arm", "waist", "leg"];
 
 /**
- *
- * @param requiredLevel - 需要达成的技能等级 (e.g., 5 for '煌雷龙之力' Lv5).
- * @param armorProvidersByPart - 按部位分组的、所有提供该Series技能的防具.
- * @returns 返回所有可能的基础骨架 (EquipmentSet[]).
+ * Finds all combinations of armor pieces that provide a specific Series skill,
+ * respecting already occupied armor slots.
+ * @param requiredLevel The target level of the series skill (e.g., 5 for a 5-piece set bonus).
+ * @param armorProvidersByPart A map of armor pieces that provide the skill, grouped by armor type.
+ * @param occupiedTypes A set of armor types that are already part of the scaffold.
+ * @returns An array of possible partial `EquipmentSet`s (scaffolds).
  */
 function findSeriesSkillCombosWithConstraints(
   requiredLevel: number,
@@ -29,15 +38,15 @@ function findSeriesSkillCombosWithConstraints(
       !occupiedTypes.has(type),
   );
 
-  // 剪枝: 如果有防具的部位总数都小于需求等级，则不可能满足
+  // Pruning: If the number of available armor types is less than the required level, it's impossible to satisfy.
   if (availableTypes.length < requiredLevel) {
     return [];
   }
 
-  // 递归函数，用于生成所有可能的“部位组合”
+  // Recursive function to generate all possible "part combinations".
   const findPartCombos = (startIndex: number, currentCombo: ArmorType[]) => {
     if (currentCombo.length === requiredLevel) {
-      // 当找到一个有效的部位组合后，为这个组合生成所有可能的“防具组合”
+      // Once a valid combination of parts is found, generate all possible equipment sets for it.
       generateEquipmentSetsForPartCombo(
         currentCombo,
         solutions,
@@ -60,7 +69,7 @@ function findSeriesSkillCombosWithConstraints(
 }
 
 /**
- * 辅助函数，为一个给定的“部位组合”生成所有可能的“防具组合”。
+ * Helper function to generate all possible equipment combinations for a given "part combination".
  */
 function generateEquipmentSetsForPartCombo(
   partCombo: ArmorType[],
@@ -87,12 +96,12 @@ function generateEquipmentSetsForPartCombo(
 }
 
 /**
- * 在给定的约束（已占用部位）下，寻找满足一组Group技能需求的防具组合。
+ * Finds armor combinations that satisfy a set of Group skills, given constraints on occupied slots.
  *
- * @param skillsToProcess - 需要满足的Group技能列表.
- * @param preprocessedData - 预处理数据，用于获取技能提供者.
- * @param occupiedTypes - 已经被Series骨架占用的防具部位.
- * @returns 返回所有能满足需求的“补充骨架” (EquipmentSet[]).
+ * @param skillsToProcess The list of Group skills to be satisfied.
+ * @param preprocessedData Pre-processed data to get skill providers.
+ * @param occupiedTypes A set of armor types already occupied by a Series scaffold.
+ * @returns An array of supplementary scaffolds that satisfy the requirements.
  */
 function findGroupSkillCombos(
   skillsToProcess: SkillWithLevel[],
@@ -102,18 +111,18 @@ function findGroupSkillCombos(
   const solutions: EquipmentSet[] = [];
   const availableTypes = ARMOR_TYPES.filter((type) => !occupiedTypes.has(type));
 
-  // 1. 构建候选防具池
+  // 1. Build a pool of candidate armors.
   const requiredSkillIds = new Set(skillsToProcess.map((s) => s.skillId));
   const candidateArmors = new Map<ArmorType, Armor[]>();
   availableTypes.forEach((type) => candidateArmors.set(type, []));
 
-  // 遍历所有group技能，找到它们的提供者
+  // Find all providers for the required group skills.
   for (const skillId of requiredSkillIds) {
     const providers =
       preprocessedData.skillProviderMap.get(skillId)?.armors ?? [];
     for (const armor of providers) {
       if (candidateArmors.has(armor.type)) {
-        // 避免重复添加
+        // Avoid adding duplicates.
         const existing = candidateArmors.get(armor.type)!;
         if (!existing.find((a) => a.id === armor.id)) {
           existing.push(armor);
@@ -122,15 +131,15 @@ function findGroupSkillCombos(
     }
   }
 
-  // 2. 定义并启动回溯
+  // 2. Define and start the backtracking search.
   const backtrack = (
     typeIndex: number,
     currentScaffold: EquipmentSet,
     currentSkills: Map<string, number>,
   ) => {
-    // Base Case: 遍历完所有可用部位
+    // Base Case: All available types have been processed.
     if (typeIndex >= availableTypes.length) {
-      // 检查当前组合是否满足所有group技能需求
+      // Check if the current combination satisfies all group skill requirements.
       const isSuccess = skillsToProcess.every(
         (target) => (currentSkills.get(target.skillId) ?? 0) >= target.level,
       );
@@ -144,22 +153,22 @@ function findGroupSkillCombos(
     const currentType = availableTypes[typeIndex];
     const armorsForType = candidateArmors.get(currentType) ?? [];
 
-    // 选择1: 不为该部位选择防具
+    // Choice 1: Don't select an armor piece for this type.
     backtrack(typeIndex + 1, currentScaffold, currentSkills);
 
-    // 选择2: 为该部位选择一件防具
+    // Choice 2: Select an armor piece for this type.
     for (const armor of armorsForType) {
-      // a. 更新状态
+      // a. Update state
       currentScaffold[currentType] = { equipment: armor, accessories: [] };
       armor.skills.forEach((skill) => {
         const currentLevel = currentSkills.get(skill.skillId) ?? 0;
         currentSkills.set(skill.skillId, currentLevel + skill.level);
       });
 
-      // b. 递归
+      // b. Recurse
       backtrack(typeIndex + 1, currentScaffold, currentSkills);
 
-      // c. 回溯
+      // c. Backtrack
       delete currentScaffold[currentType];
       armor.skills.forEach((skill) => {
         const currentLevel = currentSkills.get(skill.skillId) ?? 0;
@@ -173,7 +182,7 @@ function findGroupSkillCombos(
 }
 
 /**
- * 递归求解器，用于处理多个（组合的）Series技能需求。
+ * A recursive solver to handle requirements for multiple, combined Series skills.
  */
 function resolveCombinedSeriesScaffolds(
   seriesSkills: SkillWithLevel[],
@@ -182,7 +191,7 @@ function resolveCombinedSeriesScaffolds(
 ): EquipmentSet[] {
   const finalScaffolds: EquipmentSet[] = [];
 
-  // 按满足难度排序，提供者越少的技能越难满足，优先处理
+  // Sort by difficulty: skills with fewer providers are harder to satisfy and are processed first.
   const sortedSeriesSkills = [...seriesSkills].sort((a, b) => {
     const providersA =
       preprocessedData.skillProviderMap.get(a.skillId)?.armors.length ?? 0;
@@ -196,7 +205,7 @@ function resolveCombinedSeriesScaffolds(
     currentScaffold: EquipmentSet,
     currentOccupiedTypes: Set<ArmorType>,
   ) => {
-    // Base Case: 所有 series 技能都已成功处理
+    // Base Case: All series skills have been successfully processed.
     if (skillIndex >= sortedSeriesSkills.length) {
       finalScaffolds.push(cloneDeep(currentScaffold));
       return;
@@ -206,31 +215,31 @@ function resolveCombinedSeriesScaffolds(
     const armorProviders =
       preprocessedData.skillProviderMap.get(currentSkill.skillId)?.armors ?? [];
 
-    // 按部位对当前技能的防具提供者进行分组
+    // Group armor providers for the current skill by type.
     const providersByPart = new Map<ArmorType, Armor[]>();
     ARMOR_TYPES.forEach((type) => providersByPart.set(type, []));
     armorProviders.forEach((armor) => {
       providersByPart.get(armor.type)?.push(armor);
     });
 
-    // 寻找满足当前技能的“增量骨架”，并传入已占用的部位作为约束
+    // Find "incremental scaffolds" for the current skill, respecting occupied slots.
     const incrementalScaffolds = findSeriesSkillCombosWithConstraints(
       currentSkill.level,
       providersByPart,
       currentOccupiedTypes,
     );
 
-    // 遍历所有找到的增量骨架，并进行递归
+    // Iterate through the found incremental scaffolds and recurse.
     for (const increment of incrementalScaffolds) {
-      // a. 合并骨架
+      // a. Merge scaffolds.
       const nextScaffold = { ...currentScaffold, ...increment };
-      // b. 更新已占用部位
+      // b. Update the set of occupied types.
       const nextOccupiedTypes = new Set(currentOccupiedTypes);
       Object.keys(increment).forEach((type) =>
         nextOccupiedTypes.add(type as ArmorType),
       );
 
-      // c. 递归处理下一个技能
+      // c. Recurse for the next skill.
       findCombosRecursive(skillIndex + 1, nextScaffold, nextOccupiedTypes);
     }
   };
@@ -240,9 +249,9 @@ function resolveCombinedSeriesScaffolds(
 }
 
 /**
- * 防具骨架生成器
- * 采用分层处理策略，优先处理强约束的Series技能，再处理Group技能
- * 支持单一及组合Series技能需求
+ * Generates armor scaffolds based on Series and Group skill requirements.
+ * This uses a layered approach, prioritizing the highly-constrained Series skills first,
+ * then handling Group skills. It supports single and combined Series skill requirements.
  */
 export function generateArmorScaffolds(
   context: SearchContext,
@@ -251,7 +260,7 @@ export function generateArmorScaffolds(
   const { seriesSkills, groupSkills } = context.skillDeficits;
   const finalScaffolds: EquipmentSet[] = [];
 
-  // 从context中提取已经被固定的防具位置
+  // Extract any armor types that are already fixed in the context.
   const occupiedTypesFromContext = new Set<ArmorType>();
   ARMOR_TYPES.forEach((type) => {
     if (context.equipment[type]) {
@@ -259,21 +268,21 @@ export function generateArmorScaffolds(
     }
   });
 
-  // Case 1: 存在 Series 技能需求 (主要流程)
+  // Case 1: There are Series skill requirements.
   if (seriesSkills.length > 0) {
-    // 1a. [V3] 调用高阶求解器，生成所有满足全部 Series 技能的基础骨架
+    // 1a. Generate all base scaffolds that satisfy the Series skills.
     const baseScaffolds = resolveCombinedSeriesScaffolds(
       seriesSkills,
       preprocessedData,
       occupiedTypesFromContext,
     );
 
-    // 1b. 在每个基础骨架上，校验和补充 Group 技能
+    // 1b. For each base scaffold, validate and supplement with Group skills.
     for (const baseScaffold of baseScaffolds) {
       const occupiedTypes = new Set(Object.keys(baseScaffold) as ArmorType[]);
       occupiedTypesFromContext.forEach((type) => occupiedTypes.add(type));
 
-      // 计算基础骨架已提供的 Group 技能等级
+      // Calculate the Group skill levels already provided by the base scaffold.
       const currentGroupLevels = new Map<string, number>();
       const requiredGroupSkillIds = new Set(groupSkills.map((s) => s.skillId));
       const equipmentToScan = { ...context.equipment, ...baseScaffold };
@@ -296,7 +305,7 @@ export function generateArmorScaffolds(
         }
       });
 
-      // 筛选出仍有缺口的 Group 技能
+      // Filter for Group skills that are still not met.
       const remainingGroupDeficits = groupSkills
         .map((target) => ({
           skillId: target.skillId,
@@ -304,31 +313,31 @@ export function generateArmorScaffolds(
         }))
         .filter((skill) => skill.level > 0);
 
-      // 如果 Group 技能已全部满足
+      // If all Group skills are met, the base scaffold is complete.
       if (remainingGroupDeficits.length === 0) {
         finalScaffolds.push(baseScaffold);
         continue;
       }
 
-      // 如果骨架已满，但 Group 技能仍有缺口，则此骨架无效
+      // If the scaffold is full but Group skills are missing, this scaffold is invalid.
       if (occupiedTypes.size === ARMOR_TYPES.length) {
         continue;
       }
 
-      // 尝试在空余部位补全 Group 技能
+      // Try to fill the remaining Group skills in the empty slots.
       const groupFillers = findGroupSkillCombos(
         remainingGroupDeficits,
         preprocessedData,
         occupiedTypes,
       );
       for (const filler of groupFillers) {
-        // 合并基础骨架和补充骨架
+        // Combine the base scaffold with the supplementary filler.
         const combinedScaffold = { ...baseScaffold, ...filler };
         finalScaffolds.push(combinedScaffold);
       }
     }
   }
-  // Case 2: 只存在 Group 技能需求
+  // Case 2: Only Group skill requirements exist.
   else if (groupSkills.length > 0) {
     return findGroupSkillCombos(
       groupSkills,
@@ -336,9 +345,9 @@ export function generateArmorScaffolds(
       occupiedTypesFromContext,
     );
   }
-  // Case 3: 无 Series/Group 技能需求
+  // Case 3: No Series or Group skill requirements.
   else {
-    return [{}]; // 返回一个空骨架，表示无需特定防具
+    return [{}]; // Return an empty scaffold, indicating no specific armor is required.
   }
 
   return finalScaffolds;

@@ -1,20 +1,28 @@
+/**
+ * @fileoverview Skill sorting utility for MHWS Set Builder.
+ */
+
 import type { Skill } from "@/types";
 
 /**
- * 比较两个技能的优先级
+ * Compares the priority of two skills for sorting.
  *
- * 排序规则：
- * 1. 技能分类：武器技能 > 防具技能 > 系列技能 > 组合技能
- * 2. 技能等级：降序
- * 3. 满级优先：当前等级 >= 最大等级
- * 4. 核心技能：isKey 为 true 优先
- * 5. SortId：升序
+ * Sorting Rules:
+ * 1. Category: weapon > armor > series > group
+ * 2. Level: descending
+ * 3. Max Level: Skills at max level are prioritized.
+ * 4. Key Skill: `isKey: true` is prioritized.
+ * 5. SortId: ascending
+ *
+ * @param a The first skill object to compare.
+ * @param b The second skill object to compare.
+ * @returns A number indicating the sort order.
  */
 export function compareSkills(
   a: { level: number; skillData?: Skill | null },
   b: { level: number; skillData?: Skill | null },
 ): number {
-  // 处理缺失数据的情况，有数据的排前面
+  // Handle cases with missing data, prioritizing items with data.
   if (!a.skillData && !b.skillData) return 0;
   if (!a.skillData) return 1;
   if (!b.skillData) return -1;
@@ -25,29 +33,29 @@ export function compareSkills(
 
   // 1. Category
   if (aCategoryIndex !== bCategoryIndex) {
-    // 如果某个分类不在列表中（比如未知分类），indexOf 返回 -1，应该排在最后
+    // A category not in the list (indexOf returns -1) should be last.
     if (aCategoryIndex === -1) return 1;
     if (bCategoryIndex === -1) return -1;
     return aCategoryIndex - bCategoryIndex;
   }
 
-  // 2. Level (Desc)
+  // 2. Level (Descending)
   if (a.level !== b.level) {
     return b.level - a.level;
   }
 
-  // 3. Max Level (Full level first)
+  // 3. Max Level (Prioritize maxed-out skills)
   const aIsMax = a.level >= a.skillData.maxLevel;
   const bIsMax = b.level >= b.skillData.maxLevel;
   if (aIsMax !== bIsMax) {
     return aIsMax ? -1 : 1;
   }
 
-  // 4. Is Key (Key first)
+  // 4. Is Key (Prioritize key skills)
   if (a.skillData.isKey !== b.skillData.isKey) {
     return a.skillData.isKey ? -1 : 1;
   }
 
-  // 5. SortId (Asc)
+  // 5. SortId (Ascending)
   return a.skillData.sortId - b.skillData.sortId;
 }

@@ -1,7 +1,10 @@
 /**
- * @fileoverview Entry point for the set-search algorithm service.
- * This file orchestrates the entire process of finding optimal equipment sets.
+ * @fileoverview Entry point for the MHWS Set Builder's search algorithm.
+ * This file orchestrates the entire process of finding optimal equipment sets
+ * by preprocessing data, generating scaffolds, and filling them to meet skill requirements.
  */
+
+import { cloneDeep } from "lodash-es";
 
 import type {
   Accessory,
@@ -17,7 +20,6 @@ import type {
   Weapon,
 } from "@/types";
 import type { SearchContext, SkillDeficit } from "@/types/set-builder";
-import { cloneDeep } from "lodash-es";
 
 import { solveAccessories } from "./accessory-solver";
 import { fillArmorScaffold } from "./armor-search";
@@ -27,7 +29,9 @@ import { categorizeTargetSkills } from "./utils";
 
 const SEARCH_LIMIT = 20; // Stop search if more than this many results are found
 
-// Define allData based on imported types
+/**
+ * Represents all the raw game data needed for the search.
+ */
 interface AllGameData {
   armors: Armor[];
   weapons: Weapon[];
@@ -37,15 +41,15 @@ interface AllGameData {
 }
 
 /**
- * Main orchestration function to find optimal equipment sets based on v7.1 plan.
+ * Main orchestration function to find optimal equipment sets.
  *
- * This new strategy anchors the search on a fixed weapon and iterates through charms.
+ * This strategy anchors the search on a fixed weapon and iterates through charms.
  * It integrates weapon-skill solving early to allow for aggressive pruning, leading
  * to a more efficient search process.
  *
- * @param requiredSkills - An array of skills the user requires.
- * @param fixedEquipment - The specific equipment set to build around.
- * @param allData - All game data including armors, weapons, accessories, skills, and charms.
+ * @param requiredSkills An array of skills the user requires.
+ * @param fixedEquipment The specific equipment set to build around.
+ * @param allData All game data including armors, weapons, accessories, skills, and charms.
  * @returns A promise that resolves to an array of final, sorted sets.
  */
 export const findOptimalSets = (
@@ -53,10 +57,10 @@ export const findOptimalSets = (
   fixedEquipment: EquipmentSet,
   allData: AllGameData,
 ): Promise<FinalSet[]> => {
-  console.log("[+] Starting findOptimalSets v7.1...");
+  console.log("[+] Starting MHWS Set Builder search...");
   const startTime = performance.now();
 
-  // 1. 数据预处理
+  // 1. Preprocess all raw data into efficient maps.
   console.log("[+] Step 1: Preprocessing data...");
   const preprocessedData = preprocess(
     allData.armors,
@@ -66,10 +70,12 @@ export const findOptimalSets = (
     allData.skills,
   );
   console.log(
-    `[+] Step 1: Preprocessing complete (${(performance.now() - startTime).toFixed(2)}ms).`,
+    `[+] Step 1: Preprocessing complete (${(
+      performance.now() - startTime
+    ).toFixed(2)}ms).`,
   );
 
-  // 2. 分类目标技能
+  // 2. Categorize target skills for hierarchical processing.
   console.log("[+] Step 2: Categorizing target skills...");
   const categorizedSkills = categorizeTargetSkills(
     requiredSkills,
@@ -77,7 +83,7 @@ export const findOptimalSets = (
   );
   console.log("[+] Step 2: Skill categorization complete.");
 
-  // 准备按类型分组的防具，供后续的回溯搜索使用
+  // This is not used, but kept for reference or future use.
   const armorTypes: ArmorType[] = ["helm", "body", "arm", "waist", "leg"];
   const armorsByType = new Map<ArmorType, Armor[]>();
   armorTypes.forEach((type) => {
@@ -90,15 +96,13 @@ export const findOptimalSets = (
   const finalResults: FinalSet[] = [];
   let limitReached = false;
 
-  // 如果没有护石数据，可以继续搜索（仅使用武器）
   if (!allData.charms || allData.charms.length === 0) {
     console.warn(
       "No charms available for search. The search will proceed without charms.",
     );
-    // 如果需要，可以在这里添加一个只使用武器的逻辑分支
   }
 
-  // 3. 主搜索循环: 根据情况遍历护石或直接处理
+  // 3. Main Search Loop: Iterate through charms or handle fixed charm.
   const charmsToIterate = fixedEquipment.charm
     ? [fixedEquipment.charm.equipment]
     : allData.charms;
@@ -107,10 +111,12 @@ export const findOptimalSets = (
   for (const [index, charm] of charmsToIterate.entries()) {
     const charmStartTime = performance.now();
     console.log(
-      `[+] Step 3: Main loop - Processing charm ${index + 1}/${totalCharms} (ID: ${charm.id})`,
+      `[+] Step 3: Main loop - Processing charm ${index + 1}/${totalCharms} (ID: ${
+        charm.id
+      })`,
     );
 
-    // 3a. 创建初始 SearchContext
+    // 3a. Create initial SearchContext for this charm.
     const context: SearchContext = {
       equipment: cloneDeep(fixedEquipment),
       currentSkills: new Map<string, number>(),
@@ -118,13 +124,13 @@ export const findOptimalSets = (
       skillDeficits: cloneDeep(categorizedSkills),
     };
 
-    // 如果 charm 不在 fixedEquipment 中，则添加到 context
+    // Add charm to the context if not already fixed.
     context.equipment.charm ??= {
       equipment: charm,
-      accessories: Array(charm.slots.length).fill(null) as (Accessory | null)[],
+      accessories: Array.from({ length: charm.slots.length }, () => null),
     };
 
-    // 累加所有固定装备的技能和孔位
+    // Accumulate skills and slots from all fixed equipment.
     (Object.keys(context.equipment) as (keyof EquipmentSet)[]).forEach(
       (key) => {
         const slottedEq = context.equipment[key];
@@ -147,7 +153,7 @@ export const findOptimalSets = (
       },
     );
 
-    // 3b. 求解 Weapon-Skills
+    // 3b. Solve for weapon-specific skills first.
     const weaponSkillDeficits: SkillDeficit[] =
       context.skillDeficits.weaponSkills
         .map((targetSkill) => ({
@@ -166,7 +172,7 @@ export const findOptimalSets = (
         preprocessedData.skillDetails,
       );
 
-      // 如果填充失败，则此 (武器+护石) 组合无法满足武器技能需求，直接剪枝
+      // If weapon skills cannot be satisfied, this charm is not viable. Prune.
       if (weaponSkillSolutions.length === 0) {
         console.log(
           `  -> Pruned: Failed to solve weapon skills for this charm.`,
@@ -178,16 +184,16 @@ export const findOptimalSets = (
         `  -> Found ${weaponSkillSolutions.length} weapon skill solution(s).`,
       );
 
-      // 3c. 为每个武器技能解决方案创建独立的搜索分支
+      // 3c. Create a separate search branch for each weapon skill solution.
       for (const solution of weaponSkillSolutions) {
-        // a. 为此解决方案创建独立的搜索上下文
+        // Create a dedicated context for this branch.
         const branchContext = cloneDeep(context);
 
-        // b. 更新分支上下文
+        // Update context with the solution's results.
         branchContext.availableSlots = solution.remainingSlots;
-        branchContext.skillDeficits.weaponSkills = []; // 武器技能缺口被满足
+        branchContext.skillDeficits.weaponSkills = []; // Weapon skills are now satisfied.
 
-        // c. 将找到的珠子填充回 branchContext.equipment 中
+        // Place the found accessories into the equipment in the context.
         for (const [
           sourceId,
           foundAccessories,
@@ -199,18 +205,17 @@ export const findOptimalSets = (
           ).find((eq) => eq?.equipment.id === sourceId);
 
           if (equipmentToUpdate) {
-            const newAccessories: (Accessory | null)[] = Array(
-              equipmentToUpdate.equipment.slots.length,
-            ).fill(null) as (Accessory | null)[];
+            const newAccessories: (Accessory | null)[] = Array.from(
+              { length: equipmentToUpdate.equipment.slots.length },
+              () => null,
+            );
             const originalSlots = equipmentToUpdate.equipment.slots;
-            // 优先放置需要高级孔位的珠子
             const accessoriesToPlace = [...foundAccessories].sort(
               (a, b) => b.slotLevel - a.slotLevel,
             );
 
             for (const accessory of accessoriesToPlace) {
               let placed = false;
-              // 寻找第一个能容纳该珠子的空孔位
               for (let i = 0; i < originalSlots.length; i++) {
                 if (
                   newAccessories[i] === null &&
@@ -232,7 +237,7 @@ export const findOptimalSets = (
             }
             equipmentToUpdate.accessories = newAccessories;
 
-            // 更新技能总数
+            // Update total skill counts.
             foundAccessories.forEach((acc) => {
               acc.skills.forEach((skill) => {
                 const current =
@@ -246,7 +251,7 @@ export const findOptimalSets = (
           }
         }
 
-        // 3d. [v7.2] 生成防具骨架 (Scaffolds)
+        // 3d. Generate armor scaffolds.
         console.log(
           `  -> Generating armor scaffolds for charm ${charm.id} with weapon skill solution...`,
         );
@@ -259,21 +264,20 @@ export const findOptimalSets = (
           console.log(
             `  -> Pruned: No viable armor scaffolds found for this charm to satisfy series/group skills.`,
           );
-          continue; // 此 weapon/charm 组合无法满足 series/group 技能，剪枝
+          continue; // Prune this branch.
         }
         console.log(`  -> Found ${scaffolds.length} possible scaffold(s).`);
 
-        // 3e. [v7.2] 遍历骨架，为每个骨架创建独立上下文并进行填充搜索
+        // 3e. Iterate through scaffolds and run the armor filler.
         for (const scaffold of scaffolds) {
-          // a. 为此骨架创建独立的搜索上下文
           const scaffoldContext = cloneDeep(branchContext);
 
-          // b. 将骨架信息合并到新上下文中
+          // Merge scaffold into the new context.
           for (const armorType of Object.keys(scaffold) as ArmorType[]) {
             const armorPiece = scaffold[armorType];
             if (armorPiece) {
               scaffoldContext.equipment[armorType] = armorPiece;
-              // b1. 累加技能
+              // Accumulate skills.
               armorPiece.equipment.skills.forEach((skill) => {
                 const current =
                   scaffoldContext.currentSkills.get(skill.skillId) ?? 0;
@@ -282,7 +286,7 @@ export const findOptimalSets = (
                   current + skill.level,
                 );
               });
-              // b2. 收集孔位，并确保它们携带来源ID
+              // Collect slots with source IDs.
               const slotsWithSource = armorPiece.equipment.slots.map((s) => ({
                 ...s,
                 sourceId: armorPiece.equipment.id,
@@ -291,9 +295,9 @@ export const findOptimalSets = (
             }
           }
 
-          // c. 调用改造后的骨架填充函数
+          // Call the armor filler with the scaffolded context.
           const shouldContinue = fillArmorScaffold(
-            scaffoldContext, // 传入包含骨架信息的新 context
+            scaffoldContext,
             allData.armors,
             preprocessedData,
             finalResults,
@@ -302,38 +306,35 @@ export const findOptimalSets = (
 
           if (!shouldContinue) {
             limitReached = true;
-            break; // Exit the scaffold loop
+            break; // Exit scaffold loop.
           }
         }
       }
     } else {
-      // 如果没有武器技能缺口，直接进入防具骨架生成阶段
+      // If there are no weapon skill deficits, proceed directly to scaffold generation.
       console.log(
         `  -> No weapon skill deficits, proceeding directly to armor scaffolds...`,
       );
 
-      // 3d. [v7.2] 生成防具骨架 (Scaffolds)
       const scaffolds = generateArmorScaffolds(context, preprocessedData);
 
       if (scaffolds.length === 0) {
         console.log(
           `  -> Pruned: No viable armor scaffolds found for this charm to satisfy series/group skills.`,
         );
-        continue; // 此 weapon/charm 组合无法满足 series/group 技能，剪枝
+        continue; // Prune this charm.
       }
       console.log(`  -> Found ${scaffolds.length} possible scaffold(s).`);
 
-      // 3e. [v7.2] 遍历骨架，为每个骨架创建独立上下文并进行填充搜索
       for (const scaffold of scaffolds) {
-        // a. 为此骨架创建独立的搜索上下文
         const scaffoldContext = cloneDeep(context);
 
-        // b. 将骨架信息合并到新上下文中
+        // Merge scaffold into the new context.
         for (const armorType of Object.keys(scaffold) as ArmorType[]) {
           const armorPiece = scaffold[armorType];
           if (armorPiece) {
             scaffoldContext.equipment[armorType] = armorPiece;
-            // b1. 累加技能
+            // Accumulate skills.
             armorPiece.equipment.skills.forEach((skill) => {
               const current =
                 scaffoldContext.currentSkills.get(skill.skillId) ?? 0;
@@ -342,7 +343,7 @@ export const findOptimalSets = (
                 current + skill.level,
               );
             });
-            // b2. 收集孔位，并确保它们携带来源ID
+            // Collect slots with source IDs.
             const slotsWithSource = armorPiece.equipment.slots.map((s) => ({
               ...s,
               sourceId: armorPiece.equipment.id,
@@ -351,9 +352,9 @@ export const findOptimalSets = (
           }
         }
 
-        // c. 调用改造后的骨架填充函数
+        // Call the armor filler with the scaffolded context.
         const shouldContinue = fillArmorScaffold(
-          scaffoldContext, // 传入包含骨架信息的新 context
+          scaffoldContext,
           allData.armors,
           preprocessedData,
           finalResults,
@@ -362,24 +363,26 @@ export const findOptimalSets = (
 
         if (!shouldContinue) {
           limitReached = true;
-          break; // Exit the scaffold loop
+          break; // Exit scaffold loop.
         }
       }
     }
 
     console.log(
-      `  -> Charm ${charm.id} processing finished in ${(performance.now() - charmStartTime).toFixed(2)}ms.`,
+      `  -> Charm ${charm.id} processing finished in ${(
+        performance.now() - charmStartTime
+      ).toFixed(2)}ms.`,
     );
 
     if (limitReached) {
       console.log(
         `[!] Search limit of ${SEARCH_LIMIT} reached. Aborting search.`,
       );
-      break; // Exit the charm loop
+      break; // Exit charm loop.
     }
   }
 
-  // 4. 排序并返回最终结果
+  // 4. Finalize and return results.
   if (limitReached) {
     console.warn(
       `[!] The search was stopped because the number of combinations found reached the limit of ${SEARCH_LIMIT}. The results may be incomplete. Please add more specific skill requirements to narrow down the search.`,

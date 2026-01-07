@@ -1,15 +1,15 @@
 /**
- * 数据导入导出服务
- *
- * 负责将应用数据导出为 JSON 文件，以及从 JSON 文件导入数据。
+ * @fileoverview
+ * Provides services for exporting application data to and importing from JSON files.
  */
 
-import type { DataId, DataItem } from "@/types";
 import { DATABASE_VERSION } from "@/constants";
+import type { DataId, DataItem } from "@/types";
+
 import { DataStorage } from "./index";
 
 /**
- * 统一的导出数据结构
+ * Defines the unified structure for exported data.
  */
 export interface ExportPayload {
   version: string;
@@ -19,9 +19,9 @@ export interface ExportPayload {
 }
 
 /**
- * 将任何类型的数据导出为JSON文件
+ * Exports data of a specific type to a JSON file.
  *
- * @param id - 要导出的数据ID
+ * @param id The ID of the data type to export.
  */
 export function exportData(id: DataId): void {
   const data = DataStorage.loadData(id);
@@ -40,9 +40,9 @@ export function exportData(id: DataId): void {
   const link = document.createElement("a");
   link.href = url;
 
-  // 根据数据类型生成文件名
+  // Generate a filename based on the data type.
   const dateStr = new Date().toISOString().split("T")[0];
-  const fileName = `mhws-charms-${id}-${dateStr}.json`;
+  const fileName = `mhws-set-builder-${id}-${dateStr}.json`;
 
   link.download = fileName;
   document.body.appendChild(link);
@@ -52,10 +52,10 @@ export function exportData(id: DataId): void {
 }
 
 /**
- * 从JSON文件导入数据，并进行基础验证
+ * Imports data from a JSON file and performs basic validation.
  *
- * @param file - 要导入的JSON文件
- * @throws 当文件读取失败或格式不正确时抛出错误
+ * @param file The JSON file to import.
+ * @throws An error if the file cannot be read or the format is incorrect.
  */
 export async function importData(file: File): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -66,18 +66,18 @@ export async function importData(file: File): Promise<void> {
         const content = e.target?.result as string;
         const payload = JSON.parse(content) as ExportPayload;
 
-        // 基础结构验证
+        // Basic structure validation.
         if (
           !payload.version ||
           !payload.dataType ||
           !Array.isArray(payload.data)
         ) {
           throw new Error(
-            "无效的数据结构: 缺少 version, dataType 或 data 字段",
+            "Invalid data structure: missing version, dataType, or data field",
           );
         }
 
-        // 将数据保存到 DataStorage
+        // Save the data using the DataStorage service.
         DataStorage.saveData(payload.dataType as DataId, payload.data)
           .then(() => resolve())
           .catch((err) =>
@@ -86,14 +86,16 @@ export async function importData(file: File): Promise<void> {
       } catch (error) {
         reject(
           new Error(
-            `导入失败：文件格式不正确或内容无效。(${error instanceof Error ? error.message : String(error)})`,
+            `Import failed: Invalid file format or content. (${
+              error instanceof Error ? error.message : String(error)
+            })`,
           ),
         );
       }
     };
 
     reader.onerror = () => {
-      reject(new Error("读取文件失败"));
+      reject(new Error("Failed to read the file"));
     };
 
     reader.readAsText(file);

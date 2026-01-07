@@ -1,16 +1,20 @@
-import type { Weapon } from "../types";
+/**
+ * @fileoverview Weapon grouping utility for MHWS Set Builder.
+ */
+
+import type { Weapon } from "@/types";
 
 /**
- * 将武器列表按sortId升序排序后，按稀有度分组为二维数组
- * @param weapons - Weapon数组（可无序）
- * @returns 二维数组，每个子数组表示一行武器
+ * Groups a list of weapons into rows based on rarity after sorting by sortId.
+ * @param weapons - An array of `Weapon` objects (can be unsorted).
+ * @returns A 2D array where each sub-array represents a row of weapons.
  */
 export function groupWeaponsIntoRows(weapons: Weapon[]): Weapon[][] {
   if (weapons.length === 0) {
     return [];
   }
 
-  // 先按sortId升序排序
+  // First, sort weapons by sortId in ascending order.
   const sortedWeapons = [...weapons].sort((a, b) => a.sortId - b.sortId);
 
   const rows: Weapon[][] = [[sortedWeapons[0]]];
@@ -20,10 +24,10 @@ export function groupWeaponsIntoRows(weapons: Weapon[]): Weapon[][] {
     const previousWeapon = sortedWeapons[i - 1];
 
     if (currentWeapon.rarity > previousWeapon.rarity) {
-      // 稀有度增加，添加到当前行末尾
+      // If rarity increases, add to the end of the current row.
       rows[rows.length - 1].push(currentWeapon);
     } else {
-      // 稀有度不变或减少，创建新行
+      // If rarity is the same or decreases, start a new row.
       rows.push([currentWeapon]);
     }
   }

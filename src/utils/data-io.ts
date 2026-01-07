@@ -1,72 +1,70 @@
 /**
- * MHWS护石管理器 - 通用数据IO工具
+ * @fileoverview General-purpose data I/O utilities for MHWS Set Builder.
  *
- * 提供与具体数据类型无关的、统一的数据对比和验证功能。
+ * Provides data-agnostic functions for comparing, validating, and
+ * manipulating data sets.
  */
+
 import type { DataItem } from "@/types";
 
 /**
- * 数据迁移统计信息
- * 描述了将本地数据迁移到官方版本时发生的变化
+ * Statistics for data migration, describing changes when migrating local data
+ * to an official version.
  */
 export interface MigrationStats {
   mergedData: DataItem[];
-  // 官方新增的条目数（本地没有，从官方数据添加）
+  /** Number of items added from the official data (not present locally). */
   officialAdded: number;
-  // 官方更新的条目数（本地有但不同，被官方数据覆盖）
+  /** Number of items updated by the official data (present locally but different). */
   officialUpdated: number;
-  // 用户保留的条目ID列表（官方没有，本地保留）
+  /** List of user-retained item IDs (not present in official data). */
   userRetainedIds: string[];
 }
 
 /**
- * 数据验证结果
- * 描述了当前本地数据与官方标准数据的差异
+ * Result of data validation, describing differences between local and official data.
  */
 export interface ValidationResult {
   isValid: boolean;
-  // 缺失的官方条目数
+  /** Number of missing official items. */
   missingOfficial: number;
-  // 与官方不一致的条目数
+  /** Number of items inconsistent with the official data. */
   mismatched: number;
-  // 用户私有的额外条目数
+  /** Number of extra user-private items. */
   userPrivate: number;
-  // 详细的错误/差异描述
+  /** Detailed error or difference descriptions. */
   errors: string[];
 }
 
 /**
- * 描述一组数据相对于其基准版本的变化。
- * T 必须是包含 `id: string` 的对象类型。
+ * Describes the changes in a dataset relative to its base version.
+ * T must be an object type with an `id: string` property.
  */
 export interface DataDelta<T extends { id: string }> {
   /**
-   * 新增的条目。
-   * 这些是不存在于基准数据中的全新条目。
+   * New items that do not exist in the base data.
    */
   added: T[];
 
   /**
-   * 被修改的条目。
-   * 这些条目的 `id` 存在于基准数据中，但内容已发生变化。
-   * 我们存储完整的对象以简化 Patch 逻辑。
+   * Modified items whose `id` exists in the base data but whose content has changed.
+   * The full object is stored to simplify patching logic.
    */
   modified: T[];
 
   /**
-   * 被删除的条目ID。
-   * 这些条目的 `id` 存在于基准数据中，但已被用户删除。
-   * 只存储 ID 以节省空间。
+   * IDs of items that exist in the base data but have been deleted by the user.
+   * Only IDs are stored to save space.
    */
   deleted: string[];
 }
 
 /**
- * Diff 算法: 对比基准数据和当前数据，生成 DataDelta 对象。
+ * Diff Algorithm: Compares base and current data to generate a DataDelta object.
  *
- * @param baseData - 基准数据数组
- * @param currentData - 当前数据数组
- * @returns DataDelta<T> - 描述变化的差异对象
+ * @param baseData - The base data array.
+ * @param currentData - The current data array.
+ * @returns A DataDelta object describing the changes.
  */
 export function createDiff<T extends { id: string }>(
   baseData: T[],
@@ -79,22 +77,22 @@ export function createDiff<T extends { id: string }>(
   const modified: T[] = [];
   const deleted: string[] = [];
 
-  // 遍历当前数据，查找新增和修改项
+  // Find added and modified items by iterating through current data.
   for (const currentItem of currentData) {
     const baseItem = baseMap.get(currentItem.id);
     if (!baseItem) {
-      // 在基准数据中不存在 -> 新增
+      // Not in base data -> added.
       added.push(currentItem);
     } else if (JSON.stringify(currentItem) !== JSON.stringify(baseItem)) {
-      // 存在但内容不同 -> 修改
+      // Exists but content is different -> modified.
       modified.push(currentItem);
     }
   }
 
-  // 遍历基准数据，查找删除项
+  // Find deleted items by iterating through base data.
   for (const baseItem of baseData) {
     if (!currentMap.has(baseItem.id)) {
-      // 在当前数据中不存在 -> 删除
+      // Not in current data -> deleted.
       deleted.push(baseItem.id);
     }
   }
@@ -103,30 +101,30 @@ export function createDiff<T extends { id: string }>(
 }
 
 /**
- * Patch 算法: 将 DataDelta 应用于基准数据，生成合并后的完整数据。
+ * Patch Algorithm: Applies a DataDelta to base data to generate merged data.
  *
- * @param baseData - 基准数据数组
- * @param delta - 描述变化的差异对象
- * @returns T[] - 合并后的完整数据数组
+ * @param baseData - The base data array.
+ * @param delta - The DataDelta object describing changes.
+ * @returns The merged, complete data array.
  */
 export function patch<T extends { id: string }>(
   baseData: T[],
   delta: DataDelta<T>,
 ): T[] {
-  // 1. 从基准数据开始
+  // 1. Start with the base data.
   const patchedMap = new Map(baseData.map((item) => [item.id, item]));
 
-  // 2. 应用删除
+  // 2. Apply deletions.
   for (const id of delta.deleted) {
     patchedMap.delete(id);
   }
 
-  // 3. 应用修改
+  // 3. Apply modifications.
   for (const item of delta.modified) {
     patchedMap.set(item.id, item);
   }
 
-  // 4. 应用新增
+  // 4. Apply additions.
   for (const item of delta.added) {
     patchedMap.set(item.id, item);
   }
@@ -135,16 +133,16 @@ export function patch<T extends { id: string }>(
 }
 
 /**
- * 核心数据对比与合并函数 (Reconcile)
+ * Core data reconciliation function.
  *
- * 逻辑：
- * 1. 官方数据 (officialData) 具有最高优先级：官方新增或修改的条目将直接采用。
- * 2. 用户私有数据 (仅在 currentData 中存在) 将被保留。
- * 3. 稳定性假设：条目 ID 在跨版本间是稳定不变的。
+ * Logic:
+ * 1. Official data has the highest priority; new or modified official items are always adopted.
+ * 2. User-private data (existing only in `currentData`) is retained.
+ * 3. Assumes item IDs are stable across versions.
  *
- * @param currentData - 当前本地存储的数据
- * @param officialData - 官方最新的初始数据
- * @returns 迁移统计信息 (包含合并后的最终数据)
+ * @param currentData - The current data stored locally.
+ * @param officialData - The latest official initial data.
+ * @returns Migration statistics, including the merged data.
  */
 export function reconcileData(
   currentData: DataItem[],
@@ -153,29 +151,29 @@ export function reconcileData(
   const currentMap = new Map(currentData.map((item) => [item.id, item]));
   const officialMap = new Map(officialData.map((item) => [item.id, item]));
 
-  // 默认包含所有官方数据（这涵盖了“官方新增”和“官方更新”的情况）
+  // Default to all official data, covering additions and updates.
   const mergedData: DataItem[] = [...officialData];
 
   let officialAdded = 0;
   let officialUpdated = 0;
   const userRetainedIds: string[] = [];
 
-  // 1. 统计官方数据的变化
+  // 1. Tally changes from the official data.
   officialData.forEach((officialItem) => {
     const currentItem = currentMap.get(officialItem.id);
 
     if (!currentItem) {
-      // 本地不存在，视为官方新增
+      // Not present locally, considered an official addition.
       officialAdded++;
     } else if (JSON.stringify(currentItem) !== JSON.stringify(officialItem)) {
-      // 本地存在但内容不同，视为官方更新
+      // Present but different, considered an official update.
       officialUpdated++;
     }
   });
 
-  // 2. 处理用户私有数据
+  // 2. Handle user-private data.
   currentData.forEach((currentItem) => {
-    // 如果官方数据中没有这个ID，说明是用户私有数据，需要保留
+    // If not in official data, it's user-private and should be retained.
     if (!officialMap.has(currentItem.id)) {
       mergedData.push(currentItem);
       userRetainedIds.push(currentItem.id);
@@ -191,16 +189,16 @@ export function reconcileData(
 }
 
 /**
- * 验证数据库数据与初始数据的一致性
+ * Validates the consistency of database data against initial data.
  *
- * 复用 reconcileData 的逻辑，但从“验证”的角度解释结果：
- * - officialAdded -> 缺失官方数据
- * - officialUpdated -> 数据不匹配
- * - userRetainedIds -> 包含非官方数据
+ * Reuses `reconcileData` logic but interprets results from a validation perspective:
+ * - `officialAdded` -> Missing official data.
+ * - `officialUpdated` -> Mismatched data.
+ * - `userRetainedIds` -> Non-official (user) data.
  *
- * @param currentData - 当前应用内的数据
- * @param initialData - 从JSON文件加载的初始数据
- * @returns 验证结果
+ * @param currentData - The current in-app data.
+ * @param initialData - The initial data loaded from a source like JSON.
+ * @returns A validation result object.
  */
 export function validateData(
   currentData: DataItem[],
@@ -210,13 +208,15 @@ export function validateData(
 
   const errors: string[] = [];
   if (stats.officialAdded > 0) {
-    errors.push(`缺失官方数据: ${stats.officialAdded} 条`);
+    errors.push(`Missing official data entries: ${stats.officialAdded}`);
   }
   if (stats.officialUpdated > 0) {
-    errors.push(`与官方数据不一致: ${stats.officialUpdated} 条`);
+    errors.push(`Mismatched with official data: ${stats.officialUpdated}`);
   }
   if (stats.userRetainedIds.length > 0) {
-    errors.push(`包含非官方(用户)数据: ${stats.userRetainedIds.length} 条`);
+    errors.push(
+      `Contains non-official (user) data: ${stats.userRetainedIds.length}`,
+    );
   }
 
   return {
