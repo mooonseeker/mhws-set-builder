@@ -1,8 +1,7 @@
 import { SkillItem } from "@/components/entities/";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-
-import type { Equipment, Charm, Armor, Weapon } from "@/types";
+import type { Armor, Charm, Equipment, Weapon } from "@/types";
 
 /**
  * EquipmentCard 组件 Props 接口
@@ -39,7 +38,7 @@ export function EquipmentCard({
   ];
 
   // 辅助函数：判断装备类型
-  const isCharm = (item: Equipment): item is Charm => !("name" in item);
+  const isCharm = (item: Equipment): item is Charm => "equivalentSlots" in item;
   const isWeapon = (item: Equipment): item is Weapon => "attack" in item;
   const isArmor = (item: Equipment): item is Armor => "resistance" in item;
 
@@ -80,11 +79,9 @@ export function EquipmentCard({
           alt="Equipment Icon"
           className="equipment-icon h-6 w-6"
         />
-        {!isCharm(item) && (
-          <h3 className="flex-1 text-center text-xs font-semibold">
-            {item.name}
-          </h3>
-        )}
+        <h3 className="flex-1 text-center text-xs font-semibold">
+          {item.name}
+        </h3>
         {isCharm(item) && variant !== "compact" && (
           <Badge
             variant="outline"

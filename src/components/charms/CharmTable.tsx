@@ -12,9 +12,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-
 import type { Charm, CharmSortField, SortDirection } from "@/types";
 import type { EquipmentCellType } from "@/types/set-builder";
+import { isOfficialCharmId } from "@/utils/id-generator";
 
 interface CharmTableProps {
   charms: Charm[];
@@ -83,6 +83,9 @@ export function CharmTable({
                 currentSortField={sortField}
                 sortDirection={sortDirection}
               />
+            </TableHead>
+            <TableHead className="bg-primary text-primary-foreground px-4 text-center">
+              名称
             </TableHead>
             <TableHead className="bg-primary text-primary-foreground px-4 text-center">
               技能
@@ -193,6 +196,9 @@ export function CharmTable({
                     </Badge>
                   </TableCell>
                   <TableCell className="text-center">
+                    <span className="font-medium">{charm.name}</span>
+                  </TableCell>
+                  <TableCell className="text-center">
                     <div className="space-y-1 px-2 sm:space-y-2">
                       {charm.skills.map((skillWithLevel) => (
                         <SkillItem
@@ -287,7 +293,13 @@ export function CharmTable({
                               variant="ghost"
                               size="sm"
                               onClick={() => onEdit(charm)}
+                              disabled={isOfficialCharmId(charm.id)}
                               className="h-8 w-8 p-0 sm:h-auto sm:w-auto sm:p-2"
+                              title={
+                                isOfficialCharmId(charm.id)
+                                  ? "官方护石不可编辑"
+                                  : undefined
+                              }
                             >
                               <Pencil className="h-4 w-4" />
                             </Button>
@@ -296,9 +308,21 @@ export function CharmTable({
                             variant="ghost"
                             size="sm"
                             onClick={() => onDelete(charm.id)}
+                            disabled={isOfficialCharmId(charm.id)}
                             className="h-8 w-8 p-0 sm:h-auto sm:w-auto sm:p-2"
+                            title={
+                              isOfficialCharmId(charm.id)
+                                ? "官方护石不可删除"
+                                : undefined
+                            }
                           >
-                            <Trash2 className="text-destructive h-4 w-4" />
+                            <Trash2
+                              className={cn(
+                                "h-4 w-4",
+                                !isOfficialCharmId(charm.id) &&
+                                  "text-destructive",
+                              )}
+                            />
                           </Button>
                         </div>
                       </TableCell>

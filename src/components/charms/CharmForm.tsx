@@ -12,19 +12,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-
-import { RARITY_MAX, RARITY_MIN } from "@/types";
-import type {
-  Skill,
-  SkillWithLevel,
-  Slot,
-  SlotType,
-  SlotLevel,
-  EquivalentSlots,
+import {
+  RARITY_MAX,
+  RARITY_MIN,
+  type EquivalentSlots,
+  type Skill,
+  type SkillWithLevel,
+  type Slot,
+  type SlotLevel,
+  type SlotType,
 } from "@/types";
 
 interface CharmFormProps {
   isEditMode: boolean;
+  name?: string;
   rarity: number;
   setRarity: (value: number) => void;
   selectedSkills: SkillWithLevel[];
@@ -48,6 +49,7 @@ interface CharmFormProps {
  */
 export function CharmForm({
   isEditMode,
+  name,
   rarity,
   setRarity,
   selectedSkills,
@@ -65,6 +67,14 @@ export function CharmForm({
 }: CharmFormProps) {
   return (
     <div className="space-y-8">
+      {/* 名称显示 */}
+      <div className="flex items-center gap-2">
+        <Label className="w-16 shrink-0 text-base font-medium">名称</Label>
+        <div className="bg-muted text-muted-foreground flex h-10 flex-1 items-center rounded-md px-3 font-medium">
+          {name ?? "未知护石"}
+        </div>
+      </div>
+
       {/* 稀有度选择 */}
       <div className="flex items-center gap-2">
         <Label className="w-16 shrink-0 text-base font-medium">稀有度</Label>

@@ -1,6 +1,8 @@
-import { Lock, Unlock, X } from "lucide-react";
 import { useState } from "react";
 
+import { Lock, Unlock, X } from "lucide-react";
+
+import { EquipmentCard } from "@/components/entities";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Popover,
@@ -8,10 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-
-import { EquipmentCard } from "@/components/entities";
-
-import type { Slot, Weapon, Armor, Charm } from "@/types";
+import type { Armor, Charm, Slot, Weapon } from "@/types";
 import type { EquipmentCellType, SlottedEquipment } from "@/types/set-builder";
 
 export interface EquipmentCellProps {
@@ -151,11 +150,7 @@ export function EquipmentCell({
             <div className="border-border/20 my-1 self-stretch border-l" />
             <div className="flex flex-5 items-center px-2">
               <h3 className="truncate text-sm font-semibold">
-                {equipment
-                  ? "name" in equipment
-                    ? equipment.name
-                    : "收藏护石"
-                  : "点击选择..."}
+                {equipment ? equipment.name : "点击选择..."}
               </h3>
             </div>
           </div>

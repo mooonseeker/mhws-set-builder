@@ -1,3 +1,4 @@
+import { EquipmentCard } from "@/components/entities";
 import {
   Card,
   CardContent,
@@ -6,11 +7,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useCharms } from "@/hooks";
+import type { Charm } from "@/types";
 import { sortCharms } from "@/utils";
 
-import { EquipmentCard } from "@/components/entities";
-
-import type { Charm } from "@/types";
 /**
  * CharmShowcase 组件
  *

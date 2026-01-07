@@ -13,6 +13,7 @@ import {
   calculateCharmEquivalentSlots,
   calculateKeySkillValue,
   generateCharmId,
+  isOfficialCharmId,
   validateCharm,
 } from "@/utils";
 
@@ -69,7 +70,12 @@ const generateCharmNameByRarity = (rarity: number): string => {
  * ```
  */
 export function useCharmOperations() {
-  const { charms, addCharm, updateCharm: updateCharmInContext } = useCharms();
+  const {
+    charms,
+    addCharm,
+    updateCharm: updateCharmInContext,
+    deleteCharm: deleteCharmInContext,
+  } = useCharms();
   const { skills } = useSkills();
 
   /**
@@ -198,6 +204,11 @@ export function useCharmOperations() {
         throw new Error(`Charm with id ${id} not found`);
       }
 
+      // Prevent updating official charms
+      if (isOfficialCharmId(id)) {
+        throw new Error("Cannot update official charms");
+      }
+
       // Calculate equivalent slots
       const equivalentSlots = calculateCharmEquivalentSlots(
         data.skills,
@@ -232,9 +243,26 @@ export function useCharmOperations() {
     [charms, skills, updateCharmInContext],
   );
 
+  /**
+   * Deletes a charm, but prevents deleting official charms.
+   *
+   * @param id - The ID of the charm to delete.
+   * @throws {Error} If the charm is an official charm.
+   */
+  const deleteCharm = useCallback(
+    (id: string) => {
+      if (isOfficialCharmId(id)) {
+        throw new Error("Cannot delete official charms");
+      }
+      deleteCharmInContext(id);
+    },
+    [deleteCharmInContext],
+  );
+
   return {
     createCharm,
     validateNewCharm,
     updateAndRecalculateCharm,
+    deleteCharm,
   };
 }

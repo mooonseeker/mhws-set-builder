@@ -1,5 +1,6 @@
-import { List } from "lucide-react";
 import { useMemo, useState } from "react";
+
+import { List } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,14 +20,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useCharms, useSkills } from "@/hooks";
+import { DEFAULT_CHARMS_PER_PAGE } from "@/constants";
+import { useCharmOperations, useCharms, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { DataStorage } from "@/services/storage";
-import { DEFAULT_CHARMS_PER_PAGE } from "@/constants";
-import { sortCharms } from "@/utils";
-
-import { CharmTable } from "./CharmTable";
-
 import type {
   AppSettings,
   Charm,
@@ -34,6 +31,9 @@ import type {
   SortDirection,
 } from "@/types";
 import type { EquipmentCellType } from "@/types/set-builder";
+import { sortCharms } from "@/utils";
+
+import { CharmTable } from "./CharmTable";
 
 interface CharmListProps {
   onEdit?: (charm: Charm) => void;
@@ -59,7 +59,7 @@ export function CharmList({
   selectingFor,
   currentCharm,
 }: CharmListProps) {
-  const { charms, deleteCharm } = useCharms();
+  const { charms } = useCharms();
   const { skills } = useSkills();
 
   // 筛选状态
@@ -155,10 +155,12 @@ export function CharmList({
     }
   };
 
+  const { deleteCharm: deleteCharmSecurely } = useCharmOperations();
+
   // 删除护石
   const handleDelete = (id: string) => {
     if (confirm("确定要删除这个护石吗？")) {
-      deleteCharm(id);
+      deleteCharmSecurely(id);
     }
   };
 

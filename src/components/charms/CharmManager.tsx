@@ -1,5 +1,6 @@
-import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
+
+import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +15,8 @@ import {
   PopoverAnchor,
   PopoverContent,
 } from "@/components/ui/popover";
-import { useCharms, useSkills, useCharmOperations } from "@/hooks";
+import { useCharmOperations, useCharms, useSkills } from "@/hooks";
+import type { Charm, SkillWithLevel, Slot, SlotLevel, SlotType } from "@/types";
 import {
   calculateCharmEquivalentSlots,
   calculateKeySkillValue,
@@ -24,8 +26,6 @@ import {
 import { CharmForm } from "./CharmForm";
 import { CharmList } from "./CharmList";
 import { CharmValidation } from "./CharmValidation";
-
-import type { Charm, SkillWithLevel, Slot, SlotType, SlotLevel } from "@/types";
 
 /**
  * 护石管理主组件
@@ -61,6 +61,23 @@ export function CharmManager() {
     setSlots(charm.slots);
   };
 
+  // 根据稀有度生成预览名称（用于自定义护石）
+  const previewName = useMemo(() => {
+    if (charmToEdit) return charmToEdit.name;
+    switch (rarity) {
+      case 5:
+        return "不明护石";
+      case 6:
+        return "史传护石";
+      case 7:
+        return "秘史护石";
+      case 8:
+        return "盛世护石";
+      default:
+        return "非法护石";
+    }
+  }, [rarity, charmToEdit]);
+
   // 实时计算等效孔位和核心技能价值
   const { equivalentSlots, keySkillValue } = useMemo(() => {
     const eq = calculateCharmEquivalentSlots(selectedSkills, slots, allSkills);
@@ -79,6 +96,7 @@ export function CharmManager() {
 
     return validateCharm(
       {
+        name: charmToEdit?.name ?? "预览护石",
         rarity,
         skills: selectedSkills,
         slots,
@@ -203,6 +221,7 @@ export function CharmManager() {
                 <div>
                   <CharmForm
                     isEditMode={!!charmToEdit}
+                    name={previewName}
                     rarity={rarity}
                     setRarity={setRarity}
                     selectedSkills={selectedSkills}
