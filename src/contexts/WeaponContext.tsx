@@ -1,44 +1,70 @@
 /**
- * MHWS护石管理器 - 武器Context定义
+ * @fileoverview Defines the context and types for weapon management in the MHWS Set Builder.
  *
- * 仅包含Context定义和类型，以避免React Fast Refresh警告
+ * This file contains only the context definition and related types to prevent
+ * React Fast Refresh warnings.
  */
 
 import { createContext } from "react";
+
 import type { Weapon } from "@/types";
 
 /**
- * 武器状态类型
+ * Describes the state of weapons.
  */
 interface WeaponState {
-  /** 武器列表 */
+  /** The list of all available weapons. */
   weapons: Weapon[];
-  /** 加载状态 */
+  /** True if the weapons are currently being loaded. */
   loading: boolean;
-  /** 错误信息 */
+  /** An error message if something went wrong, otherwise null. */
   error: string | null;
 }
 
 /**
- * 武器Context类型
+ * Defines the shape of the WeaponContext.
  */
 export interface WeaponContextType extends WeaponState {
-  /** 添加武器 */
+  /**
+   * Adds a new weapon.
+   * @param weapon - The weapon to add.
+   * @throws {Error} If a weapon with the same ID already exists.
+   */
   addWeapon: (weapon: Weapon) => void;
-  /** 更新武器 */
+
+  /**
+   * Updates an existing weapon.
+   * @param weapon - The weapon with updated values.
+   */
   updateWeapon: (weapon: Weapon) => void;
-  /** 删除武器 */
+
+  /**
+   * Deletes a weapon by its ID.
+   * @param id - The ID of the weapon to delete.
+   */
   deleteWeapon: (id: string) => void;
-  /** 根据ID获取武器 */
+
+  /**
+   * Retrieves a weapon by its ID.
+   * @param id - The ID of the weapon to find.
+   * @returns The weapon object if found, otherwise undefined.
+   */
   getWeaponById: (id: string) => Weapon | undefined;
-  /** 批量导入武器 */
+
+  /**
+   * Imports a list of weapons, replacing all existing ones.
+   * @param weapons - The list of weapons to import.
+   */
   importWeapons: (weapons: Weapon[]) => void;
-  /** 重置武器为初始数据 */
+
+  /**
+   * Resets weapons to the initial default dataset.
+   */
   resetWeapons: () => Promise<void>;
 }
 
 /**
- * 武器Context
+ * React context for managing weapons.
  */
 export const WeaponContext = createContext<WeaponContextType | undefined>(
   undefined,

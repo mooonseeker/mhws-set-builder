@@ -1,5 +1,5 @@
 /**
- * 常量统一导出入口
+ * @fileoverview Entry point for exporting all constants.
  */
 
 export * from "./app";

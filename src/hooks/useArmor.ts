@@ -1,18 +1,23 @@
+/**
+ * @fileoverview Hook for accessing the armor context.
+ */
+
 import { useContext } from "react";
+
 import { ArmorContext } from "@/contexts/ArmorContext";
 
 /**
- * 使用防具Context的Hook
+ * Hook for using the Armor context.
  *
- * @returns 防具Context
- * @throws {Error} 如果在ArmorProvider外部使用
+ * @returns The armor context.
+ * @throws {Error} If used outside of an ArmorProvider.
  *
  * @example
  * ```tsx
  * function ArmorList() {
  *   const { armor, loading, addArmor } = useArmor();
  *
- *   if (loading) return <div>加载中...</div>;
+ *   if (loading) return <div>Loading...</div>;
  *
  *   return (
  *     <div>

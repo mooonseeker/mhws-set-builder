@@ -1,44 +1,70 @@
 /**
- * MHWS护石管理器 - 防具Context定义
+ * @fileoverview Defines the context and types for armor management in the MHWS Set Builder.
  *
- * 仅包含Context定义和类型，以避免React Fast Refresh警告
+ * This file contains only the context definition and related types to prevent
+ * React Fast Refresh warnings.
  */
 
 import { createContext } from "react";
+
 import type { Armor } from "@/types";
 
 /**
- * 防具状态类型
+ * Describes the state of armor.
  */
 interface ArmorState {
-  /** 防具列表 */
+  /** The list of all available armor pieces. */
   armor: Armor[];
-  /** 加载状态 */
+  /** True if the armor data is currently being loaded. */
   loading: boolean;
-  /** 错误信息 */
+  /** An error message if something went wrong, otherwise null. */
   error: string | null;
 }
 
 /**
- * 防具Context类型
+ * Defines the shape of the ArmorContext.
  */
 export interface ArmorContextType extends ArmorState {
-  /** 添加防具 */
+  /**
+   * Adds a new armor piece.
+   * @param armor - The armor piece to add.
+   * @throws {Error} If an armor piece with the same ID already exists.
+   */
   addArmor: (armor: Armor) => void;
-  /** 更新防具 */
+
+  /**
+   * Updates an existing armor piece.
+   * @param armor - The armor piece with updated values.
+   */
   updateArmor: (armor: Armor) => void;
-  /** 删除防具 */
+
+  /**
+   * Deletes an armor piece by its ID.
+   * @param id - The ID of the armor piece to delete.
+   */
   deleteArmor: (id: string) => void;
-  /** 根据ID获取防具 */
+
+  /**
+   * Retrieves an armor piece by its ID.
+   * @param id - The ID of the armor piece to find.
+   * @returns The armor piece if found, otherwise undefined.
+   */
   getArmorById: (id: string) => Armor | undefined;
-  /** 批量导入防具 */
+
+  /**
+   * Imports a list of armor pieces, replacing all existing ones.
+   * @param armor - The list of armor pieces to import.
+   */
   importArmor: (armor: Armor[]) => void;
-  /** 重置防具为初始数据 */
+
+  /**
+   * Resets armor to the initial default dataset.
+   */
   resetArmor: () => Promise<void>;
 }
 
 /**
- * 防具Context
+ * React context for managing armor.
  */
 export const ArmorContext = createContext<ArmorContextType | undefined>(
   undefined,

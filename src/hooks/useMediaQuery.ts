@@ -1,10 +1,14 @@
+/**
+ * @fileoverview Custom hook for detecting media queries.
+ */
+
 import { useCallback, useSyncExternalStore } from "react";
 
 /**
- * 检测媒体查询的自定义Hook
+ * Custom hook for detecting media query matches.
  *
- * @param {string} query - CSS媒体查询字符串
- * @returns {boolean} 是否匹配媒体查询
+ * @param query - The CSS media query string.
+ * @returns `true` if the media query matches, `false` otherwise.
  *
  * @example
  * const isMobile = useMediaQuery('(max-width: 768px)');

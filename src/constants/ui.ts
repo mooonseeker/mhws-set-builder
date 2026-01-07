@@ -1,9 +1,12 @@
+/**
+ * @fileoverview UI-related constants and configurations.
+ */
+
 import { Award, ChevronDown, ChevronsDown, List } from "lucide-react";
+
 import type { SkillCategory, SlotLevel } from "@/types";
 
-/**
- * 技能分类标签映射
- */
+/** Label mapping for skill categories. */
 export const SKILL_CATEGORY_LABELS: Record<SkillCategory, string> = {
   weapon: "武器技能",
   armor: "防具技能",
@@ -11,9 +14,7 @@ export const SKILL_CATEGORY_LABELS: Record<SkillCategory, string> = {
   group: "组合技能",
 };
 
-/**
- * 孔位等级标签映射
- */
+/** Label mapping for slot levels. */
 export const SLOT_LEVEL_LABELS: Record<SlotLevel, string> = {
   [-1]: "无",
   1: "一级",
@@ -21,9 +22,7 @@ export const SLOT_LEVEL_LABELS: Record<SlotLevel, string> = {
   3: "三级",
 };
 
-/**
- * 数据库列表页面的稀有度筛选配置
- */
+/** Rarity filter configurations for database list pages. */
 export const RARITY_FILTERS = [
   { value: "all", icon: List, label: "全部" },
   { value: "low", icon: ChevronDown, label: "下位" },

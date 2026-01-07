@@ -1,115 +1,106 @@
 /**
- * MHWS护石管理器 - 主题Provider
+ * @fileoverview Provides a global state for theme management in the MHWS Set Builder.
  *
- * 提供主题全局状态管理
+ * This provider handles loading and saving the user's theme preference,
+ * detecting the system theme, and applying it to the application.
  */
 
-import { useEffect, useState } from "react";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
-import { ThemeContext } from "./ThemeContext";
-import type { Theme, ThemeContextType } from "./ThemeContext";
+import {
+  ThemeContext,
+  type Theme,
+  type ThemeContextType,
+} from "./ThemeContext";
 
 /**
- * 主题Provider组件
+ * Provides the theme state to its children.
  *
- * 提供主题全局状态管理，包括：
- * - 从LocalStorage加载用户主题偏好
- * - 检测系统主题偏好
- * - 监听系统主题变化
- * - 应用主题到DOM
- * - 持久化用户选择
+ * This component manages the global theme state, including:
+ * - Loading the user's theme preference from localStorage.
+ * - Detecting and responding to the system's color scheme.
+ * - Applying the theme class to the root HTML element.
+ * - Persisting the user's choice to localStorage.
  *
- * @param children - 子组件
+ * @param children - The child components to be rendered within this provider.
  */
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  // 1. 从localStorage读取初始主题
+  // 1. Initialize theme state from localStorage or default to "system".
   const [theme, setThemeState] = useState<Theme>(() => {
-    // 在客户端环境下读取localStorage
-    if (typeof window !== "undefined") {
-      try {
-        const stored = localStorage.getItem("theme");
-        return (stored as Theme) || "system";
-      } catch (error) {
-        console.warn("Failed to read theme from localStorage:", error);
-        return "system";
-      }
+    if (typeof window === "undefined") {
+      return "system";
     }
-    return "system";
+    try {
+      const stored = localStorage.getItem("theme");
+      return (stored as Theme) || "system";
+    } catch (error) {
+      console.warn("Failed to read theme from localStorage:", error);
+      return "system";
+    }
   });
 
-  // 2. 计算实际应用的主题
+  // 2. Calculate the effective theme to be applied.
   const [effectiveTheme, setEffectiveTheme] = useState<"light" | "dark">(() => {
-    // 初始计算
-    if (theme === "system") {
-      if (typeof window !== "undefined") {
-        return window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light";
-      }
-      return "light";
+    if (theme !== "system") {
+      return theme;
     }
-    return theme;
+    if (typeof window !== "undefined") {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    }
+    return "light"; // Default for SSR or non-browser environments.
   });
 
-  // 3. 监听系统主题变化
+  // 3. Listen for changes in the system's color scheme.
   useEffect(() => {
+    // This effect should only run when the theme is set to 'system'.
     if (theme !== "system") {
-      return; // 只有在系统模式下才监听
+      return;
     }
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
-    /**
-     * 处理系统主题变化
-     */
     const handleChange = () => {
       setEffectiveTheme(mediaQuery.matches ? "dark" : "light");
     };
 
-    // 初始设置
+    // Set the initial state correctly.
     handleChange();
 
-    // 添加监听器
+    // Add listener for future changes.
     mediaQuery.addEventListener("change", handleChange);
 
-    // 清理监听器
+    // Clean up the listener on component unmount or when theme changes.
     return () => {
       mediaQuery.removeEventListener("change", handleChange);
     };
   }, [theme]);
 
-  // 4. 应用主题到DOM
+  // 4. Apply the effective theme to the root DOM element.
   useEffect(() => {
     const root = document.documentElement;
 
-    // 移除现有的主题类
     root.classList.remove("light", "dark");
-    // 添加当前主题类
     root.classList.add(effectiveTheme);
   }, [effectiveTheme]);
 
-  // 5. 切换主题方法
-  /**
-   * 切换主题
-   *
-   * @param newTheme - 新的主题
-   */
+  // 5. Provide a function to update the theme.
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
 
-    // 保存到localStorage
+    // Persist the new theme to localStorage.
     try {
       localStorage.setItem("theme", newTheme);
     } catch (error) {
       console.warn("Failed to save theme to localStorage:", error);
     }
 
-    // 如果切换到非系统模式，直接设置effectiveTheme
+    // Update the effective theme immediately.
     if (newTheme !== "system") {
       setEffectiveTheme(newTheme);
     } else {
-      // 如果切换到系统模式，重新计算effectiveTheme
+      // When switching to 'system', re-evaluate the system's current preference.
       setEffectiveTheme(
         window.matchMedia("(prefers-color-scheme: dark)").matches
           ? "dark"

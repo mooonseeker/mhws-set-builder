@@ -1,7 +1,8 @@
 /**
- * MHWS护石管理器 - Hooks统一导出
+ * @fileoverview Barrel file for all custom hooks in the MHWS Set Builder.
  *
- * 集中导出所有自定义Hooks
+ * This file centralizes the export of all custom hooks, making them
+ * easily accessible from a single import point.
  */
 
 // Context Hooks
@@ -13,10 +14,10 @@ export { useSkills } from "./useSkills";
 export { useTheme } from "./useTheme";
 export { useWeapon } from "./useWeapon";
 
-// 护石操作Hook
+// Charm Operation Hooks
 export { useCharmOperations } from "./useCharmOperations";
 
-// 响应式Hooks
+// Responsive Hooks
 export {
   useOrientation,
   type OrientationType,

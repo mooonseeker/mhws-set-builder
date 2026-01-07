@@ -1,32 +1,31 @@
 /**
- * MHWS护石管理器 - 护石Provider
+ * @fileoverview Provides a global state for charms in the MHWS Set Builder.
  *
- * 提供护石全局状态管理
+ * This provider manages the state of charms, including loading, saving,
+ * and CRUD operations.
  */
 
-import type { ReactNode } from "react";
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useRef, type ReactNode } from "react";
 
 import { DataStorage } from "@/services/storage";
 import type { Charm } from "@/types";
 
-import { CharmContext } from "./CharmContext";
-import type { CharmContextType } from "./CharmContext";
+import { CharmContext, type CharmContextType } from "./CharmContext";
 
 /**
- * 护石状态类型
+ * Describes the state of charms.
  */
 interface CharmState {
-  /** 护石列表 */
+  /** The list of all available charms. */
   charms: Charm[];
-  /** 加载状态 */
+  /** True if the charms are currently being loaded. */
   loading: boolean;
-  /** 错误信息 */
+  /** An error message if something went wrong, otherwise null. */
   error: string | null;
 }
 
 /**
- * 护石Action类型
+ * Defines the actions that can be dispatched to modify the charm state.
  */
 type CharmAction =
   | { type: "SET_CHARMS"; payload: Charm[] }
@@ -39,9 +38,8 @@ type CharmAction =
   | { type: "SET_ERROR"; payload: string | null };
 
 /**
- * 护石Reducer
- *
- * 处理所有护石相关的状态变更
+ * Reducer for charm state management.
+ * Handles all state transitions for charms based on dispatched actions.
  */
 function charmReducer(state: CharmState, action: CharmAction): CharmState {
   switch (action.type) {
@@ -78,15 +76,14 @@ function charmReducer(state: CharmState, action: CharmAction): CharmState {
 }
 
 /**
- * 护石Provider组件
+ * Provides the charm state to its children.
  *
- * 提供护石全局状态管理，包括：
- * - 从DataStorage加载初始数据
- * - 自动保存数据到DataStorage
- * - 提供增删改查操作
- * - 支持批量删除
+ * This component manages the global state for charms, including:
+ * - Loading initial data from DataStorage.
+ * - Automatically persisting data to DataStorage.
+ * - Providing methods for CRUD operations.
  *
- * @param children - 子组件
+ * @param children - The child components to be rendered within this provider.
  */
 export function CharmProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(charmReducer, {
@@ -95,90 +92,67 @@ export function CharmProvider({ children }: { children: ReactNode }) {
     error: null,
   });
 
-  // 初始化：从DataStorage加载
+  // Used to track the initial render to avoid unnecessary saves.
+  const isFirstRender = useRef(true);
+
+  // Initialize state from DataStorage on mount.
   useEffect(() => {
     try {
-      const savedCharms = DataStorage.loadData<Charm>("charms");
-      dispatch({ type: "SET_CHARMS", payload: savedCharms });
+      const charms = DataStorage.loadData<Charm>("charms");
+      dispatch({ type: "SET_CHARMS", payload: charms });
     } catch (error) {
-      console.error("加载护石数据失败:", error);
-      dispatch({ type: "SET_ERROR", payload: "加载护石数据失败" });
-      // 出错时也设置为空数组
+      console.error("Failed to load charms from storage:", error);
+      dispatch({ type: "SET_ERROR", payload: "Failed to load charms" });
       dispatch({ type: "SET_CHARMS", payload: [] });
     }
   }, []);
 
-  // 自动保存到DataStorage
-  // 仅当数据加载完成后才执行保存操作，避免保存初始的空状态
+  // Auto-save to DataStorage whenever charms change.
   useEffect(() => {
-    if (state.loading) {
+    // Skip the very first render to prevent saving the initial empty/loading state.
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
       return;
     }
 
-    DataStorage.saveData("charms", state.charms).catch((error) => {
-      console.error("保存护石数据失败:", error);
-    });
+    if (!state.loading) {
+      DataStorage.saveData("charms", state.charms).catch((error) => {
+        console.error("Failed to save charms to storage:", error);
+      });
+    }
   }, [state.charms, state.loading]);
 
-  /**
-   * 添加护石
-   *
-   * @param charm - 完整的护石数据（包含ID）
-   */
   const addCharm = (charm: Charm) => {
+    // Prevent duplicate IDs.
+    if (state.charms.some((c) => c.id === charm.id)) {
+      throw new Error(`Charm with ID "${charm.id}" already exists.`);
+    }
     dispatch({ type: "ADD_CHARM", payload: charm });
   };
 
-  /**
-   * 更新护石
-   *
-   * @param charm - 完整的护石数据
-   */
   const updateCharm = (charm: Charm) => {
     dispatch({ type: "UPDATE_CHARM", payload: charm });
   };
 
-  /**
-   * 删除单个护石
-   *
-   * @param id - 护石ID
-   */
   const deleteCharm = (id: string) => {
     dispatch({ type: "DELETE_CHARM", payload: id });
   };
 
-  /**
-   * 批量删除护石
-   *
-   * @param ids - 护石ID数组
-   */
   const deleteCharms = (ids: string[]) => {
     dispatch({ type: "BATCH_DELETE_CHARMS", payload: ids });
   };
 
-  /**
-   * 根据ID获取护石
-   *
-   * @param id - 护石ID
-   * @returns 护石对象，如果不存在则返回undefined
-   */
   const getCharmById = (id: string) => {
     return state.charms.find((c) => c.id === id);
   };
 
-  /**
-   * 批量导入护石
-   *
-   * @param charms - 要导入的护石列表
-   */
   const importCharms = (charms: Charm[]) => {
     dispatch({ type: "IMPORT_CHARMS", payload: charms });
   };
 
-  /**
-   * 重置护石为初始数据
-   */
   const resetCharms = () => {
+    // In this implementation, reset simply clears the charms.
+    // A more robust implementation might load from a default data file.
     dispatch({ type: "SET_CHARMS", payload: [] });
   };
 

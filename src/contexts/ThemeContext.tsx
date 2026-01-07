@@ -1,30 +1,34 @@
 /**
- * MHWS护石管理器 - 主题Context定义
+ * @fileoverview Defines the context and types for theme management in the MHWS Set Builder.
  *
- * 仅包含Context定义和类型，以避免React Fast Refresh警告
+ * This file contains only the context definition and related types to prevent
+ * React Fast Refresh warnings.
  */
 
 import { createContext } from "react";
 
 /**
- * 主题类型
+ * Represents the available theme options.
+ * - `light`: Light mode.
+ * - `dark`: Dark mode.
+ * - `system`: Follow the operating system's theme setting.
  */
 export type Theme = "light" | "dark" | "system";
 
 /**
- * 主题Context类型
+ * Defines the shape of the ThemeContext.
  */
 export interface ThemeContextType {
-  /** 用户选择的主题 */
+  /** The user-selected theme preference. */
   theme: Theme;
-  /** 切换主题方法 */
+  /** Function to change the current theme. */
   setTheme: (theme: Theme) => void;
-  /** 实际应用的主题（计算后） */
+  /** The actual theme being applied (light or dark), resolved from the 'system' preference. */
   effectiveTheme: "light" | "dark";
 }
 
 /**
- * 主题Context
+ * React context for managing the application theme.
  */
 export const ThemeContext = createContext<ThemeContextType | undefined>(
   undefined,

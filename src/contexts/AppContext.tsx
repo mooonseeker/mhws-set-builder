@@ -1,7 +1,8 @@
 /**
- * MHWS护石管理器 - 应用Context
+ * @fileoverview Composes all context providers for the MHWS Set Builder application.
  *
- * 组合所有Context Provider，提供统一的应用状态管理
+ * This component wraps the entire application, providing a unified state
+ * management layer by nesting all necessary context providers.
  */
 
 import type { ReactNode } from "react";
@@ -15,18 +16,20 @@ import { ThemeProvider } from "./ThemeProvider";
 import { WeaponProvider } from "./WeaponProvider";
 
 /**
- * 应用的根Context Provider
+ * The root context provider for the application.
  *
- * 组合所有Context Provider，按照依赖顺序嵌套：
- * 1. ThemeProvider - 主题设置（全局，不依赖其他Context）
- * 2. SkillProvider - 技能数据（护石依赖技能数据）
- * 3. AccessoryProvider - 装饰品数据
- * 4. ArmorProvider - 防具数据
- * 5. WeaponProvider - 武器数据
- * 6. CharmProvider - 护石数据
- * 7. SetBuilderProvider - 配装器状态（依赖上述所有数据）
+ * It composes all individual context providers in the correct dependency order:
+ * 1.  `ThemeProvider` - Global theme settings (no dependencies).
+ * 2.  `SkillProvider` - Provides skill data, a dependency for many other contexts.
+ * 3.  `AccessoryProvider` - Manages accessory data.
+ * 4.  `ArmorProvider` - Manages armor data.
+ * 5.  `WeaponProvider` - Manages weapon data.
+ * 6.  `CharmProvider` - Manages charm data.
+ * 7.  `SetBuilderProvider` - The main feature, depends on all the above data contexts.
  *
- * @param children - 应用的根组件
+ * @param {object} props - The component props.
+ * @param {ReactNode} props.children - The root component of the application.
+ * @returns {JSX.Element} The nested provider structure.
  *
  * @example
  * ```tsx

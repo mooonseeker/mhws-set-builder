@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Custom hook for detecting screen orientation.
+ */
+
 import { useEffect, useState } from "react";
 
 export type OrientationType = "portrait" | "landscape";
@@ -10,20 +14,20 @@ export interface OrientationState {
 }
 
 /**
- * 检测屏幕方向的自定义Hook
+ * Custom hook for detecting screen orientation.
  *
- * @returns {OrientationState} 屏幕方向状态
+ * @returns The screen orientation state.
  *
  * @example
  * const { orientation, isLandscape } = useOrientation();
  *
  * if (isLandscape) {
- *   // 横屏特定逻辑
+ *   // Logic specific to landscape mode
  * }
  */
 export function useOrientation(): OrientationState {
   const getOrientation = (): OrientationState => {
-    // 优先使用 Screen Orientation API
+    // Prefer the Screen Orientation API
     if (window.screen?.orientation) {
       const type = window.screen.orientation.type;
       const angle = window.screen.orientation.angle;
@@ -37,7 +41,7 @@ export function useOrientation(): OrientationState {
       };
     }
 
-    // 降级方案：使用窗口尺寸判断
+    // Fallback: use window dimensions
     const isLandscape = window.innerWidth > window.innerHeight;
 
     return {
@@ -56,7 +60,7 @@ export function useOrientation(): OrientationState {
       setOrientation(getOrientation());
     };
 
-    // 监听方向变化事件
+    // Listen for orientation changes
     if (window.screen?.orientation) {
       window.screen.orientation.addEventListener(
         "change",
@@ -64,7 +68,7 @@ export function useOrientation(): OrientationState {
       );
     }
 
-    // 监听窗口大小变化（降级方案）
+    // Listen for window resize as a fallback
     window.addEventListener("resize", handleOrientationChange);
 
     return () => {

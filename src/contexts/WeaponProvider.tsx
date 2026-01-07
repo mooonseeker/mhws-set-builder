@@ -1,32 +1,31 @@
 /**
- * MHWS护石管理器 - 武器Provider
+ * @fileoverview Provides a global state for weapons in the MHWS Set Builder.
  *
- * 提供武器全局状态管理
+ * This provider manages the state of weapons, including loading, saving,
+ * and CRUD operations.
  */
 
-import type { ReactNode } from "react";
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer, useRef, type ReactNode } from "react";
 
 import { DataStorage } from "@/services/storage";
 import type { Weapon } from "@/types";
 
-import { WeaponContext } from "./WeaponContext";
-import type { WeaponContextType } from "./WeaponContext";
+import { WeaponContext, type WeaponContextType } from "./WeaponContext";
 
 /**
- * 武器状态类型
+ * Describes the state of weapons.
  */
 interface WeaponState {
-  /** 武器列表 */
+  /** The list of all available weapons. */
   weapons: Weapon[];
-  /** 加载状态 */
+  /** True if the weapons are currently being loaded. */
   loading: boolean;
-  /** 错误信息 */
+  /** An error message if something went wrong, otherwise null. */
   error: string | null;
 }
 
 /**
- * 武器Action类型
+ * Defines the actions that can be dispatched to modify the weapon state.
  */
 type WeaponAction =
   | { type: "SET_WEAPONS"; payload: Weapon[] }
@@ -38,9 +37,8 @@ type WeaponAction =
   | { type: "SET_ERROR"; payload: string | null };
 
 /**
- * 武器Reducer
- *
- * 处理所有武器相关的状态变更
+ * Reducer for weapon state management.
+ * Handles all state transitions for weapons based on dispatched actions.
  */
 function weaponReducer(state: WeaponState, action: WeaponAction): WeaponState {
   switch (action.type) {
@@ -72,14 +70,14 @@ function weaponReducer(state: WeaponState, action: WeaponAction): WeaponState {
 }
 
 /**
- * 武器Provider组件
+ * Provides the weapon state to its children.
  *
- * 提供武器全局状态管理，包括：
- * - 从 DataStorage 加载初始数据
- * - 自动保存数据到 DataStorage
- * - 提供增删改查操作
+ * This component manages the global state for weapons, including:
+ * - Loading initial data from DataStorage.
+ * - Automatically persisting data to DataStorage.
+ * - Providing methods for CRUD operations.
  *
- * @param children - 子组件
+ * @param children - The child components to be rendered within this provider.
  */
 export function WeaponProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(weaponReducer, {
@@ -88,24 +86,24 @@ export function WeaponProvider({ children }: { children: ReactNode }) {
     error: null,
   });
 
-  // 用于跟踪是否是首次渲染
+  // Used to track the initial render to avoid unnecessary saves.
   const isFirstRender = useRef(true);
 
-  // 初始化：从 DataStorage 加载
+  // Initialize state from DataStorage on mount.
   useEffect(() => {
     try {
       const weapons = DataStorage.loadData<Weapon>("weapons");
       dispatch({ type: "SET_WEAPONS", payload: weapons });
     } catch (error) {
-      console.error("加载武器数据失败:", error);
-      dispatch({ type: "SET_ERROR", payload: "加载武器数据失败" });
+      console.error("Failed to load weapons from storage:", error);
+      dispatch({ type: "SET_ERROR", payload: "Failed to load weapons" });
       dispatch({ type: "SET_WEAPONS", payload: [] });
     }
   }, []);
 
-  // 自动保存到 DataStorage（避免初始化时的不必要保存）
+  // Auto-save to DataStorage whenever weapons change.
   useEffect(() => {
-    // 跳过首次渲染
+    // Skip the very first render to prevent saving the initial empty/loading state.
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
@@ -113,72 +111,44 @@ export function WeaponProvider({ children }: { children: ReactNode }) {
 
     if (!state.loading) {
       DataStorage.saveData("weapons", state.weapons).catch((error) => {
-        console.error("保存武器数据失败:", error);
+        console.error("Failed to save weapons to storage:", error);
       });
     }
   }, [state.weapons, state.loading]);
 
-  /**
-   * 添加武器
-   *
-   * @param weapon - 武器数据
-   */
   const addWeapon = (weapon: Weapon) => {
-    // 检查ID是否重复
+    // Prevent duplicate IDs.
     if (state.weapons.some((w) => w.id === weapon.id)) {
-      throw new Error(`武器ID "${weapon.id}" 已存在。`);
+      throw new Error(`Weapon with ID "${weapon.id}" already exists.`);
     }
     dispatch({ type: "ADD_WEAPON", payload: weapon });
   };
 
-  /**
-   * 更新武器
-   *
-   * @param weapon - 完整的武器数据
-   */
   const updateWeapon = (weapon: Weapon) => {
     dispatch({ type: "UPDATE_WEAPON", payload: weapon });
   };
 
-  /**
-   * 删除武器
-   *
-   * @param id - 武器ID
-   */
   const deleteWeapon = (id: string) => {
     dispatch({ type: "DELETE_WEAPON", payload: id });
   };
 
-  /**
-   * 根据ID获取武器
-   *
-   * @param id - 武器ID
-   * @returns 武器对象，如果不存在则返回undefined
-   */
   const getWeaponById = (id: string) => {
     return state.weapons.find((w) => w.id === id);
   };
 
-  /**
-   * 批量导入武器
-   * @param weapons 要导入的武器列表
-   */
   const importWeapons = (weapons: Weapon[]) => {
     dispatch({ type: "IMPORT_WEAPONS", payload: weapons });
   };
 
-  /**
-   * 重置武器为初始数据
-   */
   const resetWeapons = async () => {
     try {
-      // 动态导入初始数据
+      // Dynamically import the initial data.
       const initialData = await import("@/data/initial-weapons.json");
       const initialWeapons = initialData.default.weapons as Weapon[];
       dispatch({ type: "SET_WEAPONS", payload: initialWeapons });
     } catch (error) {
-      console.error("重置武器数据失败:", error);
-      dispatch({ type: "SET_ERROR", payload: "重置武器数据失败" });
+      console.error("Failed to reset weapons data:", error);
+      dispatch({ type: "SET_ERROR", payload: "Failed to reset weapons" });
     }
   };
 

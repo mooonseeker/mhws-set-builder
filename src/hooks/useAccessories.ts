@@ -1,18 +1,23 @@
+/**
+ * @fileoverview Hook for accessing the accessory context.
+ */
+
 import { useContext } from "react";
+
 import { AccessoryContext } from "@/contexts/AccessoryContext";
 
 /**
- * 使用装饰品Context的Hook
+ * Hook for using the Accessory context.
  *
- * @returns 装饰品Context
- * @throws {Error} 如果在AccessoryProvider外部使用
+ * @returns The accessory context.
+ * @throws {Error} If used outside of an AccessoryProvider.
  *
  * @example
  * ```tsx
  * function AccessoryList() {
  *   const { accessories, loading, addAccessory } = useAccessories();
  *
- *   if (loading) return <div>加载中...</div>;
+ *   if (loading) return <div>Loading...</div>;
  *
  *   return (
  *     <div>

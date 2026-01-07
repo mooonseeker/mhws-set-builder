@@ -1,32 +1,31 @@
 /**
- * MHWS护石管理器 - 技能Provider
+ * @fileoverview Provides a global state for skills in the MHWS Set Builder.
  *
- * 提供技能全局状态管理
+ * This provider manages the state of skills, including loading, saving,
+ * and CRUD operations.
  */
 
-import type { ReactNode } from "react";
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer, useRef, type ReactNode } from "react";
 
 import { DataStorage } from "@/services/storage";
 import type { Skill } from "@/types";
 
-import { SkillContext } from "./SkillContext";
-import type { SkillContextType } from "./SkillContext";
+import { SkillContext, type SkillContextType } from "./SkillContext";
 
 /**
- * 技能状态类型
+ * Describes the state of skills.
  */
 interface SkillState {
-  /** 技能列表 */
+  /** The list of all available skills. */
   skills: Skill[];
-  /** 加载状态 */
+  /** True if the skills are currently being loaded. */
   loading: boolean;
-  /** 错误信息 */
+  /** An error message if something went wrong, otherwise null. */
   error: string | null;
 }
 
 /**
- * 技能Action类型
+ * Defines the actions that can be dispatched to modify the skill state.
  */
 type SkillAction =
   | { type: "SET_SKILLS"; payload: Skill[] }
@@ -38,9 +37,8 @@ type SkillAction =
   | { type: "SET_ERROR"; payload: string | null };
 
 /**
- * 技能Reducer
- *
- * 处理所有技能相关的状态变更
+ * Reducer for skill state management.
+ * Handles all state transitions for skills based on dispatched actions.
  */
 function skillReducer(state: SkillState, action: SkillAction): SkillState {
   switch (action.type) {
@@ -72,14 +70,14 @@ function skillReducer(state: SkillState, action: SkillAction): SkillState {
 }
 
 /**
- * 技能Provider组件
+ * Provides the skill state to its children.
  *
- * 提供技能全局状态管理，包括：
- * - 从 DataStorage 加载初始数据
- * - 自动保存数据到 DataStorage
- * - 提供增删改查操作
+ * This component manages the global state for skills, including:
+ * - Loading initial data from DataStorage.
+ * - Automatically persisting data to DataStorage.
+ * - Providing methods for CRUD operations.
  *
- * @param children - 子组件
+ * @param children - The child components to be rendered within this provider.
  */
 export function SkillProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(skillReducer, {
@@ -88,18 +86,24 @@ export function SkillProvider({ children }: { children: ReactNode }) {
     error: null,
   });
 
-  // 用于跟踪是否是首次渲染
+  // Used to track the initial render to avoid unnecessary saves.
   const isFirstRender = useRef(true);
 
-  // 初始化：从 DataStorage 加载
+  // Initialize state from DataStorage on mount.
   useEffect(() => {
-    const skills = DataStorage.loadData<Skill>("skills");
-    dispatch({ type: "SET_SKILLS", payload: skills });
+    try {
+      const skills = DataStorage.loadData<Skill>("skills");
+      dispatch({ type: "SET_SKILLS", payload: skills });
+    } catch (error) {
+      console.error("Failed to load skills from storage:", error);
+      dispatch({ type: "SET_ERROR", payload: "Failed to load skills" });
+      dispatch({ type: "SET_SKILLS", payload: [] });
+    }
   }, []);
 
-  // 自动保存到 DataStorage（避免初始化时的不必要保存）
+  // Auto-save to DataStorage whenever skills change.
   useEffect(() => {
-    // 跳过首次渲染
+    // Skip the very first render to prevent saving the initial empty/loading state.
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
@@ -107,83 +111,52 @@ export function SkillProvider({ children }: { children: ReactNode }) {
 
     if (!state.loading) {
       DataStorage.saveData("skills", state.skills).catch((error) => {
-        console.error("保存技能数据失败:", error);
+        console.error("Failed to save skills to storage:", error);
       });
     }
   }, [state.skills, state.loading]);
 
-  /**
-   * 添加技能
-   *
-   * @param skill - 技能数据（不包含ID）
-   * @throws {Error} 如果技能名称已存在
-   */
   const addSkill = (skill: Skill) => {
-    // 检查名称是否重复（忽略大小写和前后空格）
+    // Prevent duplicate names (case-insensitive) and IDs.
     if (
       state.skills.some(
         (s) => s.name.trim().toLowerCase() === skill.name.trim().toLowerCase(),
       )
     ) {
-      throw new Error(`技能 "${skill.name}" 已存在。`);
+      throw new Error(`Skill with name "${skill.name}" already exists.`);
     }
-    // 检查ID是否重复
     if (state.skills.some((s) => s.id === skill.id)) {
-      throw new Error(`技能ID "${skill.id}" 已存在。`);
+      throw new Error(`Skill with ID "${skill.id}" already exists.`);
     }
 
     dispatch({ type: "ADD_SKILL", payload: skill });
   };
 
-  /**
-   * 更新技能
-   *
-   * @param skill - 完整的技能数据
-   */
   const updateSkill = (skill: Skill) => {
     dispatch({ type: "UPDATE_SKILL", payload: skill });
   };
 
-  /**
-   * 删除技能
-   *
-   * @param id - 技能ID
-   */
   const deleteSkill = (id: string) => {
     dispatch({ type: "DELETE_SKILL", payload: id });
   };
 
-  /**
-   * 根据ID获取技能
-   *
-   * @param id - 技能ID
-   * @returns 技能对象，如果不存在则返回undefined
-   */
   const getSkillById = (id: string) => {
     return state.skills.find((s) => s.id === id);
   };
 
-  /**
-   * 批量导入技能
-   *
-   * @param skills - 要导入的技能列表
-   */
   const importSkills = (skills: Skill[]) => {
     dispatch({ type: "IMPORT_SKILLS", payload: skills });
   };
 
-  /**
-   * 重置技能为初始数据
-   */
   const resetSkills = async () => {
     try {
-      // 动态导入初始数据
+      // Dynamically import the initial data.
       const initialData = await import("@/data/initial-skills.json");
       const initialSkills = initialData.default.skills as Skill[];
       dispatch({ type: "SET_SKILLS", payload: initialSkills });
     } catch (error) {
-      console.error("重置技能数据失败:", error);
-      dispatch({ type: "SET_ERROR", payload: "重置技能数据失败" });
+      console.error("Failed to reset skills data:", error);
+      dispatch({ type: "SET_ERROR", payload: "Failed to reset skills" });
     }
   };
 

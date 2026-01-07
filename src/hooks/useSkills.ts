@@ -1,18 +1,23 @@
+/**
+ * @fileoverview Hook for accessing the skill context.
+ */
+
 import { useContext } from "react";
+
 import { SkillContext } from "@/contexts/SkillContext";
 
 /**
- * 使用技能Context的Hook
+ * Hook for using the Skill context.
  *
- * @returns 技能Context
- * @throws {Error} 如果在SkillProvider外部使用
+ * @returns The skill context.
+ * @throws {Error} If used outside of a SkillProvider.
  *
  * @example
  * ```tsx
  * function SkillList() {
  *   const { skills, loading, addSkill } = useSkills();
  *
- *   if (loading) return <div>加载中...</div>;
+ *   if (loading) return <div>Loading...</div>;
  *
  *   return (
  *     <div>

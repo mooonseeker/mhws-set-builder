@@ -1,12 +1,16 @@
+/**
+ * @fileoverview Hook for accessing the theme context.
+ */
+
 import { useContext } from "react";
-import { ThemeContext } from "@/contexts/ThemeContext";
-import type { ThemeContextType } from "@/contexts/ThemeContext";
+
+import { ThemeContext, type ThemeContextType } from "@/contexts/ThemeContext";
 
 /**
- * 使用主题Context的Hook
+ * Hook for using the Theme context.
  *
- * @returns 主题Context
- * @throws {Error} 如果在ThemeProvider外部使用
+ * @returns The theme context.
+ * @throws {Error} If used outside of a ThemeProvider.
  *
  * @example
  * ```tsx
@@ -15,10 +19,10 @@ import type { ThemeContextType } from "@/contexts/ThemeContext";
  *
  *   return (
  *     <div>
- *       <button onClick={() => setTheme('light')}>亮色</button>
- *       <button onClick={() => setTheme('dark')}>暗色</button>
- *       <button onClick={() => setTheme('system')}>跟随系统</button>
- *       <div>当前主题: {theme} (实际: {effectiveTheme})</div>
+ *       <button onClick={() => setTheme('light')}>Light</button>
+ *       <button onClick={() => setTheme('dark')}>Dark</button>
+ *       <button onClick={() => setTheme('system')}>System</button>
+ *       <div>Current Theme: {theme} (Effective: {effectiveTheme})</div>
  *     </div>
  *   );
  * }

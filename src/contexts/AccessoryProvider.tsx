@@ -1,32 +1,34 @@
 /**
- * MHWS护石管理器 - 装饰品Provider
+ * @fileoverview Provides a global state for accessories in the MHWS Set Builder.
  *
- * 提供装饰品全局状态管理
+ * This provider manages the state of accessories, including loading, saving,
+ * and CRUD operations.
  */
 
-import type { ReactNode } from "react";
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer, useRef, type ReactNode } from "react";
 
 import { DataStorage } from "@/services/storage";
 import type { Accessory } from "@/types";
 
-import { AccessoryContext } from "./AccessoryContext";
-import type { AccessoryContextType } from "./AccessoryContext";
+import {
+  AccessoryContext,
+  type AccessoryContextType,
+} from "./AccessoryContext";
 
 /**
- * 装饰品状态类型
+ * Describes the state of accessories.
  */
 interface AccessoryState {
-  /** 装饰品列表 */
+  /** The list of all available accessories. */
   accessories: Accessory[];
-  /** 加载状态 */
+  /** True if the accessories are currently being loaded. */
   loading: boolean;
-  /** 错误信息 */
+  /** An error message if something went wrong, otherwise null. */
   error: string | null;
 }
 
 /**
- * 装饰品Action类型
+ * Defines the actions that can be dispatched to modify the accessory state.
  */
 type AccessoryAction =
   | { type: "SET_ACCESSORIES"; payload: Accessory[] }
@@ -38,9 +40,8 @@ type AccessoryAction =
   | { type: "SET_ERROR"; payload: string | null };
 
 /**
- * 装饰品Reducer
- *
- * 处理所有装饰品相关的状态变更
+ * Reducer for accessory state management.
+ * Handles all state transitions for accessories based on dispatched actions.
  */
 function accessoryReducer(
   state: AccessoryState,
@@ -75,14 +76,14 @@ function accessoryReducer(
 }
 
 /**
- * 装饰品Provider组件
+ * Provides the accessory state to its children.
  *
- * 提供装饰品全局状态管理，包括：
- * - 从 DataStorage 加载初始数据
- * - 自动保存数据到 DataStorage
- * - 提供增删改查操作
+ * This component manages the global state for accessories, including:
+ * - Loading initial data from DataStorage.
+ * - Automatically persisting data to DataStorage.
+ * - Providing methods for CRUD operations.
  *
- * @param children - 子组件
+ * @param children - The child components to be rendered within this provider.
  */
 export function AccessoryProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(accessoryReducer, {
@@ -91,24 +92,24 @@ export function AccessoryProvider({ children }: { children: ReactNode }) {
     error: null,
   });
 
-  // 用于跟踪是否是首次渲染
+  // Used to track the initial render to avoid unnecessary saves.
   const isFirstRender = useRef(true);
 
-  // 初始化：从 DataStorage 加载
+  // Initialize state from DataStorage on mount.
   useEffect(() => {
     try {
       const accessories = DataStorage.loadData<Accessory>("accessories");
       dispatch({ type: "SET_ACCESSORIES", payload: accessories });
     } catch (error) {
-      console.error("加载装饰品数据失败:", error);
-      dispatch({ type: "SET_ERROR", payload: "加载装饰品数据失败" });
+      console.error("Failed to load accessories from storage:", error);
+      dispatch({ type: "SET_ERROR", payload: "Failed to load accessories" });
       dispatch({ type: "SET_ACCESSORIES", payload: [] });
     }
   }, []);
 
-  // 自动保存到 DataStorage（避免初始化时的不必要保存）
+  // Auto-save to DataStorage whenever accessories change.
   useEffect(() => {
-    // 跳过首次渲染
+    // Skip the very first render to prevent saving the initial empty/loading state.
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
@@ -116,72 +117,44 @@ export function AccessoryProvider({ children }: { children: ReactNode }) {
 
     if (!state.loading) {
       DataStorage.saveData("accessories", state.accessories).catch((error) => {
-        console.error("保存装饰品数据失败:", error);
+        console.error("Failed to save accessories to storage:", error);
       });
     }
   }, [state.accessories, state.loading]);
 
-  /**
-   * 添加装饰品
-   *
-   * @param accessory - 装饰品数据
-   */
   const addAccessory = (accessory: Accessory) => {
-    // 检查ID是否重复
+    // Prevent duplicate IDs.
     if (state.accessories.some((a) => a.id === accessory.id)) {
-      throw new Error(`装饰品ID "${accessory.id}" 已存在。`);
+      throw new Error(`Accessory with ID "${accessory.id}" already exists.`);
     }
     dispatch({ type: "ADD_ACCESSORY", payload: accessory });
   };
 
-  /**
-   * 更新装饰品
-   *
-   * @param accessory - 完整的装饰品数据
-   */
   const updateAccessory = (accessory: Accessory) => {
     dispatch({ type: "UPDATE_ACCESSORY", payload: accessory });
   };
 
-  /**
-   * 删除装饰品
-   *
-   * @param id - 装饰品ID
-   */
   const deleteAccessory = (id: string) => {
     dispatch({ type: "DELETE_ACCESSORY", payload: id });
   };
 
-  /**
-   * 根据ID获取装饰品
-   *
-   * @param id - 装饰品ID
-   * @returns 装饰品对象，如果不存在则返回undefined
-   */
   const getAccessoryById = (id: string) => {
     return state.accessories.find((a) => a.id === id);
   };
 
-  /**
-   * 批量导入装饰品
-   * @param accessories 要导入的装饰品列表
-   */
   const importAccessories = (accessories: Accessory[]) => {
     dispatch({ type: "IMPORT_ACCESSORIES", payload: accessories });
   };
 
-  /**
-   * 重置装饰品为初始数据
-   */
   const resetAccessories = async () => {
     try {
-      // 动态导入初始数据
+      // Dynamically import the initial data.
       const initialData = await import("@/data/initial-accessories.json");
       const initialAccessories = initialData.default.accessories as Accessory[];
       dispatch({ type: "SET_ACCESSORIES", payload: initialAccessories });
     } catch (error) {
-      console.error("重置装饰品数据失败:", error);
-      dispatch({ type: "SET_ERROR", payload: "重置装饰品数据失败" });
+      console.error("Failed to reset accessories data:", error);
+      dispatch({ type: "SET_ERROR", payload: "Failed to reset accessories" });
     }
   };
 

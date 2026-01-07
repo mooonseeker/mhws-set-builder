@@ -1,44 +1,70 @@
 /**
- * MHWS护石管理器 - 技能Context定义
+ * @fileoverview Defines the context and types for skill management in the MHWS Set Builder.
  *
- * 仅包含Context定义和类型，以避免React Fast Refresh警告
+ * This file contains only the context definition and related types to prevent
+ * React Fast Refresh warnings.
  */
 
 import { createContext } from "react";
+
 import type { Skill } from "@/types";
 
 /**
- * 技能状态类型
+ * Describes the state of skills.
  */
 interface SkillState {
-  /** 技能列表 */
+  /** The list of all available skills. */
   skills: Skill[];
-  /** 加载状态 */
+  /** True if the skills are currently being loaded. */
   loading: boolean;
-  /** 错误信息 */
+  /** An error message if something went wrong, otherwise null. */
   error: string | null;
 }
 
 /**
- * 技能Context类型
+ * Defines the shape of the SkillContext.
  */
 export interface SkillContextType extends SkillState {
-  /** 添加技能 */
+  /**
+   * Adds a new skill.
+   * @param skill - The skill to add.
+   * @throws {Error} If a skill with the same name or ID already exists.
+   */
   addSkill: (skill: Skill) => void;
-  /** 更新技能 */
+
+  /**
+   * Updates an existing skill.
+   * @param skill - The skill with updated values.
+   */
   updateSkill: (skill: Skill) => void;
-  /** 删除技能 */
+
+  /**
+   * Deletes a skill by its ID.
+   * @param id - The ID of the skill to delete.
+   */
   deleteSkill: (id: string) => void;
-  /** 根据ID获取技能 */
+
+  /**
+   * Retrieves a skill by its ID.
+   * @param id - The ID of the skill to find.
+   * @returns The skill object if found, otherwise undefined.
+   */
   getSkillById: (id: string) => Skill | undefined;
-  /** 批量导入技能 */
+
+  /**
+   * Imports a list of skills, replacing all existing ones.
+   * @param skills - The list of skills to import.
+   */
   importSkills: (skills: Skill[]) => void;
-  /** 重置技能为初始数据 */
+
+  /**
+   * Resets skills to the initial default dataset.
+   */
   resetSkills: () => Promise<void>;
 }
 
 /**
- * 技能Context
+ * React context for managing skills.
  */
 export const SkillContext = createContext<SkillContextType | undefined>(
   undefined,

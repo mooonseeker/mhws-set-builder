@@ -1,32 +1,31 @@
 /**
- * MHWS护石管理器 - 防具Provider
+ * @fileoverview Provides a global state for armor in the MHWS Set Builder.
  *
- * 提供防具全局状态管理
+ * This provider manages the state of armor, including loading, saving,
+ * and CRUD operations.
  */
 
-import type { ReactNode } from "react";
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer, useRef, type ReactNode } from "react";
 
 import { DataStorage } from "@/services/storage";
 import type { Armor } from "@/types";
 
-import { ArmorContext } from "./ArmorContext";
-import type { ArmorContextType } from "./ArmorContext";
+import { ArmorContext, type ArmorContextType } from "./ArmorContext";
 
 /**
- * 防具状态类型
+ * Describes the state of armor.
  */
 interface ArmorState {
-  /** 防具列表 */
+  /** The list of all available armor pieces. */
   armor: Armor[];
-  /** 加载状态 */
+  /** True if the armor data is currently being loaded. */
   loading: boolean;
-  /** 错误信息 */
+  /** An error message if something went wrong, otherwise null. */
   error: string | null;
 }
 
 /**
- * 防具Action类型
+ * Defines the actions that can be dispatched to modify the armor state.
  */
 type ArmorAction =
   | { type: "SET_ARMOR"; payload: Armor[] }
@@ -38,9 +37,8 @@ type ArmorAction =
   | { type: "SET_ERROR"; payload: string | null };
 
 /**
- * 防具Reducer
- *
- * 处理所有防具相关的状态变更
+ * Reducer for armor state management.
+ * Handles all state transitions for armor based on dispatched actions.
  */
 function armorReducer(state: ArmorState, action: ArmorAction): ArmorState {
   switch (action.type) {
@@ -72,14 +70,14 @@ function armorReducer(state: ArmorState, action: ArmorAction): ArmorState {
 }
 
 /**
- * 防具Provider组件
+ * Provides the armor state to its children.
  *
- * 提供防具全局状态管理，包括：
- * - 从 DataStorage 加载初始数据
- * - 自动保存数据到 DataStorage
- * - 提供增删改查操作
+ * This component manages the global state for armor, including:
+ * - Loading initial data from DataStorage.
+ * - Automatically persisting data to DataStorage.
+ * - Providing methods for CRUD operations.
  *
- * @param children - 子组件
+ * @param children - The child components to be rendered within this provider.
  */
 export function ArmorProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(armorReducer, {
@@ -88,24 +86,24 @@ export function ArmorProvider({ children }: { children: ReactNode }) {
     error: null,
   });
 
-  // 用于跟踪是否是首次渲染
+  // Used to track the initial render to avoid unnecessary saves.
   const isFirstRender = useRef(true);
 
-  // 初始化：从 DataStorage 加载
+  // Initialize state from DataStorage on mount.
   useEffect(() => {
     try {
       const armor = DataStorage.loadData<Armor>("armor");
       dispatch({ type: "SET_ARMOR", payload: armor });
     } catch (error) {
-      console.error("加载防具数据失败:", error);
-      dispatch({ type: "SET_ERROR", payload: "加载防具数据失败" });
+      console.error("Failed to load armor from storage:", error);
+      dispatch({ type: "SET_ERROR", payload: "Failed to load armor" });
       dispatch({ type: "SET_ARMOR", payload: [] });
     }
   }, []);
 
-  // 自动保存到 DataStorage（避免初始化时的不必要保存）
+  // Auto-save to DataStorage whenever armor changes.
   useEffect(() => {
-    // 跳过首次渲染
+    // Skip the very first render to prevent saving the initial empty/loading state.
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
@@ -113,72 +111,44 @@ export function ArmorProvider({ children }: { children: ReactNode }) {
 
     if (!state.loading) {
       DataStorage.saveData("armor", state.armor).catch((error) => {
-        console.error("保存防具数据失败:", error);
+        console.error("Failed to save armor to storage:", error);
       });
     }
   }, [state.armor, state.loading]);
 
-  /**
-   * 添加防具
-   *
-   * @param armor - 防具数据
-   */
   const addArmor = (armor: Armor) => {
-    // 检查ID是否重复
+    // Prevent duplicate IDs.
     if (state.armor.some((a) => a.id === armor.id)) {
-      throw new Error(`防具ID "${armor.id}" 已存在。`);
+      throw new Error(`Armor with ID "${armor.id}" already exists.`);
     }
     dispatch({ type: "ADD_ARMOR", payload: armor });
   };
 
-  /**
-   * 更新防具
-   *
-   * @param armor - 完整的防具数据
-   */
   const updateArmor = (armor: Armor) => {
     dispatch({ type: "UPDATE_ARMOR", payload: armor });
   };
 
-  /**
-   * 删除防具
-   *
-   * @param id - 防具ID
-   */
   const deleteArmor = (id: string) => {
     dispatch({ type: "DELETE_ARMOR", payload: id });
   };
 
-  /**
-   * 根据ID获取防具
-   *
-   * @param id - 防具ID
-   * @returns 防具对象，如果不存在则返回undefined
-   */
   const getArmorById = (id: string) => {
     return state.armor.find((a) => a.id === id);
   };
 
-  /**
-   * 批量导入防具
-   * @param armor 要导入的防具列表
-   */
   const importArmor = (armor: Armor[]) => {
     dispatch({ type: "IMPORT_ARMOR", payload: armor });
   };
 
-  /**
-   * 重置防具为初始数据
-   */
   const resetArmor = async () => {
     try {
-      // 动态导入初始数据
+      // Dynamically import the initial data.
       const initialData = await import("@/data/initial-armor.json");
       const initialArmor = initialData.default.armor as Armor[];
       dispatch({ type: "SET_ARMOR", payload: initialArmor });
     } catch (error) {
-      console.error("重置防具数据失败:", error);
-      dispatch({ type: "SET_ERROR", payload: "重置防具数据失败" });
+      console.error("Failed to reset armor data:", error);
+      dispatch({ type: "SET_ERROR", payload: "Failed to reset armor" });
     }
   };
 

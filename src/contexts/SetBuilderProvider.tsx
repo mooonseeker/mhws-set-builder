@@ -1,5 +1,14 @@
+/**
+ * @fileoverview Provides the state and logic for the Set Builder feature.
+ *
+ * This component manages the entire state for the set builder, including
+ * manual equipment selection, automatic set searching, and state management
+ * for the UI.
+ */
+
+import React, { useCallback, useState, type ReactNode } from "react";
+
 import { cloneDeep } from "lodash-es";
-import React, { useCallback, useState } from "react";
 
 import {
   useAccessories,
@@ -9,23 +18,19 @@ import {
   useWeapon,
 } from "@/hooks";
 import { findOptimalSets } from "@/services/set-search";
-
 import type {
   Accessory,
   Armor,
   Charm,
-  EquipmentSet,
   EquipmentCellType,
-  Slot,
-  SkillWithLevel,
-  Weapon,
-} from "@/types";
-import type {
+  EquipmentSet,
   FinalSet,
   SelectionContext,
+  SkillWithLevel,
+  Slot,
   SlottedEquipment,
-} from "@/types/set-builder";
-import type { ReactNode } from "react";
+  Weapon,
+} from "@/types";
 
 import { SetBuilderContext } from "./SetBuilderContext";
 
@@ -33,6 +38,11 @@ interface SetBuilderProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Provides the Set Builder state and actions to its children.
+ * @param {SetBuilderProviderProps} props - The component props.
+ * @returns {JSX.Element} The provider component.
+ */
 export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
   children,
 }) => {
@@ -222,7 +232,7 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
       const defaultWeapon = weapons.find((w) => w.id === "Rod_075");
       if (!defaultWeapon) {
         console.error(
-          '默认武器 "Rod_075" 未在数据库中找到。请检查数据完整性。',
+          'Default weapon "Rod_075" not found in the database. Please check data integrity.',
         );
         return;
       }
@@ -282,7 +292,7 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
         const decorationsForEquipment =
           finalSet.accessories.get(equipmentId) ?? [];
 
-        // 新增Log，用于验证decorationsForEquipment是否能取到值
+        // Log to verify that decorations are being retrieved correctly.
         if (decorationsForEquipment.length > 0) {
           console.log(
             `[Debug] Found ${decorationsForEquipment.length} decorations for equipment ${equipmentId}`,
@@ -308,7 +318,7 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
     );
     setCurrentEquipmentSet(newEquipmentSet);
 
-    // 加载套装后锁定所有装备槽
+    // Lock all equipment slots after loading a set.
     const allLocked: Record<EquipmentCellType, boolean> = {
       weapon: true,
       helm: true,
@@ -337,7 +347,7 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
   const clearEquipmentSlot = (type: EquipmentCellType) => {
     setCurrentEquipmentSet((prev) => {
       const newSet = { ...prev };
-      // 如果该槽位未被锁定，则删除它
+      // Only clear the slot if it is not locked.
       if (!lockedSlots[type]) {
         delete newSet[type];
       }
@@ -349,7 +359,7 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
     setRequiredSkills([]);
     setSearchResults([]);
 
-    // 只重置未锁定的装备槽
+    // Only reset the unlocked equipment slots.
     setCurrentEquipmentSet((prev) => {
       const newSet = { ...prev };
       Object.keys(newSet).forEach((key) => {

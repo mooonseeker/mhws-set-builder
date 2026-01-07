@@ -1,44 +1,70 @@
 /**
- * MHWS护石管理器 - 装饰品Context定义
+ * @fileoverview Defines the context and types for accessory management in the MHWS Set Builder.
  *
- * 仅包含Context定义和类型，以避免React Fast Refresh警告
+ * This file contains only the context definition and related types to prevent
+ * React Fast Refresh warnings.
  */
 
 import { createContext } from "react";
+
 import type { Accessory } from "@/types";
 
 /**
- * 装饰品状态类型
+ * Describes the state of accessories.
  */
 interface AccessoryState {
-  /** 装饰品列表 */
+  /** The list of all available accessories. */
   accessories: Accessory[];
-  /** 加载状态 */
+  /** True if the accessories are currently being loaded. */
   loading: boolean;
-  /** 错误信息 */
+  /** An error message if something went wrong, otherwise null. */
   error: string | null;
 }
 
 /**
- * 装饰品Context类型
+ * Defines the shape of the AccessoryContext.
  */
 export interface AccessoryContextType extends AccessoryState {
-  /** 添加装饰品 */
+  /**
+   * Adds a new accessory.
+   * @param accessory - The accessory to add.
+   * @throws {Error} If an accessory with the same ID already exists.
+   */
   addAccessory: (accessory: Accessory) => void;
-  /** 更新装饰品 */
+
+  /**
+   * Updates an existing accessory.
+   * @param accessory - The accessory with updated values.
+   */
   updateAccessory: (accessory: Accessory) => void;
-  /** 删除装饰品 */
+
+  /**
+   * Deletes an accessory by its ID.
+   * @param id - The ID of the accessory to delete.
+   */
   deleteAccessory: (id: string) => void;
-  /** 根据ID获取装饰品 */
+
+  /**
+   * Retrieves an accessory by its ID.
+   * @param id - The ID of the accessory to find.
+   * @returns The accessory object if found, otherwise undefined.
+   */
   getAccessoryById: (id: string) => Accessory | undefined;
-  /** 批量导入装饰品 */
+
+  /**
+   * Imports a list of accessories, replacing all existing ones.
+   * @param accessories - The list of accessories to import.
+   */
   importAccessories: (accessories: Accessory[]) => void;
-  /** 重置装饰品为初始数据 */
+
+  /**
+   * Resets accessories to the initial default dataset.
+   */
   resetAccessories: () => Promise<void>;
 }
 
 /**
- * 装饰品Context
+ * React context for managing accessories.
  */
 export const AccessoryContext = createContext<AccessoryContextType | undefined>(
   undefined,

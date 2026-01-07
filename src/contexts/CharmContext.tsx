@@ -1,45 +1,76 @@
 /**
- * MHWS护石管理器 - 护石Context定义
+ * @fileoverview Defines the context and types for charm management in the MHWS Set Builder.
  *
- * 仅包含Context定义和类型，以避免React Fast Refresh警告
+ * This file contains only the context definition and related types to prevent
+ * React Fast Refresh warnings.
  */
+
 import { createContext } from "react";
+
 import type { Charm } from "@/types";
 
 /**
- * 护石状态类型
+ * Describes the state of charms.
  */
 interface CharmState {
-  /** 护石列表 */
+  /** The list of all available charms. */
   charms: Charm[];
-  /** 加载状态 */
+  /** True if the charms are currently being loaded. */
   loading: boolean;
-  /** 错误信息 */
+  /** An error message if something went wrong, otherwise null. */
   error: string | null;
 }
 
 /**
- * 护石Context类型
+ * Defines the shape of the CharmContext.
  */
 export interface CharmContextType extends CharmState {
-  /** 添加护石 */
+  /**
+   * Adds a new charm.
+   * @param charm - The charm to add.
+   * @throws {Error} If a charm with the same ID already exists.
+   */
   addCharm: (charm: Charm) => void;
-  /** 更新护石 */
+
+  /**
+   * Updates an existing charm.
+   * @param charm - The charm with updated values.
+   */
   updateCharm: (charm: Charm) => void;
-  /** 删除单个护石 */
+
+  /**
+   * Deletes a single charm by its ID.
+   * @param id - The ID of the charm to delete.
+   */
   deleteCharm: (id: string) => void;
-  /** 批量删除护石 */
+
+  /**
+   * Deletes multiple charms by their IDs.
+   * @param ids - An array of charm IDs to delete.
+   */
   deleteCharms: (ids: string[]) => void;
-  /** 根据ID获取护石 */
+
+  /**
+   * Retrieves a charm by its ID.
+   * @param id - The ID of the charm to find.
+   * @returns The charm object if found, otherwise undefined.
+   */
   getCharmById: (id: string) => Charm | undefined;
-  /** 批量导入护石 */
+
+  /**
+   * Imports a list of charms, replacing all existing ones.
+   * @param charms - The list of charms to import.
+   */
   importCharms: (charms: Charm[]) => void;
-  /** 重置护石为初始数据 */
+
+  /**
+   * Resets charms to the initial default dataset.
+   */
   resetCharms: () => void;
 }
 
 /**
- * 护石Context
+ * React context for managing charms.
  */
 export const CharmContext = createContext<CharmContextType | undefined>(
   undefined,

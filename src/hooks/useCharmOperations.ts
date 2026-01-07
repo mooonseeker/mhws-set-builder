@@ -1,12 +1,14 @@
 /**
- * MHWS护石管理器 - 护石操作Hook
+ * @fileoverview Hook for charm operations in the MHWS Set Builder.
  *
- * 封装护石的创建、验证等复杂操作
+ * This hook encapsulates complex operations for creating, validating,
+ * and updating charms.
  */
 
 import { useCallback } from "react";
 
 import { useCharms, useSkills } from "@/hooks";
+import type { Charm, SkillWithLevel, Slot } from "@/types";
 import {
   calculateCharmEquivalentSlots,
   calculateKeySkillValue,
@@ -14,17 +16,37 @@ import {
   validateCharm,
 } from "@/utils";
 
-import type { SkillWithLevel, Slot, Charm } from "@/types";
 /**
- * 护石操作Hook
+ * Generates a charm name based on its rarity.
+ * @param rarity The rarity of the charm.
+ * @returns The name of the charm.
+ */
+const generateCharmNameByRarity = (rarity: number): string => {
+  switch (rarity) {
+    case 5:
+      return "不明护石";
+    case 6:
+      return "史传护石";
+    case 7:
+      return "秘史护石";
+    case 8:
+      return "盛世护石";
+    default:
+      return "非法护石";
+  }
+};
+
+/**
+ * Hook for charm operations.
  *
- * 提供护石创建和验证的便捷方法，自动处理：
- * - 等效孔位计算
- * - 核心技能价值计算
- * - ID生成
- * - 护石验证
+ * Provides convenient methods for creating and validating charms, automatically
+ * handling:
+ * - Equivalent slot calculation
+ * - Key skill value calculation
+ * - ID generation
+ * - Charm validation
  *
- * @returns 护石操作方法集合
+ * @returns A collection of charm operation methods.
  *
  * @example
  * ```tsx
@@ -32,16 +54,16 @@ import type { SkillWithLevel, Slot, Charm } from "@/types";
  *   const { createCharm, validateNewCharm } = useCharmOperations();
  *
  *   const handleSubmit = (data) => {
- *     // 先验证
+ *     // First, validate the charm
  *     const validation = validateNewCharm(data);
  *     if (!validation.isValid) {
  *       alert(validation.warnings.join('\n'));
  *       return;
  *     }
  *
- *     // 创建护石
+ *     // Create the charm
  *     const newCharm = createCharm(data);
- *     console.log('护石已创建:', newCharm);
+ *     console.log('New charm created:', newCharm);
  *   };
  * }
  * ```
@@ -51,12 +73,13 @@ export function useCharmOperations() {
   const { skills } = useSkills();
 
   /**
-   * 创建并添加护石
+   * Creates and adds a new charm.
    *
-   * 自动计算等效孔位和核心技能价值，生成ID和时间戳
+   * Automatically calculates equivalent slots, key skill value, and generates
+   * an ID and timestamp.
    *
-   * @param data - 护石基础数据（稀有度、技能、孔位）
-   * @returns 创建的完整护石对象
+   * @param data - The base data for the charm (rarity, skills, slots).
+   * @returns The fully created charm object.
    *
    * @example
    * ```tsx
@@ -73,23 +96,24 @@ export function useCharmOperations() {
       skills: SkillWithLevel[];
       slots: Slot[];
     }): Charm => {
-      // 计算等效孔位
+      // Calculate equivalent slots
       const equivalentSlots = calculateCharmEquivalentSlots(
         data.skills,
         data.slots,
         skills,
       );
 
-      // 计算核心技能价值
+      // Calculate key skill value
       const keySkillValue = calculateKeySkillValue(
         data.skills,
         data.slots,
         skills,
       );
 
-      // 创建护石对象
+      // Create the charm object
       const newCharm: Charm = {
         id: generateCharmId(),
+        name: generateCharmNameByRarity(data.rarity),
         rarity: data.rarity,
         skills: data.skills,
         slots: data.slots,
@@ -98,7 +122,7 @@ export function useCharmOperations() {
         createdAt: new Date().toISOString(),
       };
 
-      // 添加到状态
+      // Add to the state
       addCharm(newCharm);
 
       return newCharm;
@@ -107,14 +131,14 @@ export function useCharmOperations() {
   );
 
   /**
-   * 验证护石
+   * Validates a new charm.
    *
-   * 检查护石是否应该添加，包括：
-   * - 是否落后于现有护石
-   * - 核心技能价值是否低于平均值
+   * Checks if a charm should be added, including:
+   * - Whether it is outclassed by an existing charm.
+   * - Whether its key skill value is below average.
    *
-   * @param data - 护石基础数据（稀有度、技能、孔位）
-   * @returns 验证结果，包含是否通过、警告信息等
+   * @param data - The base data for the charm (rarity, skills, slots).
+   * @returns A validation result, including whether it passed and any warnings.
    *
    * @example
    * ```tsx
@@ -125,11 +149,11 @@ export function useCharmOperations() {
    * });
    *
    * if (!result.isValid) {
-   *   console.warn('护石验证失败:', result.warnings);
+   *   console.warn('Charm validation failed:', result.warnings);
    * }
    *
    * if (result.isBelowAverage) {
-   *   console.warn('核心技能价值低于平均值');
+   *   console.warn('Key skill value is below average.');
    * }
    * ```
    */
@@ -141,13 +165,14 @@ export function useCharmOperations() {
   );
 
   /**
-   * 更新护石并重新计算价值
+   * Updates a charm and recalculates its values.
    *
-   * 根据ID找到护石，更新其数据并重新计算等效孔位和核心技能价值
+   * Finds a charm by its ID, updates its data, and recalculates its
+   * equivalent slots and key skill value.
    *
-   * @param id - 要更新的护石ID
-   * @param data - 更新后的护石基础数据（稀有度、技能、孔位）
-   * @returns 更新后的完整护石对象
+   * @param id - The ID of the charm to update.
+   * @param data - The updated base data for the charm (rarity, skills, slots).
+   * @returns The updated charm object.
    *
    * @example
    * ```tsx
@@ -167,38 +192,39 @@ export function useCharmOperations() {
         slots: Slot[];
       },
     ): Charm => {
-      // 找到现有护石
+      // Find the existing charm
       const existingCharm = charms.find((c) => c.id === id);
       if (!existingCharm) {
         throw new Error(`Charm with id ${id} not found`);
       }
 
-      // 计算等效孔位
+      // Calculate equivalent slots
       const equivalentSlots = calculateCharmEquivalentSlots(
         data.skills,
         data.slots,
         skills,
       );
 
-      // 计算核心技能价值
+      // Calculate key skill value
       const keySkillValue = calculateKeySkillValue(
         data.skills,
         data.slots,
         skills,
       );
 
-      // 创建更新后的护石对象
+      // Create the updated charm object
       const updatedCharm: Charm = {
         id,
+        name: generateCharmNameByRarity(data.rarity),
         rarity: data.rarity,
         skills: data.skills,
         slots: data.slots,
         equivalentSlots,
         keySkillValue,
-        createdAt: existingCharm.createdAt, // 保持原始创建时间
+        createdAt: existingCharm.createdAt, // Keep the original creation time
       };
 
-      // 更新到状态
+      // Update the state
       updateCharmInContext(updatedCharm);
 
       return updatedCharm;

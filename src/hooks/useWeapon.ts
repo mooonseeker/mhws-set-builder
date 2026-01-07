@@ -1,18 +1,23 @@
+/**
+ * @fileoverview Hook for accessing the weapon context.
+ */
+
 import { useContext } from "react";
+
 import { WeaponContext } from "@/contexts/WeaponContext";
 
 /**
- * 使用武器Context的Hook
+ * Hook for using the Weapon context.
  *
- * @returns 武器Context
- * @throws {Error} 如果在WeaponProvider外部使用
+ * @returns The weapon context.
+ * @throws {Error} If used outside of a WeaponProvider.
  *
  * @example
  * ```tsx
  * function WeaponList() {
  *   const { weapons, loading, addWeapon } = useWeapon();
  *
- *   if (loading) return <div>加载中...</div>;
+ *   if (loading) return <div>Loading...</div>;
  *
  *   return (
  *     <div>
