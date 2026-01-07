@@ -8,6 +8,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+
 import type { ZodType } from "zod";
 
 import type {
@@ -17,10 +18,8 @@ import type {
   Skill,
   Weapon,
 } from "../src/types/index.ts";
-
+import { databaseMetaSchema, type DatabaseMeta } from "./lib/base-schemas.ts";
 import { generateFromCsv } from "./lib/csv-json.ts";
-import type { DatabaseMeta } from "./lib/base-schemas.ts";
-import { databaseMetaSchema } from "./lib/base-schemas.ts";
 import {
   accessoryRowSchema,
   armorRowSchema,

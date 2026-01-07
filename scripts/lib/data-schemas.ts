@@ -14,7 +14,6 @@ import type {
   Takumi,
   Weapon,
 } from "../../src/types";
-
 import {
   armorTypeSchema,
   boolFromString,

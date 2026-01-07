@@ -4,9 +4,10 @@
  * and handles errors gracefully.
  */
 
-import csv from "csv-parser";
 import fs from "fs";
 import path from "path";
+
+import csv from "csv-parser";
 import type { ZodError, ZodIssue, ZodType } from "zod";
 
 /**
