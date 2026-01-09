@@ -1,5 +1,11 @@
-import { List, Pencil, Trash2 } from "lucide-react";
+/**
+ * @fileoverview Component for displaying a list of accessories.
+ * It supports filtering, pagination, editing, and deletion of accessories.
+ */
+
 import { useState } from "react";
+
+import { List, Pencil, Trash2 } from "lucide-react";
 
 import { SkillItem } from "@/components/entities/";
 import { Badge } from "@/components/ui/badge";
@@ -20,11 +26,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { DEFAULT_ACCESSORIES_PER_PAGE } from "@/constants";
 import { useAccessories, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { DataStorage } from "@/services/storage";
-import { DEFAULT_ACCESSORIES_PER_PAGE } from "@/constants";
-
 import type { Accessory, AppSettings, SlotLevel } from "@/types";
 
 export interface AccessoryListProps {
@@ -33,15 +38,13 @@ export interface AccessoryListProps {
   mode?: "display" | "selector";
   onAccessorySelect?: (accessory: Accessory) => void;
   filterBySlotLevel?: SlotLevel;
-  /** 按孔位类型过滤：用于区分武器孔位/防具孔位装饰品 */
   filterBySlotType?: "weapon" | "armor";
 }
 
 /**
- * 装饰品列表组件
- * 显示所有装饰品并支持筛选、排序、编辑和删除
+ * Accessory list component.
+ * Displays all accessories with support for filtering, sorting, editing, and deleting.
  */
-
 export function AccessoryList({
   onEdit,
   isLocked,
@@ -62,12 +65,12 @@ export function AccessoryList({
     DataStorage.loadData<AppSettings>("settings")[0]?.accessoriesPerPage ??
     DEFAULT_ACCESSORIES_PER_PAGE;
 
-  // 获取技能对象
+  // Helper to get a skill object by its ID.
   const getSkill = (skillId: string) => {
     return skills.find((s) => s.id === skillId);
   };
 
-  // 获取孔位等级图标
+  // Helper to get the slot icon path.
   const getSlotIcon = (type: "weapon" | "armor", level: number) => {
     if (level >= 1 && level <= 3) {
       return `/slot/${type}-slot-${level}.png`;
@@ -75,12 +78,12 @@ export function AccessoryList({
     return "";
   };
 
-  // 筛选装饰品
+  // Filter accessories based on various criteria.
   const filteredAccessories = accessories.filter((accessory) => {
-    // 显式孔位类型过滤（用于配装器：区分武器孔/防具孔）
+    // Explicit slot type filter (for the set builder: distinguishes weapon/armor slots).
     if (filterBySlotType && accessory.type !== filterBySlotType) return false;
 
-    // 顶部按钮的类型过滤（仅在未指定filterBySlotType时由用户切换）
+    // Type filter from the top buttons (user-toggleable only when filterBySlotType is not specified).
     if (
       !filterBySlotType &&
       typeFilter !== "all" &&
@@ -88,7 +91,7 @@ export function AccessoryList({
     )
       return false;
 
-    // 孔位等级过滤：装饰品需要的等级不得高于孔位等级
+    // Slot level filter: the level of the accessory must not be higher than the slot level.
     if (filterBySlotLevel && accessory.slotLevel > filterBySlotLevel)
       return false;
     if (searchQuery) {
@@ -107,7 +110,7 @@ export function AccessoryList({
     return true;
   });
 
-  // 分页计算
+  // Pagination calculation.
   const totalPages = Math.ceil(filteredAccessories.length / accessoriesPerPage);
   const paginatedAccessories = filteredAccessories.slice(
     (currentPage - 1) * accessoriesPerPage,
@@ -122,7 +125,7 @@ export function AccessoryList({
 
   return (
     <div className="flex h-full flex-col gap-6">
-      {/* 菜单栏 */}
+      {/* MARK: Toolbar */}
       <div className="bg-card shrink-0 rounded-lg border p-2 shadow-sm sm:p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
           <TooltipProvider>
@@ -207,7 +210,7 @@ export function AccessoryList({
           </TooltipProvider>
 
           <div className="flex items-center justify-end gap-4">
-            {/* selector模式下隐藏数量信息 */}
+            {/* Hide count information in selector mode. */}
             {mode !== "selector" && (
               <div className="text-muted-foreground text-sm">
                 共 {filteredAccessories.length} 种装饰品
@@ -232,7 +235,7 @@ export function AccessoryList({
         </div>
       </div>
 
-      {/* 装饰品表格 */}
+      {/* MARK: Accessory Table */}
       <div className="bg-card min-h-0 flex-1 rounded-lg border shadow-sm">
         <Table>
           <TableHeader>

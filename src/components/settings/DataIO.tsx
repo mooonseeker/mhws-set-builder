@@ -1,5 +1,11 @@
-import { Download, RotateCcw, ShieldCheck, Upload } from "lucide-react";
+/**
+ * @fileoverview Provides the DataIO component for managing database import, export,
+ * validation, and reset operations.
+ */
+
 import { useRef, useState } from "react";
+
+import { Download, RotateCcw, ShieldCheck, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,12 +25,12 @@ import {
 } from "@/components/ui/table";
 import { DataStorage } from "@/services/storage";
 import { exportData, importData } from "@/services/storage/transfer";
+import type { DataId } from "@/types";
 import { validateData } from "@/utils/data-io";
 
-import type { DataId } from "@/types";
 /**
- * 数据库 IO 管理表格组件
- * 显示数据库验证、重置、导出和导入功能的统一界面
+ * DataIO component for database management.
+ * Displays a unified interface for database validation, reset, export, and import.
  */
 export function DataIO() {
   const [processing, setProcessing] = useState<{
@@ -34,7 +40,7 @@ export function DataIO() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importTarget, setImportTarget] = useState<DataId | null>(null);
 
-  // 定义数据库类别
+  // Database categories
   const databaseItems: { id: DataId; name: string }[] = [
     { id: "skills", name: "技能" },
     { id: "accessories", name: "装饰品" },
@@ -43,7 +49,7 @@ export function DataIO() {
     { id: "charms", name: "护石" },
   ];
 
-  // 定义每个类别可执行的操作
+  // Executable actions for each category
   const databaseActions = [
     { id: "validate", label: "验证", icon: ShieldCheck },
     { id: "reset", label: "重置", icon: RotateCcw },
@@ -51,7 +57,7 @@ export function DataIO() {
     { id: "import", label: "导入", icon: Upload },
   ] as const;
 
-  // 统一操作处理
+  // Unified action handler
   const handleAction = async (
     itemId: DataId,
     actionId: (typeof databaseActions)[number]["id"],
@@ -111,7 +117,7 @@ export function DataIO() {
     }
   };
 
-  // 处理文件导入
+  // Handles file import
   const handleFileImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !importTarget) return;
@@ -133,11 +139,11 @@ export function DataIO() {
       } finally {
         setProcessing(null);
         setImportTarget(null);
-        e.target.value = ""; // 重置文件输入
+        e.target.value = "";
       }
     } else {
       setImportTarget(null);
-      e.target.value = ""; // 重置文件输入
+      e.target.value = "";
     }
   };
 

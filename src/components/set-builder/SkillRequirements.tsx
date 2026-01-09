@@ -1,5 +1,10 @@
-import { Search } from "lucide-react";
+/**
+ * @fileoverview Component for managing skill requirements in automatic search mode.
+ */
+
 import { useMemo } from "react";
+
+import { Search } from "lucide-react";
 
 import { SkillSelector } from "@/components/entities/";
 import { Button } from "@/components/ui/button";
@@ -8,6 +13,9 @@ import { useSetBuilder, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { compareSkills } from "@/utils";
 
+/**
+ * Renders a list of required skills and a selector to add more.
+ */
 export function SkillRequirements() {
   const {
     requiredSkills,
@@ -115,7 +123,7 @@ export function SkillRequirements() {
           </div>
         )}
 
-        {/* 底部：技能选择器和搜索按钮 */}
+        {/* Footer: Skill selector and search button */}
         <div className="border-border border-t pt-4">
           <div className="flex items-end gap-2">
             <div className="flex-1">

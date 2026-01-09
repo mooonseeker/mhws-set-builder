@@ -1,3 +1,8 @@
+/**
+ * @fileoverview A table component for displaying charm data with sorting,
+ * selection, and action controls.
+ */
+
 import { ChevronDown, ChevronUp, Filter, Pencil, Trash2 } from "lucide-react";
 
 import { SkillItem } from "@/components/entities/";
@@ -48,6 +53,9 @@ const SortIcon = ({
   );
 };
 
+/**
+ * Renders a table of charms with sorting, selection, and action controls.
+ */
 export function CharmTable({
   charms,
   hasCharms,
@@ -62,7 +70,7 @@ export function CharmTable({
   onDelete,
   onSelect,
 }: CharmTableProps) {
-  // 获取装饰品等级图标
+  // Gets the icon for a decoration slot based on its type and level.
   const getAccessoryIcon = (slotType: "weapon" | "armor", level: number) => {
     return `/slot/${slotType}-slot-${level}.png`;
   };
@@ -208,7 +216,7 @@ export function CharmTable({
                           variant="full"
                         />
                       ))}
-                      {/* 小屏幕显示孔位信息 */}
+                      {/* Display slot info on smaller screens */}
                       {charm.slots.length > 0 && (
                         <div className="text-muted-foreground mt-1 text-xs md:hidden">
                           孔位:{" "}

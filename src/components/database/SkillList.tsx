@@ -1,5 +1,11 @@
-import { List, Pencil, Star, Trash2 } from "lucide-react";
+/**
+ * @fileoverview Component for displaying a list of skills.
+ * It supports filtering by category, searching, pagination, and actions like editing and deleting.
+ */
+
 import { useState } from "react";
+
+import { List, Pencil, Star, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,10 +26,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { DEFAULT_SKILLS_PER_PAGE, SKILL_CATEGORY_LABELS } from "@/constants";
 import { useSkills } from "@/hooks";
 import { DataStorage } from "@/services/storage";
-import { DEFAULT_SKILLS_PER_PAGE, SKILL_CATEGORY_LABELS } from "@/constants";
-
 import type { AppSettings, Skill, SkillCategory, SlotLevel } from "@/types";
 
 interface SkillListProps {
@@ -32,10 +37,9 @@ interface SkillListProps {
 }
 
 /**
- * 技能列表组件
- * 显示所有技能并支持筛选、排序、编辑和删除
+ * A component that displays a list of all skills,
+ * with support for filtering, sorting, editing, and deleting.
  */
-
 export function SkillList({ onEdit, isLocked }: SkillListProps) {
   const { skills, deleteSkill } = useSkills();
   const [categoryFilter, setCategoryFilter] = useState<SkillCategory | "all">(
@@ -49,7 +53,7 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
     DataStorage.loadData<AppSettings>("settings")[0]?.skillsPerPage ??
     DEFAULT_SKILLS_PER_PAGE;
 
-  // 获取装饰品等级图标
+  // Gets the accessory icon based on skill category and accessory level.
   const getAccessoryIcon = (
     skillCategory: SkillCategory,
     accessoryLevel: SlotLevel,
@@ -66,18 +70,18 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
     }
   };
 
-  // 获取技能分类图标
+  // Gets the skill category icon.
   const getCategoryIcon = (skillCategory: SkillCategory) => {
     return `/skill-category/${skillCategory}.png`;
   };
 
-  // 筛选技能
+  // Filter skills based on current filter settings.
   const filteredSkills = skills.filter((skill) => {
     if (categoryFilter !== "all" && skill.category !== categoryFilter)
       return false;
     if (keyOnlyFilter && !skill.isKey) return false;
     if (searchQuery) {
-      // 检查是否为精确匹配（以等号开头）
+      // Check for exact match (if query starts with '=').
       const isExactMatch = searchQuery.startsWith("=");
       const keyword = isExactMatch ? searchQuery.slice(1) : searchQuery;
 
@@ -90,14 +94,14 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
     return true;
   });
 
-  // 分页计算
+  // Pagination calculation.
   const totalPages = Math.ceil(filteredSkills.length / skillsPerPage);
   const paginatedSkills = filteredSkills.slice(
     (currentPage - 1) * skillsPerPage,
     currentPage * skillsPerPage,
   );
 
-  // 筛选条件变化时，重置到第一页并更新筛选
+  // When filter conditions change, reset to the first page and update the filter.
   const handleCategoryChange = (category: SkillCategory | "all") => {
     setCategoryFilter(category);
     setCurrentPage(1);
@@ -121,7 +125,7 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
 
   return (
     <div className="flex h-full flex-col gap-6">
-      {/* 菜单栏 */}
+      {/* MARK: Toolbar */}
       <div className="bg-card shrink-0 rounded-lg border p-2 shadow-sm sm:p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
           <TooltipProvider>
@@ -201,7 +205,7 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
         </div>
       </div>
 
-      {/* 技能表格 */}
+      {/* MARK: Skills Table */}
       <div className="bg-card min-h-0 flex-1 rounded-lg border shadow-sm">
         <Table className="w-full table-fixed">
           <TableHeader>

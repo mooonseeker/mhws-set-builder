@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Main container component for the Set Builder feature.
+ */
+
 import { Hand, Search } from "lucide-react";
 
 import {
@@ -7,6 +11,8 @@ import {
 } from "@/components/entities";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useSetBuilder } from "@/hooks";
+import type { Slot } from "@/types";
+import type { EquipmentCellType } from "@/types/set-builder";
 
 import { SearchConfirmationDialog } from "./SearchConfirmationDialog";
 import { SearchResultsView } from "./SearchResultsView";
@@ -14,8 +20,6 @@ import { AutoModeViewToggle, SetBuilderActions } from "./SetBuilderToolbar";
 import { SetSummary } from "./SetSummary";
 import { SkillRequirements } from "./SkillRequirements";
 
-import type { Slot } from "@/types";
-import type { EquipmentCellType } from "@/types/set-builder";
 const cellTypes: EquipmentCellType[] = [
   "weapon",
   "helm",
@@ -26,6 +30,9 @@ const cellTypes: EquipmentCellType[] = [
   "charm",
 ];
 
+/**
+ * The primary Set Builder component that coordinates between manual and automatic modes.
+ */
 export function SetBuilder() {
   const {
     mode,
@@ -121,7 +128,7 @@ export function SetBuilder() {
               )
             ) : mode === "manual" ? (
               <SetSummary equipmentSet={currentEquipmentSet} />
-            ) : // 自动模式下的视图切换
+            ) : // View switching in auto mode
             autoModeView === "requirements" ? (
               <SkillRequirements />
             ) : autoModeView === "results" ? (

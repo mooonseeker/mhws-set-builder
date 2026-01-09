@@ -1,3 +1,7 @@
+/**
+ * @fileoverview View component for displaying and selecting from search results.
+ */
+
 import { useMemo } from "react";
 
 import { Badge } from "@/components/ui/badge";
@@ -7,10 +11,12 @@ import {
   calculateExtraSkills,
   evaluateAndSortResults,
 } from "@/services/set-search/result-evaluator";
-
 import type { FinalSet, Slot, SlotType } from "@/types";
 
-// Helper function to count remaining slots by type
+/**
+ * Counts the remaining empty slots grouped by equipment type and slot level.
+ * @param slots Array of remaining slots in a set.
+ */
 const countSlotsByType = (slots: Slot[]) => {
   const counts: Record<SlotType, Record<string, number>> = {
     weapon: { "1": 0, "2": 0, "3": 0 },
@@ -26,6 +32,9 @@ const countSlotsByType = (slots: Slot[]) => {
   return counts;
 };
 
+/**
+ * Displays a list of search results with details on remaining slots and extra skills.
+ */
 export function SearchResultsView() {
   const { requiredSkills, searchResults, loadSetToBuilder } = useSetBuilder();
   const { skills, getSkillById } = useSkills();
@@ -72,7 +81,7 @@ export function SearchResultsView() {
                     onClick={() => handleSelectSet(set)}
                   >
                     <CardContent className="space-y-3 p-4">
-                      {/* Remaining Slots Section */}
+                      // Remaining Slots Section
                       <div className="flex flex-wrap gap-x-4 gap-y-2">
                         {(["weapon", "armor"] as SlotType[]).map((type) => (
                           <div
@@ -113,8 +122,7 @@ export function SearchResultsView() {
                           </p>
                         )}
                       </div>
-
-                      {/* Extra Skills Section */}
+                      // Extra Skills Section
                       {extraSkills.length > 0 ? (
                         <div className="flex flex-wrap gap-1">
                           {extraSkills.map(({ skillId, level }) => {

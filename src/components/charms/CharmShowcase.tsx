@@ -1,3 +1,7 @@
+/**
+ * @fileoverview A component to showcase the best charms based on different metrics.
+ */
+
 import { EquipmentCard } from "@/components/entities";
 import {
   Card,
@@ -11,14 +15,13 @@ import type { Charm } from "@/types";
 import { sortCharms } from "@/utils";
 
 /**
- * CharmShowcase 组件
- *
- * 展示在不同维度上的最佳护石
+ * Displays the best charms from the user's collection based on various metrics,
+ * such as highest key skill value or most equivalent slots.
  */
 export function CharmShowcase() {
   const { charms } = useCharms();
 
-  // 计算最佳护石
+  // Calculate the best charms for different categories.
   const bestKeySkillCharm: Charm | undefined =
     charms.length > 0
       ? sortCharms(charms, "keySkillValue", "desc")[0]

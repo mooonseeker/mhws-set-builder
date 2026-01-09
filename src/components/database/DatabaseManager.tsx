@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Main component for managing the application's database.
+ * It integrates lists and forms for skills, accessories, armor, and weapons.
+ */
+
+import { useState } from "react";
+
 import {
   Gem,
   Lock,
@@ -7,26 +14,24 @@ import {
   Swords,
   Unlock,
 } from "lucide-react";
-import { useState } from "react";
 
 import { ErrorMessage, Loading } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useAccessories, useArmor, useSkills } from "@/hooks";
+import type { Accessory, Skill } from "@/types";
 import { generateSkillId } from "@/utils";
 
-import { SkillForm } from "./SkillForm";
-import { SkillList } from "./SkillList";
 import { AccessoryForm } from "./AccessoryForm";
 import { AccessoryList } from "./AccessoryList";
 import { ArmorList } from "./ArmorList";
+import { SkillForm } from "./SkillForm";
+import { SkillList } from "./SkillList";
 import { WeaponList } from "./WeaponList";
 
-import type { Skill, Accessory } from "@/types";
-
 /**
- * 数据库管理主组件
- * 整合技能和装饰品列表和表单功能
+ * The main component for database management.
+ * Integrates list and form functionalities for skills and accessories.
  */
 export function DatabaseManager() {
   const {
@@ -59,7 +64,7 @@ export function DatabaseManager() {
   const error = skillsError ?? accessoriesError ?? armorError;
 
   const handleAdd = () => {
-    setFormError(null); // 打开表单时清除旧错误
+    setFormError(null); // Clear previous errors when opening the form.
     if (currentDb === "skills") {
       setEditingItem({
         type: "skill",
@@ -91,13 +96,13 @@ export function DatabaseManager() {
         },
       });
     }
-    // TODO: 为防具和武器添加类似的处理
+    // TODO: Add similar handling for armor and weapons.
     setFormOpen(true);
   };
 
   const handleEdit = (item: Skill | Accessory, type: "skill" | "accessory") => {
     setEditingItem({ type, data: item });
-    setFormError(null); // 打开表单时清除旧错误
+    setFormError(null); // Clear previous errors when opening the form.
     setFormOpen(true);
   };
 
@@ -109,7 +114,7 @@ export function DatabaseManager() {
     if (editingItem.type === "skill") {
       const skillData = itemData as Omit<Skill, "id">;
       if (editingItem.data.id) {
-        // 编辑模式
+        // Edit mode
         try {
           updateSkill({ ...skillData, id: editingItem.data.id });
           setFormOpen(false);
@@ -119,7 +124,7 @@ export function DatabaseManager() {
           }
         }
       } else {
-        // 添加模式
+        // Add mode
         try {
           const newSkill: Skill = {
             ...skillData,
@@ -136,7 +141,7 @@ export function DatabaseManager() {
     } else {
       const accessoryData = itemData as Omit<Accessory, "id">;
       if (editingItem.data.id) {
-        // 编辑模式
+        // Edit mode
         try {
           updateAccessory({ ...accessoryData, id: editingItem.data.id });
           setFormOpen(false);
@@ -146,7 +151,7 @@ export function DatabaseManager() {
           }
         }
       } else {
-        // 添加模式
+        // Add mode
         try {
           addAccessory(accessoryData as Accessory);
           setFormOpen(false);

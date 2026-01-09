@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Dialog component to confirm starting a set search.
+ */
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,6 +13,9 @@ import {
 } from "@/components/ui/dialog";
 import { useSetBuilder } from "@/hooks";
 
+/**
+ * Dialog that asks for confirmation before starting the automatic search process.
+ */
 export function SearchConfirmationDialog() {
   const { isSearchConfirmOpen, confirmSearch, cancelSearch, isSearching } =
     useSetBuilder();

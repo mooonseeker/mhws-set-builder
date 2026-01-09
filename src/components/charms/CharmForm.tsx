@@ -1,3 +1,8 @@
+/**
+ * @fileoverview A presentational component for the charm form.
+ * It receives all state and handlers as props and is only responsible for rendering the UI.
+ */
+
 import { X } from "lucide-react";
 
 import { SkillSelector } from "@/components/entities/";
@@ -43,9 +48,9 @@ interface CharmFormProps {
 }
 
 /**
- * 护石表单组件（展示型）
+ * A presentational component for the charm form.
  *
- * 接收所有状态和处理器作为 props，只负责渲染 UI。
+ * It receives all state and handlers as props and is only responsible for rendering the UI.
  */
 export function CharmForm({
   isEditMode,
@@ -67,7 +72,7 @@ export function CharmForm({
 }: CharmFormProps) {
   return (
     <div className="space-y-8">
-      {/* 名称显示 */}
+      {/* Name display */}
       <div className="flex items-center gap-2">
         <Label className="w-16 shrink-0 text-base font-medium">名称</Label>
         <div className="bg-muted text-muted-foreground flex h-10 flex-1 items-center rounded-md px-3 font-medium">
@@ -75,7 +80,7 @@ export function CharmForm({
         </div>
       </div>
 
-      {/* 稀有度选择 */}
+      {/* Rarity selection */}
       <div className="flex items-center gap-2">
         <Label className="w-16 shrink-0 text-base font-medium">稀有度</Label>
         <Badge
@@ -102,9 +107,9 @@ export function CharmForm({
         </div>
       </div>
 
-      {/* 技能和孔位并排布局 */}
+      {/* Side-by-side layout for skills and slots */}
       <div className="grid grid-cols-[60%_40%] gap-6">
-        {/* 技能选择 */}
+        {/* Skill selection */}
         <div className="flex flex-col gap-3">
           <Label className="space-y-3 text-base font-medium">
             技能 ({selectedSkills.length}/3)
@@ -148,7 +153,7 @@ export function CharmForm({
               </div>
             );
           })}
-          {/* 填充空槽位 */}
+          {/* Fill empty skill slots */}
           {Array.from(
             { length: Math.max(0, 3 - selectedSkills.length) },
             (_unused, index) => index,
@@ -159,14 +164,14 @@ export function CharmForm({
             />
           ))}
 
-          {/* 技能选择器 */}
+          {/* Skill selector */}
           <SkillSelector
             onSelect={handleAddSkill}
             excludeSkillIds={selectedSkills.map((s) => s.skillId)}
           />
         </div>
 
-        {/* 孔位选择 */}
+        {/* Slot selection */}
         <div className="flex flex-col gap-3">
           <Label className="space-y-3 text-base font-medium">
             孔位 ({slots.length}/3)
@@ -217,7 +222,7 @@ export function CharmForm({
               </Button>
             </div>
           ))}
-          {/* 填充空槽位 */}
+          {/* Fill empty slot spaces */}
           {Array.from(
             { length: Math.max(0, 3 - slots.length) },
             (_unused, index) => index,
@@ -228,14 +233,14 @@ export function CharmForm({
             />
           ))}
 
-          {/* 添加孔位按钮 */}
+          {/* Add slot button */}
           <Button variant="outline" onClick={handleAddSlot} className="w-full">
             添加孔位
           </Button>
         </div>
       </div>
 
-      {/* 护石价值评估 */}
+      {/* Charm value assessment */}
       <div className="bg-muted flex items-center justify-between gap-4 rounded-lg p-4">
         <div className="font-medium">
           核心技能价值: <span className="text-primary">{keySkillValue}</span>
@@ -262,7 +267,7 @@ export function CharmForm({
         </div>
       </div>
 
-      {/* 操作按钮 */}
+      {/* Action buttons */}
       <div className="flex justify-end gap-3 border-t pt-4">
         {onCancel && (
           <Button variant="outline" onClick={onCancel}>

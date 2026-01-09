@@ -1,28 +1,36 @@
+/**
+ * @fileoverview Component for displaying a summary of the current equipment set.
+ */
+
 import { useMemo } from "react";
 
 import { SkillItem } from "@/components/entities/";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSkills } from "@/hooks";
+import type {
+  Accessory,
+  Armor,
+  Charm,
+  Skill,
+  SkillWithLevel,
+  Weapon,
+} from "@/types";
+import type { EquipmentSet, SlottedEquipment } from "@/types/set-builder";
 import { compareSkills } from "@/utils";
 
-import type { EquipmentSet, SlottedEquipment } from "@/types/set-builder";
-import type {
-  SkillWithLevel,
-  Accessory,
-  Weapon,
-  Armor,
-  Skill,
-  Charm,
-} from "@/types";
-
+/** Props for SetSummary component. */
 export interface SetSummaryProps {
+  /** The equipment set to summarize. */
   equipmentSet: EquipmentSet;
 }
 
+/**
+ * Renders a summary of total stats and aggregated skills for the given equipment set.
+ */
 export function SetSummary({ equipmentSet }: SetSummaryProps) {
   const { skills: allSkillsData } = useSkills();
 
-  // 计算套装统计信息
+  // Calculate aggregate stats for the set
   const setStats = useMemo(() => {
     let totalAttack = 0;
     let totalCritical = 0;
@@ -40,14 +48,14 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
       if (slottedPiece) {
         const equipment = slottedPiece.equipment;
 
-        // 武器属性
+        // Weapon attributes
         if ("attack" in equipment) {
           totalAttack += equipment.attack;
           totalCritical += equipment.critical;
           totalDefense += equipment.defense || 0;
         }
 
-        // 防具属性
+        // Armor attributes
         if ("defense" in equipment && "resistance" in equipment) {
           totalDefense += equipment.defense;
           equipment.resistance.forEach((res, index) => {
@@ -78,7 +86,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
       }
     >();
 
-    // 遍历所有装备部件
+    // Iterate through all equipment pieces
     (
       Object.values(equipmentSet) as (
         | SlottedEquipment<Weapon | Armor | Charm>
@@ -86,7 +94,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
       )[]
     ).forEach((slottedPiece) => {
       if (slottedPiece) {
-        // 累加装备自带的技能
+        // Accumulate innate skills from equipment
         slottedPiece.equipment.skills.forEach((skill: SkillWithLevel) => {
           const current = skillMap.get(skill.skillId);
           const skillData = allSkillsData.find((s) => s.id === skill.skillId);
@@ -103,7 +111,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
             });
           }
         });
-        // 累加装饰品技能
+        // Accumulate skills from accessories
         slottedPiece.accessories.forEach((acc: Accessory | null) => {
           if (acc) {
             acc.skills.forEach((skill: SkillWithLevel) => {
@@ -132,7 +140,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
     return Array.from(skillMap.values()).sort(compareSkills);
   }, [equipmentSet, allSkillsData]);
 
-  // 计算技能列表的两列布局
+  // Split skills into two columns for layout
   const skillColumns = useMemo(() => {
     const totalSkills = aggregatedSkills.length;
 
@@ -140,7 +148,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
       return { left: [], right: [] };
     }
 
-    // 始终均分到两列
+    // Evenly distribute skills between columns
     const leftCount = Math.ceil(totalSkills / 2);
     return {
       left: aggregatedSkills.slice(0, leftCount),
@@ -162,11 +170,11 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
         <CardTitle>套装汇总</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* 统计信息 */}
+        {/* Stats Section */}
         <div className="space-y-4">
-          {/* 属性统计：攻击、会心、防御 + 五种耐性（合并为一行） */}
+          {/* Stats: Attack, Critical, Defense + 5 Resistances */}
           <div className="grid grid-cols-3 items-center gap-4 md:grid-cols-8">
-            {/* 攻击 */}
+            {/* Attack */}
             <div className="flex items-center justify-center gap-2">
               <img
                 src="/skill-type/SKILL_0000.png"
@@ -175,7 +183,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
               />
               <span className="text-sm font-medium">{setStats.attack}</span>
             </div>
-            {/* 会心 */}
+            {/* Critical */}
             <div className="flex items-center justify-center gap-2">
               <img
                 src="/skill-type/SKILL_0001.png"
@@ -184,7 +192,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
               />
               <span className="text-sm font-medium">{setStats.critical}%</span>
             </div>
-            {/* 防御 */}
+            {/* Defense */}
             <div className="flex items-center justify-center gap-2">
               <img
                 src="/skill-type/SKILL_0005.png"
@@ -193,7 +201,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
               />
               <span className="text-sm font-medium">{setStats.defense}</span>
             </div>
-            {/* 五种耐性 */}
+            {/* Elemental Resistances */}
             {ARMOR_RESISTANCE_META.map((meta, index) => (
               <div
                 key={meta.key}
@@ -208,7 +216,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
           </div>
         </div>
 
-        {/* 技能列表 */}
+        {/* Skill List Section */}
         <div className="space-y-4">
           {aggregatedSkills.length === 0 ? (
             <p className="text-muted-foreground text-sm">
@@ -216,7 +224,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
             </p>
           ) : (
             <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2">
-              {/* 左侧列 */}
+              {/* Left Column */}
               <ul className="space-y-1">
                 {skillColumns.left.map((skill) => (
                   <SkillItem
@@ -227,7 +235,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
                   />
                 ))}
               </ul>
-              {/* 右侧列 */}
+              {/* Right Column */}
               {skillColumns.right.length > 0 && (
                 <ul className="space-y-1">
                   {skillColumns.right.map((skill) => (

@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Component for displaying a list of weapons.
+ * It features filtering by weapon type and rarity, a search input, and a grid layout for weapons.
+ */
+
 import { useMemo, useState } from "react";
 
 import { EquipmentCard } from "@/components/entities/";
@@ -18,15 +23,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { RARITY_FILTERS } from "@/constants";
 import { useWeapon } from "@/hooks";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
-import { RARITY_FILTERS } from "@/constants";
-import { WEAPON_TYPES, RARITY_RANGES, type RarityRangeKey } from "@/types";
-import { groupWeaponsIntoRows } from "@/utils/weapon-grouper";
-
-import type { Weapon, WeaponType } from "@/types";
+import {
+  RARITY_RANGES,
+  WEAPON_TYPES,
+  type RarityRangeKey,
+  type Weapon,
+  type WeaponType,
+} from "@/types";
 import type { EquipmentCellType } from "@/types/set-builder";
+import { groupWeaponsIntoRows } from "@/utils/weapon-grouper";
 
 const RARITY_COLUMNS_MAP = {
   low: [1, 2, 3, 4],
@@ -43,9 +52,8 @@ export interface WeaponListProps {
 }
 
 /**
- * WeaponList 组件
- *
- * 显示武器列表，支持按武器类型筛选和搜索，使用12列网格布局展示武器
+ * A component that displays a list of weapons.
+ * It supports filtering by weapon type and search, and uses a 12-column grid layout.
  */
 export function WeaponList({
   mode = "display",
@@ -53,38 +61,40 @@ export function WeaponList({
   selectingFor,
   currentWeapon,
 }: WeaponListProps) {
-  // 状态管理
+  // MARK: State Management
   const [selectedWeaponType, setSelectedWeaponType] =
     useState<WeaponType>("rod");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedRarity, setSelectedRarity] = useState<RarityRangeKey>("all");
 
-  // 获取武器数据
+  // Fetch weapon data.
   const { weapons, loading, error } = useWeapon();
 
+  // Responsive card variant.
   const is2Xl = useMediaQuery("(min-width: 1536px)");
   const cardVariant = useMemo(() => {
     if (mode === "display") {
       return is2Xl ? "full" : "default";
     }
-    // selector mode
+    // Selector mode
     return is2Xl ? "default" : "compact";
   }, [mode, is2Xl]);
 
-  // 数据处理：筛选、排序并分组为行
+  // MARK: Data Processing
+  // Filter, sort, and group weapons into rows.
   const weaponRows = useMemo(() => {
     if (!weapons) return [];
 
-    // 筛选：根据武器类型、稀有度和搜索查询
+    // Filter by weapon type, rarity, and search query.
     const filteredWeapons = weapons.filter((weapon) => {
-      // 稀有度筛选
+      // Rarity filter
       const range = RARITY_RANGES[selectedRarity];
       const rankMatch =
         weapon.rarity >= range.min && weapon.rarity <= range.max;
 
       if (!rankMatch) return false;
 
-      // 武器类型和搜索查询
+      // Weapon type and search query filter
       return (
         weapon.type === selectedWeaponType &&
         (searchQuery === "" ||
@@ -92,26 +102,27 @@ export function WeaponList({
       );
     });
 
-    // 按sortId升序排序（已在groupWeaponsIntoRows中处理，但这里明确处理）
+    // Sort by sortId (handled in groupWeaponsIntoRows, but explicit here).
     filteredWeapons.sort((a, b) => a.sortId - b.sortId);
 
-    // 调用groupWeaponsIntoRows分组为行
+    // Group weapons into rows.
     return groupWeaponsIntoRows(filteredWeapons);
   }, [weapons, selectedWeaponType, searchQuery, selectedRarity]);
 
-  // 根据选择的稀有度确定要显示的列
+  // Determine columns to display based on selected rarity.
   const rarityColumns = useMemo(() => {
     return RARITY_COLUMNS_MAP[selectedRarity];
   }, [selectedRarity]);
 
-  // 加载状态
+  // MARK: Render Logic
+  // Loading state
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">加载中...</div>
     );
   }
 
-  // 错误状态
+  // Error state
   if (error) {
     return (
       <div className="flex items-center justify-center p-8 text-red-500">
@@ -122,10 +133,10 @@ export function WeaponList({
 
   return (
     <div className="flex h-full flex-col gap-4">
-      {/* 菜单栏 */}
+      {/* MARK: Toolbar */}
       <div className="bg-card shrink-0 rounded-lg border p-2 shadow-sm sm:p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
-          {/* 武器类型切换 */}
+          {/* Weapon type toggle */}
           <ToggleGroup
             type="single"
             value={selectedWeaponType}
@@ -145,9 +156,9 @@ export function WeaponList({
             ))}
           </ToggleGroup>
 
-          {/* 右侧组合：稀有度筛选 + 搜索框 */}
+          {/* Right-side group: Rarity filter + Search input */}
           <div className="flex items-center gap-2">
-            {/* 稀有度筛选 */}
+            {/* Rarity filter */}
             <TooltipProvider>
               <div className="flex items-center gap-2">
                 {RARITY_FILTERS.map(({ value, icon: Icon, label }) => (
@@ -171,7 +182,7 @@ export function WeaponList({
               </div>
             </TooltipProvider>
 
-            {/* 搜索框 */}
+            {/* Search input */}
             <Input
               type="text"
               placeholder="搜索武器名称..."
@@ -183,10 +194,10 @@ export function WeaponList({
         </div>
       </div>
 
-      {/* 武器表格 */}
+      {/* MARK: Weapon Table */}
       <div className="bg-card min-h-0 flex-1 overflow-x-auto rounded-lg border shadow-sm">
         <Table className={cn(selectedRarity === "all" ? "w-[200%]" : "")}>
-          {/* 表头 */}
+          {/* Table Header */}
           <TableHeader>
             <TableRow>
               {rarityColumns.map((rarity, index) => (
@@ -208,10 +219,10 @@ export function WeaponList({
             </TableRow>
           </TableHeader>
 
-          {/* 表体 */}
+          {/* Table Body */}
           <TableBody>
             {weaponRows.map((row, rowIndex) => {
-              // 创建武器稀有度映射，便于快速查找
+              // Create a map of rarity to weapon for quick lookup.
               const weaponMap = new Map<number, Weapon>();
               row.forEach((weapon: Weapon) => {
                 weaponMap.set(weapon.rarity, weapon);

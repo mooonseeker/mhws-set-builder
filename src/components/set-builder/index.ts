@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Entry point for Set Builder components.
+ */
+
 export * from "./SetBuilder";
 export * from "./SetSummary";
 export * from "./SetBuilderToolbar";

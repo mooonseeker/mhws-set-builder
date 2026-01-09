@@ -1,3 +1,7 @@
+/**
+ * @fileoverview A component to display detailed charm validation feedback.
+ */
+
 import { useMemo } from "react";
 
 import {
@@ -14,7 +18,7 @@ interface CharmValidationProps {
   validation: CharmValidationResult | null;
 }
 
-// 主题配置
+// Theme configuration for different validation statuses.
 interface ValidationTheme {
   Icon: LucideIcon;
   containerClass: string;
@@ -53,7 +57,7 @@ const THEMES: Record<string, ValidationTheme> = {
   },
 };
 
-// 集中处理状态信息
+// Maps validation status to a user-friendly message.
 const getStatusMessage = (status: CharmValidationStatus): string => {
   switch (status) {
     case "REJECTED_AS_INFERIOR":
@@ -74,11 +78,12 @@ const getStatusMessage = (status: CharmValidationStatus): string => {
 };
 
 /**
- * 护石验证提示组件（重构版）
- * 显示来自新验证逻辑的详细信息
+ * Displays detailed feedback from the charm validation logic.
+ * It shows whether a charm is accepted, rejected, or has warnings,
+ * and provides context like superior or outclassed charms.
  */
 export function CharmValidation({ validation }: CharmValidationProps) {
-  // 使用 useMemo 优化性能，避免在每次渲染时都重新计算
+  // Memoize the display configuration to avoid re-calculating on every render.
   const displayConfig = useMemo(() => {
     if (!validation) {
       return null;
@@ -89,14 +94,14 @@ export function CharmValidation({ validation }: CharmValidationProps) {
     const isRejected = status === "REJECTED_AS_INFERIOR";
     const hasWarnings = !!warnings?.length;
 
-    // 1. 决定主题
+    // 1. Determine the theme based on status
     const theme = isRejected
       ? THEMES.DESTRUCTIVE
       : hasWarnings
         ? THEMES.WARNING
         : THEMES.SUCCESS;
 
-    // 2. 获取主信息
+    // 2. Get the primary status message
     const message = getStatusMessage(status);
 
     return {
@@ -124,14 +129,14 @@ export function CharmValidation({ validation }: CharmValidationProps) {
           <p className={titleClass}>{message}</p>
           {warnings?.length || betterCharm || outclassedCharms?.length ? (
             <ul className="mt-2 space-y-2 text-sm">
-              {/* 渲染警告信息 */}
+              {/* Render warnings */}
               {warnings?.map((warning, index) => (
                 <li key={`warn-${index}`} className={listClass}>
                   • {warning}
                 </li>
               ))}
 
-              {/* 渲染上位替代护石 */}
+              {/* Render superior charm */}
               {betterCharm && (
                 <>
                   <li className={listClass}>• 存在以下1个上位替代：</li>
@@ -141,7 +146,7 @@ export function CharmValidation({ validation }: CharmValidationProps) {
                 </>
               )}
 
-              {/* 渲染下位替代护石 */}
+              {/* Render outclassed charms */}
               {outclassedCharms?.length ? (
                 <>
                   <li className={listClass}>

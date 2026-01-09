@@ -1,3 +1,8 @@
+/**
+ * @fileoverview A form component for adding and editing skills.
+ * It uses a dialog and a reducer for state management.
+ */
+
 import { useEffect, useReducer } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -19,7 +24,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SKILL_CATEGORY_LABELS, SLOT_LEVEL_LABELS } from "@/constants";
-
 import type { Skill, SkillCategory, SlotLevel } from "@/types";
 
 interface SkillFormProps {
@@ -31,7 +35,7 @@ interface SkillFormProps {
   skills: Skill[];
 }
 
-// Define the state for the form
+// Define the state for the form.
 interface SkillFormState {
   name: string;
   category: SkillCategory;
@@ -41,7 +45,7 @@ interface SkillFormState {
   localError: string | null;
 }
 
-// Define action types for the reducer
+// Define action types for the reducer.
 type SkillFormAction =
   | {
       type: "SET_FIELD";
@@ -51,7 +55,7 @@ type SkillFormAction =
   | { type: "RESET_FORM"; skill?: Skill }
   | { type: "SET_LOCAL_ERROR"; error: string | null };
 
-// Reducer function
+// Reducer for the skill form state.
 function skillFormReducer(
   state: SkillFormState,
   action: SkillFormAction,
@@ -87,8 +91,7 @@ function skillFormReducer(
 }
 
 /**
- * 技能表单组件
- * 用于添加或编辑技能
+ * A form component for adding or editing a skill.
  */
 export function SkillForm({
   skill,
@@ -98,7 +101,7 @@ export function SkillForm({
   error,
   skills,
 }: SkillFormProps) {
-  // Initial state for useReducer
+  // Initial state for the reducer.
   const initialFormState: SkillFormState = {
     name: "",
     category: "armor",
@@ -121,9 +124,9 @@ export function SkillForm({
 
     const trimmedName = name.trim();
 
-    // 检查名称是否重复（忽略大小写和前后空格）
+    // Check for duplicate names (case-insensitive and trimmed).
     const isDuplicate = skills.some((s) => {
-      // 编辑模式下，排除当前编辑的技能
+      // In edit mode, exclude the current skill.
       if (skill) {
         return (
           s.id !== skill.id &&
@@ -136,7 +139,7 @@ export function SkillForm({
     if (isDuplicate) {
       dispatch({
         type: "SET_LOCAL_ERROR",
-        error: `技能 "${trimmedName}" 已存在。`,
+        error: `Skill "${trimmedName}" already exists.`,
       });
       return;
     }
@@ -148,9 +151,9 @@ export function SkillForm({
       maxLevel,
       accessoryLevel,
       isKey,
-      description: "", // 用户自定义技能默认无描述
-      type: "", // 用户自定义技能默认无类型
-      sortId: 9999, // 用户自定义技能默认排在最后
+      description: "", // User-defined skills have no description by default.
+      type: "", // User-defined skills have no type by default.
+      sortId: 9999, // User-defined skills are sorted to the end by default.
     });
     onClose();
   };
@@ -175,7 +178,7 @@ export function SkillForm({
                     field: "name",
                     value: e.target.value,
                   });
-                  dispatch({ type: "SET_LOCAL_ERROR", error: null }); // 输入时清除错误
+                  dispatch({ type: "SET_LOCAL_ERROR", error: null }); // Clear error on input
                 }}
                 placeholder="输入技能名称"
                 required

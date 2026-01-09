@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Component for displaying a list of armor sets grouped by series.
+ * It supports filtering by rarity and search, and has different modes for display or selection.
+ */
+
 import { useCallback, useMemo, useState } from "react";
 
 import { ErrorMessage, Loading } from "@/components/common";
@@ -20,21 +25,21 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useArmor, useSkills, useMediaQuery } from "@/hooks";
+import { DEFAULT_ARMOR_SERIES_PER_PAGE, RARITY_FILTERS } from "@/constants";
+import { useArmor, useMediaQuery, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { DataStorage } from "@/services/storage";
-import { DEFAULT_ARMOR_SERIES_PER_PAGE, RARITY_FILTERS } from "@/constants";
-import { RARITY_RANGES, type RarityRangeKey } from "@/types";
-import { groupArmorBySeries } from "@/utils/armor-grouper";
-
-import type {
-  AppSettings,
-  Armor,
-  ArmorType,
-  GroupedArmor,
-  SkillWithLevel,
+import {
+  RARITY_RANGES,
+  type AppSettings,
+  type Armor,
+  type ArmorType,
+  type GroupedArmor,
+  type RarityRangeKey,
+  type SkillWithLevel,
 } from "@/types";
 import type { EquipmentCellType } from "@/types/set-builder";
+import { groupArmorBySeries } from "@/utils/armor-grouper";
 
 const ARMOR_COLUMNS: { key: ArmorType; label: string }[] = [
   { key: "helm", label: "头盔" },
@@ -45,15 +50,15 @@ const ARMOR_COLUMNS: { key: ArmorType; label: string }[] = [
 ];
 
 /**
- * ArmorList 组件
- *
- * 显示按系列分组的防具列表表格
+ * Displays a list of armor, grouped by series, in a table format.
  */
 export interface ArmorListProps {
   mode?: "display" | "selector";
   onPieceSelect?: (piece: Armor) => void;
-  selectingFor?: EquipmentCellType; // 新增
-  currentPiece?: Armor | null; // 新增
+  /** The equipment slot being selected for. */
+  selectingFor?: EquipmentCellType;
+  /** The currently selected armor piece. */
+  currentPiece?: Armor | null;
 }
 
 export function ArmorList({
@@ -81,36 +86,36 @@ export function ArmorList({
     return is2Xl ? "default" : "compact";
   }, [mode, is2Xl]);
 
-  // 获取技能名称的辅助函数
+  // Helper function to get a skill name by its ID.
   const getSkillName = useCallback(
     (skillId: string) => {
       const skill = skills.find((s) => s.id === skillId);
-      return skill?.name ?? "未知技能";
+      return skill?.name ?? "Unknown Skill";
     },
     [skills],
   );
 
   /**
-   * 将防具数组按系列分组，并计算全套技能
+   * Groups armor pieces by series and calculates full set skills.
    */
   const groupedArmor = useMemo((): GroupedArmor[] => {
     return groupArmorBySeries(armor);
   }, [armor]);
 
   /**
-   * 搜索过滤和分页处理
+   * Handles search filtering and pagination.
    */
   const filteredAndPaginatedArmor = useMemo(() => {
-    // 搜索过滤
+    // Search filtering
     let filtered = groupedArmor;
 
     if (searchQuery) {
       const keyword = searchQuery.toLowerCase();
       filtered = groupedArmor.filter((group) => {
-        // 检查系列名称
+        // Check series name
         if (group.series.toLowerCase().includes(keyword)) return true;
 
-        // 检查装备名称
+        // Check equipment names
         const pieceNames = [
           group.helm?.name,
           group.body?.name,
@@ -122,7 +127,7 @@ export function ArmorList({
         if (pieceNames.some((name) => name?.toLowerCase().includes(keyword)))
           return true;
 
-        // 检查技能名称
+        // Check skill names
         const skillNames = group.fullSetSkills.map((skill) =>
           getSkillName(skill.skillId),
         );
@@ -130,7 +135,7 @@ export function ArmorList({
       });
     }
 
-    // 稀有度筛选
+    // Rarity filtering
     if (selectedRarity !== "all") {
       const range = RARITY_RANGES[selectedRarity];
       filtered = filtered.filter((group) => {
@@ -142,7 +147,7 @@ export function ArmorList({
           group.leg,
         ].filter(Boolean);
 
-        // 检查系列中是否有符合稀有度要求的防具
+        // Check if any piece in the series matches the rarity range.
         return pieces.some((piece) => {
           if (!piece) return false;
           return piece.rarity >= range.min && piece.rarity <= range.max;
@@ -150,7 +155,7 @@ export function ArmorList({
       });
     }
 
-    // 分页
+    // Pagination
     const totalPages = Math.ceil(filtered.length / armorSeriesPerPage);
     const startIndex = (currentPage - 1) * armorSeriesPerPage;
     const endIndex = startIndex + armorSeriesPerPage;
@@ -179,7 +184,7 @@ export function ArmorList({
   }
 
   /**
-   * 渲染防具部件列
+   * Renders a cell for a single armor piece.
    */
   const renderArmorPiece = (piece: Armor | undefined, key: string) => {
     if (!piece) {
@@ -218,7 +223,7 @@ export function ArmorList({
   };
 
   /**
-   * 渲染全套技能列
+   * Renders the cell for full set skills.
    */
   const renderFullSetSkills = (skills: SkillWithLevel[]) => {
     if (skills.length === 0) {
@@ -240,7 +245,7 @@ export function ArmorList({
 
   return (
     <div className="flex h-full flex-col gap-6">
-      {/* 菜单栏 */}
+      {/* MARK: Toolbar */}
       <div className="bg-card shrink-0 rounded-lg border p-2 shadow-sm sm:p-4">
         <div className="flex flex-nowrap items-center justify-between gap-2 sm:gap-3">
           <TooltipProvider>
@@ -292,7 +297,7 @@ export function ArmorList({
         </div>
       </div>
 
-      {/* 防具表格 */}
+      {/* MARK: Armor Table */}
       <div className="bg-card min-h-0 flex-1 rounded-lg border shadow-sm">
         <Table className="w-full table-fixed">
           <TableHeader>

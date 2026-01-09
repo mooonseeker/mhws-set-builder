@@ -1,5 +1,9 @@
+/**
+ * @fileoverview Component for displaying a migration report after database updates.
+ */
+
 import { useState } from "react";
-import { DataStorage } from "@/services/storage";
+
 import {
   Dialog,
   DialogContent,
@@ -15,11 +19,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { DataStorage } from "@/services/storage";
 import type { DataId } from "@/types";
 import type { MigrationStats } from "@/utils/data-io";
 
+/**
+ * Dialog component that shows statistics about data migration.
+ */
 export function MigrationReportDialog() {
-  // 直接在初始化时获取报告，避免 useEffect 中的 setState
+  // Retrieve report during initialization to avoid setState in useEffect
   const [report] = useState<Map<DataId, MigrationStats> | null>(() =>
     DataStorage.getAndClearMigrationReport(),
   );

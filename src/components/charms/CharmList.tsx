@@ -1,3 +1,8 @@
+/**
+ * @fileoverview This component displays a list of charms with features
+ * like filtering, sorting, pagination, and management operations.
+ */
+
 import { useMemo, useState } from "react";
 
 import { List } from "lucide-react";
@@ -44,13 +49,11 @@ interface CharmListProps {
 }
 
 /**
- * 护石列表组件
+ * Renders a list of charms with sorting, filtering, and pagination.
  *
- * 显示护石列表，支持：
- * - 默认按核心技能价值降序、稀有度降序排序
- * - 筛选（按稀有度、技能、核心技能阈值）
- * - 排序字段切换
- * - 编辑和删除操作
+ * Supports two modes:
+ * - `display`: For managing the charm collection.
+ * - `selector`: For selecting a charm for a build.
  */
 export function CharmList({
   onEdit,
@@ -62,17 +65,17 @@ export function CharmList({
   const { charms } = useCharms();
   const { skills } = useSkills();
 
-  // 筛选状态
+  // Filter states
   const [selectedRarity, setSelectedRarity] = useState<"all" | number>("all");
   const [minKeySkillValue, setMinKeySkillValue] = useState<number | null>(null);
   const [filterSkillId, setFilterSkillId] = useState<string>("");
   const [isFilterVisible, setIsFilterVisible] = useState(false);
 
-  // 排序状态
+  // Sort states
   const [sortField, setSortField] = useState<CharmSortField>("keySkillValue");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
 
-  // 分页和搜索状态
+  // Pagination and search states
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -80,30 +83,30 @@ export function CharmList({
     DataStorage.loadData<AppSettings>("settings")[0]?.charmsPerPage ??
     DEFAULT_CHARMS_PER_PAGE;
 
-  // 筛选护石
+  // Memoized filtered charms based on current filter criteria.
   const searchedCharms = useMemo(() => {
     let filtered = [...charms];
 
-    // 按稀有度筛选
+    // Filter by rarity
     if (selectedRarity !== "all") {
       filtered = filtered.filter((c) => c.rarity === selectedRarity);
     }
 
-    // 按核心技能价值筛选
+    // Filter by minimum key skill value
     if (minKeySkillValue !== null) {
       filtered = filtered.filter((c) => c.keySkillValue >= minKeySkillValue);
     }
 
-    // 按技能筛选
+    // Filter by skill
     if (filterSkillId && filterSkillId !== "all") {
       filtered = filtered.filter((c) =>
         c.skills.some((s) => s.skillId === filterSkillId),
       );
     }
 
-    // 按搜索关键词筛选
+    // Filter by search query
     if (searchQuery) {
-      // 检查是否为精确匹配（以等号开头）
+      // Check for exact match (starts with '=')
       const isExactMatch = searchQuery.startsWith("=");
       const keyword = isExactMatch ? searchQuery.slice(1) : searchQuery;
 
@@ -128,28 +131,28 @@ export function CharmList({
     skills,
   ]);
 
-  // 排序和分页护石
+  // Memoized sorted and paginated charms.
   const paginatedCharms = useMemo(() => {
-    // 排序
+    // Sort the charms
     const sorted = sortCharms(searchedCharms, sortField, sortDirection);
 
-    // 分页
+    // Paginate the results
     return sorted.slice(
       (currentPage - 1) * charmsPerPage,
       currentPage * charmsPerPage,
     );
   }, [searchedCharms, sortField, sortDirection, currentPage, charmsPerPage]);
 
-  // 计算总页数
+  // Calculate total pages for pagination.
   const totalPages = Math.ceil(searchedCharms.length / charmsPerPage);
 
-  // 切换排序字段
+  // Handles changing the sort field or direction.
   const handleSortFieldChange = (field: CharmSortField) => {
     if (field === sortField) {
-      // 切换方向
+      // Toggle direction if the same field is clicked
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
-      // 新字段，默认降序
+      // Set new field, default to descending
       setSortField(field);
       setSortDirection("desc");
     }
@@ -157,7 +160,7 @@ export function CharmList({
 
   const { deleteCharm: deleteCharmSecurely } = useCharmOperations();
 
-  // 删除护石
+  // Handles charm deletion with confirmation.
   const handleDelete = (id: string) => {
     if (confirm("确定要删除这个护石吗？")) {
       deleteCharmSecurely(id);
@@ -166,7 +169,7 @@ export function CharmList({
 
   return (
     <div className="flex h-full flex-col gap-6">
-      {/* 菜单栏 */}
+      {/* Control bar */}
       <div className="bg-card shrink-0 rounded-lg border p-2 shadow-sm sm:p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
           <TooltipProvider>
@@ -251,7 +254,7 @@ export function CharmList({
         </div>
       </div>
 
-      {/* 可折叠筛选器 */}
+      {/* Collapsible filter section */}
       {isFilterVisible && (
         <div className="bg-muted shrink-0 space-y-4 rounded-lg p-4 sm:p-6">
           <h3 className="text-base font-medium sm:text-lg">筛选条件</h3>
@@ -313,7 +316,7 @@ export function CharmList({
         </div>
       )}
 
-      {/* 护石列表 */}
+      {/* Charm table */}
       <CharmTable
         charms={paginatedCharms}
         hasCharms={charms.length > 0}

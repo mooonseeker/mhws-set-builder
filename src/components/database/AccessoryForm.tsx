@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Form component for adding and editing accessories.
+ * It includes a dialog for user input and handles form submission and validation.
+ */
+
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -17,9 +22,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-import { RARITY_MAX, RARITY_MIN } from "@/types";
-import type { Accessory, SlotLevel } from "@/types";
+import {
+  RARITY_MAX,
+  RARITY_MIN,
+  type Accessory,
+  type SlotLevel,
+} from "@/types";
 
 interface AccessoryFormProps {
   accessory?: Accessory;
@@ -54,9 +62,9 @@ function AccessoryFormContent({
 
     const trimmedName = name.trim();
 
-    // 检查名称是否重复（忽略大小写和前后空格）
+    // Check for duplicate names (case-insensitive and trimmed).
     const isDuplicate = accessories.some((a) => {
-      // 编辑模式下，排除当前编辑的装饰品
+      // In edit mode, exclude the current accessory being edited.
       if (accessory) {
         return (
           a.id !== accessory.id &&
@@ -67,7 +75,7 @@ function AccessoryFormContent({
     });
 
     if (isDuplicate) {
-      setLocalError(`装饰品 "${trimmedName}" 已存在。`);
+      setLocalError(`Accessory "${trimmedName}" already exists.`);
       return;
     }
     setLocalError(null);
@@ -76,8 +84,8 @@ function AccessoryFormContent({
       name: trimmedName,
       type,
       description: description.trim(),
-      sortID: 9999, // 用户自定义装饰品默认排在最后
-      skills: [], // 暂时为空，用户自定义装饰品无技能
+      sortID: 9999, // User-defined accessories are sorted to the end by default.
+      skills: [], // Temporarily empty, user-defined accessories have no skills.
       rarity,
       slotLevel,
       color,
@@ -95,7 +103,7 @@ function AccessoryFormContent({
             value={name}
             onChange={(e) => {
               setName(e.target.value);
-              setLocalError(null); // 输入时清除错误
+              setLocalError(null); // Clear error on input
             }}
             placeholder="输入装饰品名称"
             required
@@ -205,8 +213,7 @@ function AccessoryFormContent({
 }
 
 /**
- * 装饰品表单组件
- * 用于添加或编辑装饰品
+ * Form component for adding or editing an accessory.
  */
 export function AccessoryForm(props: AccessoryFormProps) {
   const { accessory, open, onClose } = props;
@@ -217,7 +224,7 @@ export function AccessoryForm(props: AccessoryFormProps) {
         <DialogHeader>
           <DialogTitle>{accessory ? "编辑装饰品" : "添加装饰品"}</DialogTitle>
         </DialogHeader>
-        {/* 使用 key 属性强制重新渲染组件，从而重置状态 */}
+        {/* Use the key prop to force re-rendering and reset component state. */}
         <AccessoryFormContent key={accessory?.id ?? "new"} {...props} />
       </DialogContent>
     </Dialog>

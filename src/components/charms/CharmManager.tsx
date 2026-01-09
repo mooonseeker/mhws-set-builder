@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Main component for charm management.
+ * It integrates all charm-related functionalities, including state management and layout.
+ */
+
 import { useMemo, useState } from "react";
 
 import { Plus } from "lucide-react";
@@ -28,40 +33,41 @@ import { CharmList } from "./CharmList";
 import { CharmValidation } from "./CharmValidation";
 
 /**
- * 护石管理主组件
+ * Main component for charm management.
  *
- * 整合所有护石相关功能，包括状态管理和布局。
+ * This component integrates all charm-related functionalities,
+ * including state management for the form, dialogs, and the charm list display.
  */
 export function CharmManager() {
-  // 弹窗和编辑状态
+  // State for dialog visibility and the charm being edited
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [charmToEdit, setCharmToEdit] = useState<Charm | null>(null);
 
-  // 从 context 和 hooks 获取数据和操作
+  // Data and operations from context and hooks
   const { charms } = useCharms();
   const { skills: allSkills } = useSkills();
   const { createCharm, updateAndRecalculateCharm } = useCharmOperations();
 
-  // 表单状态
+  // Form state
   const [rarity, setRarity] = useState(7);
   const [selectedSkills, setSelectedSkills] = useState<SkillWithLevel[]>([]);
   const [slots, setSlots] = useState<Slot[]>([]);
 
-  // 重置表单
+  // Resets the form to its initial state.
   const resetForm = () => {
     setRarity(7);
     setSelectedSkills([]);
     setSlots([]);
   };
 
-  // 初始化表单
+  // Initializes the form with data from an existing charm for editing.
   const initializeForm = (charm: Charm) => {
     setRarity(charm.rarity);
     setSelectedSkills(charm.skills);
     setSlots(charm.slots);
   };
 
-  // 根据稀有度生成预览名称（用于自定义护石）
+  // Generates a preview name for the charm based on its rarity (for custom charms).
   const previewName = useMemo(() => {
     if (charmToEdit) return charmToEdit.name;
     switch (rarity) {
@@ -78,18 +84,18 @@ export function CharmManager() {
     }
   }, [rarity, charmToEdit]);
 
-  // 实时计算等效孔位和核心技能价值
+  // Calculates equivalent slots and key skill value in real-time.
   const { equivalentSlots, keySkillValue } = useMemo(() => {
     const eq = calculateCharmEquivalentSlots(selectedSkills, slots, allSkills);
     const kv = calculateKeySkillValue(selectedSkills, slots, allSkills);
     return { equivalentSlots: eq, keySkillValue: kv };
   }, [selectedSkills, slots, allSkills]);
 
-  // 实时验证
+  // Performs real-time validation of the charm.
   const validation = useMemo(() => {
     if (selectedSkills.length === 0) return null;
 
-    // 在编辑模式下，从验证列表中排除当前正在编辑的护石
+    // Exclude the current charm from the validation list in edit mode
     const charmsForValidation = charmToEdit
       ? charms.filter((c) => c.id !== charmToEdit.id)
       : charms;
@@ -117,7 +123,7 @@ export function CharmManager() {
     charmToEdit,
   ]);
 
-  // 添加技能
+  // Adds a skill to the charm.
   const handleAddSkill = (skill: SkillWithLevel) => {
     if (selectedSkills.length >= 3) return;
     const newSkills = [...selectedSkills, skill].sort((a, b) => {
@@ -130,18 +136,18 @@ export function CharmManager() {
     setSelectedSkills(newSkills);
   };
 
-  // 删除技能
+  // Removes a skill from the charm.
   const handleRemoveSkill = (skillId: string) => {
     setSelectedSkills(selectedSkills.filter((s) => s.skillId !== skillId));
   };
 
-  // 添加孔位
+  // Adds a slot to the charm.
   const handleAddSlot = () => {
     if (slots.length >= 3) return;
     setSlots([...slots, { type: "weapon", level: 1 }]);
   };
 
-  // 更新孔位
+  // Updates a slot's type or level.
   const handleUpdateSlot = (
     index: number,
     type: SlotType,
@@ -152,12 +158,12 @@ export function CharmManager() {
     setSlots(newSlots);
   };
 
-  // 删除孔位
+  // Removes a slot from the charm.
   const handleRemoveSlot = (index: number) => {
     setSlots(slots.filter((_, i) => i !== index));
   };
 
-  // 提交表单
+  // Handles form submission for creating or updating a charm.
   const handleSubmit = () => {
     if (selectedSkills.length === 0) {
       alert("请至少选择一个技能");
@@ -202,7 +208,7 @@ export function CharmManager() {
             <Plus className="mr-2 h-5 w-5" />
             添加护石
           </Button>
-          {/* 调整 DialogContent 宽度以适应 Popover 浮窗 */}
+          {/* Adjust DialogContent width to accommodate Popover */}
           <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto p-6 sm:p-8">
             <DialogHeader>
               <DialogTitle>
@@ -215,7 +221,7 @@ export function CharmManager() {
               </DialogDescription>
             </DialogHeader>
 
-            {/* Popover 布局：使用 PopoverAnchor 定位，验证信息自动浮动显示 */}
+            {/* Popover layout: Use PopoverAnchor for positioning, validation info floats automatically */}
             <Popover open={!!validation}>
               <PopoverAnchor asChild>
                 <div>
