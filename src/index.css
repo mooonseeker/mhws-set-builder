@@ -1,151 +1,139 @@
-/* ============================================
-   Tailwind CSS 基础样式导入
-   ============================================ */
+/**
+ * @fileoverview Main CSS entry point for MHWS Set Builder.
+ * Sets up Tailwind CSS, global variables, and theme configurations.
+ */
+
+/* Tailwind CSS Imports */
 @import "tailwindcss";
 
-/* ============================================
-   暗色模式变体定义
-   ============================================ */
+/* Dark Mode Variant Definition */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ============================================
-   根元素变量定义 - 默认主题（亮色模式）
-   ============================================ */
+/* MARK: CSS Variables */
 :root {
-  /* 字体配置 */
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Typography & Rendering */
+  font-family:
+    system-ui, "Segoe UI", Roboto, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  /* 颜色方案和基础颜色 */
-  color-scheme: light dark;
-  color: #213547;
-  background-color: #ffffff;
-
-  /* 字体优化 */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* ========== 设计系统变量 - 亮色模式 ========== */
+  /* Base Scheme */
+  color-scheme: light dark;
+  color: #213547;
+  background-color: #ffffff;
 
-  /* 圆角变量 */
+  /* Design System - Primitives */
   --radius: 0.625rem;
 
-  /* 基础颜色 */
+  /* Design System - Light Mode Colors */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
 
-  /* 卡片组件 */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
 
-  /* 弹出层组件 */
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
 
-  /* 主要按钮/元素 */
   --primary: oklch(0.55 0.15 250);
   --primary-foreground: oklch(0.985 0 0);
 
-  /* 次要按钮/元素 */
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
 
-  /* 禁用状态 */
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
 
-  /* 强调色 */
   --accent: oklch(0.65 0.18 150);
   --accent-foreground: oklch(0.985 0 0);
 
-  /* 破坏性操作 */
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
 
-  /* 警告色彩 */
   --warning: oklch(0.8 0.15 85);
   --warning-foreground: oklch(0.2 0.05 85);
 
-  /* 边框和输入框 */
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
 
-  /* 稀有度颜色 */
-  --rarity-1: oklch(0.7 0 0); /* R1 灰色 */
-  --rarity-2: oklch(0.9 0 0); /* R2 白色 */
-  --rarity-3: oklch(0.85 0.16 142); /* R3 浅绿色 */
-  --rarity-4: oklch(0.55 0.18 142); /* R4 鲜绿色 */
-  --rarity-5: oklch(0.7 0.08 240); /* R5 浅蓝色 */
-  --rarity-6: oklch(0.65 0.18 285); /* R6 紫色 */
-  --rarity-7: oklch(0.7 0.18 300); /* R7 紫色 */
-  --rarity-8: oklch(0.75 0.18 45); /* R8 橙色 */
-  --rarity-9: oklch(0.65 0.2 25); /* R9 红色 */
-  --rarity-10: oklch(0.5 0.15 250); /* R10 深蓝色 */
-  --rarity-11: oklch(0.85 0.15 85); /* R11 金色 */
+  /* Rarity Colors */
+  --rarity-1: oklch(0.7 0 0); /* R1 Gray */
+  --rarity-2: oklch(0.9 0 0); /* R2 White */
+  --rarity-3: oklch(0.85 0.16 142); /* R3 Light Green */
+  --rarity-4: oklch(0.55 0.18 142); /* R4 Green */
+  --rarity-5: oklch(0.7 0.08 240); /* R5 Light Blue */
+  --rarity-6: oklch(0.65 0.18 285); /* R6 Medium Purple */
+  --rarity-7: oklch(0.7 0.18 300); /* R7 Purple */
+  --rarity-8: oklch(0.75 0.18 45); /* R8 Orange */
+  --rarity-9: oklch(0.65 0.2 25); /* R9 Red */
+  --rarity-10: oklch(0.5 0.15 250); /* R10 Dark Blue */
+  --rarity-11: oklch(0.85 0.15 85); /* R11 Gold */
   --rarity-12: linear-gradient(
     135deg,
     #c8c8c8 0%,
     #f8f8f8 40%,
     #c0c0c0 60%,
     #a8a8a8 100%
-  ); /* R12 银色 */
+  ); /* R12 Silver */
 }
 
-/* ============================================
-    基础元素样式
-    ============================================ */
+/* MARK: Dark Mode Overrides */
+.dark {
+  /* Design System - Light Mode Colors */
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
 
-/* 链接样式 */
-a {
-  font-weight: 500;
-  color: var(--primary);
-  text-decoration: inherit;
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+
+  --primary: oklch(0.7 0.12 250);
+  --primary-foreground: oklch(0.1 0 0);
+
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+
+  --accent: oklch(0.6 0.15 150);
+  --accent-foreground: oklch(0.985 0 0);
+
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.985 0 0);
+
+  --warning: oklch(0.7 0.2 85);
+  --warning-foreground: oklch(0.95 0 85);
+
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
 }
 
-a:hover {
-  color: var(--accent);
-}
-
-/* 主体样式 */
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-/* 标题样式 */
-h1 {
-  font-size: 2em;
-  line-height: 1.1;
-  margin-left: 1rem;
-  margin-right: 1rem;
-}
-
-/* ============================================
-    Tailwind 主题配置
-    ============================================ */
+/* MARK: Tailwind Theme Configuration */
 @theme {
-  /* 响应式断点配置 */
-  --breakpoint-sm: 640px;
-  /* 小型设备 */
-  --breakpoint-md: 768px;
-  /* 中型设备 */
-  --breakpoint-lg: 1024px;
-  /* 大型设备 */
+  /* Breakpoints */
+  --breakpoint-sm: 640px; /* sm */
+  --breakpoint-md: 768px; /* md */
+  --breakpoint-lg: 1024px; /* lg */
 }
 
 @theme inline {
-  /* 圆角尺寸变量 */
+  /* Radius */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* 颜色映射 - 将CSS变量映射到Tailwind颜色系统 */
+  /* Color Mapping (CSS variables to Tailwind colors) */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -166,11 +154,11 @@ h1 {
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* 警告色彩映射 */
+  /* Warning Colors */
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
 
-  /* 稀有度颜色映射 */
+  /* Rarity Colors */
   --color-rarity-1: var(--rarity-1);
   --color-rarity-2: var(--rarity-2);
   --color-rarity-3: var(--rarity-3);
@@ -182,66 +170,105 @@ h1 {
   --color-rarity-9: var(--rarity-9);
   --color-rarity-10: var(--rarity-10);
   --color-rarity-11: var(--rarity-11);
-  --color-rarity-12: var(--rarity-12);
+  /* --color-rarity-12: var(--rarity-12); Gradient cannot be mapped directly to color */
+
+  /* Spacing Extension */
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+  --spacing-26: 6.5rem;
+  --spacing-30: 7.5rem;
+  --spacing-34: 8.5rem;
+  --spacing-38: 9.5rem;
+  --spacing-42: 10.5rem;
+
+  /* Micro spacing */
+  --spacing-0_5: 0.125rem;
+  --spacing-1_5: 0.375rem;
+  --spacing-2_5: 0.625rem;
+
+  /* Max Width */
+  --max-width-container: 1400px;
+  --max-width-content: 1200px;
+  --max-width-narrow: 800px;
+  --max-width-wide: 1600px;
+
+  /* Font Size */
+  --text-2xs: 0.625rem;
+  --text-2xs--line-height: 0.75rem;
+
+  /* Box Shadow */
+  --shadow-sm-light: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md-light:
+    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
-/* ============================================
-   暗色模式主题变量
-   ============================================ */
-.dark {
-  /* ========== 设计系统变量 - 暗色模式 ========== */
-
-  /* 基础颜色 */
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-
-  /* 卡片组件 */
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-
-  /* 弹出层组件 */
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-
-  /* 主要按钮/元素 */
-  --primary: oklch(0.7 0.12 250);
-  --primary-foreground: oklch(0.1 0 0);
-
-  /* 次要按钮/元素 */
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-
-  /* 禁用状态 */
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-
-  /* 强调色 */
-  --accent: oklch(0.6 0.15 150);
-  --accent-foreground: oklch(0.985 0 0);
-
-  /* 破坏性操作 */
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
-
-  /* 警告色彩 */
-  --warning: oklch(0.7 0.2 85);
-  --warning-foreground: oklch(0.95 0 85);
-
-  /* 边框和输入框 */
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-}
-
-/* ============================================
-   Tailwind 基础层样式
-   ============================================ */
+/* MARK: Base Styles */
 @layer base {
+  /* Reset & Global Defaults */
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
 
+  /* Keyboard Navigation Focus */
+  :focus-visible {
+    @apply outline-ring/50 outline-2;
+  }
+
+  /* Core Elements */
   body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
     @apply bg-background text-foreground;
+  }
+
+  /* Headings */
+  h1 {
+    font-size: 2em;
+    line-height: 1.1;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  /* Links */
+  a {
+    font-weight: 500;
+    color: var(--primary);
+    text-decoration: inherit;
+  }
+
+  a:hover {
+    color: var(--accent);
+  }
+}
+
+/* MARK: Custom Utilities */
+@layer utilities {
+  /* Utility class for R12 gradient border */
+  .border-rarity-12 {
+    position: relative;
+    border-color: transparent; /* Hide original border color */
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 10; /* Ensure it's above content */
+      padding: 1px;
+      border-radius: inherit;
+      background: var(--rarity-12);
+
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+
+      pointer-events: none;
+    }
   }
 }
