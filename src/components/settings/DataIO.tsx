@@ -5,7 +5,7 @@
 
 import { useRef, useState } from "react";
 
-import { Download, RotateCcw, ShieldCheck, Upload } from "lucide-react";
+import { FileInput, RotateCcw, Share, ShieldCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,10 +23,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Toggle } from "@/components/ui/toggle";
 import { DataStorage } from "@/services/storage";
 import { exportData, importData } from "@/services/storage/transfer";
 import type { DataId } from "@/types";
-import { validateData } from "@/utils/data-io";
 
 /**
  * DataIO component for database management.
@@ -39,6 +39,7 @@ export function DataIO() {
   } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importTarget, setImportTarget] = useState<DataId | null>(null);
+  const [exportMode, setExportMode] = useState<"full" | "diff">("full");
 
   // Database categories
   const databaseItems: { id: DataId; name: string }[] = [
@@ -53,8 +54,8 @@ export function DataIO() {
   const databaseActions = [
     { id: "validate", label: "验证", icon: ShieldCheck },
     { id: "reset", label: "重置", icon: RotateCcw },
-    { id: "export", label: "导出", icon: Download },
-    { id: "import", label: "导入", icon: Upload },
+    { id: "export", label: "导出", icon: Share },
+    { id: "import", label: "导入", icon: FileInput },
   ] as const;
 
   // Unified action handler
@@ -66,13 +67,7 @@ export function DataIO() {
     try {
       switch (actionId) {
         case "validate": {
-          const currentItems = DataStorage.loadData(itemId);
-          const initialData = (await import(
-            `../../data/initial-${itemId}.json`
-          )) as { default: Record<string, unknown[]> };
-          const initialItems = (initialData.default[itemId] ??
-            []) as typeof currentItems;
-          const result = validateData(currentItems, initialItems);
+          const result = DataStorage.getValidationResult(itemId);
           if (result.isValid) {
             alert(
               `"${databaseItems.find((i) => i.id === itemId)?.name}"数据库验证通过！数据完整且一致。`,
@@ -99,7 +94,7 @@ export function DataIO() {
           break;
         }
         case "export": {
-          exportData(itemId);
+          exportData(itemId, exportMode);
           break;
         }
         case "import": {
@@ -124,7 +119,7 @@ export function DataIO() {
 
     if (
       confirm(
-        `确定要导入"${databaseItems.find((i) => i.id === importTarget)?.name}"数据吗？\n\n这将覆盖当前数据！`,
+        `确定要导入"${databaseItems.find((i) => i.id === importTarget)?.name}"数据吗？`,
       )
     ) {
       setProcessing({ id: importTarget, action: "import" });
@@ -169,7 +164,23 @@ export function DataIO() {
               <TableHead className="w-1/5 text-center">数据库</TableHead>
               <TableHead className="w-1/5 text-center">验证</TableHead>
               <TableHead className="w-1/5 text-center">重置</TableHead>
-              <TableHead className="w-1/5 text-center">导出</TableHead>
+              <TableHead className="w-1/5 text-center">
+                <div className="flex items-center justify-center gap-2">
+                  <span>导出</span>
+                  <Toggle
+                    variant="outline"
+                    size="sm"
+                    className="h-6 px-1.5 text-xs"
+                    pressed={exportMode === "diff"}
+                    onPressedChange={(pressed) =>
+                      setExportMode(pressed ? "diff" : "full")
+                    }
+                    aria-label="Toggle export mode"
+                  >
+                    {exportMode === "diff" ? "DIFF" : "FULL"}
+                  </Toggle>
+                </div>
+              </TableHead>
               <TableHead className="w-1/5 text-center">导入</TableHead>
             </TableRow>
           </TableHeader>
@@ -189,10 +200,7 @@ export function DataIO() {
                         variant="outline"
                         size="sm"
                         className="mx-auto flex h-auto items-center gap-2 px-3 py-2"
-                        disabled={
-                          !!processing ||
-                          (item.id === "charms" && action.id === "validate")
-                        }
+                        disabled={!!processing}
                         onClick={() => void handleAction(item.id, action.id)}
                       >
                         <action.icon

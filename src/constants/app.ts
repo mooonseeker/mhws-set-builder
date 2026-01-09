@@ -10,11 +10,6 @@ export const DATABASE_VERSION_KEY = `${APP_NAME}-db-version`;
 
 /** Key mapping for data storage. */
 export const STORAGE_KEYS = {
-  skills: `${APP_NAME}-skills`,
-  accessories: `${APP_NAME}-accessories`,
-  armor: `${APP_NAME}-armor`,
-  weapons: `${APP_NAME}-weapons`,
-  charms: `${APP_NAME}-charms`,
   settings: `${APP_NAME}-settings`,
 } as const;
 

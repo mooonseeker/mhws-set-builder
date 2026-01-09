@@ -8,6 +8,7 @@
  */
 
 import {
+  APP_NAME,
   DATABASE_VERSION,
   DATABASE_VERSION_KEY,
   DEFAULT_ACCESSORIES_PER_PAGE,
@@ -28,6 +29,7 @@ import {
   patch,
   type DataDelta,
   type MigrationStats,
+  type ValidationResult,
 } from "@/utils/data-io";
 
 // Define data types that require differential storage.
@@ -197,6 +199,9 @@ class DataStorageService {
     // Clear localStorage.
     // Clear full and differential data.
     Object.values(STORAGE_KEYS).forEach((key) => localStorage.removeItem(key));
+    DIFFERENTIAL_DATA_IDS.forEach((id) =>
+      localStorage.removeItem(`${APP_NAME}-${id}`),
+    );
     Object.values(STORAGE_KEYS_DELTA).forEach((key) =>
       localStorage.removeItem(key),
     );
@@ -216,6 +221,68 @@ class DataStorageService {
     const report = this.migrationReport;
     this.migrationReport = null;
     return report;
+  }
+
+  /**
+   * Retrieves the current differential data (delta) for a specific type.
+   *
+   * @param id The ID of the data type.
+   * @returns The DataDelta object.
+   */
+  getDelta<T extends { id: string }>(id: DataId): DataDelta<T> {
+    if (id === "settings") {
+      return { added: [], modified: [], deleted: [] };
+    }
+    const deltaKey = STORAGE_KEYS_DELTA[id];
+    const storedDelta = localStorage.getItem(deltaKey);
+    return storedDelta
+      ? (JSON.parse(storedDelta) as DataDelta<T>)
+      : { added: [], modified: [], deleted: [] };
+  }
+
+  /**
+   * Validates the data by checking if official data has been modified or deleted.
+   *
+   * This is a simplified validation that relies on the differential storage mechanism.
+   * It checks if there are any deletions or modifications to the base (official) data.
+   *
+   * @param id The ID of the data type.
+   * @returns A ValidationResult object.
+   */
+  getValidationResult(id: DataId): ValidationResult {
+    if (id === "settings") {
+      return {
+        isValid: true,
+        missingOfficial: 0,
+        mismatched: 0,
+        userPrivate: 0,
+        errors: [],
+      };
+    }
+
+    const delta = this.getDelta(id);
+    const missingOfficial = delta.deleted.length;
+    const mismatched = delta.modified.length;
+    const userPrivate = delta.added.length;
+
+    const errors: string[] = [];
+    if (missingOfficial > 0) {
+      errors.push(`Missing official data entries: ${missingOfficial}`);
+    }
+    if (mismatched > 0) {
+      errors.push(`Mismatched with official data: ${mismatched}`);
+    }
+    if (userPrivate > 0) {
+      errors.push(`Contains non-official (user) data: ${userPrivate}`);
+    }
+
+    return {
+      isValid: missingOfficial === 0 && mismatched === 0 && userPrivate === 0,
+      missingOfficial,
+      mismatched,
+      userPrivate,
+      errors,
+    };
   }
 
   /**
@@ -316,7 +383,7 @@ class DataStorageService {
       // 2. Migrate other data types.
       for (const id of DIFFERENTIAL_DATA_IDS) {
         // 2a. Load the old full data from storage.
-        const oldKey = STORAGE_KEYS[id];
+        const oldKey = `${APP_NAME}-${id}`;
         const oldStoredData = localStorage.getItem(oldKey);
         const oldFullData = oldStoredData
           ? (JSON.parse(oldStoredData) as DataItem[])
