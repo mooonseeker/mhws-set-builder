@@ -1,17 +1,21 @@
+/**
+ * @fileoverview The main application component for MHWS Set Builder.
+ * It orchestrates the main layout and renders different views based on the
+ * selected navigation tab.
+ */
+
 import { useState } from "react";
 
 import { CharmManager } from "@/components/charms";
 import { DatabaseManager } from "@/components/database";
-import { MainLayout } from "@/components/layout";
+import { MainLayout, type NavigationTab } from "@/components/layout";
 import { SetBuilder } from "@/components/set-builder";
-import { MigrationReportDialog } from "@/components/settings/MigrationReportDialog";
 import { Settings } from "@/components/settings";
+import { MigrationReportDialog } from "@/components/settings/MigrationReportDialog";
 import { AppProvider } from "@/contexts";
 
-import type { NavigationTab } from "@/components/layout";
-
 function App() {
-  const [currentTab, setCurrentTab] = useState<NavigationTab>("database");
+  const [currentTab, setCurrentTab] = useState<NavigationTab>("set-builder");
 
   const renderContent = () => {
     switch (currentTab) {

@@ -1,9 +1,14 @@
+/**
+ * @fileoverview ESLint configuration file for MHWS Set Builder.
+ * @see https://eslint.org/docs/latest/use/configure/
+ */
+
 import js from "@eslint/js";
-import globals from "globals";
+import eslintConfigPrettier from "eslint-config-prettier";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
+import globals from "globals";
 import tseslint from "typescript-eslint";
-import eslintConfigPrettier from "eslint-config-prettier";
 
 export default tseslint.config(
   { ignores: ["dist"] },

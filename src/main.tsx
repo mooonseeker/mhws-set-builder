@@ -1,4 +1,7 @@
-import "./index.css";
+/**
+ * @fileoverview Application entry point for MHWS Set Builder.
+ * Initializes core services and mounts the React application.
+ */
 
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -6,6 +9,8 @@ import { createRoot } from "react-dom/client";
 import { DataStorage } from "@/services/storage";
 
 import App from "./App.tsx";
+
+import "./index.css";
 
 async function main() {
   try {
@@ -26,9 +31,9 @@ async function main() {
       rootEl.innerHTML = `
         <div style="display: flex; align-items: center; justify-content: center; height: 100vh; font-family: system-ui, -apple-system, sans-serif;">
           <div style="text-align: center; padding: 2rem; max-width: 500px;">
-            <h1 style="color: #dc2626; margin-bottom: 1rem;">初始化失败</h1>
-            <p style="color: #6b7280; margin-bottom: 1rem;">应用程序在启动时遇到错误。请尝试刷新页面或清除浏览器数据后重试。</p>
-            <p style="color: #9ca3af; font-size: 0.875rem;">错误详情: ${error instanceof Error ? error.message : String(error)}</p>
+            <h1 style="color: #dc2626; margin-bottom: 1rem;">Initialization Failed</h1>
+            <p style="color: #6b7280; margin-bottom: 1rem;">The application encountered an error during startup. Please try refreshing the page or clearing your browser data.</p>
+            <p style="color: #9ca3af; font-size: 0.875rem;">Error Details: ${error instanceof Error ? error.message : String(error)}</p>
           </div>
         </div>
       `;

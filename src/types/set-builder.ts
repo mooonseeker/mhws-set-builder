@@ -1,39 +1,38 @@
+/**
+ * @fileoverview Type definitions for the set builder feature.
+ * This file contains types related to equipment sets, search context, and results.
+ */
+
 import {
+  ARMOR_TYPES,
   type Accessory,
   type Armor,
+  type ArmorType,
   type Charm,
   type Skill,
   type SkillWithLevel,
   type Slot,
   type Weapon,
-  type ArmorType,
-  ARMOR_TYPES,
 } from "./core";
 
-/** 装备栏类型 */
+// MARK: Equipment Set Types
+/** The type of an equipment cell in the UI. */
 export const EQUIPMENT_CELL_TYPES = [
   ...ARMOR_TYPES,
   "weapon",
   "charm",
 ] as const;
+/** Type representing an equipment cell type. */
 export type EquipmentCellType = (typeof EQUIPMENT_CELL_TYPES)[number];
 
-export type SelectionContext =
-  | { type: "equipment"; equipmentType: EquipmentCellType }
-  | {
-      type: "accessory";
-      slotType: EquipmentCellType;
-      slotIndex: number;
-      slot: Slot;
-    };
-
-/** 带有镶嵌信息的装备槽 */
+/** Represents a piece of equipment with accessories. */
 export interface SlottedEquipment<T extends Weapon | Armor | Charm> {
   equipment: T;
-  accessories: (Accessory | null)[]; // 数组长度应与孔位数匹配
+  /** The length of this array should match the number of slots on the equipment. */
+  accessories: (Accessory | null)[];
 }
 
-/** 一套完整的防具组合（不含武器和护石） */
+/** A complete set of armor. */
 export interface ArmorSet {
   helm?: Armor;
   body?: Armor;
@@ -43,8 +42,8 @@ export interface ArmorSet {
 }
 
 /**
- * 一套完整的装备组合（包含武器、5件防具、护石）
- * 所有属性均为可选，以支持逐步配装
+ * A complete equipment set, including weapon, 5 armor pieces, and a charm.
+ * All properties are optional to support progressive set building.
  */
 export interface EquipmentSet {
   weapon?: SlottedEquipment<Weapon>;
@@ -57,23 +56,46 @@ export interface EquipmentSet {
 }
 
 /**
- * 分类后的技能需求
+ * The final, complete equipment set to be presented to the user.
+ */
+export interface FinalSet {
+  /** The final equipment combination. */
+  equipment: EquipmentSet;
+  /** Details of the accessories used in the set. */
+  accessories: Map<string, Accessory[]>;
+  /** Any remaining slots in the final set. */
+  remainingSlots: Slot[];
+}
+
+// MARK: Context
+/** Context for selecting equipment or accessories. */
+export type SelectionContext =
+  | { type: "equipment"; equipmentType: EquipmentCellType }
+  | {
+      type: "accessory";
+      slotType: EquipmentCellType;
+      slotIndex: number;
+      slot: Slot;
+    };
+
+/**
+ * Desired skills, categorized for the search algorithm.
  */
 export interface CategorizedSkills {
-  /** 系列技能 */
+  /** Skills from armor series bonuses. */
   seriesSkills: SkillWithLevel[];
-  /** 组合技能 */
+  /** Combination skills. */
   groupSkills: SkillWithLevel[];
-  /** 无法通过装饰品获得的防具/武器技能 */
+  /** Armor/weapon skills that cannot be obtained from accessories. */
   noAccessorySkills: SkillWithLevel[];
-  /** 可通过装饰品获得的武器技能 */
+  /** Weapon skills that can be obtained from accessories. */
   weaponSkills: SkillWithLevel[];
-  /** 可通过装饰品获得的防具技能 */
+  /** Armor skills that can be obtained from accessories. */
   armorSkills: SkillWithLevel[];
 }
 
 /**
- * 特定技能的来源装备列表
+ * A list of equipment that provides a specific skill.
  */
 export interface SkillProviders {
   armors: Armor[];
@@ -82,55 +104,52 @@ export interface SkillProviders {
   accessories: Accessory[];
 }
 
+/** Preprocessed data structures for fast lookups during the search. */
+export interface PreprocessedData {
+  /** A map from skill ID to the list of equipment that provides it. */
+  skillProviderMap: Map<string, SkillProviders>;
+  /** A map of the maximum potential skill points per armor type. */
+  maxPotentialPerArmorType: Map<ArmorType, Map<string, number>>;
+  /** A map from skill ID to the accessories that provide it. */
+  accessoriesBySkill: Map<string, Accessory[]>;
+  /** A map from skill ID to its full definition. */
+  skillDetails: Map<string, Skill>;
+}
+
 /**
- * 搜索过程中的上下文信息
+ * Contextual information during the set search process.
  */
 export interface SearchContext {
+  /** The current equipment being built. */
   equipment: EquipmentSet;
+  /** A map of currently achieved skill levels. */
   currentSkills: Map<string, number>;
+  /** All available slots from the current equipment. */
   availableSlots: {
     weapon: Slot[];
     armor: Slot[];
   };
+  /** The remaining skill levels to be fulfilled. */
   skillDeficits: CategorizedSkills;
 }
 
-/** 预处理后的数据结构，用于快速查询 */
-export interface PreprocessedData {
-  skillProviderMap: Map<string, SkillProviders>;
-  maxPotentialPerArmorType: Map<ArmorType, Map<string, number>>;
-  accessoriesBySkill: Map<string, Accessory[]>;
-  skillDetails: Map<string, Skill>;
-}
-
-/** 技能需求与当前装备提供技能的差值 */
+/** Represents the deficit between desired and current skill levels. */
 export interface SkillDeficit {
+  /** The ID of the skill. */
   skillId: string;
-  /** 还需要多少等级 */
+  /** The number of additional levels required. */
   missingLevel: number;
 }
 
-/** 装饰品填充方案的结果 */
+/** The result of an accessory filling solution. */
 export interface AccessorySolution {
-  /** 是否成功找到满足所有技能需求的装饰品方案 */
+  /** Whether a valid accessory combination was found to meet all skill requirements. */
   isSuccess: boolean;
-  /** 装饰品的具体放置方案，Key为装备ID，Value为镶嵌的装饰品列表 */
+  /** The specific placement of accessories. Key is equipment ID, Value is the list of socketed accessories. */
   placement: Map<string, Accessory[]>;
-  /** 填充完毕后剩余的孔位 (已按类型分类) */
+  /** The remaining slots after filling, categorized by type. */
   remainingSlots: {
     weapon: Slot[];
     armor: Slot[];
   };
-}
-
-/**
- * 最终返回给用户的完整配装方案
- */
-export interface FinalSet {
-  /** 最终装备组合 */
-  equipment: EquipmentSet;
-  /** 使用的装饰品详情 */
-  accessories: Map<string, Accessory[]>;
-  /** 剩余的孔位 */
-  remainingSlots: Slot[];
 }

@@ -1,6 +1,6 @@
 /**
- * App.css - 应用特定样式
- * 
- * 注意：大部分样式应使用Tailwind类名
- * 仅在此文件中添加无法用Tailwind表达的特殊样式
+ * @fileoverview Application-specific styles for MHWS Set Builder.
+ *
+ * Note: Most styles should be handled by Tailwind CSS utility classes.
+ * This file is intended for special cases that cannot be expressed with Tailwind.
  */

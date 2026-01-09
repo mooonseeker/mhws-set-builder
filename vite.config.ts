@@ -1,10 +1,14 @@
+/**
+ * @fileoverview Vite configuration file for MHWS Set Builder.
+ * @see https://vitejs.dev/config/
+ */
+
 import { readFileSync } from "fs";
 import path from "path";
-import { defineConfig } from "vite";
 
 import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -14,7 +18,11 @@ export default defineConfig({
   },
   define: {
     __APP_VERSION__: JSON.stringify(
-      JSON.parse(readFileSync("./package.json", "utf-8")).version,
+      (
+        JSON.parse(readFileSync("./package.json", "utf-8")) as {
+          version: string;
+        }
+      ).version,
     ),
   },
 });

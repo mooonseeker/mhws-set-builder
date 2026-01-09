@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Type definitions for Vite environment variables and client types.
+ */
+
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
