@@ -1,6 +1,12 @@
+/**
+ * @fileoverview A set of two-state buttons that can be toggled on or off.
+ */
 "use client";
 
 import * as React from "react";
+
+import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group";
+import type { VariantProps } from "class-variance-authority";
 
 import { toggleVariants } from "@/components/ui/toggle";
 import {
@@ -10,9 +16,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group";
-
-import type { VariantProps } from "class-variance-authority";
 
 const ToggleGroupContext = React.createContext<
   VariantProps<typeof toggleVariants>
@@ -21,6 +24,9 @@ const ToggleGroupContext = React.createContext<
   variant: "default",
 });
 
+/**
+ * A container for a group of toggle buttons.
+ */
 const ToggleGroup = React.forwardRef<
   React.ElementRef<typeof ToggleGroupPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root> &
@@ -39,13 +45,21 @@ const ToggleGroup = React.forwardRef<
 
 ToggleGroup.displayName = ToggleGroupPrimitive.Root.displayName;
 
+/**
+ * Props for the ToggleGroupItem component.
+ */
 interface ToggleGroupItemProps
   extends
     React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item>,
     VariantProps<typeof toggleVariants> {
+  /** The content to display in the tooltip. */
   tooltip?: string | React.ReactNode;
 }
 
+/**
+ * An individual toggle button within a ToggleGroup.
+ * It can optionally display a tooltip on hover.
+ */
 const ToggleGroupItem = React.forwardRef<
   React.ElementRef<typeof ToggleGroupPrimitive.Item>,
   ToggleGroupItemProps
@@ -72,6 +86,7 @@ const ToggleGroupItem = React.forwardRef<
     return (
       <Tooltip>
         <TooltipTrigger asChild>
+          {/* The div is necessary to ensure the tooltip trigger works correctly with the toggle item. */}
           <div style={{ display: "inline-flex" }}>{item}</div>
         </TooltipTrigger>
         <TooltipContent>

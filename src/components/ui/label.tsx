@@ -1,15 +1,22 @@
-import { cva } from "class-variance-authority";
+/**
+ * @fileoverview A component for labeling form elements.
+ */
+
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import * as LabelPrimitive from "@radix-ui/react-label";
+import { cva, type VariantProps } from "class-variance-authority";
 
-import type { VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
 const labelVariants = cva(
   "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
 );
 
+/**
+ * A component that provides a label for form elements like input, textarea, etc.
+ * It enhances accessibility by associating the label with its corresponding form control.
+ */
 const Label = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> &

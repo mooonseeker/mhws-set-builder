@@ -1,11 +1,21 @@
+/**
+ * @fileoverview Defines the Loading component for displaying a loading spinner.
+ */
+
 import { Loader2 } from "lucide-react";
 
+/**
+ * Props for the Loading component.
+ */
 interface LoadingProps {
+  /** The message to display below the spinner. */
   message?: string;
 }
 
 /**
- * 加载状态组件
+ * Renders a loading spinner with an optional message.
+ *
+ * This component is used to indicate that content is being loaded.
  */
 export function Loading({ message = "加载中..." }: LoadingProps) {
   return (

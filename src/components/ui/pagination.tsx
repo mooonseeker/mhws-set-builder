@@ -1,13 +1,26 @@
+/**
+ * @fileoverview A component for navigating between pages.
+ */
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
+/**
+ * Props for the Pagination component.
+ */
 interface PaginationProps {
+  /** The currently active page. */
   currentPage: number;
+  /** The total number of pages. */
   totalPages: number;
+  /** Callback fired when the page is changed. */
   onPageChange: (page: number) => void;
 }
 
+/**
+ * A pagination component that allows users to navigate through a series of pages.
+ */
 export function Pagination({
   currentPage,
   totalPages,

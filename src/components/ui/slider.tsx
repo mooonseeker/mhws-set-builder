@@ -1,15 +1,29 @@
+/**
+ * @fileoverview A slider component for selecting a value from a range.
+ */
+
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import * as SliderPrimitive from "@radix-ui/react-slider";
 
+import { cn } from "@/lib/utils";
+
+/**
+ * Props for the Slider component.
+ */
 interface SliderProps extends React.ComponentPropsWithoutRef<
   typeof SliderPrimitive.Root
 > {
+  /** If `true`, the tick marks below the slider will be hidden. */
   hideTicks?: boolean;
+  /** An array of values to be displayed as tick marks. If not provided, ticks are generated automatically based on `min`, `max`, and `step`. */
   ticks?: (number | string)[];
 }
 
+/**
+ * A slider component that allows users to select a value or a range of values.
+ * It can display tick marks and supports all the props of the Radix Slider.
+ */
 const Slider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
   SliderProps
@@ -40,10 +54,10 @@ const Slider = React.forwardRef<
         <SliderPrimitive.Range className="bg-primary absolute h-full" />
       </SliderPrimitive.Track>
       {/*
-          Radix Slider automatically renders one thumb for each value in the array.
-          We map over the values to ensure we render the correct number of thumbs
-          and apply the same styling to all of them.
-        */}
+        Radix Slider automatically renders one thumb for each value in the array.
+        We map over the values to ensure we render the correct number of thumbs
+        and apply the same styling to all of them.
+      */}
       {(props.value ?? props.defaultValue ?? [0]).map((_, index) => (
         <SliderPrimitive.Thumb
           key={index}

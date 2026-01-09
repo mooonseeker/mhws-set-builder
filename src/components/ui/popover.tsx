@@ -1,14 +1,26 @@
+/**
+ * @fileoverview A component that displays rich content in a portal, triggered by a button.
+ */
+
 import * as React from "react";
+
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 
 import { cn } from "@/lib/utils";
 
+/** The root component for the popover. */
 const Popover = PopoverPrimitive.Root;
 
+/** A button that toggles the popover's visibility. */
 const PopoverTrigger = PopoverPrimitive.Trigger;
 
+/**
+ * An optional anchor for the popover. The popover will be positioned relative
+ * to this element if it is provided.
+ */
 const PopoverAnchor = PopoverPrimitive.Anchor;
 
+/** The main content of the popover. */
 const PopoverContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>

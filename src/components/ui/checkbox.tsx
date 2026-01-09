@@ -1,11 +1,18 @@
+/**
+ * @fileoverview A checkbox component that can be used in forms.
+ */
 "use client";
 
-import { Check } from "lucide-react";
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+import { Check } from "lucide-react";
 
+import { cn } from "@/lib/utils";
+
+/**
+ * A checkbox component that allows users to select one or more options from a set.
+ */
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>

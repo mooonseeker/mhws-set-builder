@@ -1,14 +1,23 @@
+/**
+ * @fileoverview A component that displays a short, informational message when a user hovers over or focuses on an element.
+ */
+
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 
+import { cn } from "@/lib/utils";
+
+/** A provider that supplies context for the tooltip. */
 const TooltipProvider = TooltipPrimitive.Provider;
 
+/** The root component for the tooltip. */
 const Tooltip = TooltipPrimitive.Root;
 
+/** A button or other element that triggers the tooltip. */
 const TooltipTrigger = TooltipPrimitive.Trigger;
 
+/** The content of the tooltip. */
 const TooltipContent = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>

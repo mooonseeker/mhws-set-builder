@@ -1,12 +1,23 @@
+/**
+ * @fileoverview Defines the ErrorMessage component for displaying errors.
+ */
+
 import { AlertCircle } from "lucide-react";
 
+/**
+ * Props for the ErrorMessage component.
+ */
 interface ErrorMessageProps {
+  /** The error message to display. */
   message: string;
+  /** Optional callback to be executed when the user clicks the retry button. */
   onRetry?: () => void;
 }
 
 /**
- * 错误提示组件
+ * Renders a standardized error message box.
+ *
+ * Includes an icon, the error message, and an optional "Retry" button.
  */
 export function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
   return (

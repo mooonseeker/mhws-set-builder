@@ -1,7 +1,15 @@
+/**
+ * @fileoverview A basic input component.
+ */
+
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * A standard text input field. It is a wrapper around the native HTML `<input>`
+ * element and supports all of its props.
+ */
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
   ({ className, type, ...props }, ref) => {
     return (

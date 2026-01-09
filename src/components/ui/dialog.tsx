@@ -1,17 +1,37 @@
-import { X } from "lucide-react";
+/**
+ * @fileoverview A modal dialog component that interrupts the user's workflow to focus on a single task or piece of information.
+ */
+
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
 
+import { cn } from "@/lib/utils";
+
+/**
+ * The root component for the dialog.
+ */
 const Dialog = DialogPrimitive.Root;
 
+/**
+ * A button that opens the dialog.
+ */
 const DialogTrigger = DialogPrimitive.Trigger;
 
+/**
+ * A portal that renders the dialog outside of the normal DOM hierarchy.
+ */
 const DialogPortal = DialogPrimitive.Portal;
 
+/**
+ * A button that closes the dialog.
+ */
 const DialogClose = DialogPrimitive.Close;
 
+/**
+ * A semi-transparent overlay that covers the page content when the dialog is open.
+ */
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
@@ -27,6 +47,9 @@ const DialogOverlay = React.forwardRef<
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
+/**
+ * The main content of the dialog.
+ */
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
@@ -37,17 +60,17 @@ const DialogContent = React.forwardRef<
       ref={ref}
       className={cn(
         "bg-background fixed top-[50%] left-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-6 border shadow-lg duration-200",
-        // 响应式宽度
+        // Responsive width
         "max-w-[95vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl",
-        // 响应式高度（横屏优化）
+        // Responsive height (landscape optimization)
         "mobile-landscape:max-h-[80vh] max-h-[90vh] landscape:max-h-[85vh]",
-        // 响应式内边距
+        // Responsive padding
         "mobile-landscape:p-4 p-6 sm:p-8 md:p-10",
-        // 滚动
+        // Scrolling
         "overflow-y-auto",
-        // 圆角
+        // Rounded corners
         "rounded-lg",
-        // 动画
+        // Animations
         "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
         className,
       )}
@@ -63,6 +86,9 @@ const DialogContent = React.forwardRef<
 ));
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
+/**
+ * The header of the dialog.
+ */
 const DialogHeader = ({
   className,
   ...props
@@ -77,6 +103,9 @@ const DialogHeader = ({
 );
 DialogHeader.displayName = "DialogHeader";
 
+/**
+ * The footer of the dialog.
+ */
 const DialogFooter = ({
   className,
   ...props
@@ -91,6 +120,9 @@ const DialogFooter = ({
 );
 DialogFooter.displayName = "DialogFooter";
 
+/**
+ * The title of the dialog.
+ */
 const DialogTitle = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
@@ -106,6 +138,9 @@ const DialogTitle = React.forwardRef<
 ));
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
+/**
+ * The description of the dialog.
+ */
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
