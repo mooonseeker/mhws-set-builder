@@ -1,17 +1,21 @@
+/**
+ * @fileoverview Navigation component for switching between application modules.
+ */
+
 import { Database, List, Settings, TextSearch } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
 export type NavigationTab = "database" | "charms" | "set-builder" | "settings";
 
+/** Props for the Navigation component. */
 interface NavigationProps {
   currentTab: NavigationTab;
   onTabChange: (tab: NavigationTab) => void;
 }
 
 /**
- * 导航组件
- * 使用Tab方式切换不同功能模块
+ * Navigation bar using tabs to switch between different functional modules.
  */
 export function Navigation({ currentTab, onTabChange }: NavigationProps) {
   const tabs = [
@@ -29,7 +33,7 @@ export function Navigation({ currentTab, onTabChange }: NavigationProps) {
             <Button
               key={id}
               onClick={() => onTabChange(id)}
-              className={`mobile-landscape:py-1.5 -mb-px flex min-w-[120px] items-center justify-center gap-1.5 rounded-t-md rounded-b-none border-2 px-6 py-2 transition-colors sm:min-w-[140px] sm:gap-2 sm:px-8 sm:py-2.5 md:min-w-40 md:px-12 md:py-3 landscape:py-2 ${
+              className={`mobile-landscape:py-1.5 -mb-px flex min-w-30 items-center justify-center gap-1.5 rounded-t-md rounded-b-none border-2 px-6 py-2 transition-colors sm:min-w-35 sm:gap-2 sm:px-8 sm:py-2.5 md:min-w-40 md:px-12 md:py-3 landscape:py-2 ${
                 currentTab === id
                   ? "bg-background text-foreground border-foreground border-b-background"
                   : "border-transparent"

@@ -1,5 +1,10 @@
-import { Search } from "lucide-react";
+/**
+ * @fileoverview SkillSelector component for searching and adding skills with levels.
+ */
+
 import { useState } from "react";
+
+import { Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,17 +16,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useSkills } from "@/hooks";
-
 import type { SkillWithLevel } from "@/types";
 
+/** Props for the SkillSelector component. */
 interface SkillSelectorProps {
   onSelect: (skill: SkillWithLevel) => void;
   excludeSkillIds?: string[];
 }
 
 /**
- * 技能选择器组件
- * 搜索并选择技能，设置等级
+ * Skill selector component that allows searching for skills and setting their level.
  */
 export function SkillSelector({
   onSelect,
@@ -32,7 +36,7 @@ export function SkillSelector({
   const [selectedSkillId, setSelectedSkillId] = useState<string>("");
   const [level, setLevel] = useState(1);
 
-  // 筛选可用技能
+  // Filter available skills based on search and exclusions
   const availableSkills = skills.filter(
     (s) => !excludeSkillIds.includes(s.id) && s.name.includes(search),
   );

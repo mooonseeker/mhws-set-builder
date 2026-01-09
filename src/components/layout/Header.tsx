@@ -1,9 +1,12 @@
+/**
+ * @fileoverview Header component for the application.
+ */
+
 import { ThemeToggle } from "@/components/layout";
 import { DATABASE_VERSION } from "@/constants";
 
 /**
- * 应用头部组件
- * 显示应用标题、Logo和主题切换按钮
+ * Application header displaying the title, logo, and theme toggle.
  */
 export function Header() {
   const appVersion = __APP_VERSION__;

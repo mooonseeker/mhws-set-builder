@@ -1,5 +1,10 @@
-import { Square } from "lucide-react";
+/**
+ * @fileoverview SkillItem component for displaying a single skill and its level.
+ */
+
 import { useLayoutEffect, useRef, useState } from "react";
+
+import { Square } from "lucide-react";
 
 import {
   Tooltip,
@@ -10,12 +15,17 @@ import {
 import { useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
 
+/** Props for the SkillItem component. */
 interface SkillItemProps {
   skillId: string;
   level: number;
   variant?: "full" | "default" | "compact";
 }
 
+/**
+ * Displays a skill name, icon, and level blocks.
+ * Supports different variants: full, default, and compact.
+ */
 export function SkillItem({
   skillId,
   level,
@@ -50,7 +60,7 @@ export function SkillItem({
   const isMaxLevel = level >= maxLevel;
   const isOverflow = level > maxLevel;
 
-  // 生成等级方块（使用 lucide Square 图标）
+  // Generate level blocks using lucide Square icons
   const levelBlocks = Array.from({ length: maxLevel }, (_, i) => {
     const isActive = i < level;
     return (
@@ -66,7 +76,7 @@ export function SkillItem({
     );
   });
 
-  // 根据 variant 决定样式
+  // Determine styles based on variant
   const heightClass = variant === "full" ? "h-8" : "h-6";
   const iconSizeClass = variant === "full" ? "w-5 h-5" : "w-4 h-4";
   const textSizeClass = variant === "full" ? "text-sm" : "text-xs";

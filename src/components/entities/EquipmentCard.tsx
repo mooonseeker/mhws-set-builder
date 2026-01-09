@@ -1,11 +1,13 @@
+/**
+ * @fileoverview EquipmentCard component for displaying detailed equipment information.
+ */
+
 import { SkillItem } from "@/components/entities/";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { Armor, Charm, Equipment, Weapon } from "@/types";
 
-/**
- * EquipmentCard 组件 Props 接口
- */
+/** Props for the EquipmentCard component. */
 export interface EquipmentCardProps {
   item: Equipment;
   className?: string;
@@ -14,9 +16,8 @@ export interface EquipmentCardProps {
 }
 
 /**
- * EquipmentCard 组件
- *
- * 显示单个装备的卡片视图，包含图标、稀有度徽章、孔位和技能列表
+ * Displays a card view of a single piece of equipment, including icon,
+ * rarity badge, slots, and skill list.
  */
 export function EquipmentCard({
   item,
@@ -24,7 +25,7 @@ export function EquipmentCard({
   variant = "full",
   isSelected,
 }: EquipmentCardProps) {
-  // 获取装饰品图标路径
+  // Get accessory icon path
   const getAccessoryIcon = (slotType: "weapon" | "armor", level: number) => {
     return `/slot/${slotType}-slot-${level}.png`;
   };
@@ -37,12 +38,12 @@ export function EquipmentCard({
     { key: "dragon", icon: "/attribute-type/dragon.png", alt: "Dragon Res" },
   ];
 
-  // 辅助函数：判断装备类型
+  // Helper functions to determine equipment type
   const isCharm = (item: Equipment): item is Charm => "equivalentSlots" in item;
   const isWeapon = (item: Equipment): item is Weapon => "attack" in item;
   const isArmor = (item: Equipment): item is Armor => "resistance" in item;
 
-  // 获取装备图标路径
+  // Get equipment icon path
   const getEquipmentIcon = (item: Equipment) => {
     if (isCharm(item)) {
       return "/charm.png";
@@ -63,16 +64,17 @@ export function EquipmentCard({
         {
           "ring-primary ring-offset-background ring-2 ring-offset-2":
             isSelected,
+          "border-rarity-12": item.rarity === 12,
         },
         className,
       )}
       style={{
         borderColor:
-          item.rarity === 12 ? "black" : `var(--rarity-${item.rarity})`,
-        borderWidth: item.rarity === 12 ? "2px" : "1px",
+          item.rarity === 12 ? undefined : `var(--rarity-${item.rarity})`,
+        borderWidth: "1px",
       }}
     >
-      {/* Header: 装备图标和稀有度徽章 */}
+      {/* Header: Equipment icon and rarity badge */}
       <div className="card-header mb-3 flex items-center justify-between">
         <img
           src={getEquipmentIcon(item)}
@@ -104,7 +106,7 @@ export function EquipmentCard({
         )}
       </div>
 
-      {/* Stats: 核心属性 */}
+      {/* Stats: Core attributes */}
       {variant !== "compact" && (
         <>
           {isWeapon(item) && (
@@ -159,7 +161,7 @@ export function EquipmentCard({
         </>
       )}
 
-      {/* Slots: 孔位图标 */}
+      {/* Slots: Slot icons */}
       <div className="card-slots mb-3 flex justify-center gap-2">
         {Array.from({ length: 3 }, (_, index) => {
           const slot = item.slots[index];
@@ -188,7 +190,7 @@ export function EquipmentCard({
         })}
       </div>
 
-      {/* Skills: 技能列表 (根据 variant 传递) */}
+      {/* Skills: Skill list (passed based on variant) */}
       <div className="card-skills space-y-1">
         <ul className="space-y-1">
           {item.skills.map((skillWithLevel) => (

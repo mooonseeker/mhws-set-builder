@@ -1,16 +1,22 @@
+/**
+ * @fileoverview MainLayout component that defines the overall structure of the application.
+ */
+
 import type { ReactNode } from "react";
 
 import { Header } from "./Header";
-import { Navigation } from "./Navigation";
+import { Navigation, type NavigationTab } from "./Navigation";
 
-import type { NavigationTab } from "./Navigation";
-
+/** Props for the MainLayout component. */
 interface MainLayoutProps {
   currentTab: NavigationTab;
   onTabChange: (tab: NavigationTab) => void;
   children: ReactNode;
 }
 
+/**
+ * The main layout wrapper for the application, including the header and navigation.
+ */
 export function MainLayout({
   currentTab,
   onTabChange,

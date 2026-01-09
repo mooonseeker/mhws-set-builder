@@ -1,3 +1,7 @@
+/**
+ * @fileoverview EquipmentCell component for displaying an equipment slot in the set builder.
+ */
+
 import { useState } from "react";
 
 import { Lock, Unlock, X } from "lucide-react";
@@ -13,6 +17,7 @@ import { cn } from "@/lib/utils";
 import type { Armor, Charm, Slot, Weapon } from "@/types";
 import type { EquipmentCellType, SlottedEquipment } from "@/types/set-builder";
 
+/** Props for the EquipmentCell component. */
 export interface EquipmentCellProps {
   type: EquipmentCellType;
   isSelected?: boolean;
@@ -45,6 +50,10 @@ const getAccessoryIcon = (slotType: "weapon" | "armor", level: number) => {
   return `/slot/${slotType}-slot-${validLevel}.png`;
 };
 
+/**
+ * Represents a single equipment slot (e.g., Head, Chest) in the set builder UI.
+ * Allows selecting equipment, locking the slot, and managing accessories.
+ */
 export function EquipmentCell({
   type,
   isSelected,
@@ -68,12 +77,12 @@ export function EquipmentCell({
   return (
     <Card
       className={cn(
-        "relative h-full w-full", // 占满父容器，添加 relative 定位
+        "relative h-full w-full", // Fill parent container, add relative positioning
         isSelected &&
           "ring-primary ring-offset-background ring-2 ring-offset-2",
       )}
     >
-      {/* 清除按钮 - 位于卡片右上角 */}
+      {/* Clear button - located at the top right of the card */}
       {onClear && slottedEquipment && (
         <button
           onClick={(e) => {
@@ -90,9 +99,9 @@ export function EquipmentCell({
         className="flex h-full w-full items-stretch gap-2 p-2"
         onClick={onEquipmentClick}
       >
-        {/* 左侧图标区 */}
+        {/* Left icon area */}
         <div className="relative flex aspect-square w-12 shrink-0 items-center justify-center self-center p-1">
-          {/* 锁定图标 - 移至左侧图标右上角 */}
+          {/* Lock icon - moved to the top right of the left icon */}
           {onToggleLock && (
             <button
               onClick={handleToggleLock}
@@ -140,9 +149,9 @@ export function EquipmentCell({
         </div>
         <div className="border-border/50 border-l" />
 
-        {/* 右侧内容区 */}
+        {/* Right content area */}
         <div className="flex min-w-0 flex-1 flex-col">
-          {/* 上半部分: Label + Name */}
+          {/* Top part: Label + Name */}
           <div className="flex flex-1 items-center gap-2">
             <div className="flex flex-1 items-center justify-center">
               <p className="text-muted-foreground text-sm">{label}</p>
@@ -157,7 +166,7 @@ export function EquipmentCell({
 
           <div className="border-border/50 border-t" />
 
-          {/* 下半部分: 孔位 */}
+          {/* Bottom part: Slots */}
           <div className="flex flex-1 items-center justify-around gap-1 p-1">
             {Array.from({ length: 3 }).map((_, index) => {
               const slot = equipment?.slots[index];
@@ -169,7 +178,7 @@ export function EquipmentCell({
                   key={index}
                   onClick={(e) => {
                     if (!canClick) return;
-                    e.stopPropagation(); // 阻止冒泡到 CardContent 的 onEquipmentClick
+                    e.stopPropagation(); // Prevent bubbling to CardContent's onEquipmentClick
                     onSlotClick(index, slot);
                   }}
                   className={`bg-muted/30 flex h-full flex-1 items-center gap-1 rounded-sm ${canClick ? "hover:bg-muted cursor-pointer" : ""}`}
