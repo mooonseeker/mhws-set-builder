@@ -4,7 +4,7 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "./button";
 
 /**
  * Props for the Pagination component.

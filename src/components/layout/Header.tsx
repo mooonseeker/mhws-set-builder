@@ -2,8 +2,9 @@
  * @fileoverview Header component for the application.
  */
 
-import { ThemeToggle } from "@/components/layout";
 import { DATABASE_VERSION } from "@/constants";
+
+import { ThemeToggle } from "./ThemeToggle";
 
 /**
  * Application header displaying the title, logo, and theme toggle.

@@ -6,7 +6,6 @@ import { useState } from "react";
 
 import { Lock, Unlock, X } from "lucide-react";
 
-import { EquipmentCard } from "@/components/entities";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Popover,
@@ -16,6 +15,8 @@ import {
 import { cn } from "@/lib/utils";
 import type { Armor, Charm, Slot, Weapon } from "@/types";
 import type { EquipmentCellType, SlottedEquipment } from "@/types/set-builder";
+
+import { EquipmentCard } from "./EquipmentCard";
 
 /** Props for the EquipmentCell component. */
 export interface EquipmentCellProps {

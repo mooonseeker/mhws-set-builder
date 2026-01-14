@@ -7,7 +7,6 @@
 
 import { useCallback } from "react";
 
-import { useCharms, useSkills } from "@/hooks";
 import type { Charm, SkillWithLevel, Slot } from "@/types";
 import {
   calculateCharmEquivalentSlots,
@@ -16,6 +15,9 @@ import {
   isOfficialCharmId,
   validateCharm,
 } from "@/utils";
+
+import { useCharms } from "./useCharms";
+import { useSkills } from "./useSkills";
 
 /**
  * Generates a charm name based on its rarity.

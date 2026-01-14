@@ -8,7 +8,6 @@ import { useState } from "react";
 import { Settings2, Trash2, Zap } from "lucide-react";
 
 import { CharmShowcase } from "@/components/charms";
-import { DataIO } from "@/components/settings";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -29,6 +28,8 @@ import {
 import { DataStorage } from "@/services/storage";
 import type { AppSettings, Charm, Skill } from "@/types";
 import { toggleLimitBreakGlobal } from "@/utils/limit-break";
+
+import { DataIO } from "./DataIO";
 
 /**
  * Settings component for application configuration.
