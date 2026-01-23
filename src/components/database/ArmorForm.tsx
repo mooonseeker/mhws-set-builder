@@ -93,35 +93,44 @@ export function ArmorForm({ armor, onClose, onSubmit, error }: ArmorFormProps) {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="type">类型</Label>
-          <Select value={type} onValueChange={(v) => setType(v as ArmorType)}>
-            <SelectTrigger id="type">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {ARMOR_TYPES.map((t) => (
-                <SelectItem key={t} value={t}>
-                  {t.charAt(0).toUpperCase() + t.slice(1)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="rarity">稀有度</Label>
-            <Badge variant="outline">R{rarity}</Badge>
-          </div>
+      <div className="space-y-2">
+        <Label htmlFor="type">类型</Label>
+        <Select value={type} onValueChange={(v) => setType(v as ArmorType)}>
+          <SelectTrigger id="type">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {ARMOR_TYPES.map((t) => (
+              <SelectItem key={t} value={t}>
+                {t.charAt(0).toUpperCase() + t.slice(1)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Label className="w-16 shrink-0 text-base font-medium">稀有度</Label>
+        <Badge
+          variant="outline"
+          className="mr-4 w-12 justify-center text-sm font-medium"
+          style={{
+            color: rarity === 12 ? "black" : `var(--rarity-${rarity})`,
+            borderColor:
+              rarity === 12 ? "var(--border)" : `var(--rarity-${rarity})`,
+            background:
+              rarity === 12 ? `var(--rarity-${rarity})` : "transparent",
+          }}
+        >
+          R{rarity}
+        </Badge>
+        <div className="min-w-0 flex-1 pb-8">
           <Slider
-            id="rarity"
+            value={[rarity]}
+            onValueChange={(vals) => setRarity(vals[0])}
             min={RARITY_MIN}
             max={RARITY_MAX}
             step={1}
-            value={[rarity]}
-            onValueChange={(vals) => setRarity(vals[0])}
-            className="py-4"
           />
         </div>
       </div>

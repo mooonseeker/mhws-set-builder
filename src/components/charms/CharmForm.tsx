@@ -96,7 +96,7 @@ export function CharmForm({
         >
           R{rarity}
         </Badge>
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 pb-8">
           <Slider
             value={[rarity]}
             onValueChange={(values) => setRarity(values[0])}

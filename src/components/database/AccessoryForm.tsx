@@ -129,39 +129,47 @@ export function AccessoryForm({
         </Select>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="rarity">稀有度</Label>
-            <Badge variant="outline">R{rarity}</Badge>
-          </div>
+      <div className="flex items-center gap-2">
+        <Label className="w-16 shrink-0 text-base font-medium">稀有度</Label>
+        <Badge
+          variant="outline"
+          className="mr-4 w-12 justify-center text-sm font-medium"
+          style={{
+            color: rarity === 12 ? "black" : `var(--rarity-${rarity})`,
+            borderColor:
+              rarity === 12 ? "var(--border)" : `var(--rarity-${rarity})`,
+            background:
+              rarity === 12 ? `var(--rarity-${rarity})` : "transparent",
+          }}
+        >
+          R{rarity}
+        </Badge>
+        <div className="min-w-0 flex-1 pb-8">
           <Slider
-            id="rarity"
+            value={[rarity]}
+            onValueChange={(vals) => setRarity(vals[0])}
             min={RARITY_MIN}
             max={RARITY_MAX}
             step={1}
-            value={[rarity]}
-            onValueChange={(vals) => setRarity(vals[0])}
-            className="py-4"
           />
         </div>
+      </div>
 
-        <div className="space-y-3">
-          <Label htmlFor="slotLevel">孔位等级</Label>
-          <Select
-            value={slotLevel.toString()}
-            onValueChange={(v) => setSlotLevel(parseInt(v) as SlotLevel)}
-          >
-            <SelectTrigger id="slotLevel">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">1级孔</SelectItem>
-              <SelectItem value="2">2级孔</SelectItem>
-              <SelectItem value="3">3级孔</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="space-y-3">
+        <Label htmlFor="slotLevel">孔位等级</Label>
+        <Select
+          value={slotLevel.toString()}
+          onValueChange={(v) => setSlotLevel(parseInt(v) as SlotLevel)}
+        >
+          <SelectTrigger id="slotLevel">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="1">1级孔</SelectItem>
+            <SelectItem value="2">2级孔</SelectItem>
+            <SelectItem value="3">3级孔</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* TODO: add skill editor*/}
