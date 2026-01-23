@@ -5,6 +5,8 @@
 
 import { useCallback, useMemo, useState } from "react";
 
+import { Edit } from "lucide-react";
+
 import { ErrorMessage, Loading } from "@/components/common";
 import { EquipmentCard } from "@/components/entities";
 import { Badge } from "@/components/ui/badge";
@@ -59,6 +61,8 @@ export interface ArmorListProps {
   selectingFor?: EquipmentCellType;
   /** The currently selected armor piece. */
   currentPiece?: Armor | null;
+  onEdit?: (piece: Armor) => void;
+  isLocked?: boolean;
 }
 
 export function ArmorList({
@@ -66,6 +70,8 @@ export function ArmorList({
   onPieceSelect,
   selectingFor,
   currentPiece,
+  onEdit,
+  isLocked,
 }: ArmorListProps) {
   const { armor, loading, error } = useArmor();
   const { skills } = useSkills();
@@ -199,6 +205,7 @@ export function ArmorList({
       <TableCell
         key={key}
         className={cn(
+          "relative",
           isSelector && "transition-colors",
           isSelector && isMatchingSlot && "hover:bg-accent/50 cursor-pointer",
           isSelector && !isMatchingSlot && "cursor-not-allowed opacity-50",
@@ -213,11 +220,26 @@ export function ArmorList({
             : undefined
         }
       >
-        <EquipmentCard
-          item={piece}
-          variant={cardVariant}
-          isSelected={isSelected}
-        />
+        <div className="group">
+          <EquipmentCard
+            item={piece}
+            variant={cardVariant}
+            isSelected={isSelected}
+          />
+          {mode === "display" && onEdit && !isLocked && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute top-1 right-1 h-7 w-7 opacity-0 transition-opacity group-hover:opacity-100"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(piece);
+              }}
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
       </TableCell>
     );
   };

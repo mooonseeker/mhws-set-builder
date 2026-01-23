@@ -1,18 +1,13 @@
 /**
  * @fileoverview Form component for adding and editing accessories.
- * It includes a dialog for user input and handles form submission and validation.
+ * It handles form submission and validation.
  */
 
 import { useState } from "react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -22,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import {
   RARITY_MAX,
   RARITY_MIN,
@@ -31,30 +27,30 @@ import {
 
 interface AccessoryFormProps {
   accessory?: Accessory;
-  open: boolean;
   onClose: () => void;
   onSubmit: (accessory: Omit<Accessory, "id">) => void;
   error: string | null;
   accessories: Accessory[];
 }
 
-function AccessoryFormContent({
+/**
+ * Form component for adding or editing an accessory.
+ */
+export function AccessoryForm({
   accessory,
   onClose,
   onSubmit,
   error,
   accessories,
-}: Omit<AccessoryFormProps, "open">) {
+}: AccessoryFormProps) {
   const [name, setName] = useState(accessory?.name ?? "");
   const [type, setType] = useState<"weapon" | "armor">(
     accessory?.type ?? "weapon",
   );
-  const [description, setDescription] = useState(accessory?.description ?? "");
   const [rarity, setRarity] = useState(accessory?.rarity ?? 1);
   const [slotLevel, setSlotLevel] = useState<SlotLevel>(
     accessory?.slotLevel ?? 1,
   );
-  const [color, setColor] = useState(accessory?.color ?? "WHITE");
   const [localError, setLocalError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -83,12 +79,12 @@ function AccessoryFormContent({
     onSubmit({
       name: trimmedName,
       type,
-      description: description.trim(),
+      description: "自定义条目",
       sortID: 9999, // User-defined accessories are sorted to the end by default.
       skills: [], // Temporarily empty, user-defined accessories have no skills.
       rarity,
       slotLevel,
-      color,
+      color: "WHITE", // Default color for user-defined accessories.
     });
     onClose();
   };
@@ -133,75 +129,42 @@ function AccessoryFormContent({
         </Select>
       </div>
 
-      <div className="space-y-3">
-        <Label htmlFor="description">描述</Label>
-        <Input
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="输入装饰品描述"
-        />
-      </div>
-
       <div className="grid grid-cols-2 gap-6">
         <div className="space-y-3">
-          <Label htmlFor="rarity">稀有度</Label>
-          <Input
+          <div className="flex items-center justify-between">
+            <Label htmlFor="rarity">稀有度</Label>
+            <Badge variant="outline">R{rarity}</Badge>
+          </div>
+          <Slider
             id="rarity"
-            type="number"
             min={RARITY_MIN}
             max={RARITY_MAX}
-            value={rarity}
-            onChange={(e) => setRarity(parseInt(e.target.value))}
-            required
+            step={1}
+            value={[rarity]}
+            onValueChange={(vals) => setRarity(vals[0])}
+            className="py-4"
           />
         </div>
 
         <div className="space-y-3">
           <Label htmlFor="slotLevel">孔位等级</Label>
-          <Input
-            id="slotLevel"
-            type="number"
-            min={1}
-            max={3}
-            value={slotLevel}
-            onChange={(e) =>
-              setSlotLevel(parseInt(e.target.value) as SlotLevel)
-            }
-            required
-          />
+          <Select
+            value={slotLevel.toString()}
+            onValueChange={(v) => setSlotLevel(parseInt(v) as SlotLevel)}
+          >
+            <SelectTrigger id="slotLevel">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">1级孔</SelectItem>
+              <SelectItem value="2">2级孔</SelectItem>
+              <SelectItem value="3">3级孔</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
-      <div className="space-y-3">
-        <Label htmlFor="color">颜色</Label>
-        <Select value={color} onValueChange={setColor}>
-          <SelectTrigger id="color">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="WHITE">白色</SelectItem>
-            <SelectItem value="BLUE">蓝色</SelectItem>
-            <SelectItem value="RED">红色</SelectItem>
-            <SelectItem value="YELLOW">黄色</SelectItem>
-            <SelectItem value="PURPLE">紫色</SelectItem>
-            <SelectItem value="PINK">粉色</SelectItem>
-            <SelectItem value="ROSE">玫瑰色</SelectItem>
-            <SelectItem value="DPURPLE">深紫色</SelectItem>
-            <SelectItem value="EMERALD">翠绿色</SelectItem>
-            <SelectItem value="ULTRAMARINE">群青色</SelectItem>
-            <SelectItem value="LEMON">柠檬色</SelectItem>
-            <SelectItem value="SKY">天蓝色</SelectItem>
-            <SelectItem value="VERMILION">朱红色</SelectItem>
-            <SelectItem value="GRAY">灰色</SelectItem>
-            <SelectItem value="BROWN">棕色</SelectItem>
-            <SelectItem value="IVORY">象牙色</SelectItem>
-            <SelectItem value="SGREEN">浅绿色</SelectItem>
-            <SelectItem value="MOS">苔绿色</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
+      {/* TODO: add skill editor*/}
       <DialogFooter className="border-t pt-6">
         <Button type="button" variant="outline" onClick={onClose}>
           取消
@@ -209,24 +172,5 @@ function AccessoryFormContent({
         <Button type="submit">{accessory ? "保存" : "添加"}</Button>
       </DialogFooter>
     </form>
-  );
-}
-
-/**
- * Form component for adding or editing an accessory.
- */
-export function AccessoryForm(props: AccessoryFormProps) {
-  const { accessory, open, onClose } = props;
-
-  return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{accessory ? "编辑装饰品" : "添加装饰品"}</DialogTitle>
-        </DialogHeader>
-        {/* Use the key prop to force re-rendering and reset component state. */}
-        <AccessoryFormContent key={accessory?.id ?? "new"} {...props} />
-      </DialogContent>
-    </Dialog>
   );
 }

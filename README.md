@@ -56,7 +56,7 @@ src/
 ├── contexts/            # 领域驱动的状态管理中心
 ├── hooks/               # 业务逻辑封装与自定义 Hooks
 ├── services/            
-│   ├── set-search/      # 核心算法：v7.2 骨架搜索实现
+│   ├── set-search/      # 配装搜索实现
 │   └── storage/         # 数据持久化与导入导出服务
 ├── types/               # 严格的 TypeScript 类型定义
 ├── utils/               # 核心算法工具 (护石计算、数据解析)

@@ -4,8 +4,11 @@
  */
 export * from "./AccessoryForm";
 export * from "./AccessoryList";
+export * from "./ArmorForm";
 export * from "./ArmorList";
 export * from "./DatabaseManager";
+export * from "./DatabaseForm";
 export * from "./SkillList";
 export * from "./SkillForm";
 export * from "./WeaponList";
+export * from "./WeaponForm";

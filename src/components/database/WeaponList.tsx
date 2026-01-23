@@ -5,6 +5,8 @@
 
 import { useMemo, useState } from "react";
 
+import { Edit } from "lucide-react";
+
 import { EquipmentCard } from "@/components/entities/";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,6 +51,8 @@ export interface WeaponListProps {
   onWeaponSelect?: (weapon: Weapon) => void;
   selectingFor?: EquipmentCellType;
   currentWeapon?: Weapon | null;
+  onEdit?: (weapon: Weapon) => void;
+  isLocked?: boolean;
 }
 
 /**
@@ -60,6 +64,8 @@ export function WeaponList({
   onWeaponSelect,
   selectingFor,
   currentWeapon,
+  onEdit,
+  isLocked,
 }: WeaponListProps) {
   // MARK: State Management
   const [selectedWeaponType, setSelectedWeaponType] =
@@ -242,7 +248,7 @@ export function WeaponList({
                       <TableCell
                         key={`cell-${rowIndex}-${rarity}`}
                         className={cn(
-                          "p-2",
+                          "relative p-2",
                           selectedRarity === "all" ? "1/6" : "w-1/4",
                           isSelector && "rounded-lg transition-colors",
                           isSelector &&
@@ -262,11 +268,26 @@ export function WeaponList({
                         }
                       >
                         {weapon ? (
-                          <EquipmentCard
-                            item={weapon}
-                            variant={cardVariant}
-                            isSelected={isSelected}
-                          />
+                          <div className="group">
+                            <EquipmentCard
+                              item={weapon}
+                              variant={cardVariant}
+                              isSelected={isSelected}
+                            />
+                            {mode === "display" && onEdit && !isLocked && (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="absolute top-1 right-1 h-7 w-7 opacity-0 transition-opacity group-hover:opacity-100"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onEdit(weapon);
+                                }}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
                         ) : (
                           <span className="text-muted-foreground block text-center">
                             —

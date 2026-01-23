@@ -7,13 +7,7 @@ import { useEffect, useReducer } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -28,7 +22,6 @@ import type { Skill, SkillCategory, SlotLevel } from "@/types";
 
 interface SkillFormProps {
   skill?: Skill;
-  open: boolean;
   onClose: () => void;
   onSubmit: (skill: Omit<Skill, "id">) => void;
   error: string | null;
@@ -95,7 +88,6 @@ function skillFormReducer(
  */
 export function SkillForm({
   skill,
-  open,
   onClose,
   onSubmit,
   error,
@@ -117,7 +109,7 @@ export function SkillForm({
 
   useEffect(() => {
     dispatch({ type: "RESET_FORM", skill });
-  }, [skill, open]);
+  }, [skill]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -159,135 +151,127 @@ export function SkillForm({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{skill ? "编辑技能" : "添加技能"}</DialogTitle>
-        </DialogHeader>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-3">
+        <Label htmlFor="name">技能名称</Label>
+        <div className="relative">
+          <Input
+            id="name"
+            value={name}
+            onChange={(e) => {
+              dispatch({
+                type: "SET_FIELD",
+                field: "name",
+                value: e.target.value,
+              });
+              dispatch({ type: "SET_LOCAL_ERROR", error: null }); // Clear error on input
+            }}
+            placeholder="输入技能名称"
+            required
+            className={(localError ?? error) ? "pr-20" : ""}
+          />
+          {(localError ?? error) && (
+            <span className="text-destructive absolute top-1/2 right-3 -translate-y-1/2 transform text-sm">
+              {localError ?? error}
+            </span>
+          )}
+        </div>
+      </div>
+      <div className="space-y-3">
+        <Label htmlFor="category">技能分类</Label>
+        <Select
+          value={category}
+          onValueChange={(v) =>
+            dispatch({
+              type: "SET_FIELD",
+              field: "category",
+              value: v as SkillCategory,
+            })
+          }
+        >
+          <SelectTrigger id="category">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="weapon">
+              {SKILL_CATEGORY_LABELS.weapon}
+            </SelectItem>
+            <SelectItem value="armor">{SKILL_CATEGORY_LABELS.armor}</SelectItem>
+            <SelectItem value="series">
+              {SKILL_CATEGORY_LABELS.series}
+            </SelectItem>
+            <SelectItem value="group">{SKILL_CATEGORY_LABELS.group}</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-3">
-            <Label htmlFor="name">技能名称</Label>
-            <div className="relative">
-              <Input
-                id="name"
-                value={name}
-                onChange={(e) => {
-                  dispatch({
-                    type: "SET_FIELD",
-                    field: "name",
-                    value: e.target.value,
-                  });
-                  dispatch({ type: "SET_LOCAL_ERROR", error: null }); // Clear error on input
-                }}
-                placeholder="输入技能名称"
-                required
-                className={(localError ?? error) ? "pr-20" : ""}
-              />
-              {(localError ?? error) && (
-                <span className="text-destructive absolute top-1/2 right-3 -translate-y-1/2 transform text-sm">
-                  {localError ?? error}
-                </span>
-              )}
-            </div>
-          </div>
+      {/* TODO: Add left/right button */}
+      <div className="grid grid-cols-2 gap-6">
+        <div className="space-y-3">
+          <Label htmlFor="maxLevel">最大等级</Label>
+          <Input
+            id="maxLevel"
+            type="number"
+            min={1}
+            max={10}
+            value={maxLevel}
+            onChange={(e) =>
+              dispatch({
+                type: "SET_FIELD",
+                field: "maxLevel",
+                value: parseInt(e.target.value),
+              })
+            }
+            required
+          />
+        </div>
 
-          <div className="space-y-3">
-            <Label htmlFor="category">技能分类</Label>
-            <Select
-              value={category}
-              onValueChange={(v) =>
-                dispatch({
-                  type: "SET_FIELD",
-                  field: "category",
-                  value: v as SkillCategory,
-                })
-              }
-            >
-              <SelectTrigger id="category">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="weapon">
-                  {SKILL_CATEGORY_LABELS.weapon}
-                </SelectItem>
-                <SelectItem value="armor">
-                  {SKILL_CATEGORY_LABELS.armor}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <Label htmlFor="maxLevel">最大等级</Label>
-              <Input
-                id="maxLevel"
-                type="number"
-                min={1}
-                max={10}
-                value={maxLevel}
-                onChange={(e) =>
-                  dispatch({
-                    type: "SET_FIELD",
-                    field: "maxLevel",
-                    value: parseInt(e.target.value),
-                  })
-                }
-                required
-              />
-            </div>
-
-            <div className="space-y-3">
-              <Label htmlFor="accessoryLevel">装饰品等级</Label>
-              <Select
-                value={accessoryLevel.toString()}
-                onValueChange={(v) =>
-                  dispatch({
-                    type: "SET_FIELD",
-                    field: "accessoryLevel",
-                    value: parseInt(v) as SlotLevel,
-                  })
-                }
-              >
-                <SelectTrigger id="accessoryLevel">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="-1">{SLOT_LEVEL_LABELS[-1]}</SelectItem>
-                  <SelectItem value="1">{SLOT_LEVEL_LABELS[1]}</SelectItem>
-                  <SelectItem value="2">{SLOT_LEVEL_LABELS[2]}</SelectItem>
-                  <SelectItem value="3">{SLOT_LEVEL_LABELS[3]}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="isKey"
-              checked={isKey}
-              onCheckedChange={(checked) =>
-                dispatch({
-                  type: "SET_FIELD",
-                  field: "isKey",
-                  value: checked as boolean,
-                })
-              }
-            />
-            <Label htmlFor="isKey" className="cursor-pointer">
-              标记为核心技能
-            </Label>
-          </div>
-
-          <DialogFooter className="border-t pt-6">
-            <Button type="button" variant="outline" onClick={onClose}>
-              取消
-            </Button>
-            <Button type="submit">{skill ? "保存" : "添加"}</Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+        <div className="space-y-3">
+          <Label htmlFor="accessoryLevel">装饰品等级</Label>
+          <Select
+            value={accessoryLevel.toString()}
+            onValueChange={(v) =>
+              dispatch({
+                type: "SET_FIELD",
+                field: "accessoryLevel",
+                value: parseInt(v) as SlotLevel,
+              })
+            }
+          >
+            <SelectTrigger id="accessoryLevel">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="-1">{SLOT_LEVEL_LABELS[-1]}</SelectItem>
+              <SelectItem value="1">{SLOT_LEVEL_LABELS[1]}</SelectItem>
+              <SelectItem value="2">{SLOT_LEVEL_LABELS[2]}</SelectItem>
+              <SelectItem value="3">{SLOT_LEVEL_LABELS[3]}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <div className="flex items-center space-x-2">
+        <Checkbox
+          id="isKey"
+          checked={isKey}
+          onCheckedChange={(checked) =>
+            dispatch({
+              type: "SET_FIELD",
+              field: "isKey",
+              value: checked as boolean,
+            })
+          }
+        />
+        <Label htmlFor="isKey" className="cursor-pointer">
+          标记为核心技能
+        </Label>
+      </div>
+      <DialogFooter className="border-t pt-6">
+        <Button type="button" variant="outline" onClick={onClose}>
+          取消
+        </Button>
+        <Button type="submit">{skill ? "保存" : "添加"}</Button>
+      </DialogFooter>
+    </form>
   );
 }
