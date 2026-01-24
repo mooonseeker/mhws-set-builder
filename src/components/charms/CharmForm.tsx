@@ -3,25 +3,15 @@
  * It receives all state and handlers as props and is only responsible for rendering the UI.
  */
 
-import { X } from "lucide-react";
-
-import { SkillSelector } from "@/components/entities/";
+import { SkillEditor, SlotEditor } from "@/components/entities/";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import {
   RARITY_MAX,
   RARITY_MIN,
   type EquivalentSlots,
-  type Skill,
   type SkillWithLevel,
   type Slot,
   type SlotLevel,
@@ -34,7 +24,6 @@ interface CharmFormProps {
   rarity: number;
   setRarity: (value: number) => void;
   selectedSkills: SkillWithLevel[];
-  allSkills: Skill[];
   slots: Slot[];
   handleAddSkill: (skill: SkillWithLevel) => void;
   handleRemoveSkill: (skillId: string) => void;
@@ -58,7 +47,6 @@ export function CharmForm({
   rarity,
   setRarity,
   selectedSkills,
-  allSkills,
   slots,
   handleAddSkill,
   handleRemoveSkill,
@@ -110,134 +98,21 @@ export function CharmForm({
       {/* Side-by-side layout for skills and slots */}
       <div className="grid grid-cols-[60%_40%] gap-6">
         {/* Skill selection */}
-        <div className="flex flex-col gap-3">
-          <Label className="space-y-3 text-base font-medium">
-            技能 ({selectedSkills.length}/3)
-          </Label>
-
-          {selectedSkills.slice(0, 3).map((skillWithLevel) => {
-            const skill = allSkills.find(
-              (s) => s.id === skillWithLevel.skillId,
-            );
-            if (!skill)
-              return (
-                <div
-                  key={`empty-skill-${skillWithLevel.skillId}`}
-                  className="h-10"
-                />
-              );
-
-            return (
-              <div
-                key={skillWithLevel.skillId}
-                className="bg-muted flex h-10 items-center gap-2 rounded-md p-2"
-              >
-                <span className="flex-1">
-                  {skill.name} Lv.{skillWithLevel.level}
-                  {skill.isKey && " ⭐"}
-                </span>
-                <Badge variant="outline">
-                  {skill.category === "weapon"
-                    ? "武器"
-                    : skill.category === "armor"
-                      ? "防具"
-                      : "特殊"}
-                </Badge>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleRemoveSkill(skillWithLevel.skillId)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            );
-          })}
-          {/* Fill empty skill slots */}
-          {Array.from(
-            { length: Math.max(0, 3 - selectedSkills.length) },
-            (_unused, index) => index,
-          ).map((index) => (
-            <div
-              key={`empty-skill-${selectedSkills.length + index}`}
-              className="bg-muted h-10 rounded-md"
-            />
-          ))}
-
-          {/* Skill selector */}
-          <SkillSelector
-            onSelect={handleAddSkill}
-            excludeSkillIds={selectedSkills.map((s) => s.skillId)}
-          />
-        </div>
+        <SkillEditor
+          skills={selectedSkills}
+          onAdd={handleAddSkill}
+          onRemove={handleRemoveSkill}
+          maxSkills={3}
+        />
 
         {/* Slot selection */}
-        <div className="flex flex-col gap-3">
-          <Label className="space-y-3 text-base font-medium">
-            孔位 ({slots.length}/3)
-          </Label>
-
-          {slots.slice(0, 3).map((slot, index) => (
-            <div
-              key={index}
-              className="bg-muted flex h-10 items-center gap-2 rounded-md p-2"
-            >
-              <Select
-                value={slot.type}
-                onValueChange={(v) =>
-                  handleUpdateSlot(index, v as SlotType, slot.level)
-                }
-              >
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="weapon">武器孔</SelectItem>
-                  <SelectItem value="armor">防具孔</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select
-                value={slot.level.toString()}
-                onValueChange={(v) =>
-                  handleUpdateSlot(index, slot.type, parseInt(v) as SlotLevel)
-                }
-              >
-                <SelectTrigger className="w-24">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">1级</SelectItem>
-                  <SelectItem value="2">2级</SelectItem>
-                  <SelectItem value="3">3级</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => handleRemoveSlot(index)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
-          {/* Fill empty slot spaces */}
-          {Array.from(
-            { length: Math.max(0, 3 - slots.length) },
-            (_unused, index) => index,
-          ).map((index) => (
-            <div
-              key={`empty-slot-${slots.length + index}`}
-              className="bg-muted h-10 rounded-md"
-            />
-          ))}
-
-          {/* Add slot button */}
-          <Button variant="outline" onClick={handleAddSlot} className="w-full">
-            添加孔位
-          </Button>
-        </div>
+        <SlotEditor
+          slots={slots}
+          onAdd={handleAddSlot}
+          onUpdate={handleUpdateSlot}
+          onRemove={handleRemoveSlot}
+          maxSlots={3}
+        />
       </div>
 
       {/* Charm value assessment */}

@@ -231,7 +231,6 @@ export function CharmManager() {
                     rarity={rarity}
                     setRarity={setRarity}
                     selectedSkills={selectedSkills}
-                    allSkills={allSkills}
                     slots={slots}
                     handleAddSkill={handleAddSkill}
                     handleRemoveSkill={handleRemoveSkill}
