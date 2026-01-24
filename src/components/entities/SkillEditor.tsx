@@ -36,17 +36,29 @@ export function SkillEditor({
   skills,
   onAdd,
   onRemove,
-  maxSkills = 3,
+  maxSkills,
 }: SkillEditorProps) {
   const { getSkillById } = useSkills();
+
+  // Determine if there is a strict limit
+  const isLimited = typeof maxSkills === "number";
+  
+  // Visual consistency: If limited, use the limit. If unlimited, default to 3 placeholders minimum.
+  const targetSlots = isLimited ? maxSkills : 3;
+  
+  // Calculate how many empty placeholders to show
+  const emptySlots = Math.max(0, targetSlots - skills.length);
+
+  // If limited, strictly show up to maxSkills. If unlimited, show all.
+  const displayedSkills = isLimited ? skills.slice(0, maxSkills) : skills;
 
   return (
     <div className="flex flex-col gap-3">
       <Label className="space-y-3 text-base font-medium">
-        技能 ({skills.length}/{maxSkills})
+        技能 ({skills.length}{isLimited ? `/${maxSkills}` : ""})
       </Label>
 
-      {skills.slice(0, maxSkills).map((skillWithLevel) => {
+      {displayedSkills.map((skillWithLevel) => {
         const skill = getSkillById(skillWithLevel.skillId);
 
         if (!skill) {
@@ -87,22 +99,24 @@ export function SkillEditor({
           </div>
         );
       })}
-      {/* Fill empty skill slots */}
-      {Array.from(
-        { length: Math.max(0, maxSkills - skills.length) },
-        (_unused, index) => index,
-      ).map((index) => (
-        <div
-          key={`empty-skill-${skills.length + index}`}
-          className="bg-muted h-10 rounded-md"
-        />
-      ))}
+      
+      {/* Fill empty skill slots for visual consistency or limit enforcement */}
+      {Array.from({ length: emptySlots }, (_unused, index) => index).map(
+        (index) => (
+          <div
+            key={`empty-skill-${skills.length + index}`}
+            className="bg-muted h-10 rounded-md"
+          />
+        ),
+      )}
 
-      {/* Skill selector */}
-      <SkillSelector
-        onSelect={onAdd}
-        excludeSkillIds={skills.map((s) => s.skillId)}
-      />
+      {/* Skill selector - Show if unlimited OR if not yet full */}
+      {(!isLimited || skills.length < maxSkills) && (
+        <SkillSelector
+          onSelect={onAdd}
+          excludeSkillIds={skills.map((s) => s.skillId)}
+        />
+      )}
     </div>
   );
 }

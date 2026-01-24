@@ -5,6 +5,7 @@
 
 import { useState } from "react";
 
+import { SkillEditor } from "@/components/entities";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
@@ -22,6 +23,7 @@ import {
   RARITY_MAX,
   RARITY_MIN,
   type Accessory,
+  type SkillWithLevel,
   type SlotLevel,
 } from "@/types";
 
@@ -50,6 +52,9 @@ export function AccessoryForm({
   const [rarity, setRarity] = useState(accessory?.rarity ?? 1);
   const [slotLevel, setSlotLevel] = useState<SlotLevel>(
     accessory?.slotLevel ?? 1,
+  );
+  const [skills, setSkills] = useState<SkillWithLevel[]>(
+    accessory?.skills ?? [],
   );
   const [localError, setLocalError] = useState<string | null>(null);
 
@@ -81,7 +86,7 @@ export function AccessoryForm({
       type,
       description: "自定义条目",
       sortID: 9999, // User-defined accessories are sorted to the end by default.
-      skills: [], // Temporarily empty, user-defined accessories have no skills.
+      skills,
       rarity,
       slotLevel,
       color: "WHITE", // Default color for user-defined accessories.
@@ -113,22 +118,6 @@ export function AccessoryForm({
         </div>
       </div>
 
-      <div className="space-y-3">
-        <Label htmlFor="type">装饰品类型</Label>
-        <Select
-          value={type}
-          onValueChange={(v) => setType(v as "weapon" | "armor")}
-        >
-          <SelectTrigger id="type">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="weapon">武器</SelectItem>
-            <SelectItem value="armor">防具</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
       <div className="flex items-center gap-2">
         <Label className="w-16 shrink-0 text-base font-medium">稀有度</Label>
         <Badge
@@ -155,24 +144,50 @@ export function AccessoryForm({
         </div>
       </div>
 
-      <div className="space-y-3">
-        <Label htmlFor="slotLevel">孔位等级</Label>
-        <Select
-          value={slotLevel.toString()}
-          onValueChange={(v) => setSlotLevel(parseInt(v) as SlotLevel)}
-        >
-          <SelectTrigger id="slotLevel">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="1">1级孔</SelectItem>
-            <SelectItem value="2">2级孔</SelectItem>
-            <SelectItem value="3">3级孔</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-3">
+          <Label htmlFor="type">装饰品类型</Label>
+          <Select
+            value={type}
+            onValueChange={(v) => setType(v as "weapon" | "armor")}
+          >
+            <SelectTrigger id="type">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="weapon">武器</SelectItem>
+              <SelectItem value="armor">防具</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-3">
+          <Label htmlFor="slotLevel">孔位等级</Label>
+          <Select
+            value={slotLevel.toString()}
+            onValueChange={(v) => setSlotLevel(parseInt(v) as SlotLevel)}
+          >
+            <SelectTrigger id="slotLevel">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">1级孔</SelectItem>
+              <SelectItem value="2">2级孔</SelectItem>
+              <SelectItem value="3">3级孔</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      {/* TODO: add skill editor*/}
+      <SkillEditor
+        skills={skills}
+        onAdd={(skill) => setSkills((prev) => [...prev, skill])}
+        onRemove={(skillId) =>
+          setSkills((prev) => prev.filter((s) => s.skillId !== skillId))
+        }
+        maxSkills={2}
+      />
+
       <DialogFooter className="border-t pt-6">
         <Button type="button" variant="outline" onClick={onClose}>
           取消
