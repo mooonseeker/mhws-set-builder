@@ -150,23 +150,21 @@ export function WeaponList({
               onValueChange={(value) =>
                 value && setSelectedWeaponType(value as WeaponType)
               }
-              className="flex-wrap justify-start gap-0"
+              className="flex-wrap justify-start"
             >
               {WEAPON_TYPES.map((type) => (
-                <Tooltip key={type}>
-                  <TooltipTrigger asChild>
-                    <ToggleGroupItem value={type} className="text-xs">
-                      <img
-                        src={`/weapon-type/${type}.png`}
-                        alt={type}
-                        className="h-6 w-6"
-                      />
-                    </ToggleGroupItem>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{WEAPON_TYPE_LABELS[type]}</p>
-                  </TooltipContent>
-                </Tooltip>
+                <ToggleGroupItem
+                  key={type}
+                  value={type}
+                  tooltip={WEAPON_TYPE_LABELS[type]}
+                  className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground hover:bg-accent hover:text-accent-foreground"
+                >
+                  <img
+                    src={`/weapon-type/${type}.png`}
+                    alt={type}
+                    className="h-6 w-6"
+                  />
+                </ToggleGroupItem>
               ))}
             </ToggleGroup>
 
