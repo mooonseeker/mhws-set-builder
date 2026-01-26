@@ -42,10 +42,10 @@ export function SkillEditor({
 
   // Determine if there is a strict limit
   const isLimited = typeof maxSkills === "number";
-  
+
   // Visual consistency: If limited, use the limit. If unlimited, default to 3 placeholders minimum.
   const targetSlots = isLimited ? maxSkills : 3;
-  
+
   // Calculate how many empty placeholders to show
   const emptySlots = Math.max(0, targetSlots - skills.length);
 
@@ -55,7 +55,8 @@ export function SkillEditor({
   return (
     <div className="flex flex-col gap-3">
       <Label className="space-y-3 text-base font-medium">
-        技能 ({skills.length}{isLimited ? `/${maxSkills}` : ""})
+        技能 ({skills.length}
+        {isLimited ? `/${maxSkills}` : ""})
       </Label>
 
       {displayedSkills.map((skillWithLevel) => {
@@ -99,7 +100,7 @@ export function SkillEditor({
           </div>
         );
       })}
-      
+
       {/* Fill empty skill slots for visual consistency or limit enforcement */}
       {Array.from({ length: emptySlots }, (_unused, index) => index).map(
         (index) => (

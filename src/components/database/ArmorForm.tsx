@@ -78,99 +78,123 @@ export function ArmorForm({ armor, onClose, onSubmit, error }: ArmorFormProps) {
       slots,
       description: "自定义条目", // Add default value
     });
+    onClose();
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="name">名称</Label>
-        <Input
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="输入防具名称"
-          required
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="type">类型</Label>
-        <Select value={type} onValueChange={(v) => setType(v as ArmorType)}>
-          <SelectTrigger id="type">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {ARMOR_TYPES.map((t) => (
-              <SelectItem key={t} value={t}>
-                {t.charAt(0).toUpperCase() + t.slice(1)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <Label className="w-16 shrink-0 text-base font-medium">稀有度</Label>
-        <Badge
-          variant="outline"
-          className="mr-4 w-12 justify-center text-sm font-medium"
-          style={{
-            color: rarity === 12 ? "black" : `var(--rarity-${rarity})`,
-            borderColor:
-              rarity === 12 ? "var(--border)" : `var(--rarity-${rarity})`,
-            background:
-              rarity === 12 ? `var(--rarity-${rarity})` : "transparent",
-          }}
-        >
-          R{rarity}
-        </Badge>
-        <div className="min-w-0 flex-1 pb-8">
-          <Slider
-            value={[rarity]}
-            onValueChange={(vals) => setRarity(vals[0])}
-            min={RARITY_MIN}
-            max={RARITY_MAX}
-            step={1}
+    <form onSubmit={handleSubmit} className="space-y-4 pt-4 pb-0">
+      <div className="grid grid-cols-6 items-center gap-4 px-6">
+        <Label htmlFor="name" className="col-span-1 text-center">
+          防具名称
+        </Label>
+        <div className="relative col-span-5">
+          <Input
+            id="name"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+              setLocalError(null);
+            }}
+            placeholder="输入防具名称"
+            required
+            className={(localError ?? error) ? "pr-20" : ""}
           />
+          {(localError ?? error) && (
+            <span className="text-destructive absolute top-1/2 right-3 -translate-y-1/2 transform text-sm">
+              {localError ?? error}
+            </span>
+          )}
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="defense">防御</Label>
+      <div className="grid grid-cols-6 items-center gap-4 px-6">
+        <Label htmlFor="type" className="col-span-1 text-center">
+          防具部位
+        </Label>
+        <div className="col-span-2">
+          <Select value={type} onValueChange={(v) => setType(v as ArmorType)}>
+            <SelectTrigger id="type">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {ARMOR_TYPES.map((t) => (
+                <SelectItem key={t} value={t}>
+                  {t.charAt(0).toUpperCase() + t.slice(1)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <Label htmlFor="series" className="col-span-1 text-center">
+          套装系列
+        </Label>
         <Input
-          id="defense"
-          type="number"
-          value={defense}
-          onChange={(e) => setDefense(parseInt(e.target.value, 10))}
-          required
+          id="series"
+          value={series}
+          onChange={(e) => setSeries(e.target.value)}
+          placeholder="输入防具系列"
+          className="col-span-2"
         />
       </div>
 
-      <div className="space-y-2">
-        <Label>抗性（火、水、冰、雷、龙）</Label>
-        <div className="grid grid-cols-5 gap-2">
+      <div className="grid grid-cols-6 items-center gap-4 px-6 py-2">
+        <Label className="col-span-1 text-center">稀有度</Label>
+        <div className="col-span-5 flex items-center gap-4">
+          <Badge
+            variant="outline"
+            className="w-12 shrink-0 justify-center text-sm font-medium"
+            style={{
+              color: rarity === 12 ? "black" : `var(--rarity-${rarity})`,
+              borderColor:
+                rarity === 12 ? "var(--border)" : `var(--rarity-${rarity})`,
+              background:
+                rarity === 12 ? `var(--rarity-${rarity})` : "transparent",
+            }}
+          >
+            R{rarity}
+          </Badge>
+          <div className="min-w-0 flex-1 pb-8">
+            <Slider
+              value={[rarity]}
+              onValueChange={(vals) => setRarity(vals[0])}
+              min={RARITY_MIN}
+              max={RARITY_MAX}
+              step={1}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-2 px-6">
+        <div className="grid grid-cols-6 gap-4 text-center">
+          <Label className="text-xs">防御</Label>
+          <Label className="text-xs">火抗性</Label>
+          <Label className="text-xs">水抗性</Label>
+          <Label className="text-xs">雷抗性</Label>
+          <Label className="text-xs">冰抗性</Label>
+          <Label className="text-xs">龙抗性</Label>
+        </div>
+        <div className="grid grid-cols-6 gap-4">
+          <Input
+            type="number"
+            value={defense}
+            onChange={(e) => setDefense(parseInt(e.target.value, 10))}
+            required
+            className="px-1 text-center"
+          />
           {resistance.map((res, index) => (
             <Input
               key={index}
               type="number"
               value={res}
               onChange={(e) => handleResistanceChange(index, e.target.value)}
+              className="px-1 text-center"
             />
           ))}
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="series">系列</Label>
-        <Input
-          id="series"
-          value={series}
-          onChange={(e) => setSeries(e.target.value)}
-          placeholder="输入防具系列"
-        />
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 px-6 pb-4">
         <SkillEditor
           skills={skills}
           onAdd={(skill) => setSkills((prev) => [...prev, skill])}
@@ -200,11 +224,7 @@ export function ArmorForm({ armor, onClose, onSubmit, error }: ArmorFormProps) {
         />
       </div>
 
-      {(localError ?? error) && (
-        <p className="text-destructive text-sm">{localError ?? error}</p>
-      )}
-
-      <DialogFooter className="mt-4 border-t pt-4">
+      <DialogFooter className="bg-muted/30 -mx-6 mt-6 -mb-6 border-t px-6 py-4">
         <Button type="button" variant="outline" onClick={onClose}>
           取消
         </Button>

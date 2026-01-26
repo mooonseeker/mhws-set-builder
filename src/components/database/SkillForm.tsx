@@ -151,10 +151,12 @@ export function SkillForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-3">
-        <Label htmlFor="name">技能名称</Label>
-        <div className="relative">
+    <form onSubmit={handleSubmit} className="space-y-4 pt-4 pb-0">
+      <div className="grid grid-cols-6 items-center gap-4 px-6">
+        <Label htmlFor="name" className="col-span-1 text-center">
+          技能名称
+        </Label>
+        <div className="relative col-span-5">
           <Input
             id="name"
             value={name}
@@ -177,38 +179,48 @@ export function SkillForm({
           )}
         </div>
       </div>
-      <div className="space-y-3">
-        <Label htmlFor="category">技能分类</Label>
-        <Select
-          value={category}
-          onValueChange={(v) =>
-            dispatch({
-              type: "SET_FIELD",
-              field: "category",
-              value: v as SkillCategory,
-            })
-          }
-        >
-          <SelectTrigger id="category">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="weapon">
-              {SKILL_CATEGORY_LABELS.weapon}
-            </SelectItem>
-            <SelectItem value="armor">{SKILL_CATEGORY_LABELS.armor}</SelectItem>
-            <SelectItem value="series">
-              {SKILL_CATEGORY_LABELS.series}
-            </SelectItem>
-            <SelectItem value="group">{SKILL_CATEGORY_LABELS.group}</SelectItem>
-          </SelectContent>
-        </Select>
+
+      <div className="grid grid-cols-6 items-center gap-4 px-6">
+        <Label htmlFor="category" className="col-span-1 text-center">
+          技能分类
+        </Label>
+        <div className="col-span-5">
+          <Select
+            value={category}
+            onValueChange={(v) =>
+              dispatch({
+                type: "SET_FIELD",
+                field: "category",
+                value: v as SkillCategory,
+              })
+            }
+          >
+            <SelectTrigger id="category">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="weapon">
+                {SKILL_CATEGORY_LABELS.weapon}
+              </SelectItem>
+              <SelectItem value="armor">
+                {SKILL_CATEGORY_LABELS.armor}
+              </SelectItem>
+              <SelectItem value="series">
+                {SKILL_CATEGORY_LABELS.series}
+              </SelectItem>
+              <SelectItem value="group">
+                {SKILL_CATEGORY_LABELS.group}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      {/* TODO: Add left/right button */}
-      <div className="grid grid-cols-2 gap-6">
-        <div className="space-y-3">
-          <Label htmlFor="maxLevel">最大等级</Label>
+      <div className="grid grid-cols-6 items-center gap-4 px-6">
+        <Label htmlFor="maxLevel" className="col-span-1 text-center">
+          最大等级
+        </Label>
+        <div className="col-span-2">
           <Input
             id="maxLevel"
             type="number"
@@ -225,9 +237,10 @@ export function SkillForm({
             required
           />
         </div>
-
-        <div className="space-y-3">
-          <Label htmlFor="accessoryLevel">装饰品等级</Label>
+        <Label htmlFor="accessoryLevel" className="col-span-1 text-center">
+          装饰品等级
+        </Label>
+        <div className="col-span-2">
           <Select
             value={accessoryLevel.toString()}
             onValueChange={(v) =>
@@ -250,23 +263,27 @@ export function SkillForm({
           </Select>
         </div>
       </div>
-      <div className="flex items-center space-x-2">
-        <Checkbox
-          id="isKey"
-          checked={isKey}
-          onCheckedChange={(checked) =>
-            dispatch({
-              type: "SET_FIELD",
-              field: "isKey",
-              value: checked as boolean,
-            })
-          }
-        />
-        <Label htmlFor="isKey" className="cursor-pointer">
-          标记为核心技能
-        </Label>
+
+      <div className="grid grid-cols-6 items-center gap-4 px-6">
+        <div className="col-span-5 col-start-2 flex items-center space-x-2">
+          <Checkbox
+            id="isKey"
+            checked={isKey}
+            onCheckedChange={(checked) =>
+              dispatch({
+                type: "SET_FIELD",
+                field: "isKey",
+                value: checked as boolean,
+              })
+            }
+          />
+          <Label htmlFor="isKey" className="cursor-pointer">
+            标记为核心技能
+          </Label>
+        </div>
       </div>
-      <DialogFooter className="border-t pt-6">
+
+      <DialogFooter className="bg-muted/30 -mx-6 mt-6 -mb-6 border-t px-6 py-4">
         <Button type="button" variant="outline" onClick={onClose}>
           取消
         </Button>

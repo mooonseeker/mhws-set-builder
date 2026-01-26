@@ -95,10 +95,12 @@ export function AccessoryForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-3">
-        <Label htmlFor="name">装饰品名称</Label>
-        <div className="relative">
+    <form onSubmit={handleSubmit} className="space-y-4 pt-4 pb-0">
+      <div className="grid grid-cols-6 items-center gap-4 px-6">
+        <Label htmlFor="name" className="col-span-1 text-center">
+          装饰品名称
+        </Label>
+        <div className="relative col-span-5">
           <Input
             id="name"
             value={name}
@@ -118,35 +120,39 @@ export function AccessoryForm({
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
-        <Label className="w-16 shrink-0 text-base font-medium">稀有度</Label>
-        <Badge
-          variant="outline"
-          className="mr-4 w-12 justify-center text-sm font-medium"
-          style={{
-            color: rarity === 12 ? "black" : `var(--rarity-${rarity})`,
-            borderColor:
-              rarity === 12 ? "var(--border)" : `var(--rarity-${rarity})`,
-            background:
-              rarity === 12 ? `var(--rarity-${rarity})` : "transparent",
-          }}
-        >
-          R{rarity}
-        </Badge>
-        <div className="min-w-0 flex-1 pb-8">
-          <Slider
-            value={[rarity]}
-            onValueChange={(vals) => setRarity(vals[0])}
-            min={RARITY_MIN}
-            max={RARITY_MAX}
-            step={1}
-          />
+      <div className="grid grid-cols-6 items-center gap-4 px-6 py-2">
+        <Label className="col-span-1 text-center">稀有度</Label>
+        <div className="col-span-5 flex items-center gap-4">
+          <Badge
+            variant="outline"
+            className="w-12 shrink-0 justify-center text-sm font-medium"
+            style={{
+              color: rarity === 12 ? "black" : `var(--rarity-${rarity})`,
+              borderColor:
+                rarity === 12 ? "var(--border)" : `var(--rarity-${rarity})`,
+              background:
+                rarity === 12 ? `var(--rarity-${rarity})` : "transparent",
+            }}
+          >
+            R{rarity}
+          </Badge>
+          <div className="min-w-0 flex-1 pb-8">
+            <Slider
+              value={[rarity]}
+              onValueChange={(vals) => setRarity(vals[0])}
+              min={RARITY_MIN}
+              max={RARITY_MAX}
+              step={1}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-3">
-          <Label htmlFor="type">装饰品类型</Label>
+      <div className="grid grid-cols-6 items-center gap-4 px-6">
+        <Label htmlFor="type" className="col-span-1 text-center">
+          类型
+        </Label>
+        <div className="col-span-2">
           <Select
             value={type}
             onValueChange={(v) => setType(v as "weapon" | "armor")}
@@ -161,8 +167,10 @@ export function AccessoryForm({
           </Select>
         </div>
 
-        <div className="space-y-3">
-          <Label htmlFor="slotLevel">孔位等级</Label>
+        <Label htmlFor="slotLevel" className="col-span-1 text-center">
+          孔位
+        </Label>
+        <div className="col-span-2">
           <Select
             value={slotLevel.toString()}
             onValueChange={(v) => setSlotLevel(parseInt(v) as SlotLevel)}
@@ -179,16 +187,18 @@ export function AccessoryForm({
         </div>
       </div>
 
-      <SkillEditor
-        skills={skills}
-        onAdd={(skill) => setSkills((prev) => [...prev, skill])}
-        onRemove={(skillId) =>
-          setSkills((prev) => prev.filter((s) => s.skillId !== skillId))
-        }
-        maxSkills={2}
-      />
+      <div className="px-6 pb-4">
+        <SkillEditor
+          skills={skills}
+          onAdd={(skill) => setSkills((prev) => [...prev, skill])}
+          onRemove={(skillId) =>
+            setSkills((prev) => prev.filter((s) => s.skillId !== skillId))
+          }
+          maxSkills={2}
+        />
+      </div>
 
-      <DialogFooter className="border-t pt-6">
+      <DialogFooter className="bg-muted/30 -mx-6 mt-6 -mb-6 border-t px-6 py-4">
         <Button type="button" variant="outline" onClick={onClose}>
           取消
         </Button>
