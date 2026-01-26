@@ -25,7 +25,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { RARITY_FILTERS } from "@/constants";
+import { RARITY_FILTERS, WEAPON_TYPE_LABELS } from "@/constants";
 import { useWeapon } from "@/hooks";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
@@ -141,31 +141,38 @@ export function WeaponList({
     <div className="flex h-full flex-col gap-4">
       {/* MARK: Toolbar */}
       <div className="bg-card shrink-0 rounded-lg border p-2 shadow-sm sm:p-4">
-        <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
-          {/* Weapon type toggle */}
-          <ToggleGroup
-            type="single"
-            value={selectedWeaponType}
-            onValueChange={(value) =>
-              value && setSelectedWeaponType(value as WeaponType)
-            }
-            className="flex-wrap justify-start gap-0"
-          >
-            {WEAPON_TYPES.map((type) => (
-              <ToggleGroupItem key={type} value={type} className="text-xs">
-                <img
-                  src={`/weapon-type/${type}.png`}
-                  alt={type}
-                  className="h-6 w-6"
-                />
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
+        <TooltipProvider>
+          <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+            {/* Weapon type toggle */}
+            <ToggleGroup
+              type="single"
+              value={selectedWeaponType}
+              onValueChange={(value) =>
+                value && setSelectedWeaponType(value as WeaponType)
+              }
+              className="flex-wrap justify-start gap-0"
+            >
+              {WEAPON_TYPES.map((type) => (
+                <Tooltip key={type}>
+                  <TooltipTrigger asChild>
+                    <ToggleGroupItem value={type} className="text-xs">
+                      <img
+                        src={`/weapon-type/${type}.png`}
+                        alt={type}
+                        className="h-6 w-6"
+                      />
+                    </ToggleGroupItem>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{WEAPON_TYPE_LABELS[type]}</p>
+                  </TooltipContent>
+                </Tooltip>
+              ))}
+            </ToggleGroup>
 
-          {/* Right-side group: Rarity filter + Search input */}
-          <div className="flex items-center gap-2">
-            {/* Rarity filter */}
-            <TooltipProvider>
+            {/* Right-side group: Rarity filter + Search input */}
+            <div className="flex items-center gap-2">
+              {/* Rarity filter */}
               <div className="flex items-center gap-2">
                 {RARITY_FILTERS.map(({ value, icon: Icon, label }) => (
                   <Tooltip key={value}>
@@ -186,18 +193,18 @@ export function WeaponList({
                   </Tooltip>
                 ))}
               </div>
-            </TooltipProvider>
 
-            {/* Search input */}
-            <Input
-              type="text"
-              placeholder="搜索武器名称..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="max-w-sm"
-            />
+              {/* Search input */}
+              <Input
+                type="text"
+                placeholder="搜索武器名称..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="max-w-sm"
+              />
+            </div>
           </div>
-        </div>
+        </TooltipProvider>
       </div>
 
       {/* MARK: Weapon Table */}

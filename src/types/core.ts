@@ -103,7 +103,7 @@ export type ArmorType = (typeof ARMOR_TYPES)[number];
 
 /**
  * Elemental resistance values.
- * The tuple represents resistances in the order: Fire, Water, Ice, Thunder, Dragon.
+ * The tuple represents resistances in the order: Fire, Water, Thunder, Ice, Dragon.
  */
 export type Resistance = [number, number, number, number, number];
 
@@ -261,17 +261,17 @@ export type CharmSortField =
  * The type of weapon.
  */
 export const WEAPON_TYPES = [
-  "hammer",
-  "lance",
   "long-sword",
   "short-sword",
-  "tachi",
   "twin-sword",
-  "charge-axe",
-  "gun-lance",
-  "rod",
-  "slash-axe",
+  "tachi",
+  "hammer",
   "whistle",
+  "lance",
+  "gun-lance",
+  "slash-axe",
+  "charge-axe",
+  "rod",
   "bow",
   "heavy-bowgun",
   "light-bowgun",

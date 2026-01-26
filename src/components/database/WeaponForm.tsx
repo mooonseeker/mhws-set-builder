@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { ATTRIBUTE_TYPE_LABELS, WEAPON_TYPE_LABELS } from "@/constants";
 import {
   ATTRIBUTE_TYPES,
   RARITY_MAX,
@@ -95,99 +96,124 @@ export function WeaponForm({
       sharpness: [0, 0, 0, 0, 0, 0, 0], // Default sharpness
       takumi: [0, 0, 0, 0], // Default takumi
     });
+    onClose();
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="name">名称</Label>
+    <form onSubmit={handleSubmit} className="space-y-4 pt-4 pb-0">
+      <div className="grid grid-cols-6 items-center gap-4 px-6">
+        <Label htmlFor="name" className="col-span-1 text-center">
+          武器名称
+        </Label>
+        <div className="relative col-span-5">
+          <Input
+            id="name"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+              setLocalError(null);
+            }}
+            placeholder="输入武器名称"
+            required
+            className={(localError ?? error) ? "pr-20" : ""}
+          />
+          {(localError ?? error) && (
+            <span className="text-destructive absolute top-1/2 right-3 -translate-y-1/2 transform text-sm">
+              {localError ?? error}
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-6 items-center gap-4 px-6">
+        <Label htmlFor="type" className="col-span-1 text-center">
+          武器类型
+        </Label>
+        <div className="col-span-5">
+          <Select value={type} onValueChange={(v) => setType(v as WeaponType)}>
+            <SelectTrigger id="type">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {WEAPON_TYPES.map((t) => (
+                <SelectItem key={t} value={t}>
+                  {WEAPON_TYPE_LABELS[t]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-6 items-center gap-4 px-6 py-2">
+        <Label className="col-span-1 text-center">稀有度</Label>
+        <div className="col-span-5 flex items-center gap-4">
+          <Badge
+            variant="outline"
+            className="w-12 shrink-0 justify-center text-sm font-medium"
+            style={{
+              color: rarity === 12 ? "black" : `var(--rarity-${rarity})`,
+              borderColor:
+                rarity === 12 ? "var(--border)" : `var(--rarity-${rarity})`,
+              background:
+                rarity === 12 ? `var(--rarity-${rarity})` : "transparent",
+            }}
+          >
+            R{rarity}
+          </Badge>
+          <div className="min-w-0 flex-1 pb-8">
+            <Slider
+              value={[rarity]}
+              onValueChange={(vals) => setRarity(vals[0])}
+              min={RARITY_MIN}
+              max={RARITY_MAX}
+              step={1}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-6 items-center gap-4 px-6">
+        <Label htmlFor="attack" className="col-span-1 text-center">
+          攻击
+        </Label>
         <Input
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="输入武器名称"
+          id="attack"
+          type="number"
+          value={attack}
+          onChange={(e) => setAttack(parseInt(e.target.value, 10))}
           required
+          className="col-span-1"
+        />
+        <Label htmlFor="critical" className="col-span-1 text-center">
+          会心
+        </Label>
+        <Input
+          id="critical"
+          type="number"
+          value={critical}
+          onChange={(e) => setCritical(parseInt(e.target.value, 10))}
+          required
+          className="col-span-1"
+        />
+        <Label htmlFor="defense" className="col-span-1 text-center">
+          防御
+        </Label>
+        <Input
+          id="defense"
+          type="number"
+          value={defense}
+          onChange={(e) => setDefense(parseInt(e.target.value, 10))}
+          required
+          className="col-span-1"
         />
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="type">类型</Label>
-        <Select value={type} onValueChange={(v) => setType(v as WeaponType)}>
-          <SelectTrigger id="type">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {WEAPON_TYPES.map((t) => (
-              <SelectItem key={t} value={t}>
-                {t.charAt(0).toUpperCase() + t.slice(1)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <Label className="w-16 shrink-0 text-base font-medium">稀有度</Label>
-        <Badge
-          variant="outline"
-          className="mr-4 w-12 justify-center text-sm font-medium"
-          style={{
-            color: rarity === 12 ? "black" : `var(--rarity-${rarity})`,
-            borderColor:
-              rarity === 12 ? "var(--border)" : `var(--rarity-${rarity})`,
-            background:
-              rarity === 12 ? `var(--rarity-${rarity})` : "transparent",
-          }}
-        >
-          R{rarity}
-        </Badge>
-        <div className="min-w-0 flex-1 pb-8">
-          <Slider
-            value={[rarity]}
-            onValueChange={(vals) => setRarity(vals[0])}
-            min={RARITY_MIN}
-            max={RARITY_MAX}
-            step={1}
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="attack">攻击力</Label>
-          <Input
-            id="attack"
-            type="number"
-            value={attack}
-            onChange={(e) => setAttack(parseInt(e.target.value, 10))}
-            required
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="critical">会心率</Label>
-          <Input
-            id="critical"
-            type="number"
-            value={critical}
-            onChange={(e) => setCritical(parseInt(e.target.value, 10))}
-            required
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="defense">防御</Label>
-          <Input
-            id="defense"
-            type="number"
-            value={defense}
-            onChange={(e) => setDefense(parseInt(e.target.value, 10))}
-            required
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="attribute">属性</Label>
+      <div className="grid grid-cols-6 items-center gap-4 px-6">
+        <Label htmlFor="attribute" className="col-span-1 text-center">
+          主属性
+        </Label>
+        <div className="col-span-2">
           <Select
             value={attribute ?? "none"}
             onValueChange={(v) =>
@@ -201,27 +227,30 @@ export function WeaponForm({
               <SelectItem value="none">无</SelectItem>
               {ATTRIBUTE_TYPES.map((t) => (
                 <SelectItem key={t} value={t}>
-                  {t.charAt(0).toUpperCase() + t.slice(1)}
+                  {ATTRIBUTE_TYPE_LABELS[t]}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="attributeValue">属性值</Label>
-          <Input
-            id="attributeValue"
-            type="number"
-            value={attributeValue}
-            onChange={(e) => setAttributeValue(parseInt(e.target.value, 10))}
-            disabled={!attribute}
-          />
-        </div>
+        <Label htmlFor="attributeValue" className="col-span-1 text-center">
+          数值
+        </Label>
+        <Input
+          id="attributeValue"
+          type="number"
+          value={attributeValue}
+          onChange={(e) => setAttributeValue(parseInt(e.target.value, 10))}
+          disabled={!attribute}
+          className="col-span-2"
+        />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="subattribute">副属性</Label>
+      <div className="grid grid-cols-6 items-center gap-4 px-6">
+        <Label htmlFor="subattribute" className="col-span-1 text-center">
+          副属性
+        </Label>
+        <div className="col-span-2">
           <Select
             value={subattribute ?? "none"}
             onValueChange={(v) =>
@@ -235,25 +264,26 @@ export function WeaponForm({
               <SelectItem value="none">无</SelectItem>
               {ATTRIBUTE_TYPES.map((t) => (
                 <SelectItem key={t} value={t}>
-                  {t.charAt(0).toUpperCase() + t.slice(1)}
+                  {ATTRIBUTE_TYPE_LABELS[t]}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="subattributeValue">副属性值</Label>
-          <Input
-            id="subattributeValue"
-            type="number"
-            value={subattributeValue}
-            onChange={(e) => setSubattributeValue(parseInt(e.target.value, 10))}
-            disabled={!subattribute}
-          />
-        </div>
+        <Label htmlFor="subattributeValue" className="col-span-1 text-center">
+          数值
+        </Label>
+        <Input
+          id="subattributeValue"
+          type="number"
+          value={subattributeValue}
+          onChange={(e) => setSubattributeValue(parseInt(e.target.value, 10))}
+          disabled={!subattribute}
+          className="col-span-2"
+        />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 px-6 pb-4">
         <SkillEditor
           skills={skills}
           onAdd={(skill) => setSkills((prev) => [...prev, skill])}
@@ -283,11 +313,7 @@ export function WeaponForm({
         />
       </div>
 
-      {(localError ?? error) && (
-        <p className="text-destructive text-sm">{localError ?? error}</p>
-      )}
-
-      <DialogFooter className="mt-4 border-t pt-4">
+      <DialogFooter className="bg-muted/30 -mx-6 mt-6 -mb-6 border-t px-6 py-4">
         <Button type="button" variant="outline" onClick={onClose}>
           取消
         </Button>
