@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { ATTRIBUTE_TYPE_LABELS, WEAPON_TYPE_LABELS } from "@/constants";
+import { useMediaQuery } from "@/hooks";
 import {
   ATTRIBUTE_TYPES,
   RARITY_MAX,
@@ -68,6 +69,8 @@ export function WeaponForm({
   const [skills, setSkills] = useState<SkillWithLevel[]>(weapon?.skills ?? []);
   const [slots, setSlots] = useState<Slot[]>(weapon?.slots ?? []);
   const [localError, setLocalError] = useState<string | null>(null);
+
+  const is2Xl = useMediaQuery("(min-width: 1536px)");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -290,6 +293,7 @@ export function WeaponForm({
           onRemove={(skillId) =>
             setSkills((prev) => prev.filter((s) => s.skillId !== skillId))
           }
+          variant={is2Xl ? "full" : "default"}
         />
         <SlotEditor
           slots={slots}

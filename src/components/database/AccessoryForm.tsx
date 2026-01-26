@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { useMediaQuery } from "@/hooks";
 import {
   RARITY_MAX,
   RARITY_MIN,
@@ -57,6 +58,8 @@ export function AccessoryForm({
     accessory?.skills ?? [],
   );
   const [localError, setLocalError] = useState<string | null>(null);
+  
+  const is2Xl = useMediaQuery("(min-width: 1536px)");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -195,6 +198,7 @@ export function AccessoryForm({
             setSkills((prev) => prev.filter((s) => s.skillId !== skillId))
           }
           maxSkills={2}
+          variant={is2Xl ? "full" : "default"}
         />
       </div>
 

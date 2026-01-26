@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { useMediaQuery } from "@/hooks";
 import {
   RARITY_MAX,
   RARITY_MIN,
@@ -59,6 +60,8 @@ export function CharmForm({
   keySkillValue,
   equivalentSlots,
 }: CharmFormProps) {
+  const is2Xl = useMediaQuery("(min-width: 1536px)");
+
   return (
     <div className="space-y-4 pt-4 pb-0">
       <div className="grid grid-cols-6 items-center gap-4 px-6">
@@ -103,6 +106,7 @@ export function CharmForm({
           onAdd={handleAddSkill}
           onRemove={handleRemoveSkill}
           maxSkills={3}
+          variant={is2Xl ? "full" : "default"}
         />
 
         {/* Slot selection */}

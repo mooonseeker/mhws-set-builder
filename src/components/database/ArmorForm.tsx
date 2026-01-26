@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { useMediaQuery } from "@/hooks";
 import {
   ARMOR_TYPES,
   RARITY_MAX,
@@ -51,6 +52,8 @@ export function ArmorForm({ armor, onClose, onSubmit, error }: ArmorFormProps) {
   const [skills, setSkills] = useState<SkillWithLevel[]>(armor?.skills ?? []);
   const [slots, setSlots] = useState<Slot[]>(armor?.slots ?? []);
   const [localError, setLocalError] = useState<string | null>(null);
+
+  const is2Xl = useMediaQuery("(min-width: 1536px)");
 
   const handleResistanceChange = (index: number, value: string) => {
     const newResistance = [...resistance] as Resistance;
@@ -201,6 +204,7 @@ export function ArmorForm({ armor, onClose, onSubmit, error }: ArmorFormProps) {
           onRemove={(skillId) =>
             setSkills((prev) => prev.filter((s) => s.skillId !== skillId))
           }
+          variant={is2Xl ? "full" : "default"}
         />
         <SlotEditor
           slots={slots}

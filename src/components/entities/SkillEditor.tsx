@@ -5,10 +5,10 @@
 
 import { X } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useSkills } from "@/hooks";
+import { cn } from "@/lib/utils";
 import { type SkillWithLevel } from "@/types";
 
 import { SkillItem } from "./SkillItem";
@@ -26,6 +26,8 @@ interface SkillEditorProps {
   onRemove: (skillId: string) => void;
   /** Maximum number of skills allowed. Defaults to 3. */
   maxSkills?: number;
+  /** Visual variant of the editor items. */
+  variant?: "full" | "default" | "compact";
 }
 
 /**
@@ -37,6 +39,7 @@ export function SkillEditor({
   onAdd,
   onRemove,
   maxSkills,
+  variant = "default",
 }: SkillEditorProps) {
   const { getSkillById } = useSkills();
 
@@ -52,9 +55,39 @@ export function SkillEditor({
   // If limited, strictly show up to maxSkills. If unlimited, show all.
   const displayedSkills = isLimited ? skills.slice(0, maxSkills) : skills;
 
+  // Variant configuration
+  const variantConfig = {
+    full: {
+      gap: "gap-3",
+      rowHeight: "h-12",
+      rowPadding: "p-2",
+      labelClass: "text-base space-y-3",
+      itemVariant: "full" as const,
+      iconSize: "h-4 w-4",
+    },
+    default: {
+      gap: "gap-3",
+      rowHeight: "h-10",
+      rowPadding: "p-2",
+      labelClass: "text-base space-y-3",
+      itemVariant: "default" as const,
+      iconSize: "h-4 w-4",
+    },
+    compact: {
+      gap: "gap-2",
+      rowHeight: "h-8",
+      rowPadding: "p-1",
+      labelClass: "text-sm space-y-1.5",
+      itemVariant: "compact" as const,
+      iconSize: "h-3.5 w-3.5",
+    },
+  };
+
+  const config = variantConfig[variant];
+
   return (
-    <div className="flex flex-col gap-3">
-      <Label className="space-y-3 text-base font-medium">
+    <div className={cn("flex flex-col", config.gap)}>
+      <Label className={cn("font-medium", config.labelClass)}>
         技能 ({skills.length}
         {isLimited ? `/${maxSkills}` : ""})
       </Label>
@@ -66,7 +99,7 @@ export function SkillEditor({
           return (
             <div
               key={`empty-skill-${skillWithLevel.skillId}`}
-              className="h-10"
+              className={cn("bg-muted rounded-md", config.rowHeight)}
             />
           );
         }
@@ -74,28 +107,27 @@ export function SkillEditor({
         return (
           <div
             key={skillWithLevel.skillId}
-            className="bg-muted flex h-10 items-center gap-2 rounded-md p-2"
+            className={cn(
+              "bg-muted flex items-center rounded-md",
+              config.rowHeight,
+              config.rowPadding,
+              variant === "compact" ? "gap-1" : "gap-2",
+            )}
           >
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               <SkillItem
                 skillId={skillWithLevel.skillId}
                 level={skillWithLevel.level}
-                variant="default"
+                variant={config.itemVariant}
               />
             </div>
-            <Badge variant="outline">
-              {skill.category === "weapon"
-                ? "武器"
-                : skill.category === "armor"
-                  ? "防具"
-                  : "特殊"}
-            </Badge>
             <Button
               variant="ghost"
-              size="sm"
+              size={variant === "compact" ? "icon" : "sm"}
+              className={cn("shrink-0", variant === "compact" && "h-6 w-6")}
               onClick={() => onRemove(skillWithLevel.skillId)}
             >
-              <X className="h-4 w-4" />
+              <X className={config.iconSize} />
             </Button>
           </div>
         );
@@ -106,7 +138,7 @@ export function SkillEditor({
         (index) => (
           <div
             key={`empty-skill-${skills.length + index}`}
-            className="bg-muted h-10 rounded-md"
+            className={cn("bg-muted rounded-md", config.rowHeight)}
           />
         ),
       )}
