@@ -36,7 +36,11 @@ export {
 } from "./charm-sorter";
 
 // Skill sorting utilities
-export { compareSkills } from "./skill-sorter";
+export { compareSkillsPriority } from "./skill-sorter";
+
+// Dominance check utilities
+export { compareSlots, compareSkillSets, isStrictlyBetter } from "./dominance";
+export type { ComparisonResult, IDominanceCandidate } from "./dominance";
 
 // General-purpose data I/O utilities
 export { validateData } from "./data-io";

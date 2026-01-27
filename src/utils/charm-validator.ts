@@ -16,6 +16,8 @@ import {
   type Slot,
 } from "@/types";
 
+import { compareSkillSets, compareSlots } from "./dominance";
+
 type SlotComparisonResult = "superior" | "inferior" | "equal" | "incomparable";
 
 /**
@@ -64,42 +66,25 @@ function isDominating(
   dominator: Omit<Charm, "id" | "createdAt">,
   dominated: Charm,
 ): boolean {
-  const slotComparison = compareEquivalentSlots(
+  const slotRes = compareEquivalentSlots(
     dominator.equivalentSlots,
     dominated.equivalentSlots,
   );
 
-  // 1. Slots cannot be inferior.
-  if (slotComparison === "inferior") {
+  if (slotRes === "inferior" || slotRes === "incomparable") {
     return false;
   }
 
-  const dominatorSkillsMap = new Map(
-    dominator.skills.map((s) => [s.skillId, s.level]),
-  );
-  let isSkillStrictlySuperior = false;
+  const skillRes = compareSkillSets(dominator.skills, dominated.skills);
 
-  // 2. Check if the dominator covers all skills of the dominated charm
-  //    with at least the same level.
-  for (const dominatedSkill of dominated.skills) {
-    const dominatorLevel = dominatorSkillsMap.get(dominatedSkill.skillId);
-    // If the dominator is missing a skill or has a lower level, it can't dominate.
-    if (!dominatorLevel || dominatorLevel < dominatedSkill.level) {
-      return false;
-    }
-    if (dominatorLevel > dominatedSkill.level) {
-      isSkillStrictlySuperior = true;
-    }
+  if (skillRes === "inferior" || skillRes === "incomparable") {
+    return false;
   }
 
-  // If the dominator has more skills, it's also considered superior in skills.
-  // (This assumes it already covers all of the dominated charm's skills).
-  if (dominator.skills.length > dominated.skills.length) {
-    isSkillStrictlySuperior = true;
-  }
-
-  // 3. The charms cannot be identical; at least one aspect must be strictly superior.
-  const isSlotStrictlySuperior = slotComparison === "superior";
+  // At this point, both slots and skills are >= (superior or equal).
+  // We need at least one to be strictly superior.
+  const isSlotStrictlySuperior = slotRes === "superior";
+  const isSkillStrictlySuperior = skillRes === "superior";
 
   return isSlotStrictlySuperior || isSkillStrictlySuperior;
 }
@@ -259,18 +244,7 @@ export function areSkillsIdentical(
   skills1: SkillWithLevel[],
   skills2: SkillWithLevel[],
 ): boolean {
-  if (skills1.length !== skills2.length) {
-    return false;
-  }
-
-  for (const skill1 of skills1) {
-    const skill2 = skills2.find((s) => s.skillId === skill1.skillId);
-    if (skill2?.level !== skill1.level) {
-      return false;
-    }
-  }
-
-  return true;
+  return compareSkillSets(skills1, skills2) === "equal";
 }
 
 /**
@@ -280,45 +254,5 @@ export function areSkillsIdentical(
  * @returns True if the slot lists are identical.
  */
 export function areSlotsIdentical(slots1: Slot[], slots2: Slot[]): boolean {
-  if (slots1.length !== slots2.length) {
-    return false;
-  }
-
-  const counts1 = {
-    weapon1: 0,
-    weapon2: 0,
-    weapon3: 0,
-    armor1: 0,
-    armor2: 0,
-    armor3: 0,
-  };
-  const counts2 = {
-    weapon1: 0,
-    weapon2: 0,
-    weapon3: 0,
-    armor1: 0,
-    armor2: 0,
-    armor3: 0,
-  };
-
-  for (const slot of slots1) {
-    const key = `${slot.type}${slot.level}` as keyof typeof counts1;
-    counts1[key]++;
-  }
-
-  for (const slot of slots2) {
-    const key = `${slot.type}${slot.level}` as keyof typeof counts2;
-    counts2[key]++;
-  }
-
-  for (const key in counts1) {
-    if (
-      counts1[key as keyof typeof counts1] !==
-      counts2[key as keyof typeof counts2]
-    ) {
-      return false;
-    }
-  }
-
-  return true;
+  return compareSlots(slots1, slots2) === "equal";
 }

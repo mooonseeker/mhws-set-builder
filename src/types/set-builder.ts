@@ -114,6 +114,10 @@ export interface PreprocessedData {
   accessoriesBySkill: Map<string, Accessory[]>;
   /** A map from skill ID to its full definition. */
   skillDetails: Map<string, Skill>;
+  /** The list of armors after filtering dominated items. */
+  filteredArmors: Armor[];
+  /** The list of charms after filtering dominated items. */
+  filteredCharms: Charm[];
 }
 
 /**

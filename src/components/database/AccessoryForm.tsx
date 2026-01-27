@@ -58,7 +58,7 @@ export function AccessoryForm({
     accessory?.skills ?? [],
   );
   const [localError, setLocalError] = useState<string | null>(null);
-  
+
   const is2Xl = useMediaQuery("(min-width: 1536px)");
 
   const handleSubmit = (e: React.FormEvent) => {

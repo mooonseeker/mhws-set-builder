@@ -18,7 +18,7 @@ import type { Skill } from "@/types";
  * @param b The second skill object to compare.
  * @returns A number indicating the sort order.
  */
-export function compareSkills(
+export function compareSkillsPriority(
   a: { level: number; skillData?: Skill | null },
   b: { level: number; skillData?: Skill | null },
 ): number {

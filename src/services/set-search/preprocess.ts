@@ -14,6 +14,8 @@ import type {
   Weapon,
 } from "@/types";
 
+import { filterArmors, filterCharms } from "./equipment-filter";
+
 /**
  * Pre-processes raw game data into efficient Map-based structures for the search algorithm.
  * Key outputs include:
@@ -21,20 +23,24 @@ import type {
  * - `maxPotentialPerArmorType`: The theoretical maximum skill points achievable for each skill on each armor type,
  *   which is crucial for pruning.
  *
- * @param allArmors Raw list of all armors.
+ * @param rawArmors Raw list of all armors.
  * @param allWeapons Raw list of all weapons.
- * @param allCharms Raw list of all charms.
+ * @param rawCharms Raw list of all charms.
  * @param allAccessories Raw list of all accessories.
  * @param allSkills Raw list of all skills.
  * @returns A `PreprocessedData` object containing the structured data.
  */
 export function preprocess(
-  allArmors: Armor[],
+  rawArmors: Armor[],
   allWeapons: Weapon[],
-  allCharms: Charm[],
+  rawCharms: Charm[],
   allAccessories: Accessory[],
   allSkills: Skill[],
 ): PreprocessedData {
+  // Filter out dominated equipment to reduce search space.
+  const allArmors = filterArmors(rawArmors);
+  const allCharms = filterCharms(rawCharms);
+
   // Initialize the core data structures.
   const skillProviderMap = new Map<string, SkillProviders>();
   const maxPotentialPerArmorType = new Map<ArmorType, Map<string, number>>();
@@ -144,5 +150,7 @@ export function preprocess(
     maxPotentialPerArmorType,
     accessoriesBySkill,
     skillDetails,
+    filteredArmors: allArmors,
+    filteredCharms: allCharms,
   };
 }

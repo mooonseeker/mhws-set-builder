@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSetBuilder, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
-import { compareSkills } from "@/utils";
+import { compareSkillsPriority } from "@/utils";
 
 /**
  * Renders a list of required skills and a selector to add more.
@@ -41,7 +41,7 @@ export function SkillRequirements() {
         ...skill,
         skillData: getSkillById(skill.skillId),
       }))
-      .sort(compareSkills);
+      .sort(compareSkillsPriority);
   }, [requiredSkills, getSkillById]);
 
   const skillColumns = useMemo(() => {

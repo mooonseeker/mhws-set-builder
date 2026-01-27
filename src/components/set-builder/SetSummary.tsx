@@ -16,7 +16,7 @@ import type {
   Weapon,
 } from "@/types";
 import type { EquipmentSet, SlottedEquipment } from "@/types/set-builder";
-import { compareSkills } from "@/utils";
+import { compareSkillsPriority } from "@/utils";
 
 /** Props for SetSummary component. */
 export interface SetSummaryProps {
@@ -137,7 +137,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
       }
     });
 
-    return Array.from(skillMap.values()).sort(compareSkills);
+    return Array.from(skillMap.values()).sort(compareSkillsPriority);
   }, [equipmentSet, allSkillsData]);
 
   // Split skills into two columns for layout

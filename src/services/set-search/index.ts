@@ -83,16 +83,6 @@ export const findOptimalSets = (
   );
   console.log("[+] Step 2: Skill categorization complete.");
 
-  // This is not used, but kept for reference or future use.
-  const armorTypes: ArmorType[] = ["helm", "body", "arm", "waist", "leg"];
-  const armorsByType = new Map<ArmorType, Armor[]>();
-  armorTypes.forEach((type) => {
-    armorsByType.set(
-      type,
-      allData.armors.filter((a: Armor) => a.type === type),
-    );
-  });
-
   const finalResults: FinalSet[] = [];
   let limitReached = false;
 
@@ -105,7 +95,7 @@ export const findOptimalSets = (
   // 3. Main Search Loop: Iterate through charms or handle fixed charm.
   const charmsToIterate = fixedEquipment.charm
     ? [fixedEquipment.charm.equipment]
-    : allData.charms;
+    : preprocessedData.filteredCharms;
   const totalCharms = charmsToIterate.length;
 
   for (const [index, charm] of charmsToIterate.entries()) {
@@ -298,7 +288,7 @@ export const findOptimalSets = (
           // Call the armor filler with the scaffolded context.
           const shouldContinue = fillArmorScaffold(
             scaffoldContext,
-            allData.armors,
+            preprocessedData.filteredArmors,
             preprocessedData,
             finalResults,
             SEARCH_LIMIT,
@@ -355,7 +345,7 @@ export const findOptimalSets = (
         // Call the armor filler with the scaffolded context.
         const shouldContinue = fillArmorScaffold(
           scaffoldContext,
-          allData.armors,
+          preprocessedData.filteredArmors,
           preprocessedData,
           finalResults,
           SEARCH_LIMIT,

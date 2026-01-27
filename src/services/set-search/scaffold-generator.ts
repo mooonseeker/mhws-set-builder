@@ -7,16 +7,17 @@
 
 import { cloneDeep } from "lodash-es";
 
-import type {
-  Armor,
-  ArmorType,
-  EquipmentSet,
-  PreprocessedData,
-  SearchContext,
-  SkillWithLevel,
+import {
+  ARMOR_TYPES,
+  type Armor,
+  type ArmorType,
+  type Equipment,
+  type EquipmentSet,
+  type PreprocessedData,
+  type SearchContext,
+  type SkillWithLevel,
+  type SlottedEquipment,
 } from "@/types";
-
-const ARMOR_TYPES: ArmorType[] = ["helm", "body", "arm", "waist", "leg"];
 
 /**
  * Finds all combinations of armor pieces that provide a specific Series skill,
@@ -212,6 +213,35 @@ function resolveCombinedSeriesScaffolds(
     }
 
     const currentSkill = sortedSeriesSkills[skillIndex];
+
+    // Calculate how many levels of the current series skill are already provided by the current scaffold.
+    // In MHWS, one piece of armor typically provides 1 level of its series skill(s).
+    let levelsFromScaffold = 0;
+    (
+      Object.values(currentScaffold) as (
+        | SlottedEquipment<Equipment>
+        | undefined
+      )[]
+    ).forEach((item) => {
+      if (
+        item?.equipment.skills.some((s) => s.skillId === currentSkill.skillId)
+      ) {
+        levelsFromScaffold += 1;
+      }
+    });
+
+    const neededLevel = Math.max(0, currentSkill.level - levelsFromScaffold);
+
+    // If the requirement is already met by the pieces picked for previous skills, move to the next skill.
+    if (neededLevel === 0) {
+      findCombosRecursive(
+        skillIndex + 1,
+        currentScaffold,
+        currentOccupiedTypes,
+      );
+      return;
+    }
+
     const armorProviders =
       preprocessedData.skillProviderMap.get(currentSkill.skillId)?.armors ?? [];
 
@@ -224,7 +254,7 @@ function resolveCombinedSeriesScaffolds(
 
     // Find "incremental scaffolds" for the current skill, respecting occupied slots.
     const incrementalScaffolds = findSeriesSkillCombosWithConstraints(
-      currentSkill.level,
+      neededLevel,
       providersByPart,
       currentOccupiedTypes,
     );
@@ -287,14 +317,19 @@ export function generateArmorScaffolds(
       const requiredGroupSkillIds = new Set(groupSkills.map((s) => s.skillId));
       const equipmentToScan = { ...context.equipment, ...baseScaffold };
 
-      Object.values(equipmentToScan).forEach((item) => {
+      (
+        Object.values(equipmentToScan) as (
+          | SlottedEquipment<Equipment>
+          | undefined
+        )[]
+      ).forEach((item) => {
         if (!item) return;
         const { equipment } = item;
 
         if (
           equipment &&
           "type" in equipment &&
-          ARMOR_TYPES.includes(equipment.type as ArmorType)
+          ARMOR_TYPES.includes((equipment as Armor).type)
         ) {
           equipment.skills.forEach((skill: SkillWithLevel) => {
             if (requiredGroupSkillIds.has(skill.skillId)) {

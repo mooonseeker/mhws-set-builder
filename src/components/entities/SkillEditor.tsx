@@ -114,7 +114,7 @@ export function SkillEditor({
               variant === "compact" ? "gap-1" : "gap-2",
             )}
           >
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <SkillItem
                 skillId={skillWithLevel.skillId}
                 level={skillWithLevel.level}
