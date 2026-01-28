@@ -17,7 +17,6 @@ import type {
   SearchContext,
   SkillDeficit,
   SkillWithLevel,
-  Slot,
 } from "@/types";
 
 import { solveAccessories } from "./accessory-solver";
@@ -130,20 +129,9 @@ function backtrack(
     }
 
     // If there are deficits, call the accessory solver.
-    const allArmorSlots: Slot[] = [];
-    for (const armorType of ARMOR_TYPES) {
-      const armorItem = context.equipment[armorType];
-      if (armorItem) {
-        const armorPiece = armorItem.equipment;
-        armorPiece.slots.forEach((slot) => {
-          allArmorSlots.push({ ...slot, sourceId: armorPiece.id });
-        });
-      }
-    }
-
     const accessorySolutions = solveAccessories(
       armorSkillDeficits,
-      { weapon: [], armor: allArmorSlots }, // Use only armor slots.
+      context.availableSlots, // Use the maintained available slots (includes slots from Charm/Weapon).
       preprocessedData.accessoriesBySkill,
       preprocessedData.skillDetails,
     );
@@ -156,12 +144,13 @@ function backtrack(
 
         // Place the found accessories into the equipment slots.
         solution.placement.forEach((placedAccessories, equipmentId) => {
-          const armorType = ARMOR_TYPES.find(
-            (type) => solutionEquipment[type]?.equipment.id === equipmentId,
-          );
+          // Find the equipment slot across ALL types (armor, weapon, charm)
+          const eqKey = (
+            Object.keys(solutionEquipment) as (keyof EquipmentSet)[]
+          ).find((key) => solutionEquipment[key]?.equipment.id === equipmentId);
 
-          if (armorType) {
-            const equipmentSlot = solutionEquipment[armorType]!;
+          if (eqKey) {
+            const equipmentSlot = solutionEquipment[eqKey]!;
             const totalSlots = equipmentSlot.equipment.slots.length;
             const newAccessories: (Accessory | null)[] = Array.from(
               { length: totalSlots },
@@ -220,7 +209,7 @@ function backtrack(
           accessories: finalAccessories,
           remainingSlots: [
             ...solution.remainingSlots.armor,
-            ...context.availableSlots.weapon,
+            ...solution.remainingSlots.weapon,
           ],
         };
         finalResults.push(finalSet);
