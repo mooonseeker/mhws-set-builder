@@ -56,6 +56,8 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
   const [requiredSkills, setRequiredSkills] = useState<SkillWithLevel[]>([]);
   const [searchResults, setSearchResults] = useState<FinalSet[]>([]);
   const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [searchProgress, setSearchProgress] = useState<number | null>(null);
+  const [searchStatus, setSearchStatus] = useState<string>("");
   const [currentEquipmentSet, setCurrentEquipmentSet] = useState<EquipmentSet>(
     {},
   );
@@ -248,6 +250,8 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
 
     console.log("Starting search with fixed equipment:", cleanedEquipmentSet);
     setIsSearching(true);
+    setSearchProgress(0);
+    setSearchStatus("正在准备数据...");
     setAutoModeView("results");
 
     try {
@@ -255,6 +259,11 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
         requiredSkills,
         cleanedEquipmentSet,
         { armors: armor, weapons, accessories, skills, charms },
+        (current, total) => {
+          const percentage = Math.round((current / total) * 100);
+          setSearchProgress(percentage);
+          setSearchStatus(`正在处理... ${current}/${total}`);
+        },
       );
       console.log("Search completed with results:", results);
       setSearchResults(results);
@@ -263,6 +272,8 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
       setSearchResults([]);
     } finally {
       setIsSearching(false);
+      setSearchProgress(null);
+      setSearchStatus("");
     }
   }, [
     requiredSkills,
@@ -377,6 +388,8 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
     requiredSkills,
     searchResults,
     isSearching,
+    searchProgress,
+    searchStatus,
     currentEquipmentSet,
     selectionContext,
     isResultsModalOpen,

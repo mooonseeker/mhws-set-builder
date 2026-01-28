@@ -32,6 +32,10 @@ interface SetBuilderState {
   searchResults: FinalSet[];
   /** True if the search is currently in progress. */
   isSearching: boolean;
+  /** Current search progress (0-100), or null if not searching. */
+  searchProgress: number | null;
+  /** Current search status message. */
+  searchStatus: string;
   /** The equipment set currently being built or displayed. */
   currentEquipmentSet: EquipmentSet;
   /** The context for the current selection (e.g., choosing a helmet or an accessory). */
