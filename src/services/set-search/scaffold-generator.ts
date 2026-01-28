@@ -138,6 +138,26 @@ function findGroupSkillCombos(
     currentScaffold: EquipmentSet,
     currentSkills: Map<string, number>,
   ) => {
+    // Pruning: Check if it's still possible to satisfy all skills with remaining types.
+    for (const target of skillsToProcess) {
+      const currentLevel = currentSkills.get(target.skillId) ?? 0;
+      if (currentLevel >= target.level) continue;
+
+      let maxRemainingPotential = 0;
+      for (let i = typeIndex; i < availableTypes.length; i++) {
+        const type = availableTypes[i];
+        const potentialOnType =
+          preprocessedData.maxPotentialPerArmorType.get(type);
+        if (potentialOnType) {
+          maxRemainingPotential += potentialOnType.get(target.skillId) ?? 0;
+        }
+      }
+
+      if (currentLevel + maxRemainingPotential < target.level) {
+        return; // Prune this branch.
+      }
+    }
+
     // Base Case: All available types have been processed.
     if (typeIndex >= availableTypes.length) {
       // Check if the current combination satisfies all group skill requirements.
