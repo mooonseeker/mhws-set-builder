@@ -21,7 +21,7 @@ import type {
 } from "@/types";
 import type { SearchContext, SkillDeficit } from "@/types/set-builder";
 
-import { solveAccessories } from "./accessory-solver";
+import { solveAccessories, clearAccessoryCache } from "./accessory-solver";
 import { fillArmorScaffold } from "./armor-search";
 import { preprocess } from "./preprocess";
 import { generateArmorScaffolds } from "./scaffold-generator";
@@ -60,6 +60,9 @@ export const findOptimalSets = (
 ): Promise<FinalSet[]> => {
   console.log("[+] Starting MHWS Set Builder search...");
   const startTime = performance.now();
+
+  // Clear memoization cache at the start of each search
+  clearAccessoryCache();
 
   // 1. Preprocess all raw data into efficient maps.
   console.log("[+] Step 1: Preprocessing data...");

@@ -24,6 +24,35 @@ interface SlotCounts {
   armor: Map<number, number>; // Level -> Count
 }
 
+// --- Memoization Cache ---
+const solutionCache = new Map<string, Accessory[][]>();
+
+/**
+ * Clears the accessory solution cache.
+ * Should be called at the start of a new search operation.
+ */
+export function clearAccessoryCache() {
+  solutionCache.clear();
+}
+
+/**
+ * Generates a unique cache key based on deficits and available slot counts.
+ */
+function generateCacheKey(
+  deficits: SkillDeficit[],
+  slotCounts: SlotCounts,
+): string {
+  // Deficits are already sorted by sortDeficits, so order is consistent.
+  const deficitsPart = deficits
+    .map((d) => `${d.skillId}:${d.missingLevel}`)
+    .join(",");
+
+  const weaponSlots = `W:${slotCounts.weapon.get(1)}-${slotCounts.weapon.get(2)}-${slotCounts.weapon.get(3)}`;
+  const armorSlots = `A:${slotCounts.armor.get(1)}-${slotCounts.armor.get(2)}-${slotCounts.armor.get(3)}`;
+
+  return `${deficitsPart}|${weaponSlots}|${armorSlots}`;
+}
+
 /**
  * The main solver for accessory placements.
  * It uses a backtracking algorithm to find all viable decoration combinations.
@@ -51,15 +80,25 @@ export function solveAccessories(
     skillDetails,
   );
 
-  // 3. Core backtracking search for accessory combinations.
-  const accessoryLists = findCombinations(
-    sortedDeficits,
-    slotCounts,
-    accessoriesBySkill,
-    skillDetails,
-  );
+  // 3. Check Cache
+  const cacheKey = generateCacheKey(sortedDeficits, slotCounts);
+  let accessoryLists: Accessory[][];
 
-  // 4. Map abstract combinations back to concrete slot placements.
+  if (solutionCache.has(cacheKey)) {
+    accessoryLists = solutionCache.get(cacheKey)!;
+  } else {
+    // 4. Core backtracking search for accessory combinations.
+    accessoryLists = findCombinations(
+      sortedDeficits,
+      slotCounts,
+      accessoriesBySkill,
+      skillDetails,
+    );
+    // Store in cache
+    solutionCache.set(cacheKey, accessoryLists);
+  }
+
+  // 5. Map abstract combinations back to concrete slot placements.
   const solutions: AccessorySolution[] = [];
   for (const accessoryList of accessoryLists) {
     const solution = mapAccessoriesToSlots(accessoryList, availableSlots);
@@ -172,6 +211,12 @@ function findCombinations(
     return [[]];
   }
 
+  // Check Cache for this specific sub-problem
+  const cacheKey = generateCacheKey(deficits, slotCounts);
+  if (solutionCache.has(cacheKey)) {
+    return solutionCache.get(cacheKey)!;
+  }
+
   const [currentDeficit, ...remainingDeficits] = deficits;
   const allSolutions: Accessory[][] = [];
 
@@ -190,21 +235,33 @@ function findCombinations(
       armor: new Map(slotCounts.armor),
     };
 
-    // Consume the slots required for the current 'way'.
-    let isValid = true;
-    for (const accessory of way) {
-      const slotType = accessory.type;
-      const slotLevel = accessory.slotLevel;
-      const currentCount = newSlotCounts[slotType].get(slotLevel) ?? 0;
+    const sortedWay = [...way].sort((a, b) => b.slotLevel - a.slotLevel);
 
-      if (currentCount <= 0) {
+    let isValid = true;
+    for (const accessory of sortedWay) {
+      const slotType = accessory.type;
+      const reqLevel = accessory.slotLevel;
+      let placed = false;
+
+      // Try to find the smallest available slot that fits
+      for (let level = reqLevel; level <= 3; level++) {
+        const count = newSlotCounts[slotType].get(level) ?? 0;
+        if (count > 0) {
+          newSlotCounts[slotType].set(level, count - 1);
+          placed = true;
+          break;
+        }
+      }
+
+      if (!placed) {
         isValid = false;
         break;
       }
-      newSlotCounts[slotType].set(slotLevel, currentCount - 1);
     }
 
     if (!isValid) {
+      // This should ideally not happen if checkSlotAvailability logic in findWays matches,
+      // but it's good as a safety check.
       continue;
     }
 
@@ -221,6 +278,9 @@ function findCombinations(
       allSolutions.push([...way, ...restSolution]);
     }
   }
+
+  // Store in cache
+  solutionCache.set(cacheKey, allSolutions);
 
   return allSolutions;
 }
@@ -287,28 +347,38 @@ function findWaysToSatisfyDeficit(
 
 /**
  * Checks if the required slots for a given combination of accessories are available.
+ * Validates against the flexible slot system (Lvl 1 fits in Lvl 2/3).
  */
 function checkSlotAvailability(
   accessories: Accessory[],
   slotType: "weapon" | "armor",
   slotCounts: SlotCounts,
 ): boolean {
-  const slotDemand = new Map<number, number>();
-
-  // Count the demand for each slot level.
-  for (const accessory of accessories) {
-    const level = accessory.slotLevel;
-    const current = slotDemand.get(level) ?? 0;
-    slotDemand.set(level, current + 1);
-  }
-
-  // Check if demand exceeds supply for any level.
-  for (const [level, demand] of slotDemand.entries()) {
-    const supply = slotCounts[slotType].get(level) ?? 0;
-    if (demand > supply) {
-      return false;
+  // 1. Calculate Demand
+  const demand = { 1: 0, 2: 0, 3: 0 };
+  for (const acc of accessories) {
+    // Only count standard slots.
+    if (acc.slotLevel >= 1 && acc.slotLevel <= 3) {
+      demand[acc.slotLevel as 1 | 2 | 3]++;
     }
   }
+
+  // 2. Get Supply
+  const supply = {
+    1: slotCounts[slotType].get(1) ?? 0,
+    2: slotCounts[slotType].get(2) ?? 0,
+    3: slotCounts[slotType].get(3) ?? 0,
+  };
+
+  // 3. Verify Feasibility (Greedy from largest slot)
+  const surplus3 = supply[3] - demand[3];
+  if (surplus3 < 0) return false;
+
+  const surplus2 = supply[2] + surplus3 - demand[2];
+  if (surplus2 < 0) return false;
+
+  const surplus1 = supply[1] + surplus2 - demand[1];
+  if (surplus1 < 0) return false;
 
   return true;
 }
