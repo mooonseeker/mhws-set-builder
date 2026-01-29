@@ -4,7 +4,7 @@
 
 import { useMemo } from "react";
 
-import { Search } from "lucide-react";
+import { RefreshCw, Search } from "lucide-react";
 
 import { SkillSelector } from "@/components/entities/";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ export function SkillRequirements() {
     startSearch,
     isSearching,
     addRequiredSkill,
+    resetRequiredSkills,
   } = useSetBuilder();
   const { getSkillById } = useSkills();
 
@@ -139,6 +140,15 @@ export function SkillRequirements() {
             >
               <Search className="mr-2 h-4 w-4" />
               搜索
+            </Button>
+            <Button
+              variant="outline"
+              onClick={resetRequiredSkills}
+              title="重置技能需求"
+              className="shrink-0"
+            >
+              <RefreshCw className="mr-2 h-4 w-4" />
+              重置
             </Button>
           </div>
         </div>

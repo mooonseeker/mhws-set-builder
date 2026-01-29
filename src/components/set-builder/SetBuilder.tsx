@@ -16,7 +16,11 @@ import type { EquipmentCellType } from "@/types/set-builder";
 
 import { SearchConfirmationDialog } from "./SearchConfirmationDialog";
 import { SearchResultsView } from "./SearchResultsView";
-import { AutoModeViewToggle, SetBuilderActions } from "./SetBuilderToolbar";
+import {
+  AutoModeViewToggle,
+  SetBuilderActions,
+  SetBuilderAutoActions,
+} from "./SetBuilderToolbar";
 import { SetSummary } from "./SetSummary";
 import { SkillRequirements } from "./SkillRequirements";
 
@@ -71,9 +75,10 @@ export function SetBuilder() {
                 </ToggleGroupItem>
               </ToggleGroup>
             </div>
-            <SetBuilderActions mode={mode} />
+            <SetBuilderActions />
           </div>
-          <div className="flex w-full items-center justify-end lg:w-3/5">
+          <div className="flex w-full items-center justify-between lg:w-3/5">
+            <div>{mode === "auto" && <SetBuilderAutoActions />}</div>
             {mode === "auto" && <AutoModeViewToggle />}
           </div>
         </div>
@@ -96,9 +101,7 @@ export function SetBuilder() {
                   handleSlotClick(type, slotIndex, slot)
                 }
                 isLocked={lockedSlots[type]}
-                onToggleLock={
-                  mode === "auto" ? () => toggleSlotLock(type) : undefined
-                }
+                onToggleLock={() => toggleSlotLock(type)}
                 onClear={
                   currentEquipmentSet[type] && !lockedSlots[type]
                     ? () => clearEquipmentSlot(type)

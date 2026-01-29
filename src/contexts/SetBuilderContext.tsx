@@ -84,10 +84,18 @@ interface SetBuilderActions {
   setIsResultsModalOpen: (isOpen: boolean) => void;
   /** Toggles the locked state of an equipment slot. */
   toggleSlotLock: (type: EquipmentCellType) => void;
+  /** Locks all equipment slots. */
+  lockAllEqSlots: () => void;
+  /** Unlocks all equipment slots. */
+  unlockAllEqSlots: () => void;
   /** Sets the current view in auto mode. */
   setAutoModeView: (view: "requirements" | "results" | "summary") => void;
-  /** Resets the builder state, clearing required skills and non-locked equipment. */
+  /** Resets the builder state, clearing required skills, search results and non-locked equipment. */
   resetBuilder: () => void;
+  /** Clears all non-locked equipment slots. */
+  clearAllEqSlots: () => void;
+  /** Resets the required skills list. */
+  resetRequiredSkills: () => void;
   /** Clears a single, non-locked equipment slot. */
   clearEquipmentSlot: (type: EquipmentCellType) => void;
 }

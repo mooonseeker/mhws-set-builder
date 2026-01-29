@@ -335,6 +335,30 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
     }));
   };
 
+  const lockAllEqSlots = () => {
+    setLockedSlots({
+      weapon: true,
+      helm: true,
+      body: true,
+      arm: true,
+      waist: true,
+      leg: true,
+      charm: true,
+    });
+  };
+
+  const unlockAllEqSlots = () => {
+    setLockedSlots({
+      weapon: false,
+      helm: false,
+      body: false,
+      arm: false,
+      waist: false,
+      leg: false,
+      charm: false,
+    });
+  };
+
   const setAutoModeView = (view: "requirements" | "results" | "summary") => {
     setAutoModeViewState(view);
   };
@@ -342,7 +366,6 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
   const clearEquipmentSlot = (type: EquipmentCellType) => {
     setCurrentEquipmentSet((prev) => {
       const newSet = { ...prev };
-      // Only clear the slot if it is not locked.
       if (!lockedSlots[type]) {
         delete newSet[type];
       }
@@ -365,6 +388,23 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
       });
       return newSet;
     });
+  };
+
+  const clearAllEqSlots = () => {
+    setCurrentEquipmentSet((prev) => {
+      const newSet = { ...prev };
+      Object.keys(newSet).forEach((key) => {
+        const equipmentType = key as EquipmentCellType;
+        if (!lockedSlots[equipmentType]) {
+          delete newSet[equipmentType];
+        }
+      });
+      return newSet;
+    });
+  };
+
+  const resetRequiredSkills = () => {
+    setRequiredSkills([]);
   };
 
   const value = {
@@ -393,8 +433,12 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
     handleAccessorySelect,
     setIsResultsModalOpen,
     toggleSlotLock,
+    lockAllEqSlots,
+    unlockAllEqSlots,
     setAutoModeView,
     resetBuilder,
+    clearAllEqSlots,
+    resetRequiredSkills,
     clearEquipmentSlot,
   };
 

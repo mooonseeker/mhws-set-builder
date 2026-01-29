@@ -4,57 +4,80 @@
 
 import {
   ClipboardList,
+  Lock,
   RefreshCw,
   ScrollText,
   Search,
   Sparkles,
   Square,
+  Unlock,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useSetBuilder } from "@/hooks";
 
-/** Props for SetBuilderActions component. */
-interface SetBuilderActionsProps {
-  /** Current builder mode. */
-  mode: "manual" | "auto";
-}
-
 /**
- * Action buttons for the Set Builder (e.g., Search, Reset).
+ * General action buttons for the Set Builder (Lock All, Unlock All, Reset).
  */
-export function SetBuilderActions({ mode }: SetBuilderActionsProps) {
-  const { startSearch, resetBuilder, isSearching } = useSetBuilder();
+export function SetBuilderActions() {
+  const { clearAllEqSlots, lockAllEqSlots, unlockAllEqSlots } = useSetBuilder();
 
   return (
     <div className="flex items-center gap-2">
-      {mode === "auto" && (
-        <>
-          <Button onClick={startSearch} disabled={isSearching} size="sm">
-            <Search className="mr-2 h-4 w-4" />
-            搜索
-          </Button>
-          {isSearching && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="px-2.5"
-              onClick={() => console.log("Stop clicked")}
-            >
-              <Square className="h-4 w-4" />
-            </Button>
-          )}
-        </>
-      )}
       <Button
         variant="outline"
         size="sm"
         className="px-2.5"
-        onClick={resetBuilder}
+        onClick={lockAllEqSlots}
+        title="全部锁定"
+      >
+        <Lock className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        className="px-2.5"
+        onClick={unlockAllEqSlots}
+        title="全部解锁"
+      >
+        <Unlock className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        className="px-2.5"
+        onClick={clearAllEqSlots}
+        title="重置"
       >
         <RefreshCw className="h-4 w-4" />
       </Button>
+    </div>
+  );
+}
+
+/**
+ * Action buttons for Auto Mode (Search, Stop).
+ */
+export function SetBuilderAutoActions() {
+  const { startSearch, isSearching } = useSetBuilder();
+
+  return (
+    <div className="flex items-center gap-2">
+      <Button onClick={startSearch} disabled={isSearching} size="sm">
+        <Search className="mr-2 h-4 w-4" />
+        搜索
+      </Button>
+      {isSearching && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="px-2.5"
+          onClick={() => console.log("Stop clicked")}
+        >
+          <Square className="h-4 w-4" />
+        </Button>
+      )}
     </div>
   );
 }
