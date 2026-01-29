@@ -2,10 +2,14 @@
  * @fileoverview EquipmentCard component for displaying detailed equipment information.
  */
 
+import { useMemo } from "react";
+
 import { SkillItem } from "@/components/entities/";
 import { Badge } from "@/components/ui/badge";
+import { useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { Armor, Charm, Equipment, Weapon } from "@/types";
+import { compareSkillsPriority } from "@/utils";
 
 /** Props for the EquipmentCard component. */
 export interface EquipmentCardProps {
@@ -56,6 +60,17 @@ export function EquipmentCard({
     }
     return "/set.png"; // Fallback icon
   };
+
+  const { getSkillById } = useSkills();
+
+  const sortedSkills = useMemo(() => {
+    return item.skills
+      .map((skill) => ({
+        ...skill,
+        skillData: getSkillById(skill.skillId),
+      }))
+      .sort(compareSkillsPriority);
+  }, [item.skills, getSkillById]);
 
   return (
     <div
@@ -193,7 +208,7 @@ export function EquipmentCard({
       {/* Skills: Skill list (passed based on variant) */}
       <div className="card-skills space-y-1">
         <ul className="space-y-1">
-          {item.skills.map((skillWithLevel) => (
+          {sortedSkills.map((skillWithLevel) => (
             <SkillItem
               key={skillWithLevel.skillId}
               skillId={skillWithLevel.skillId}

@@ -10,9 +10,7 @@ import type { Skill } from "@/types";
  * Sorting Rules:
  * 1. Category: weapon > armor > series > group
  * 2. Level: descending
- * 3. Max Level: Skills at max level are prioritized.
- * 4. Key Skill: `isKey: true` is prioritized.
- * 5. SortId: ascending
+ * 3. SortId: ascending
  *
  * @param a The first skill object to compare.
  * @param b The second skill object to compare.
@@ -44,18 +42,6 @@ export function compareSkillsPriority(
     return b.level - a.level;
   }
 
-  // 3. Max Level (Prioritize maxed-out skills)
-  const aIsMax = a.level >= a.skillData.maxLevel;
-  const bIsMax = b.level >= b.skillData.maxLevel;
-  if (aIsMax !== bIsMax) {
-    return aIsMax ? -1 : 1;
-  }
-
-  // 4. Is Key (Prioritize key skills)
-  if (a.skillData.isKey !== b.skillData.isKey) {
-    return a.skillData.isKey ? -1 : 1;
-  }
-
-  // 5. SortId (Ascending)
+  // 3. SortId (Ascending)
   return a.skillData.sortId - b.skillData.sortId;
 }
