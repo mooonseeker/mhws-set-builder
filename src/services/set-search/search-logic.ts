@@ -21,7 +21,7 @@ import type {
 } from "@/types";
 import type { SearchContext, SkillDeficit } from "@/types/set-builder";
 
-import { solveAccessories, clearAccessoryCache } from "./accessory-solver";
+import { clearAccessoryCache, solveAccessories } from "./accessory-solver";
 import { fillArmorScaffold } from "./armor-search";
 import { preprocess } from "./preprocess";
 import { generateArmorScaffolds } from "./scaffold-generator";

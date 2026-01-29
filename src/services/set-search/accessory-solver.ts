@@ -265,9 +265,32 @@ function findCombinations(
       continue;
     }
 
+    // Update remaining deficits based on skills provided by the current combination.
+    // This handles cases where a single accessory satisfies multiple deficits.
+    const providedSkills = new Map<string, number>();
+    for (const acc of way) {
+      for (const s of acc.skills) {
+        providedSkills.set(
+          s.skillId,
+          (providedSkills.get(s.skillId) ?? 0) + s.level,
+        );
+      }
+    }
+
+    const nextDeficits: SkillDeficit[] = [];
+    for (const deficit of remainingDeficits) {
+      const providedLevel = providedSkills.get(deficit.skillId) ?? 0;
+      if (providedLevel < deficit.missingLevel) {
+        nextDeficits.push({
+          skillId: deficit.skillId,
+          missingLevel: deficit.missingLevel - providedLevel,
+        });
+      }
+    }
+
     // Recurse to solve for the remaining deficits.
     const solutionsForRest = findCombinations(
-      remainingDeficits,
+      nextDeficits,
       newSlotCounts,
       accessoriesBySkill,
       skillDetails,
