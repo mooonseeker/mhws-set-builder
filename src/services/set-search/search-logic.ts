@@ -393,9 +393,5 @@ export const findOptimalSets = (
   console.log(
     `[+] Full search completed in ${(endTime - startTime).toFixed(2)}ms.`,
   );
-  console.log(
-    "[Debug] Final sets to be returned to UI:",
-    JSON.stringify(finalResults.slice(0, SEARCH_LIMIT), null, 2),
-  );
   return Promise.resolve(finalResults.slice(0, SEARCH_LIMIT));
 };

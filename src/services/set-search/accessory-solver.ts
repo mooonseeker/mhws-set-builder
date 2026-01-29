@@ -107,7 +107,6 @@ export function solveAccessories(
     }
   }
 
-  console.log("[Debug] solveAccessories found", solutions.length, "solutions");
   return solutions;
 }
 

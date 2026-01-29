@@ -287,11 +287,6 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
   ]);
 
   const loadSetToBuilder = (finalSet: FinalSet) => {
-    console.log(
-      "[Debug] loadSetToBuilder received finalSet:",
-      JSON.stringify(finalSet, null, 2),
-    );
-
     const newEquipmentSet = cloneDeep(finalSet.equipment);
 
     for (const key in newEquipmentSet) {
@@ -302,13 +297,6 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
         const equipmentId = slottedEquipment.equipment.id;
         const decorationsForEquipment =
           finalSet.accessories.get(equipmentId) ?? [];
-
-        // Log to verify that decorations are being retrieved correctly.
-        if (decorationsForEquipment.length > 0) {
-          console.log(
-            `[Debug] Found ${decorationsForEquipment.length} decorations for equipment ${equipmentId}`,
-          );
-        }
 
         const newAccessories = Array(
           slottedEquipment.equipment.slots.length,
@@ -323,10 +311,6 @@ export const SetBuilderProvider: React.FC<SetBuilderProviderProps> = ({
       }
     }
 
-    console.log(
-      "[Debug] Processed newEquipmentSet for UI:",
-      JSON.stringify(newEquipmentSet, null, 2),
-    );
     setCurrentEquipmentSet(newEquipmentSet);
 
     // Lock all equipment slots after loading a set.
