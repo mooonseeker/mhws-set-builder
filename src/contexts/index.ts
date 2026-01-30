@@ -10,7 +10,7 @@ export { AccessoryProvider } from "./AccessoryProvider";
 export { ArmorProvider } from "./ArmorProvider";
 export { WeaponProvider } from "./WeaponProvider";
 export { CharmProvider } from "./CharmProvider";
-export { SetBuilderProvider } from "./SetBuilderProvider";
+export * from "./set-builder";
 export { AppProvider } from "./AppContext";
 export { ThemeProvider } from "./ThemeProvider";
 export type { Theme, ThemeContextType } from "./ThemeContext";

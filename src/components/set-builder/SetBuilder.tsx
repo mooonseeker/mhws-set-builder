@@ -121,12 +121,20 @@ export function SetBuilder() {
                       selectionContext.equipmentType as keyof typeof currentEquipmentSet
                     ]?.equipment
                   }
-                  onSelect={handleEqSelect}
+                  onSelect={(item) =>
+                    handleEqSelect(selectionContext.equipmentType, item)
+                  }
                 />
               ) : (
                 <AccessorySelector
                   slot={selectionContext.slot}
-                  onAccessorySelect={handleAccessorySelect}
+                  onAccessorySelect={(accessory) =>
+                    handleAccessorySelect(
+                      selectionContext.slotType,
+                      selectionContext.slotIndex,
+                      accessory,
+                    )
+                  }
                 />
               )
             ) : mode === "manual" ? (

@@ -10,7 +10,11 @@ import type { ReactNode } from "react";
 import { AccessoryProvider } from "./AccessoryProvider";
 import { ArmorProvider } from "./ArmorProvider";
 import { CharmProvider } from "./CharmProvider";
-import { SetBuilderProvider } from "./SetBuilderProvider";
+import {
+  BuilderUIProvider,
+  EquipmentProvider,
+  SearchProvider,
+} from "./set-builder";
 import { SkillProvider } from "./SkillProvider";
 import { ThemeProvider } from "./ThemeProvider";
 import { WeaponProvider } from "./WeaponProvider";
@@ -25,7 +29,9 @@ import { WeaponProvider } from "./WeaponProvider";
  * 4.  `ArmorProvider` - Manages armor data.
  * 5.  `WeaponProvider` - Manages weapon data.
  * 6.  `CharmProvider` - Manages charm data.
- * 7.  `SetBuilderProvider` - The main feature, depends on all the above data contexts.
+ * 7.  `EquipmentProvider` - Base equipment state for the Set Builder.
+ * 8.  `SearchProvider` - Search service for the Set Builder (depends on equipment).
+ * 9.  `BuilderUIProvider` - UI and selection flow (depends on equipment and search).
  *
  * @param {object} props - The component props.
  * @param {ReactNode} props.children - The root component of the application.
@@ -52,7 +58,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
           <ArmorProvider>
             <WeaponProvider>
               <CharmProvider>
-                <SetBuilderProvider>{children}</SetBuilderProvider>
+                <EquipmentProvider>
+                  <SearchProvider>
+                    <BuilderUIProvider>{children}</BuilderUIProvider>
+                  </SearchProvider>
+                </EquipmentProvider>
               </CharmProvider>
             </WeaponProvider>
           </ArmorProvider>
