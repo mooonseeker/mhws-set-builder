@@ -67,6 +67,7 @@ export const useSetBuilder = () => {
     resetRequiredSkills: search.resetRequiredSkills,
     startSearch: ui.startSearch, // Uses UI wrapper for view switching
     confirmSearch: ui.confirmSearch, // Uses UI wrapper for view switching
+    stopSearch: search.stopSearch,
     cancelSearch: ui.closeSearchConfirm,
 
     // Equipment Actions

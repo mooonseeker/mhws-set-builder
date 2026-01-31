@@ -50,6 +50,11 @@ export interface SearchContextValue {
   confirmSearch: () => Promise<void>;
 
   /**
+   * Stops the currently running search operation.
+   */
+  stopSearch: () => void;
+
+  /**
    * Manually updates the search results list.
    * @param results The new list of results.
    */

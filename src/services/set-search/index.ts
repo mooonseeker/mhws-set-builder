@@ -28,23 +28,40 @@ interface AllGameData {
 }
 
 /**
+ * Represents a search operation that can be cancelled.
+ */
+export interface CancellableSearch {
+  promise: Promise<FinalSet[]>;
+  cancel: () => void;
+}
+
+/**
  * Finds optimal equipment sets using a Web Worker to avoid blocking the main thread.
  *
  * @param requiredSkills An array of skills the user requires.
  * @param fixedEquipment The specific equipment set to build around.
  * @param allData All game data including armors, weapons, accessories, skills, and charms.
- * @returns A promise that resolves to an array of final, sorted sets.
+ * @returns A CancellableSearch object containing the result promise and a cancel function.
  */
 export const findOptimalSets = (
   requiredSkills: SkillWithLevel[],
   fixedEquipment: EquipmentSet,
   allData: AllGameData,
   onProgress?: (current: number, total: number) => void,
-): Promise<FinalSet[]> => {
-  return new Promise((resolve, reject) => {
+): CancellableSearch => {
+  let worker: Worker | null = null;
+
+  const cancel = () => {
+    if (worker) {
+      worker.terminate();
+      worker = null;
+    }
+  };
+
+  const promise = new Promise<FinalSet[]>((resolve, reject) => {
     // Create a new worker instance
     // Vite handles this import.meta.url pattern to bundle the worker correctly
-    const worker = new Worker(new URL("./search.worker.ts", import.meta.url), {
+    worker = new Worker(new URL("./search.worker.ts", import.meta.url), {
       type: "module",
     });
 
@@ -60,14 +77,20 @@ export const findOptimalSets = (
       if (response.type === "success") {
         resolve(response.results);
         // Terminate the worker after the job is done to free up resources
-        worker.terminate();
+        if (worker) {
+          worker.terminate();
+          worker = null;
+        }
       } else if (response.type === "progress") {
         if (onProgress) {
           onProgress(response.current, response.total);
         }
       } else {
         reject(new Error(response.error));
-        worker.terminate();
+        if (worker) {
+          worker.terminate();
+          worker = null;
+        }
       }
     };
 
@@ -79,10 +102,15 @@ export const findOptimalSets = (
               event instanceof ErrorEvent ? event.message : "Worker error",
             );
       reject(error);
-      worker.terminate();
+      if (worker) {
+        worker.terminate();
+        worker = null;
+      }
     };
 
     // Start the worker
     worker.postMessage(request);
   });
+
+  return { promise, cancel };
 };

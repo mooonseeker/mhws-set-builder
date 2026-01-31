@@ -3,7 +3,7 @@
  * Manages the state of skill requirements and orchestrates the worker-based search.
  */
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import {
   useAccessories,
@@ -54,6 +54,9 @@ export function useSearchService({
   const [searchProgress, setSearchProgress] = useState<number | null>(null);
   const [searchStatus, setSearchStatus] = useState<string>("");
 
+  // Ref to hold the cancel function of the current search
+  const cancelSearchRef = useRef<(() => void) | null>(null);
+
   const addRequiredSkill = (skill: SkillWithLevel) => {
     setRequiredSkills((prev) => {
       const existing = prev.find((s) => s.skillId === skill.skillId);
@@ -79,6 +82,16 @@ export function useSearchService({
   };
 
   const resetRequiredSkills = () => setRequiredSkills([]);
+
+  const stopSearch = useCallback(() => {
+    if (cancelSearchRef.current) {
+      cancelSearchRef.current();
+      cancelSearchRef.current = null;
+    }
+    setIsSearching(false);
+    setSearchProgress(null);
+    setSearchStatus("已取消");
+  }, []);
 
   const confirmSearch = useCallback(async (): Promise<void> => {
     const cleanedEquipmentSet: EquipmentSet = {};
@@ -127,7 +140,7 @@ export function useSearchService({
     setSearchStatus("正在准备数据...");
 
     try {
-      const results = await findOptimalSets(
+      const { promise, cancel } = findOptimalSets(
         requiredSkills,
         cleanedEquipmentSet,
         { armors: armor, weapons, accessories, skills, charms },
@@ -137,15 +150,21 @@ export function useSearchService({
           setSearchStatus(`正在处理... ${current}/${total}`);
         },
       );
+
+      cancelSearchRef.current = cancel;
+
+      const results = await promise;
       setSearchResults(results);
       onSearchSuccess?.(results);
     } catch (error) {
       console.error("Search failed:", error);
-      setSearchResults([]);
+      // Don't clear results on error, just keep previous state or empty
+      // setSearchResults([]);
     } finally {
       setIsSearching(false);
       setSearchProgress(null);
       setSearchStatus("");
+      cancelSearchRef.current = null;
     }
   }, [
     requiredSkills,
@@ -169,6 +188,7 @@ export function useSearchService({
     updateRequiredSkillLevel,
     resetRequiredSkills,
     confirmSearch,
+    stopSearch,
     setSearchResults,
   };
 }

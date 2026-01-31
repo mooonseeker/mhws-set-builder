@@ -60,7 +60,7 @@ export function SetBuilderActions() {
  * Action buttons for Auto Mode (Search, Stop).
  */
 export function SetBuilderAutoActions() {
-  const { startSearch, isSearching } = useSetBuilder();
+  const { startSearch, isSearching, stopSearch } = useSetBuilder();
 
   return (
     <div className="flex items-center gap-2">
@@ -73,7 +73,8 @@ export function SetBuilderAutoActions() {
           variant="outline"
           size="sm"
           className="px-2.5"
-          onClick={() => console.log("Stop clicked")}
+          onClick={stopSearch}
+          title="停止搜索"
         >
           <Square className="h-4 w-4" />
         </Button>
