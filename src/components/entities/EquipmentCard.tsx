@@ -35,11 +35,31 @@ export function EquipmentCard({
   };
 
   const ARMOR_RESISTANCE_META = [
-    { key: "fire", icon: "/attribute-type/fire.png", alt: "Fire Res" },
-    { key: "water", icon: "/attribute-type/water.png", alt: "Water Res" },
-    { key: "elec", icon: "/attribute-type/elec.png", alt: "Elec Res" },
-    { key: "ice", icon: "/attribute-type/ice.png", alt: "Ice Res" },
-    { key: "dragon", icon: "/attribute-type/dragon.png", alt: "Dragon Res" },
+    {
+      key: "fire",
+      icon: "/equipment-status/resistance_fire.png",
+      alt: "Fire Res",
+    },
+    {
+      key: "water",
+      icon: "/equipment-status/resistance_water.png",
+      alt: "Water Res",
+    },
+    {
+      key: "elec",
+      icon: "/equipment-status/resistance_elec.png",
+      alt: "Elec Res",
+    },
+    {
+      key: "ice",
+      icon: "/equipment-status/resistance_ice.png",
+      alt: "Ice Res",
+    },
+    {
+      key: "dragon",
+      icon: "/equipment-status/resistance_dragon.png",
+      alt: "Dragon Res",
+    },
   ];
 
   // Helper functions to determine equipment type
@@ -96,7 +116,18 @@ export function EquipmentCard({
           alt="Equipment Icon"
           className="equipment-icon h-6 w-6"
         />
-        <h3 className="flex-1 text-center text-xs font-semibold">
+        <h3
+          className={cn(
+            "flex-1 text-center text-xs",
+            item.rarity <= 2 ? "font-normal" : "font-semibold",
+          )}
+          style={{
+            color:
+              item.rarity >= 3 && item.rarity <= 11
+                ? `var(--rarity-${item.rarity})`
+                : undefined,
+          }}
+        >
           {item.name}
         </h3>
         {isCharm(item) && variant !== "compact" && (
@@ -128,7 +159,7 @@ export function EquipmentCard({
             <div className="card-stats mb-3 grid grid-cols-2 gap-2 text-xs">
               <div className="flex items-center justify-center gap-1">
                 <img
-                  src="/skill-type/SKILL_0000.png"
+                  src="/equipment-status/attack.png"
                   alt="Attack"
                   className="h-4 w-4"
                 />
@@ -136,7 +167,7 @@ export function EquipmentCard({
               </div>
               <div className="flex items-center justify-center gap-1">
                 <img
-                  src="/skill-type/SKILL_0001.png"
+                  src="/equipment-status/critical.png"
                   alt="Critical"
                   className="h-4 w-4"
                 />
@@ -145,27 +176,22 @@ export function EquipmentCard({
             </div>
           )}
           {isArmor(item) && (
-            <div className="card-stats mb-3 grid min-w-0 grid-cols-3 text-xs lg:grid-cols-6">
+            <div className="card-stats mb-3 grid grid-cols-3 gap-y-2 text-xs lg:grid-cols-6">
               {[
                 {
                   key: "defense",
-                  icon: "/skill-type/SKILL_0005.png",
+                  icon: "/equipment-status/defense.png",
                   alt: "Defense",
                   value: item.defense,
-                  minWidthClass: "min-w-[1.5rem]",
                 },
                 ...ARMOR_RESISTANCE_META.map((meta, index) => ({
                   ...meta,
                   value: item.resistance[index],
-                  minWidthClass: "min-w-[1rem]",
                 })),
               ].map((stat) => (
                 <div
                   key={stat.key}
-                  className={cn(
-                    "flex flex-col items-center justify-center p-0.5",
-                    stat.minWidthClass,
-                  )}
+                  className="flex flex-col items-center justify-center gap-1 p-0.5"
                 >
                   <img src={stat.icon} alt={stat.alt} className="h-4 w-4" />
                   <span className="text-center">{stat.value}</span>

@@ -40,8 +40,16 @@ const typeToLabel: Record<EquipmentCellType, string> = {
   charm: "护石",
 };
 
-const getIconPath = (type: EquipmentCellType): string => {
-  if (type === "weapon") return "/weapon.png";
+const getIconPath = (
+  type: EquipmentCellType,
+  equipment?: Weapon | Armor | Charm,
+): string => {
+  if (type === "weapon") {
+    if (equipment && "type" in equipment) {
+      return `/weapon-type/${(equipment as Weapon).type}.png`;
+    }
+    return "/weapon.png";
+  }
   if (type === "charm") return "/charm.png";
   return `/armor-type/${type}.png`;
 };
@@ -66,8 +74,8 @@ export function EquipmentCell({
   onClear,
 }: EquipmentCellProps) {
   const label = typeToLabel[type];
-  const iconPath = getIconPath(type);
   const { equipment, accessories } = slottedEquipment ?? {};
+  const iconPath = getIconPath(type, equipment);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const handleToggleLock = (e: React.MouseEvent) => {
@@ -159,7 +167,20 @@ export function EquipmentCell({
             </div>
             <div className="border-border/20 my-1 self-stretch border-l" />
             <div className="flex flex-5 items-center px-2">
-              <h3 className="truncate text-sm font-semibold">
+              <h3
+                className={cn(
+                  "truncate text-sm",
+                  equipment && equipment.rarity <= 2
+                    ? "font-normal"
+                    : "font-semibold",
+                )}
+                style={{
+                  color:
+                    equipment && equipment.rarity >= 3 && equipment.rarity <= 11
+                      ? `var(--rarity-${equipment.rarity})`
+                      : undefined,
+                }}
+              >
                 {equipment ? equipment.name : "点击选择..."}
               </h3>
             </div>
