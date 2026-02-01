@@ -5,7 +5,7 @@
 
 import { useMemo, useState } from "react";
 
-import { Plus } from "lucide-react";
+import { LayoutGrid, List, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +20,7 @@ import {
   PopoverAnchor,
   PopoverContent,
 } from "@/components/ui/popover";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useCharmOperations, useCharms, useSkills } from "@/hooks";
 import type { Charm, SkillWithLevel, Slot, SlotLevel, SlotType } from "@/types";
 import {
@@ -52,6 +53,9 @@ export function CharmManager() {
   const [rarity, setRarity] = useState(7);
   const [selectedSkills, setSelectedSkills] = useState<SkillWithLevel[]>([]);
   const [slots, setSlots] = useState<Slot[]>([]);
+
+  // View Mode state
+  const [mode, setMode] = useState<"display" | "table">("display");
 
   // Resets the form to its initial state.
   const resetForm = () => {
@@ -192,72 +196,91 @@ export function CharmManager() {
   return (
     <div className="flex h-full flex-col gap-6">
       <div className="flex shrink-0 items-center justify-between">
-        <div className="flex items-baseline">
+        <div className="flex items-baseline gap-4">
           <h1 className="font-bold tracking-tight">护石管理</h1>
-          <p className="text-foreground">管理你的护石收藏，智能评估护石价值</p>
+          <p className="text-foreground hidden sm:block">
+            管理你的护石收藏，智能评估护石价值
+          </p>
         </div>
-        <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-          <Button
-            size="lg"
-            onClick={() => {
-              resetForm();
-              setCharmToEdit(null);
-              setIsFormOpen(true);
-            }}
+        <div className="flex items-center gap-4">
+          <ToggleGroup
+            type="single"
+            value={mode}
+            onValueChange={(v) => v && setMode(v as "display" | "table")}
+            className="border-border rounded-md border p-1"
           >
-            <Plus className="mr-2 h-5 w-5" />
-            添加护石
-          </Button>
-          {/* Adjust DialogContent width to accommodate Popover */}
-          <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto p-6 sm:p-8">
-            <DialogHeader>
-              <DialogTitle>
-                {charmToEdit ? "编辑护石" : "添加新护石"}
-              </DialogTitle>
-              <DialogDescription>
-                {charmToEdit
-                  ? "修改护石信息，系统将重新计算等效孔位和核心技能价值"
-                  : "填写护石信息，系统将自动计算等效孔位和核心技能价值"}
-              </DialogDescription>
-            </DialogHeader>
+            <ToggleGroupItem value="display" size="sm" aria-label="画廊视图">
+              <LayoutGrid className="h-4 w-4" />
+            </ToggleGroupItem>
+            <ToggleGroupItem value="table" size="sm" aria-label="列表视图">
+              <List className="h-4 w-4" />
+            </ToggleGroupItem>
+          </ToggleGroup>
 
-            {/* Popover layout: Use PopoverAnchor for positioning, validation info floats automatically */}
-            <Popover open={!!validation}>
-              <PopoverAnchor asChild>
-                <div>
-                  <CharmForm
-                    isEditMode={!!charmToEdit}
-                    name={previewName}
-                    rarity={rarity}
-                    setRarity={setRarity}
-                    selectedSkills={selectedSkills}
-                    slots={slots}
-                    handleAddSkill={handleAddSkill}
-                    handleRemoveSkill={handleRemoveSkill}
-                    handleAddSlot={handleAddSlot}
-                    handleUpdateSlot={handleUpdateSlot}
-                    handleRemoveSlot={handleRemoveSlot}
-                    handleSubmit={handleSubmit}
-                    onCancel={handleCancel}
-                    keySkillValue={keySkillValue}
-                    equivalentSlots={equivalentSlots}
-                  />
-                </div>
-              </PopoverAnchor>
-              <PopoverContent
-                className="w-80 border-none p-0 shadow-lg"
-                align="start"
-                side="right"
-                sideOffset={50}
-              >
-                <CharmValidation validation={validation} />
-              </PopoverContent>
-            </Popover>
-          </DialogContent>
-        </Dialog>
+          <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+            <Button
+              size="lg"
+              onClick={() => {
+                resetForm();
+                setCharmToEdit(null);
+                setIsFormOpen(true);
+              }}
+            >
+              <Plus className="mr-2 h-5 w-5" />
+              添加护石
+            </Button>
+            {/* Adjust DialogContent width to accommodate Popover */}
+            <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto p-6 sm:p-8">
+              <DialogHeader>
+                <DialogTitle>
+                  {charmToEdit ? "编辑护石" : "添加新护石"}
+                </DialogTitle>
+                <DialogDescription>
+                  {charmToEdit
+                    ? "修改护石信息，系统将重新计算等效孔位和核心技能价值"
+                    : "填写护石信息，系统将自动计算等效孔位和核心技能价值"}
+                </DialogDescription>
+              </DialogHeader>
+
+              {/* Popover layout: Use PopoverAnchor for positioning, validation info floats automatically */}
+              <Popover open={!!validation}>
+                <PopoverAnchor asChild>
+                  <div>
+                    <CharmForm
+                      isEditMode={!!charmToEdit}
+                      name={previewName}
+                      rarity={rarity}
+                      setRarity={setRarity}
+                      selectedSkills={selectedSkills}
+                      slots={slots}
+                      handleAddSkill={handleAddSkill}
+                      handleRemoveSkill={handleRemoveSkill}
+                      handleAddSlot={handleAddSlot}
+                      handleUpdateSlot={handleUpdateSlot}
+                      handleRemoveSlot={handleRemoveSlot}
+                      handleSubmit={handleSubmit}
+                      onCancel={handleCancel}
+                      keySkillValue={keySkillValue}
+                      equivalentSlots={equivalentSlots}
+                    />
+                  </div>
+                </PopoverAnchor>
+                <PopoverContent
+                  className="w-80 border-none p-0 shadow-lg"
+                  align="start"
+                  side="right"
+                  sideOffset={50}
+                >
+                  <CharmValidation validation={validation} />
+                </PopoverContent>
+              </Popover>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
       <div className="min-h-0 flex-1">
         <CharmList
+          mode={mode}
           onEdit={(charm) => {
             initializeForm(charm);
             setCharmToEdit(charm);
