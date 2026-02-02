@@ -57,9 +57,9 @@ export function SetBuilder() {
     <>
       <div className="flex h-full flex-col gap-6">
         <div className="flex shrink-0 flex-col gap-8 lg:flex-row">
-          <div className="flex w-full items-center justify-between lg:w-2/5">
+          <div className="flex h-11 w-full items-center justify-between lg:w-2/5">
             <div className="flex items-center gap-4">
-              <h1 className="text-2xl font-bold">配装器</h1>
+              <h1 className="text-2xl font-bold tracking-tight">配装器</h1>
               <ToggleGroup
                 type="single"
                 value={mode}
@@ -75,9 +75,11 @@ export function SetBuilder() {
                 </ToggleGroupItem>
               </ToggleGroup>
             </div>
-            <SetBuilderActions />
+            <div className="flex items-center gap-4">
+              <SetBuilderActions />
+            </div>
           </div>
-          <div className="flex w-full items-center justify-between lg:w-3/5">
+          <div className="flex h-11 w-full items-center justify-between lg:w-3/5">
             <div>{mode === "auto" && <SetBuilderAutoActions />}</div>
             {mode === "auto" && <AutoModeViewToggle />}
           </div>

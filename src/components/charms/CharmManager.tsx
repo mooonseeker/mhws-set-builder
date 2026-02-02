@@ -195,28 +195,25 @@ export function CharmManager() {
 
   return (
     <div className="flex h-full flex-col gap-6">
-      <div className="flex shrink-0 items-center justify-between">
-        <div className="flex items-baseline gap-4">
-          <h1 className="font-bold tracking-tight">护石管理</h1>
-          <p className="text-foreground hidden sm:block">
-            管理你的护石收藏，智能评估护石价值
-          </p>
-        </div>
+      <div className="flex h-11 shrink-0 items-center justify-between">
         <div className="flex items-center gap-4">
+          <h1 className="text-2xl font-bold tracking-tight">护石管理</h1>
           <ToggleGroup
             type="single"
             value={mode}
+            size="sm"
             onValueChange={(v) => v && setMode(v as "display" | "table")}
             className="border-border rounded-md border p-1"
           >
-            <ToggleGroupItem value="display" size="sm" aria-label="画廊视图">
+            <ToggleGroupItem value="display" tooltip="画廊视图">
               <LayoutGrid className="h-4 w-4" />
             </ToggleGroupItem>
-            <ToggleGroupItem value="table" size="sm" aria-label="列表视图">
+            <ToggleGroupItem value="table" tooltip="列表视图">
               <List className="h-4 w-4" />
             </ToggleGroupItem>
           </ToggleGroup>
-
+        </div>
+        <div className="flex items-center gap-4">
           <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
             <Button
               size="lg"

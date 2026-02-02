@@ -15,6 +15,12 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useSetBuilder } from "@/hooks";
 
 /**
@@ -24,35 +30,57 @@ export function SetBuilderActions() {
   const { clearAllEqSlots, lockAllEqSlots, unlockAllEqSlots } = useSetBuilder();
 
   return (
-    <div className="flex items-center gap-2">
-      <Button
-        variant="outline"
-        size="sm"
-        className="px-2.5"
-        onClick={lockAllEqSlots}
-        title="全部锁定"
-      >
-        <Lock className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        className="px-2.5"
-        onClick={unlockAllEqSlots}
-        title="全部解锁"
-      >
-        <Unlock className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        className="px-2.5"
-        onClick={clearAllEqSlots}
-        title="重置"
-      >
-        <RefreshCw className="h-4 w-4" />
-      </Button>
-    </div>
+    <TooltipProvider>
+      <div className="flex items-center gap-2">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="px-2.5"
+              onClick={lockAllEqSlots}
+            >
+              <Lock className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>全部锁定</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="px-2.5"
+              onClick={unlockAllEqSlots}
+            >
+              <Unlock className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>全部解锁</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="px-2.5"
+              onClick={clearAllEqSlots}
+            >
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>重置</p>
+          </TooltipContent>
+        </Tooltip>
+      </div>
+    </TooltipProvider>
   );
 }
 
@@ -63,23 +91,31 @@ export function SetBuilderAutoActions() {
   const { startSearch, isSearching, stopSearch } = useSetBuilder();
 
   return (
-    <div className="flex items-center gap-2">
-      <Button onClick={startSearch} disabled={isSearching} size="sm">
-        <Search className="mr-2 h-4 w-4" />
-        搜索
-      </Button>
-      {isSearching && (
-        <Button
-          variant="outline"
-          size="sm"
-          className="px-2.5"
-          onClick={stopSearch}
-          title="停止搜索"
-        >
-          <Square className="h-4 w-4" />
+    <TooltipProvider>
+      <div className="flex items-center gap-2">
+        <Button onClick={startSearch} disabled={isSearching} size="sm">
+          <Search className="mr-2 h-4 w-4" />
+          搜索
         </Button>
-      )}
-    </div>
+        {isSearching && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="px-2.5"
+                onClick={stopSearch}
+              >
+                <Square className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>停止搜索</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+      </div>
+    </TooltipProvider>
   );
 }
 
@@ -99,19 +135,15 @@ export function AutoModeViewToggle() {
       size="sm"
       className="border-border rounded-md border p-1"
     >
-      <ToggleGroupItem
-        value="requirements"
-        aria-label="技能需求"
-        className="px-3"
-      >
+      <ToggleGroupItem value="requirements" tooltip="技能需求" className="px-3">
         <Sparkles className="h-4 w-4" />
         技能需求
       </ToggleGroupItem>
-      <ToggleGroupItem value="results" aria-label="搜索结果" className="px-3">
+      <ToggleGroupItem value="results" tooltip="搜索结果" className="px-3">
         <ClipboardList className="h-4 w-4" />
         搜索结果
       </ToggleGroupItem>
-      <ToggleGroupItem value="summary" aria-label="套装汇总" className="px-3">
+      <ToggleGroupItem value="summary" tooltip="套装汇总" className="px-3">
         <ScrollText className="h-4 w-4" />
         套装汇总
       </ToggleGroupItem>

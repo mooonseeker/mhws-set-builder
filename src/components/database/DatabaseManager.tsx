@@ -248,9 +248,9 @@ export function DatabaseManager() {
 
   return (
     <div className="flex h-full flex-col gap-6">
-      <div className="flex shrink-0 items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <h1 className="font-bold tracking-tight">数据库管理</h1>
+      <div className="flex h-11 shrink-0 items-center justify-between">
+        <div className="flex items-center gap-4">
+          <h1 className="text-2xl font-bold tracking-tight">数据库管理</h1>
           <ToggleGroup
             type="single"
             value={currentDb}

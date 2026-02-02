@@ -92,9 +92,19 @@ export function Settings() {
   return (
     <div className="flex h-full flex-col gap-6">
       {/* Sticky header area */}
-      <div className="flex shrink-0 items-baseline">
-        <h1 className="font-bold tracking-tight">设置</h1>
-        <p className="text-foreground ml-2">管理系统设置和数据</p>
+      <div className="flex h-11 shrink-0 items-center justify-between">
+        <div className="flex items-baseline gap-4">
+          <h1 className="text-2xl font-bold tracking-tight">设置</h1>
+          <p className="text-muted-foreground hidden sm:block">
+            管理系统设置和数据
+          </p>
+        </div>
+        <div className="flex items-center gap-4">
+          <Button size="lg" variant="destructive" onClick={handleReset}>
+            <Trash2 className="mr-2 h-5 w-5" />
+            重置数据
+          </Button>
+        </div>
       </div>
 
       {/* Scrollable content area */}
@@ -218,8 +228,8 @@ export function Settings() {
             </CardContent>
           </Card>
 
-          {/* Row 2: Statistics (4/5) */}
-          <Card className="md:col-span-4">
+          {/* Row 2: Statistics (5/5) */}
+          <Card className="md:col-span-5">
             <CardHeader>
               <CardTitle>数据统计</CardTitle>
             </CardHeader>
@@ -251,28 +261,6 @@ export function Settings() {
                   </p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Row 2: Reset data (1/5) */}
-          <Card className="md:col-span-1">
-            <CardHeader>
-              <CardTitle className="text-destructive flex items-center gap-2">
-                <Trash2 className="h-5 w-5" />
-                重置
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Button
-                onClick={handleReset}
-                variant="destructive"
-                className="w-full"
-              >
-                重置数据
-              </Button>
-              <p className="text-muted-foreground text-[10px] leading-tight">
-                ⚠️ 此操作不可撤销！
-              </p>
             </CardContent>
           </Card>
 
