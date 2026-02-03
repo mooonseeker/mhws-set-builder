@@ -41,7 +41,7 @@ interface SkillListProps {
  * with support for filtering, sorting, editing, and deleting.
  */
 export function SkillList({ onEdit, isLocked }: SkillListProps) {
-  const { skills, deleteSkill } = useSkills();
+  const { skills, deleteSkill, updateSkill } = useSkills();
   const [categoryFilter, setCategoryFilter] = useState<SkillCategory | "all">(
     "all",
   );
@@ -247,9 +247,16 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
               paginatedSkills.map((skill) => (
                 <TableRow key={skill.id}>
                   <TableCell className="text-center">
-                    <Star
-                      className={`h-4 w-4 ${skill.isKey ? "fill-warning text-warning-foreground" : "text-muted-foreground"} inline`}
-                    />
+                    <button
+                      className="cursor-pointer transition-transform hover:scale-150 focus:outline-hidden"
+                      onClick={() =>
+                        updateSkill({ ...skill, isKey: !skill.isKey })
+                      }
+                    >
+                      <Star
+                        className={`h-4 w-4 ${skill.isKey ? "fill-warning text-warning-foreground" : "text-muted-foreground"} inline`}
+                      />
+                    </button>
                   </TableCell>
                   <TableCell className="text-left font-medium md:pl-4 lg:pl-8">
                     <div className="flex items-center gap-2">

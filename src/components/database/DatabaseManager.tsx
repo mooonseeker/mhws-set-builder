@@ -11,6 +11,7 @@ import {
   Plus,
   Shield,
   Sparkles,
+  Star,
   Swords,
   Unlock,
 } from "lucide-react";
@@ -25,6 +26,7 @@ import { generateSkillId } from "@/utils";
 import { AccessoryList } from "./AccessoryList";
 import { ArmorList } from "./ArmorList";
 import { DatabaseForm } from "./DatabaseForm";
+import { KeySkillManager } from "./KeySkillManager";
 import { SkillList } from "./SkillList";
 import { WeaponList } from "./WeaponList";
 
@@ -62,6 +64,7 @@ export function DatabaseManager() {
 
   const [currentDb, setCurrentDb] = useState<DataId>("skills");
   const [isLocked, setIsLocked] = useState<boolean>(true);
+  const [showKeySkillManager, setShowKeySkillManager] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<
     { type: DataId; data: Skill | Accessory | Armor | Weapon } | undefined
@@ -286,10 +289,22 @@ export function DatabaseManager() {
             </ToggleGroupItem>
           </ToggleGroup>
         </div>
-        <Button size="lg" onClick={handleAdd} disabled={isLocked}>
-          <Plus className="mr-2 h-5 w-5" />
-          {addButtonText}
-        </Button>
+        <div className="flex gap-2">
+          {currentDb === "skills" && (
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => setShowKeySkillManager(true)}
+            >
+              <Star className="fill-warning text-warning-foreground mr-2 h-5 w-5" />
+              核心技能
+            </Button>
+          )}
+          <Button size="lg" onClick={handleAdd} disabled={isLocked}>
+            <Plus className="mr-2 h-5 w-5" />
+            {addButtonText}
+          </Button>
+        </div>
       </div>
 
       <div className="min-h-0 flex-1">
@@ -368,6 +383,10 @@ export function DatabaseManager() {
               return null;
           }
         })()}
+      <KeySkillManager
+        open={showKeySkillManager}
+        onOpenChange={setShowKeySkillManager}
+      />
     </div>
   );
 }
