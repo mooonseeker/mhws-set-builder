@@ -291,11 +291,7 @@ export function DatabaseManager() {
         </div>
         <div className="flex gap-2">
           {currentDb === "skills" && (
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => setShowKeySkillManager(true)}
-            >
+            <Button size="lg" onClick={() => setShowKeySkillManager(true)}>
               <Star className="fill-warning text-warning-foreground mr-2 h-5 w-5" />
               核心技能
             </Button>

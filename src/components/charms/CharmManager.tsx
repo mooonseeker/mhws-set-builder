@@ -31,6 +31,7 @@ import {
 
 import { CharmForm } from "./CharmForm";
 import { CharmList } from "./CharmList";
+import { CharmOrganizer } from "./CharmOrganizer";
 import { CharmValidation } from "./CharmValidation";
 
 /**
@@ -214,6 +215,7 @@ export function CharmManager() {
           </ToggleGroup>
         </div>
         <div className="flex items-center gap-4">
+          <CharmOrganizer />
           <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
             <Button
               size="lg"

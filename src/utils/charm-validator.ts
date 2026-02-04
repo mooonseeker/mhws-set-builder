@@ -62,7 +62,7 @@ function compareEquivalentSlots(
  * @param dominated The potential dominated charm.
  * @returns True if the dominator charm is strictly better.
  */
-function isDominating(
+export function isDominating(
   dominator: Omit<Charm, "id" | "createdAt">,
   dominated: Charm,
 ): boolean {

@@ -17,6 +17,7 @@ export {
   validateCharm,
   areSkillsIdentical,
   areSlotsIdentical,
+  isDominating,
 } from "./charm-validator";
 
 // ID generation utilities
