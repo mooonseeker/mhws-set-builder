@@ -207,7 +207,7 @@ export function WeaponList({
 
       {/* MARK: Weapon Table */}
       <div className="bg-card min-h-0 flex-1 overflow-x-auto rounded-lg border shadow-sm">
-        <Table className={cn(selectedRarity === "all" ? "w-[200%]" : "")}>
+        <Table className={cn(selectedRarity === "all" ? "w-[300%]" : "")}>
           {/* Table Header */}
           <TableHeader>
             <TableRow>
@@ -216,7 +216,7 @@ export function WeaponList({
                   key={`header-${rarity}`}
                   className={cn(
                     "bg-primary text-primary-foreground text-center",
-                    selectedRarity === "all" ? "1/6" : "w-1/4",
+                    selectedRarity === "all" ? "w-1/12" : "w-1/4",
                     index === 0
                       ? "rounded-tl-lg"
                       : index === rarityColumns.length - 1
@@ -254,7 +254,7 @@ export function WeaponList({
                         key={`cell-${rowIndex}-${rarity}`}
                         className={cn(
                           "relative p-2",
-                          selectedRarity === "all" ? "1/6" : "w-1/4",
+                          selectedRarity === "all" ? "w-1/12" : "w-1/4",
                           isSelector && "rounded-lg transition-colors",
                           isSelector &&
                             isMatchingSlot &&
