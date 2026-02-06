@@ -27,6 +27,7 @@ import {
 import {
   createDiff,
   patch,
+  validateData,
   type DataDelta,
   type MigrationStats,
   type ValidationResult,
@@ -243,13 +244,10 @@ class DataStorageService {
   /**
    * Validates the data by checking if official data has been modified or deleted.
    *
-   * This is a simplified validation that relies on the differential storage mechanism.
-   * It checks if there are any deletions or modifications to the base (official) data.
-   *
    * @param id The ID of the data type.
-   * @returns A ValidationResult object.
+   * @returns A Promise resolving to a ValidationResult object.
    */
-  getValidationResult(id: DataId): ValidationResult {
+  async getValidationResult(id: DataId): Promise<ValidationResult> {
     if (id === "settings") {
       return {
         isValid: true,
@@ -257,32 +255,14 @@ class DataStorageService {
         mismatched: 0,
         userPrivate: 0,
         errors: [],
+        details: { missing: [], mismatched: [], userPrivate: [] },
       };
     }
 
-    const delta = this.getDelta(id);
-    const missingOfficial = delta.deleted.length;
-    const mismatched = delta.modified.length;
-    const userPrivate = delta.added.length;
+    const currentData = this.loadData(id);
+    const initialData = await this.loadBaseDataForType(id);
 
-    const errors: string[] = [];
-    if (missingOfficial > 0) {
-      errors.push(`Missing official data entries: ${missingOfficial}`);
-    }
-    if (mismatched > 0) {
-      errors.push(`Mismatched with official data: ${mismatched}`);
-    }
-    if (userPrivate > 0) {
-      errors.push(`Contains non-official (user) data: ${userPrivate}`);
-    }
-
-    return {
-      isValid: missingOfficial === 0 && mismatched === 0 && userPrivate === 0,
-      missingOfficial,
-      mismatched,
-      userPrivate,
-      errors,
-    };
+    return validateData(currentData, initialData);
   }
 
   /**
