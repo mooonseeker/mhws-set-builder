@@ -47,9 +47,7 @@ export function CharmGallery({
                   "cursor-not-allowed opacity-50",
               )}
               onClick={
-                isSelectable && onSelect && isMatchingSlot
-                  ? () => onSelect(charm)
-                  : undefined
+                onSelect && isMatchingSlot ? () => onSelect(charm) : undefined
               }
             >
               <EquipmentCard
