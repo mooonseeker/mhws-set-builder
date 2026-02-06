@@ -19,7 +19,11 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { useCharms, useSkills } from "@/hooks";
 import type { Charm } from "@/types";
-import { calculateKeySkillValue, isDominating } from "@/utils";
+import {
+  calculateCharmEquivalentSlots,
+  calculateKeySkillValue,
+  isDominating,
+} from "@/utils";
 
 /**
  * CharmOrganizer component provides an interface for batch management of charms.
@@ -41,7 +45,7 @@ export function CharmOrganizer() {
   // Stats for the header
   const totalCharms = charms.length;
 
-  const handleUpdateKeySkillValue = () => {
+  const handleUpdateValue = () => {
     setIsProcessing(true);
     setProgress(0);
     setLastAction("更新等效价值");
@@ -56,9 +60,21 @@ export function CharmOrganizer() {
           charm.slots,
           allSkills,
         );
-        if (keySkillValue !== charm.keySkillValue) count++;
+        const equivalentSlots = calculateCharmEquivalentSlots(
+          charm.skills,
+          charm.slots,
+          allSkills,
+        );
+
+        if (
+          keySkillValue !== charm.keySkillValue ||
+          JSON.stringify(equivalentSlots) !== JSON.stringify(charm.equivalentSlots)
+        ) {
+          count++;
+        }
+
         if (index % 10 === 0) setProgress((index / charms.length) * 100);
-        return { ...charm, keySkillValue };
+        return { ...charm, keySkillValue, equivalentSlots };
       });
       setUpdatedCount(count);
       importCharms(updatedCharms);
@@ -107,8 +123,19 @@ export function CharmOrganizer() {
           charm.slots,
           allSkills,
         );
-        if (keySkillValue !== charm.keySkillValue) count++;
-        return { ...charm, keySkillValue };
+        const equivalentSlots = calculateCharmEquivalentSlots(
+          charm.skills,
+          charm.slots,
+          allSkills,
+        );
+
+        if (
+          keySkillValue !== charm.keySkillValue ||
+          JSON.stringify(equivalentSlots) !== JSON.stringify(charm.equivalentSlots)
+        ) {
+          count++;
+        }
+        return { ...charm, keySkillValue, equivalentSlots };
       });
 
       const found: { target: Charm; betterBy: Charm }[] = [];
@@ -192,7 +219,7 @@ export function CharmOrganizer() {
             <CompactCard
               title="更新等效价值"
               icon={<RefreshCw className="h-5 w-5" />}
-              onClick={handleUpdateKeySkillValue}
+              onClick={handleUpdateValue}
               disabled={isProcessing}
             />
             <CompactCard
