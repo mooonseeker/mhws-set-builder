@@ -146,29 +146,44 @@ export function ValidationReport({
                             </span>
                           </div>
                         </div>
-                        <div className="space-y-1.5 pl-1">
-                          {item.diffs?.map((diff, idx) => (
-                            <div
-                              key={idx}
-                              className="text-muted-foreground grid grid-cols-[1fr,auto,2fr] gap-2"
-                            >
-                              <span
-                                className="truncate font-mono"
-                                title={diff.field}
+                        <div className="space-y-2 pl-1">
+                          <div className="grid grid-cols-[3fr_1fr_1fr] gap-2 px-1 text-[10px] font-bold tracking-wider text-blue-600/70 uppercase dark:text-blue-400/70">
+                            <span>属性</span>
+                            <span>官方数据</span>
+                            <span>用户数据</span>
+                          </div>
+                          <div className="space-y-1">
+                            {item.diffs?.map((diff, idx) => (
+                              <div
+                                key={idx}
+                                className="text-muted-foreground grid grid-cols-[3fr_1fr_1fr] gap-2 items-center px-1"
                               >
-                                {diff.field}
-                              </span>
-                              <span className="text-xs">→</span>
-                              <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-2">
-                                <span className="truncate line-through opacity-60">
+                                <span
+                                  className="truncate font-mono"
+                                  title={diff.field}
+                                >
+                                  {diff.field}
+                                </span>
+                                <span
+                                  className="truncate line-through opacity-60"
+                                  title={JSON.stringify(diff.oldVal)}
+                                >
                                   {JSON.stringify(diff.oldVal)}
                                 </span>
-                                <span className="text-foreground truncate font-medium">
-                                  {JSON.stringify(diff.newVal)}
-                                </span>
+                                <div className="flex items-center gap-1.5 overflow-hidden">
+                                  <span className="text-blue-400/60 shrink-0">
+                                    →
+                                  </span>
+                                  <span
+                                    className="text-foreground truncate font-medium"
+                                    title={JSON.stringify(diff.newVal)}
+                                  >
+                                    {JSON.stringify(diff.newVal)}
+                                  </span>
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            ))}
+                          </div>
                         </div>
                       </div>
                     ))}
