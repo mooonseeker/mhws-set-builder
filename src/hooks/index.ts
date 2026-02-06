@@ -9,6 +9,7 @@
 export { useAccessories } from "./useAccessories";
 export { useArmor } from "./useArmor";
 export { useCharms } from "./useCharms";
+export { useDataIO } from "./useDataIO";
 export { useSetBuilder } from "./useSetBuilder";
 export { useSkills } from "./useSkills";
 export { useTheme } from "./useTheme";
