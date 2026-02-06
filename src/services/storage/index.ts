@@ -262,7 +262,15 @@ class DataStorageService {
     const currentData = this.loadData(id);
     const initialData = await this.loadBaseDataForType(id);
 
-    return validateData(currentData, initialData);
+    // Determine fields to ignore based on data type.
+    const ignoredFields: string[] = [];
+    if (id === "skills") {
+      ignoredFields.push("isKey");
+    } else if (id === "charms") {
+      ignoredFields.push("keySkillValue");
+    }
+
+    return validateData(currentData, initialData, ignoredFields);
   }
 
   /**

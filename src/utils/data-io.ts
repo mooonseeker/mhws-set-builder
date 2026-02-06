@@ -88,11 +88,13 @@ export interface DataDelta<T extends { id: string }> {
  *
  * @param baseData - The base data array.
  * @param currentData - The current data array.
+ * @param ignoredFields - Optional list of fields to ignore during comparison.
  * @returns A DataDelta object describing the changes.
  */
 export function createDiff<T extends { id: string }>(
   baseData: T[],
   currentData: T[],
+  ignoredFields: string[] = [],
 ): DataDelta<T> {
   const baseMap = new Map(baseData.map((item) => [item.id, item]));
   const currentMap = new Map(currentData.map((item) => [item.id, item]));
@@ -107,9 +109,17 @@ export function createDiff<T extends { id: string }>(
     if (!baseItem) {
       // Not in base data -> added.
       added.push(currentItem);
-    } else if (JSON.stringify(currentItem) !== JSON.stringify(baseItem)) {
-      // Exists but content is different -> modified.
-      modified.push(currentItem);
+    } else {
+      // Check if modified
+      const isModified =
+        ignoredFields.length > 0
+          ? compareObjects(baseItem, currentItem, "", ignoredFields).length > 0
+          : JSON.stringify(currentItem) !== JSON.stringify(baseItem);
+
+      if (isModified) {
+        // Exists but content is different -> modified.
+        modified.push(currentItem);
+      }
     }
   }
 
@@ -130,9 +140,15 @@ export function createDiff<T extends { id: string }>(
  * @param obj1 - The base object (e.g., official data).
  * @param obj2 - The comparison object (e.g., local data).
  * @param path - The current property path (used for recursion).
+ * @param ignoredFields - Optional list of fields to ignore during comparison.
  * @returns An array of difference details.
  */
-function compareObjects(obj1: unknown, obj2: unknown, path = ""): DiffDetail[] {
+function compareObjects(
+  obj1: unknown,
+  obj2: unknown,
+  path = "",
+  ignoredFields: string[] = [],
+): DiffDetail[] {
   const diffs: DiffDetail[] = [];
 
   // Handle primitives and nulls
@@ -162,6 +178,8 @@ function compareObjects(obj1: unknown, obj2: unknown, path = ""): DiffDetail[] {
     const maxLen = Math.max(arr1.length, arr2.length);
     for (let i = 0; i < maxLen; i++) {
       const currentPath = path ? `${path}[${i}]` : `[${i}]`;
+      if (ignoredFields.includes(currentPath)) continue;
+
       if (i >= arr1.length) {
         // Added element in obj2
         diffs.push({ field: currentPath, oldVal: undefined, newVal: arr2[i] });
@@ -169,7 +187,9 @@ function compareObjects(obj1: unknown, obj2: unknown, path = ""): DiffDetail[] {
         // Deleted element in obj2
         diffs.push({ field: currentPath, oldVal: arr1[i], newVal: undefined });
       } else {
-        diffs.push(...compareObjects(arr1[i], arr2[i], currentPath));
+        diffs.push(
+          ...compareObjects(arr1[i], arr2[i], currentPath, ignoredFields),
+        );
       }
     }
     return diffs;
@@ -180,8 +200,9 @@ function compareObjects(obj1: unknown, obj2: unknown, path = ""): DiffDetail[] {
   const record2 = obj2 as Record<string, unknown>;
   const keys = new Set([...Object.keys(record1), ...Object.keys(record2)]);
   for (const key of keys) {
-    // Skip internal or system fields if necessary (none for now)
     const currentPath = path ? `${path}.${key}` : key;
+    if (ignoredFields.includes(currentPath)) continue;
+
     if (!(key in record1)) {
       diffs.push({
         field: currentPath,
@@ -195,7 +216,14 @@ function compareObjects(obj1: unknown, obj2: unknown, path = ""): DiffDetail[] {
         newVal: undefined,
       });
     } else {
-      diffs.push(...compareObjects(record1[key], record2[key], currentPath));
+      diffs.push(
+        ...compareObjects(
+          record1[key],
+          record2[key],
+          currentPath,
+          ignoredFields,
+        ),
+      );
     }
   }
 
@@ -306,15 +334,17 @@ export function reconcileData(
  *
  * @param currentData - The current in-app data (Local).
  * @param initialData - The initial data loaded from a source like JSON (Official).
+ * @param ignoredFields - Optional list of fields to ignore during validation.
  * @returns A detailed validation result object.
  */
 export function validateData(
   currentData: DataItem[],
   initialData: DataItem[],
+  ignoredFields: string[] = [],
 ): ValidationResult {
   // Use createDiff to find high-level changes
   // base = official (initialData), current = local (currentData)
-  const diff = createDiff(initialData, currentData);
+  const diff = createDiff(initialData, currentData, ignoredFields);
 
   const errors: string[] = [];
   const missingDetails: DataDifference[] = [];
@@ -339,7 +369,7 @@ export function validateData(
     const name = getItemName(localItem);
 
     // Deep compare to find specific fields
-    const diffs = compareObjects(officialItem, localItem);
+    const diffs = compareObjects(officialItem, localItem, "", ignoredFields);
 
     errors.push(
       `数据不匹配: [${localItem.id}] ${name} (${diffs.length} 处差异)`,
