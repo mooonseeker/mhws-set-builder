@@ -31,7 +31,7 @@ import {
   type DataDelta,
   type MigrationStats,
   type ValidationResult,
-} from "@/utils/data-io";
+} from "@/utils";
 
 // Define data types that require differential storage.
 const DIFFERENTIAL_DATA_IDS = ALL_DATA_IDS.filter((id) => id !== "settings");

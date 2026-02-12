@@ -37,7 +37,7 @@ import {
   type WeaponType,
 } from "@/types";
 import type { EquipmentCellType } from "@/types/set-builder";
-import { groupWeaponsIntoRows } from "@/utils/weapon-grouper";
+import { groupWeaponsIntoRows } from "@/utils";
 
 const RARITY_COLUMNS_MAP = {
   low: [1, 2, 3, 4],

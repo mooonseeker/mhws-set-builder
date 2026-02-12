@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { ValidationResult } from "@/utils/data-io";
+import type { ValidationResult } from "@/utils";
 
 export interface ValidationReportProps {
   title: string;

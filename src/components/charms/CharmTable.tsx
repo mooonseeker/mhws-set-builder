@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import type { Charm, CharmSortField, SortDirection } from "@/types";
-import { isOfficialCharmId } from "@/utils/id-generator";
+import { isOfficialCharmId } from "@/utils";
 
 interface CharmTableProps {
   charms: Charm[];

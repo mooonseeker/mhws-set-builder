@@ -5,7 +5,7 @@
 
 import { DATABASE_VERSION } from "@/constants";
 import type { DataId, DataItem } from "@/types";
-import { patch, type DataDelta } from "@/utils/data-io";
+import { patch, type DataDelta } from "@/utils";
 
 import { DataStorage } from "./index";
 

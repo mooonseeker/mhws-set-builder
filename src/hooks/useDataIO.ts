@@ -8,7 +8,7 @@ import { useState } from "react";
 import { DataStorage } from "@/services/storage";
 import { exportData, importData } from "@/services/storage/transfer";
 import type { DataId } from "@/types";
-import type { ValidationResult } from "@/utils/data-io";
+import type { ValidationResult } from "@/utils";
 
 /**
  * State for managing different types of dialogs.

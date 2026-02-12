@@ -271,62 +271,6 @@ export function patch<T extends { id: string }>(
 }
 
 /**
- * Core data reconciliation function.
- *
- * Logic:
- * 1. Official data has the highest priority; new or modified official items are always adopted.
- * 2. User-private data (existing only in `currentData`) is retained.
- * 3. Assumes item IDs are stable across versions.
- *
- * @param currentData - The current data stored locally.
- * @param officialData - The latest official initial data.
- * @returns Migration statistics, including the merged data.
- */
-export function reconcileData(
-  currentData: DataItem[],
-  officialData: DataItem[],
-): MigrationStats {
-  const currentMap = new Map(currentData.map((item) => [item.id, item]));
-  const officialMap = new Map(officialData.map((item) => [item.id, item]));
-
-  // Default to all official data, covering additions and updates.
-  const mergedData: DataItem[] = [...officialData];
-
-  let officialAdded = 0;
-  let officialUpdated = 0;
-  const userRetainedIds: string[] = [];
-
-  // 1. Tally changes from the official data.
-  officialData.forEach((officialItem) => {
-    const currentItem = currentMap.get(officialItem.id);
-
-    if (!currentItem) {
-      // Not present locally, considered an official addition.
-      officialAdded++;
-    } else if (JSON.stringify(currentItem) !== JSON.stringify(officialItem)) {
-      // Present but different, considered an official update.
-      officialUpdated++;
-    }
-  });
-
-  // 2. Handle user-private data.
-  currentData.forEach((currentItem) => {
-    // If not in official data, it's user-private and should be retained.
-    if (!officialMap.has(currentItem.id)) {
-      mergedData.push(currentItem);
-      userRetainedIds.push(currentItem.id);
-    }
-  });
-
-  return {
-    mergedData,
-    officialAdded,
-    officialUpdated,
-    userRetainedIds,
-  };
-}
-
-/**
  * Validates the consistency of database data against initial data.
  *
  * Uses `createDiff` to identify specific discrepancies and `compareObjects`

@@ -41,7 +41,7 @@ import {
   type SkillWithLevel,
 } from "@/types";
 import type { EquipmentCellType } from "@/types/set-builder";
-import { groupArmorBySeries } from "@/utils/armor-grouper";
+import { groupArmorBySeries } from "@/utils";
 
 const ARMOR_COLUMNS: { key: ArmorType; label: string }[] = [
   { key: "helm", label: "头盔" },

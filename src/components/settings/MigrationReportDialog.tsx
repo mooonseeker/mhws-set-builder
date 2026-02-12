@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/table";
 import { DataStorage } from "@/services/storage";
 import type { DataId } from "@/types";
-import type { MigrationStats } from "@/utils/data-io";
+import type { MigrationStats } from "@/utils";
 
 /**
  * Dialog component that shows statistics about data migration.
@@ -65,40 +65,42 @@ export function MigrationReportDialog() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {Array.from(report.entries()).map(([id, stats]) => (
-                <TableRow key={id}>
-                  <TableCell className="font-medium">
-                    {databaseNames[id]}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {stats.officialAdded > 0 ? (
-                      <span className="text-green-600">
-                        +{stats.officialAdded}
-                      </span>
-                    ) : (
-                      "-"
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {stats.officialUpdated > 0 ? (
-                      <span className="text-blue-600">
-                        {stats.officialUpdated}
-                      </span>
-                    ) : (
-                      "-"
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {stats.userRetainedIds.length > 0 ? (
-                      <span className="font-medium text-orange-600">
-                        {stats.userRetainedIds.length}
-                      </span>
-                    ) : (
-                      "-"
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {Array.from(report.entries()).map(
+                ([id, stats]: [DataId, MigrationStats]) => (
+                  <TableRow key={id}>
+                    <TableCell className="font-medium">
+                      {databaseNames[id]}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {stats.officialAdded > 0 ? (
+                        <span className="text-green-600">
+                          +{stats.officialAdded}
+                        </span>
+                      ) : (
+                        "-"
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {stats.officialUpdated > 0 ? (
+                        <span className="text-blue-600">
+                          {stats.officialUpdated}
+                        </span>
+                      ) : (
+                        "-"
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {stats.userRetainedIds.length > 0 ? (
+                        <span className="font-medium text-orange-600">
+                          {stats.userRetainedIds.length}
+                        </span>
+                      ) : (
+                        "-"
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ),
+              )}
             </TableBody>
           </Table>
         </div>

@@ -5,6 +5,9 @@
  * easily accessible from other parts of the application.
  */
 
+// Armor grouping utilities
+export { groupArmorBySeries } from "./armor-grouper";
+
 // Charm calculation utilities
 export {
   calculateSkillEquivalentSlots,
@@ -20,6 +23,9 @@ export {
   validateIdFormat,
   generateSkillId,
   generateCharmId,
+  generateAccessoryId,
+  generateArmorId,
+  generateWeaponId,
   isOfficialCharmId,
 } from "./id-generator";
 
@@ -39,7 +45,18 @@ export { isSuperior, compareEquipment } from "./equipment-vs";
 export type { EquipmentComparisonResult } from "./equipment-vs";
 
 // General-purpose data I/O utilities
-export { validateData } from "./data-io";
+export { validateData, createDiff, patch } from "./data-io";
 
 // General-purpose data I/O types
-export type { ValidationResult } from "./data-io";
+export type {
+  ValidationResult,
+  DataDelta,
+  DataDifference,
+  MigrationStats,
+} from "./data-io";
+
+// Limit break utilities
+export { upgradeArmor, toggleLimitBreakGlobal } from "./limit-break";
+
+// Weapon grouping utilities
+export { groupWeaponsIntoRows } from "./weapon-grouper";

@@ -27,7 +27,7 @@ import {
 } from "@/constants";
 import { DataStorage } from "@/services/storage";
 import type { AppSettings, Charm, Skill } from "@/types";
-import { toggleLimitBreakGlobal } from "@/utils/limit-break";
+import { toggleLimitBreakGlobal } from "@/utils";
 
 import { DataIO } from "./DataIO";
 
