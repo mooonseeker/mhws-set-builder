@@ -37,17 +37,13 @@ export function preprocess(
   allAccessories: Accessory[],
   allSkills: Skill[],
 ): PreprocessedData {
-  // Filter out dominated equipment to reduce search space.
-  const allArmors = filterArmors(rawArmors);
-  const allCharms = filterCharms(rawCharms);
-
   // Initialize the core data structures.
   const skillProviderMap = new Map<string, SkillProviders>();
   const maxPotentialPerArmorType = new Map<ArmorType, Map<string, number>>();
   const accessoriesBySkill = new Map<string, Accessory[]>();
   const skillDetails = new Map<string, Skill>();
 
-  // 1. Initialize base Map structures.
+  // 1. Initialize base Map structures and populate skillDetails.
   const armorTypes: ArmorType[] = ["helm", "body", "arm", "waist", "leg"];
   armorTypes.forEach((type) => {
     maxPotentialPerArmorType.set(type, new Map<string, number>());
@@ -63,6 +59,11 @@ export function preprocess(
       accessories: [],
     });
   });
+
+  // Filter out dominated equipment to reduce search space.
+  // Using the indexed skillDetails Map for better comparison performance.
+  const allArmors = filterArmors(rawArmors, skillDetails);
+  const allCharms = filterCharms(rawCharms, skillDetails);
 
   // 2. Build `accessoriesBySkill` map and populate `skillProviderMap` for accessories.
   allAccessories.forEach((accessory) => {
