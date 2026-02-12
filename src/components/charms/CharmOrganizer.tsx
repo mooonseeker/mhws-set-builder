@@ -2,7 +2,7 @@
  * @fileoverview A tool for batch organizing charms, including rating updates and inferior charm filtering.
  */
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Check, Loader2, Merge, RefreshCw, Trash2, Wand2 } from "lucide-react";
 
@@ -18,11 +18,11 @@ import {
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { useCharms, useSkills } from "@/hooks";
-import type { Charm } from "@/types";
+import type { Charm, Skill } from "@/types";
 import {
   calculateCharmEquivalentSlots,
   calculateKeySkillValue,
-  isDominating,
+  isSuperior,
 } from "@/utils";
 
 /**
@@ -32,6 +32,13 @@ import {
 export function CharmOrganizer() {
   const { charms, importCharms, deleteCharms } = useCharms();
   const { skills: allSkills } = useSkills();
+
+  // Create a skill map for O(1) lookups during batch processing
+  const skillMap = useMemo(() => {
+    const map = new Map<string, Skill>();
+    allSkills.forEach((s) => map.set(s.id, s));
+    return map;
+  }, [allSkills]);
 
   const [isOpen, setIsOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -68,7 +75,8 @@ export function CharmOrganizer() {
 
         if (
           keySkillValue !== charm.keySkillValue ||
-          JSON.stringify(equivalentSlots) !== JSON.stringify(charm.equivalentSlots)
+          JSON.stringify(equivalentSlots) !==
+            JSON.stringify(charm.equivalentSlots)
         ) {
           count++;
         }
@@ -93,15 +101,16 @@ export function CharmOrganizer() {
       const found: { target: Charm; betterBy: Charm }[] = [];
       for (let i = 0; i < charms.length; i++) {
         const candidate = charms[i];
-        let dominator: Charm | null = null;
+        let superior: Charm | null = null;
         for (let j = 0; j < charms.length; j++) {
           if (i === j) continue;
-          if (isDominating(charms[j], candidate)) {
-            dominator = charms[j];
+          // Use the new deep comparison logic with the indexed skill map
+          if (isSuperior(charms[j], candidate, skillMap)) {
+            superior = charms[j];
             break;
           }
         }
-        if (dominator) found.push({ target: candidate, betterBy: dominator });
+        if (superior) found.push({ target: candidate, betterBy: superior });
         if (i % 10 === 0) setProgress((i / charms.length) * 100);
       }
       setInferiorCharms(found);
@@ -131,7 +140,8 @@ export function CharmOrganizer() {
 
         if (
           keySkillValue !== charm.keySkillValue ||
-          JSON.stringify(equivalentSlots) !== JSON.stringify(charm.equivalentSlots)
+          JSON.stringify(equivalentSlots) !==
+            JSON.stringify(charm.equivalentSlots)
         ) {
           count++;
         }
@@ -141,15 +151,15 @@ export function CharmOrganizer() {
       const found: { target: Charm; betterBy: Charm }[] = [];
       for (let i = 0; i < updatedCharms.length; i++) {
         const candidate = updatedCharms[i];
-        let dominator: Charm | null = null;
+        let superior: Charm | null = null;
         for (let j = 0; j < updatedCharms.length; j++) {
           if (i === j) continue;
-          if (isDominating(updatedCharms[j], candidate)) {
-            dominator = updatedCharms[j];
+          if (isSuperior(updatedCharms[j], candidate, skillMap)) {
+            superior = updatedCharms[j];
             break;
           }
         }
-        if (dominator) found.push({ target: candidate, betterBy: dominator });
+        if (superior) found.push({ target: candidate, betterBy: superior });
       }
 
       setUpdatedCount(count);

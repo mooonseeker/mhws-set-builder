@@ -156,7 +156,7 @@ export function ValidationReport({
                             {item.diffs?.map((diff, idx) => (
                               <div
                                 key={idx}
-                                className="text-muted-foreground grid grid-cols-[3fr_1fr_1fr] gap-2 items-center px-1"
+                                className="text-muted-foreground grid grid-cols-[3fr_1fr_1fr] items-center gap-2 px-1"
                               >
                                 <span
                                   className="truncate font-mono"
@@ -171,7 +171,7 @@ export function ValidationReport({
                                   {JSON.stringify(diff.oldVal)}
                                 </span>
                                 <div className="flex items-center gap-1.5 overflow-hidden">
-                                  <span className="text-blue-400/60 shrink-0">
+                                  <span className="shrink-0 text-blue-400/60">
                                     →
                                   </span>
                                   <span

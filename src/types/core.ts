@@ -211,18 +211,12 @@ export interface EquivalentSlots {
 /**
  * The status of a charm after validation.
  *
- * - `ACCEPTED_AS_FIRST`: Accepted because the database is empty.
- * - `ACCEPTED_BY_MAX_VALUE`: Quick-accepted due to having the highest key skill value.
- * - `ACCEPTED_BY_MAX_SLOTS`: Quick-accepted due to having the most equivalent slots.
- * - `ACCEPTED_AS_UNIQUE_SKILL`: Accepted for having a unique key/advanced skill.
- * - `ACCEPTED`: Accepted after a detailed comparison.
+ * - `ACCEPTED_AS_SUPERIOR`: Accepted because it is strictly better than some existing charms.
+ * - `ACCEPTED`: Accepted after passing the comparison check.
  * - `REJECTED_AS_INFERIOR`: Rejected because a strictly better charm exists.
  */
 export type CharmValidationStatus =
-  | "ACCEPTED_AS_FIRST"
-  | "ACCEPTED_BY_MAX_VALUE"
-  | "ACCEPTED_BY_MAX_SLOTS"
-  | "ACCEPTED_AS_UNIQUE_SKILL"
+  | "ACCEPTED_AS_SUPERIOR"
   | "ACCEPTED"
   | "REJECTED_AS_INFERIOR";
 

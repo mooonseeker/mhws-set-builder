@@ -105,18 +105,19 @@ export function CharmManager() {
       ? charms.filter((c) => c.id !== charmToEdit.id)
       : charms;
 
-    return validateCharm(
-      {
-        name: charmToEdit?.name ?? "预览护石",
-        rarity,
-        skills: selectedSkills,
-        slots,
-        equivalentSlots,
-        keySkillValue,
-      },
-      charmsForValidation,
-      allSkills,
-    );
+    // Construct a full temporary charm object for strict type-safe validation
+    const previewCharm: Charm = {
+      id: charmToEdit?.id ?? "preview-charm-id",
+      name: charmToEdit?.name ?? previewName,
+      rarity,
+      skills: selectedSkills,
+      slots,
+      equivalentSlots,
+      keySkillValue,
+      createdAt: charmToEdit?.createdAt ?? new Date().toISOString(),
+    };
+
+    return validateCharm(previewCharm, charmsForValidation, allSkills);
   }, [
     rarity,
     selectedSkills,
@@ -126,6 +127,7 @@ export function CharmManager() {
     charms,
     allSkills,
     charmToEdit,
+    previewName,
   ]);
 
   // Adds a skill to the charm.

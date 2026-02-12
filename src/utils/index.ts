@@ -13,12 +13,7 @@ export {
 } from "./charm-calculator";
 
 // Charm validation utilities
-export {
-  validateCharm,
-  areSkillsIdentical,
-  areSlotsIdentical,
-  isDominating,
-} from "./charm-validator";
+export { validateCharm } from "./charm-validator";
 
 // ID generation utilities
 export {
@@ -39,9 +34,9 @@ export {
 // Skill sorting utilities
 export { compareSkillsPriority } from "./skill-sorter";
 
-// Dominance check utilities
-export { compareSlots, compareSkillSets, isStrictlyBetter } from "./dominance";
-export type { ComparisonResult, IDominanceCandidate } from "./dominance";
+// Equipment comparison utilities
+export { isSuperior, compareEquipment } from "./equipment-vs";
+export type { EquipmentComparisonResult } from "./equipment-vs";
 
 // General-purpose data I/O utilities
 export { validateData } from "./data-io";

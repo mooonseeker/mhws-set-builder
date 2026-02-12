@@ -145,7 +145,7 @@ export function useCharmOperations() {
    * - Whether it is outclassed by an existing charm.
    * - Whether its key skill value is below average.
    *
-   * @param data - The base data for the charm (rarity, skills, slots).
+   * @param data - The base data for the charm (rarity, skills, slots, plus calculated values).
    * @returns A validation result, including whether it passed and any warnings.
    *
    * @example
@@ -153,21 +153,21 @@ export function useCharmOperations() {
    * const result = validateNewCharm({
    *   rarity: 8,
    *   skills: [{ skillId: 'skill-001', level: 1 }],
-   *   slots: []
+   *   slots: [],
+   *   equivalentSlots: eq,
+   *   keySkillValue: kv
    * });
-   *
-   * if (!result.isValid) {
-   *   console.warn('Charm validation failed:', result.warnings);
-   * }
-   *
-   * if (result.isBelowAverage) {
-   *   console.warn('Key skill value is below average.');
-   * }
    * ```
    */
   const validateNewCharm = useCallback(
     (data: Omit<Charm, "id" | "createdAt">) => {
-      return validateCharm(data, charms, skills);
+      // Create a temporary full Charm object for validation
+      const fullCharm: Charm = {
+        ...data,
+        id: "temp-validation-id",
+        createdAt: new Date().toISOString(),
+      };
+      return validateCharm(fullCharm, charms, skills);
     },
     [charms, skills],
   );
