@@ -3,17 +3,12 @@
  * This file contains types related to equipment sets, search context, and results.
  */
 
-import {
-  ARMOR_TYPES,
-  type Accessory,
-  type Armor,
-  type ArmorType,
-  type Charm,
-  type Skill,
-  type SkillWithLevel,
-  type Slot,
-  type Weapon,
-} from "./core";
+import { type Accessory, type Slot } from "./accessory";
+import { ARMOR_TYPES, type Armor, type ArmorType } from "./armor";
+import { type SkillWithLevel } from "./base";
+import { type Charm } from "./charm";
+import { type Skill } from "./skill";
+import { type Weapon } from "./weapon";
 
 // MARK: Equipment Set Types
 /** The type of an equipment cell in the UI. */
