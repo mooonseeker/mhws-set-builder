@@ -5,7 +5,7 @@
  */
 
 import type {
-  Charm,
+  CharmEnhanced,
   CharmSortField,
   EquivalentSlots,
   SortDirection,
@@ -20,10 +20,10 @@ import type {
  * @returns A new, sorted array of charms without modifying the original.
  */
 export function sortCharms(
-  charms: Charm[],
+  charms: CharmEnhanced[],
   sortField: CharmSortField,
   direction: SortDirection,
-): Charm[] {
+): CharmEnhanced[] {
   const sorted = [...charms].sort((a, b) => {
     let aValue: number;
     let bValue: number;
@@ -56,7 +56,7 @@ export function sortCharms(
  * @param charms - The array of charms to sort.
  * @returns A new, sorted array of charms.
  */
-export function sortCharmsDefault(charms: Charm[]): Charm[] {
+export function sortCharmsDefault(charms: CharmEnhanced[]): CharmEnhanced[] {
   return [...charms].sort((a, b) => {
     // Primary sort: keySkillValue descending.
     if (a.keySkillValue !== b.keySkillValue) {
@@ -77,10 +77,10 @@ export function sortCharmsDefault(charms: Charm[]): Charm[] {
  * @returns A new, sorted array of charms.
  */
 export function sortCharmsMultiple(
-  charms: Charm[],
+  charms: CharmEnhanced[],
   sortFields: CharmSortField[],
   directions: SortDirection[],
-): Charm[] {
+): CharmEnhanced[] {
   if (sortFields.length !== directions.length) {
     throw new Error(
       "Sort fields and directions arrays must have the same length.",
@@ -125,9 +125,9 @@ export function sortCharmsMultiple(
  * @returns A sorted array of charms containing the specified skill.
  */
 export function filterAndSortBySkill(
-  charms: Charm[],
+  charms: CharmEnhanced[],
   skillId: string,
-): Charm[] {
+): CharmEnhanced[] {
   const filtered = charms.filter((charm) =>
     charm.skills.some((skill) => skill.skillId === skillId),
   );

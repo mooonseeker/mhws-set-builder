@@ -5,10 +5,12 @@
  * and CRUD operations.
  */
 
-import { useEffect, useReducer, useRef, type ReactNode } from "react";
+import { useEffect, useMemo, useReducer, useRef, type ReactNode } from "react";
 
+import { useSkills } from "@/hooks";
 import { DataStorage } from "@/services/storage";
-import type { Charm } from "@/types";
+import type { Charm, CharmEnhanced } from "@/types";
+import { calculateCharmEquivalentSlots, calculateKeySkillValue } from "@/utils";
 
 import { CharmContext, type CharmContextType } from "./CharmContext";
 
@@ -92,6 +94,27 @@ export function CharmProvider({ children }: { children: ReactNode }) {
     error: null,
   });
 
+  const { skills } = useSkills();
+
+  // Enhanced charms with calculated values
+  const enhancedCharms = useMemo(() => {
+    return state.charms.map((charm): CharmEnhanced => {
+      return {
+        ...charm,
+        equivalentSlots: calculateCharmEquivalentSlots(
+          charm.skills,
+          charm.slots,
+          skills,
+        ),
+        keySkillValue: calculateKeySkillValue(
+          charm.skills,
+          charm.slots,
+          skills,
+        ),
+      };
+    });
+  }, [state.charms, skills]);
+
   // Used to track the initial render to avoid unnecessary saves.
   const isFirstRender = useRef(true);
 
@@ -99,7 +122,23 @@ export function CharmProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const charms = DataStorage.loadData<Charm>("charms");
-      dispatch({ type: "SET_CHARMS", payload: charms });
+
+      // Cleanup: remove old calculated properties if they exist in storage
+      // We map the raw data to the core Charm type by explicitly picking fields
+      const cleanedCharms = charms.map((c): Charm => {
+        // We cast to Charm to access properties, knowing it might have extra properties
+        const raw = c;
+        return {
+          id: raw.id,
+          name: raw.name,
+          rarity: raw.rarity,
+          skills: raw.skills,
+          slots: raw.slots,
+          createdAt: raw.createdAt,
+        };
+      });
+
+      dispatch({ type: "SET_CHARMS", payload: cleanedCharms });
     } catch (error) {
       console.error("Failed to load charms from storage:", error);
       dispatch({ type: "SET_ERROR", payload: "Failed to load charms" });
@@ -158,6 +197,7 @@ export function CharmProvider({ children }: { children: ReactNode }) {
 
   const value: CharmContextType = {
     ...state,
+    enhancedCharms,
     addCharm,
     updateCharm,
     deleteCharm,

@@ -7,7 +7,7 @@
 
 import { createContext } from "react";
 
-import type { Charm } from "@/types";
+import type { Charm, CharmEnhanced } from "@/types";
 
 /**
  * Describes the state of charms.
@@ -25,6 +25,9 @@ interface CharmState {
  * Defines the shape of the CharmContext.
  */
 export interface CharmContextType extends CharmState {
+  /** The list of charms with calculated properties. */
+  enhancedCharms: CharmEnhanced[];
+
   /**
    * Adds a new charm.
    * @param charm - The charm to add.

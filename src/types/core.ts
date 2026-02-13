@@ -190,12 +190,6 @@ export const CHARM_SLOTS_MIN = 0;
 export const CHARM_SLOTS_MAX = 3;
 
 /**
- * The threshold for key skill value,
- * used to identify potentially subpar charms.
- */
-export const KEY_SKILL_VALUE_THRESHOLD = 2;
-
-/**
  * A summary of equivalent slots, converted from a charm's skills and
  * actual slots.
  */

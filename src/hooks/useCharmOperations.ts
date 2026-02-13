@@ -8,13 +8,7 @@
 import { useCallback } from "react";
 
 import type { Charm, SkillWithLevel, Slot } from "@/types";
-import {
-  calculateCharmEquivalentSlots,
-  calculateKeySkillValue,
-  generateCharmId,
-  isOfficialCharmId,
-  validateCharm,
-} from "@/utils";
+import { generateCharmId, isOfficialCharmId, validateCharm } from "@/utils";
 
 import { useCharms } from "./useCharms";
 import { useSkills } from "./useSkills";
@@ -104,20 +98,6 @@ export function useCharmOperations() {
       skills: SkillWithLevel[];
       slots: Slot[];
     }): Charm => {
-      // Calculate equivalent slots
-      const equivalentSlots = calculateCharmEquivalentSlots(
-        data.skills,
-        data.slots,
-        skills,
-      );
-
-      // Calculate key skill value
-      const keySkillValue = calculateKeySkillValue(
-        data.skills,
-        data.slots,
-        skills,
-      );
-
       // Create the charm object
       const newCharm: Charm = {
         id: generateCharmId(),
@@ -125,8 +105,6 @@ export function useCharmOperations() {
         rarity: data.rarity,
         skills: data.skills,
         slots: data.slots,
-        equivalentSlots,
-        keySkillValue,
         createdAt: new Date().toISOString(),
       };
 
@@ -135,7 +113,7 @@ export function useCharmOperations() {
 
       return newCharm;
     },
-    [skills, addCharm],
+    [addCharm],
   );
 
   /**
@@ -143,21 +121,9 @@ export function useCharmOperations() {
    *
    * Checks if a charm should be added, including:
    * - Whether it is outclassed by an existing charm.
-   * - Whether its key skill value is below average.
    *
-   * @param data - The base data for the charm (rarity, skills, slots, plus calculated values).
-   * @returns A validation result, including whether it passed and any warnings.
-   *
-   * @example
-   * ```tsx
-   * const result = validateNewCharm({
-   *   rarity: 8,
-   *   skills: [{ skillId: 'skill-001', level: 1 }],
-   *   slots: [],
-   *   equivalentSlots: eq,
-   *   keySkillValue: kv
-   * });
-   * ```
+   * @param data - The base data for the charm (rarity, skills, slots).
+   * @returns A validation result, including whether it passed.
    */
   const validateNewCharm = useCallback(
     (data: Omit<Charm, "id" | "createdAt">) => {
@@ -173,23 +139,13 @@ export function useCharmOperations() {
   );
 
   /**
-   * Updates a charm and recalculates its values.
+   * Updates a charm.
    *
-   * Finds a charm by its ID, updates its data, and recalculates its
-   * equivalent slots and key skill value.
+   * Finds a charm by its ID and updates its core data.
    *
    * @param id - The ID of the charm to update.
    * @param data - The updated base data for the charm (rarity, skills, slots).
    * @returns The updated charm object.
-   *
-   * @example
-   * ```tsx
-   * const updatedCharm = updateAndRecalculateCharm('charm-001', {
-   *   rarity: 11,
-   *   skills: [{ skillId: 'skill-002', level: 3 }],
-   *   slots: [{ type: 'weapon', level: 2 }]
-   * });
-   * ```
    */
   const updateAndRecalculateCharm = useCallback(
     (
@@ -211,20 +167,6 @@ export function useCharmOperations() {
         throw new Error("Cannot update official charms");
       }
 
-      // Calculate equivalent slots
-      const equivalentSlots = calculateCharmEquivalentSlots(
-        data.skills,
-        data.slots,
-        skills,
-      );
-
-      // Calculate key skill value
-      const keySkillValue = calculateKeySkillValue(
-        data.skills,
-        data.slots,
-        skills,
-      );
-
       // Create the updated charm object
       const updatedCharm: Charm = {
         id,
@@ -232,8 +174,6 @@ export function useCharmOperations() {
         rarity: data.rarity,
         skills: data.skills,
         slots: data.slots,
-        equivalentSlots,
-        keySkillValue,
         createdAt: existingCharm.createdAt, // Keep the original creation time
       };
 
@@ -242,7 +182,7 @@ export function useCharmOperations() {
 
       return updatedCharm;
     },
-    [charms, skills, updateCharmInContext],
+    [charms, updateCharmInContext],
   );
 
   /**
