@@ -9,7 +9,6 @@ import { z } from "zod";
 import type {
   ArmorType,
   AttributeType,
-  EquivalentSlots,
   Resistance,
   SkillCategory,
   SkillWithLevel,
@@ -254,31 +253,6 @@ export function parseOptionalFixedLengthTuple(
     );
   }
   return arr;
-}
-
-/**
- * Parses a CSV string representing equivalent slots into an `EquivalentSlots` object.
- * @param value The CSV string.
- * @returns An `EquivalentSlots` object.
- */
-export function parseEquivalentSlots(value: string): EquivalentSlots {
-  const parts = splitCsvList(value);
-  if (parts.length !== 6) {
-    throw new Error(
-      `Invalid equivalentSlots: expected 6 parts, got ${parts.length}`,
-    );
-  }
-  const numbers = parts.map((p, idx) =>
-    parseIntStrict(p, `equivalentSlots[${idx}]`),
-  );
-  return {
-    weaponSlot1: numbers[0],
-    weaponSlot2: numbers[1],
-    weaponSlot3: numbers[2],
-    armorSlot1: numbers[3],
-    armorSlot2: numbers[4],
-    armorSlot3: numbers[5],
-  };
 }
 
 // MARK: Row Schemas Helpers (CSV row -> strongly typed item)

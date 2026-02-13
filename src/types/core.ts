@@ -163,12 +163,18 @@ export interface Charm {
   skills: SkillWithLevel[];
   /** The slots on this charm (0-3 slots). */
   slots: Slot[];
+  /** The timestamp when the charm was created (ISO 8601 format). */
+  createdAt: string;
+}
+
+/**
+ * An enhanced charm type that includes calculated properties.
+ */
+export interface CharmEnhanced extends Charm {
   /** The calculated equivalent slots based on its skills and slots. */
   equivalentSlots: EquivalentSlots;
   /** The calculated value based on its key skills and equivalent slots. */
   keySkillValue: number;
-  /** The timestamp when the charm was created (ISO 8601 format). */
-  createdAt: string;
 }
 
 /** The minimum number of skills a charm can have. */

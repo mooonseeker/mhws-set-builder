@@ -20,7 +20,6 @@ import {
   intField,
   optionalAttributeFromString,
   optionalIntFromString,
-  parseEquivalentSlots,
   parseOptionalFixedLengthTuple,
   parseResistanceTuple,
   parseSkillPairs,
@@ -191,7 +190,6 @@ export const charmRowSchema: z.ZodType<Charm> = z
     name: z.string(),
     rarity: intField("rarity"),
     createdAt: z.string(),
-    keySkillValue: intField("keySkillValue"),
     skills: z
       .string()
       .optional()
@@ -200,7 +198,6 @@ export const charmRowSchema: z.ZodType<Charm> = z
       .string()
       .optional()
       .transform((v) => parseSlotList(v, "armor")),
-    equivalentSlots: z.string().transform((v) => parseEquivalentSlots(v)),
   })
   .passthrough()
   .transform((row) => ({
@@ -209,7 +206,5 @@ export const charmRowSchema: z.ZodType<Charm> = z
     rarity: row.rarity,
     skills: row.skills,
     slots: row.slots,
-    equivalentSlots: row.equivalentSlots,
-    keySkillValue: row.keySkillValue,
     createdAt: row.createdAt,
   }));

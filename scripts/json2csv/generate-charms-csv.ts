@@ -67,8 +67,6 @@ interface ProcessedCharm {
   skills: { name: string; level: number }[];
   skillsStr: string;
   slots: string;
-  equivalentSlots: string;
-  keySkillValue: string;
   createdAt: string;
 }
 
@@ -101,8 +99,6 @@ const main = () => {
     // Fixed values for the output CSV, as they are not present in the source data.
     const createdAt = "2025-02-27T16:00:00.000Z"; // Beijing 2025/2/28 00:00:00
     const slots = "0,0,0";
-    const equivalentSlots = "0,0,0,0,0,0";
-    const keySkillValue = "0";
 
     const allCharms: ProcessedCharm[] = [];
 
@@ -147,8 +143,6 @@ const main = () => {
           skills,
           skillsStr,
           slots,
-          equivalentSlots,
-          keySkillValue,
           createdAt,
         });
       });
@@ -185,16 +179,7 @@ const main = () => {
     finalCharms.sort((a, b) => a.id.localeCompare(b.id));
 
     const rows: string[] = [];
-    const headers = [
-      "id",
-      "name",
-      "rarity",
-      "skills",
-      "slots",
-      "equivalentSlots",
-      "keySkillValue",
-      "createdAt",
-    ];
+    const headers = ["id", "name", "rarity", "skills", "slots", "createdAt"];
     rows.push(headers.join(","));
 
     finalCharms.forEach((charm) => {
@@ -204,8 +189,6 @@ const main = () => {
         escapeCsv(charm.rarity),
         escapeCsv(charm.skillsStr),
         escapeCsv(charm.slots),
-        escapeCsv(charm.equivalentSlots),
-        escapeCsv(charm.keySkillValue),
         escapeCsv(charm.createdAt),
       ];
       rows.push(row.join(","));
