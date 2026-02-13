@@ -25,8 +25,9 @@ import {
   DEFAULT_CHARMS_PER_PAGE,
   DEFAULT_SKILLS_PER_PAGE,
 } from "@/constants";
+import { useCharms, useSkills } from "@/hooks";
 import { DataStorage } from "@/services/storage";
-import type { AppSettings, Charm, Skill } from "@/types";
+import type { AppSettings } from "@/types";
 import { toggleLimitBreakGlobal } from "@/utils";
 
 import { DataIO } from "./DataIO";
@@ -36,8 +37,8 @@ import { DataIO } from "./DataIO";
  * Provides game mechanics adjustment, display settings, and data management.
  */
 export function Settings() {
-  const skills = DataStorage.loadData<Skill>("skills");
-  const charms = DataStorage.loadData<Charm>("charms");
+  const { skills } = useSkills();
+  const { enhancedCharms } = useCharms();
 
   const [settings, setSettings] = useState<AppSettings>(() => {
     const savedSettings = DataStorage.loadData<AppSettings>("settings")[0];
@@ -247,15 +248,17 @@ export function Settings() {
                 </div>
                 <div>
                   <p className="text-foreground text-sm">护石总数</p>
-                  <p className="text-2xl font-bold">{charms.length}</p>
+                  <p className="text-2xl font-bold">{enhancedCharms.length}</p>
                 </div>
                 <div>
                   <p className="text-foreground text-sm">平均核心技能价值</p>
                   <p className="text-2xl font-bold">
-                    {charms.length > 0
+                    {enhancedCharms.length > 0
                       ? (
-                          charms.reduce((sum, c) => sum + c.keySkillValue, 0) /
-                          charms.length
+                          enhancedCharms.reduce(
+                            (sum, c) => sum + c.keySkillValue,
+                            0,
+                          ) / enhancedCharms.length
                         ).toFixed(1)
                       : "0"}
                   </p>

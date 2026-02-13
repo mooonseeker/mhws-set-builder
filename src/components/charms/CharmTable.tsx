@@ -17,11 +17,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import type { Charm, CharmSortField, SortDirection } from "@/types";
+import type {
+  Charm,
+  CharmEnhanced,
+  CharmSortField,
+  SortDirection,
+} from "@/types";
 import { isOfficialCharmId } from "@/utils";
 
 interface CharmTableProps {
-  charms: Charm[];
+  charms: CharmEnhanced[];
   hasCharms: boolean;
   sortField: CharmSortField;
   sortDirection: SortDirection;

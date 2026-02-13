@@ -112,8 +112,6 @@ export function CharmManager() {
       rarity,
       skills: selectedSkills,
       slots,
-      equivalentSlots,
-      keySkillValue,
       createdAt: charmToEdit?.createdAt ?? new Date().toISOString(),
     };
 
@@ -122,8 +120,6 @@ export function CharmManager() {
     rarity,
     selectedSkills,
     slots,
-    equivalentSlots,
-    keySkillValue,
     charms,
     allSkills,
     charmToEdit,

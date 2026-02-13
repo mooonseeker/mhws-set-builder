@@ -44,7 +44,7 @@ export function CharmList({
   selectingFor,
   currentCharm,
 }: CharmListProps) {
-  const { charms } = useCharms();
+  const { enhancedCharms } = useCharms();
   const { skills } = useSkills();
 
   // Filter states
@@ -67,7 +67,7 @@ export function CharmList({
 
   // Memoized filtered charms based on current filter criteria.
   const searchedCharms = useMemo(() => {
-    let filtered = [...charms];
+    let filtered = [...enhancedCharms];
 
     // Filter by rarity
     if (selectedRarity !== "all") {
@@ -105,7 +105,7 @@ export function CharmList({
 
     return filtered;
   }, [
-    charms,
+    enhancedCharms,
     selectedRarity,
     minKeySkillValue,
     filterSkillId,
@@ -191,7 +191,7 @@ export function CharmList({
       {mode === "table" ? (
         <CharmTable
           charms={paginatedCharms}
-          hasCharms={charms.length > 0}
+          hasCharms={enhancedCharms.length > 0}
           sortField={sortField}
           sortDirection={sortDirection}
           onSortChange={handleSortFieldChange}

@@ -3,11 +3,16 @@ import { Edit } from "lucide-react";
 import { EquipmentCard } from "@/components/entities";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { Charm, CharmSortField, SortDirection } from "@/types";
+import type {
+  Charm,
+  CharmEnhanced,
+  CharmSortField,
+  SortDirection,
+} from "@/types";
 import type { EquipmentCellType } from "@/types/set-builder";
 
 interface CharmGalleryProps {
-  charms: Charm[];
+  charms: CharmEnhanced[];
   variant?: "full" | "default" | "compact";
   selectingFor?: EquipmentCellType;
   currentCharm?: Charm | null;

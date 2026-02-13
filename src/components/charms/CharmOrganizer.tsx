@@ -1,10 +1,10 @@
 /**
- * @fileoverview A tool for batch organizing charms, including rating updates and inferior charm filtering.
+ * @fileoverview A tool for batch organizing charms, including inferior charm filtering.
  */
 
 import { useMemo, useState } from "react";
 
-import { Check, Loader2, Merge, RefreshCw, Trash2, Wand2 } from "lucide-react";
+import { Check, Loader2, Merge, Trash2, Wand2 } from "lucide-react";
 
 import { EquipmentCard } from "@/components/entities";
 import { Button } from "@/components/ui/button";
@@ -19,18 +19,14 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { useCharms, useSkills } from "@/hooks";
 import type { Charm, Skill } from "@/types";
-import {
-  calculateCharmEquivalentSlots,
-  calculateKeySkillValue,
-  isSuperior,
-} from "@/utils";
+import { isSuperior } from "@/utils";
 
 /**
  * CharmOrganizer component provides an interface for batch management of charms.
  * Optimized for a professional dashboard-like experience with fixed vertical headers.
  */
 export function CharmOrganizer() {
-  const { charms, importCharms, deleteCharms } = useCharms();
+  const { enhancedCharms, deleteCharms } = useCharms();
   const { skills: allSkills } = useSkills();
 
   // Create a skill map for O(1) lookups during batch processing
@@ -47,123 +43,30 @@ export function CharmOrganizer() {
     { target: Charm; betterBy: Charm }[]
   >([]);
   const [lastAction, setLastAction] = useState<string | null>(null);
-  const [updatedCount, setUpdatedCount] = useState(0);
 
   // Stats for the header
-  const totalCharms = charms.length;
+  const totalCharms = enhancedCharms.length;
 
-  const handleUpdateValue = () => {
-    setIsProcessing(true);
-    setProgress(0);
-    setLastAction("更新等效价值");
-    setUpdatedCount(0);
-    setInferiorCharms([]);
-
-    setTimeout(() => {
-      let count = 0;
-      const updatedCharms = charms.map((charm, index) => {
-        const keySkillValue = calculateKeySkillValue(
-          charm.skills,
-          charm.slots,
-          allSkills,
-        );
-        const equivalentSlots = calculateCharmEquivalentSlots(
-          charm.skills,
-          charm.slots,
-          allSkills,
-        );
-
-        if (
-          keySkillValue !== charm.keySkillValue ||
-          JSON.stringify(equivalentSlots) !==
-            JSON.stringify(charm.equivalentSlots)
-        ) {
-          count++;
-        }
-
-        if (index % 10 === 0) setProgress((index / charms.length) * 100);
-        return { ...charm, keySkillValue, equivalentSlots };
-      });
-      setUpdatedCount(count);
-      importCharms(updatedCharms);
-      setIsProcessing(false);
-      setProgress(100);
-    }, 100);
-  };
-
-  const handleFilterInferior = () => {
-    setIsProcessing(true);
-    setProgress(0);
-    setLastAction("筛查下位护石");
-    setUpdatedCount(0);
-
-    setTimeout(() => {
-      const found: { target: Charm; betterBy: Charm }[] = [];
-      for (let i = 0; i < charms.length; i++) {
-        const candidate = charms[i];
-        let superior: Charm | null = null;
-        for (let j = 0; j < charms.length; j++) {
-          if (i === j) continue;
-          // Use the new deep comparison logic with the indexed skill map
-          if (isSuperior(charms[j], candidate, skillMap)) {
-            superior = charms[j];
-            break;
-          }
-        }
-        if (superior) found.push({ target: candidate, betterBy: superior });
-        if (i % 10 === 0) setProgress((i / charms.length) * 100);
-      }
-      setInferiorCharms(found);
-      setIsProcessing(false);
-      setProgress(100);
-    }, 100);
-  };
-
-  const handleOneClickOrganize = () => {
+  const handleOrganize = () => {
     setIsProcessing(true);
     setProgress(0);
     setLastAction("一键整理");
 
     setTimeout(() => {
-      let count = 0;
-      const updatedCharms = charms.map((charm) => {
-        const keySkillValue = calculateKeySkillValue(
-          charm.skills,
-          charm.slots,
-          allSkills,
-        );
-        const equivalentSlots = calculateCharmEquivalentSlots(
-          charm.skills,
-          charm.slots,
-          allSkills,
-        );
-
-        if (
-          keySkillValue !== charm.keySkillValue ||
-          JSON.stringify(equivalentSlots) !==
-            JSON.stringify(charm.equivalentSlots)
-        ) {
-          count++;
-        }
-        return { ...charm, keySkillValue, equivalentSlots };
-      });
-
       const found: { target: Charm; betterBy: Charm }[] = [];
-      for (let i = 0; i < updatedCharms.length; i++) {
-        const candidate = updatedCharms[i];
+      for (let i = 0; i < enhancedCharms.length; i++) {
+        const candidate = enhancedCharms[i];
         let superior: Charm | null = null;
-        for (let j = 0; j < updatedCharms.length; j++) {
+        for (let j = 0; j < enhancedCharms.length; j++) {
           if (i === j) continue;
-          if (isSuperior(updatedCharms[j], candidate, skillMap)) {
-            superior = updatedCharms[j];
+          if (isSuperior(enhancedCharms[j], candidate, skillMap)) {
+            superior = enhancedCharms[j];
             break;
           }
         }
         if (superior) found.push({ target: candidate, betterBy: superior });
+        if (i % 10 === 0) setProgress((i / enhancedCharms.length) * 100);
       }
-
-      setUpdatedCount(count);
-      importCharms(updatedCharms);
       setInferiorCharms(found);
       setIsProcessing(false);
       setProgress(100);
@@ -187,7 +90,6 @@ export function CharmOrganizer() {
     setProgress(0);
     setInferiorCharms([]);
     setLastAction(null);
-    setUpdatedCount(0);
   };
 
   return (
@@ -210,7 +112,7 @@ export function CharmOrganizer() {
             <div>
               <DialogTitle className="text-xl">整理护石</DialogTitle>
               <DialogDescription className="text-xs">
-                更新等效核心技能价值并清理下位护石。
+                分析数据库并筛查可清理的下位护石。
               </DialogDescription>
             </div>
             <div className="text-right">
@@ -225,26 +127,20 @@ export function CharmOrganizer() {
         </DialogHeader>
 
         <div className="flex flex-1 flex-col gap-3 overflow-hidden px-3 py-0 2xl:gap-4 2xl:px-4 2xl:pb-4">
-          <div className="grid shrink-0 grid-cols-3 gap-2 2xl:gap-3">
-            <CompactCard
-              title="更新等效价值"
-              icon={<RefreshCw className="h-5 w-5" />}
-              onClick={handleUpdateValue}
+          <div className="flex shrink-0 justify-center">
+            <Button
+              size="lg"
+              className="w-full max-w-md gap-2"
+              onClick={handleOrganize}
               disabled={isProcessing}
-            />
-            <CompactCard
-              title="筛查下位护石"
-              icon={<Trash2 className="h-5 w-5" />}
-              onClick={handleFilterInferior}
-              disabled={isProcessing}
-            />
-            <CompactCard
-              title="一键整理护石"
-              icon={<Wand2 className="text-primary h-5 w-5" />}
-              onClick={handleOneClickOrganize}
-              disabled={isProcessing}
-              highlight
-            />
+            >
+              {isProcessing ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <Wand2 className="h-5 w-5" />
+              )}
+              一键筛查下位护石
+            </Button>
           </div>
 
           <div className="bg-muted/30 relative flex flex-1 flex-col overflow-hidden rounded-lg border p-4">
@@ -270,41 +166,13 @@ export function CharmOrganizer() {
             {!isProcessing && lastAction === null && (
               <div className="text-muted-foreground flex flex-1 flex-col items-center justify-center gap-2 opacity-60">
                 <Wand2 className="h-10 w-10" />
-                <p className="text-sm">请选择上方功能开始整理</p>
-              </div>
-            )}
-
-            {/* Rating update results feedback */}
-            {!isProcessing && lastAction === "更新等效价值" && (
-              <div className="text-muted-foreground animate-in fade-in zoom-in-95 flex flex-1 flex-col items-center justify-center gap-2">
-                <div
-                  className={`rounded-full p-3 ${
-                    updatedCount > 0
-                      ? "bg-green-100 dark:bg-green-900/40"
-                      : "bg-muted/50"
-                  }`}
-                >
-                  <Check
-                    className={`h-10 w-10 ${
-                      updatedCount > 0
-                        ? "text-green-600 dark:text-green-400"
-                        : "text-muted-foreground/60"
-                    }`}
-                  />
-                </div>
-                <div className="text-center">
-                  <p className="text-sm font-bold">
-                    {updatedCount > 0
-                      ? `已更新 ${updatedCount} 个护石的等效核心技能价值`
-                      : "所有护石均已匹配核心技能列表"}
-                  </p>
-                </div>
+                <p className="text-sm">点击上方按钮开始整理</p>
               </div>
             )}
 
             {/* Inferior charm filter results feedback (Empty state) */}
             {!isProcessing &&
-              (lastAction === "筛查下位护石" || lastAction === "清理完成") &&
+              (lastAction === "一键整理" || lastAction === "清理完成") &&
               inferiorCharms.length === 0 && (
                 <div className="text-muted-foreground animate-in fade-in zoom-in-95 flex flex-1 flex-col items-center justify-center gap-2 opacity-60">
                   <div
@@ -404,34 +272,5 @@ export function CharmOrganizer() {
         </div>
       </DialogContent>
     </Dialog>
-  );
-}
-
-function CompactCard({
-  title,
-  icon,
-  onClick,
-  disabled,
-  highlight,
-}: {
-  title: string;
-  icon: React.ReactNode;
-  onClick: () => void;
-  disabled?: boolean;
-  highlight?: boolean;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={`flex items-center justify-center gap-2 rounded-lg border p-2.5 transition-all ${highlight ? "border-primary/40 bg-primary/5 hover:bg-primary/10" : "border-border hover:bg-muted bg-card"} ${disabled ? "pointer-events-none opacity-50" : "cursor-pointer"}`}
-    >
-      <div
-        className={`${highlight ? "text-primary" : "text-muted-foreground"}`}
-      >
-        {disabled ? <Loader2 className="h-4 w-4 animate-spin" /> : icon}
-      </div>
-      <span className="truncate text-sm font-bold">{title}</span>
-    </button>
   );
 }
