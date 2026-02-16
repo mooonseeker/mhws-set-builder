@@ -69,7 +69,7 @@ export interface CharmContextType extends CharmState {
   /**
    * Resets charms to the initial default dataset.
    */
-  resetCharms: () => void;
+  resetCharms: () => Promise<void>;
 }
 
 /**

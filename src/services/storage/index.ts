@@ -54,6 +54,14 @@ class DataStorageService {
   private dataCache: Map<DataId, DataItem[]> = new Map<DataId, DataItem[]>();
 
   /**
+   * Cache for base (initial) data to avoid redundant fetch requests.
+   */
+  private baseDataCache: Map<DataId, DataItem[]> = new Map<
+    DataId,
+    DataItem[]
+  >();
+
+  /**
    * Cache for the migration report.
    * Stores stats from the last migration for UI display.
    */
@@ -423,14 +431,27 @@ class DataStorageService {
     // `settings` does not have a base data file.
     if (id === "settings") return [];
 
+    // Return cached base data if available.
+    const cached = this.baseDataCache.get(id);
+    if (cached) return cached;
+
     try {
-      // Note: The import path needs adjustment due to the file's location change.
-      // From src/services/storage/index.ts to src/data/initial-xxx.json
-      // This requires going up two levels: ../../data/
-      const module = (await import(`../../data/initial-${id}.json`)) as {
-        default: Record<string, unknown[]>;
-      };
-      return (module.default[id] ?? []) as DataItem[];
+      // Load data from the public data directory using fetch.
+      // import.meta.env.BASE_URL is handled by Vite and ensures correct paths on gh-pages.
+      const baseUrl = import.meta.env.BASE_URL;
+      const response = await fetch(`${baseUrl}data/initial-${id}.json`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = (await response.json()) as Record<string, unknown[]>;
+      const items = (data[id] ?? []) as DataItem[];
+
+      // Cache the base data for future use.
+      this.baseDataCache.set(id, items);
+
+      return items;
     } catch (error) {
       console.error(`[DataStorage] Failed to load base data for ${id}:`, error);
       return []; // Return an empty array on failure.

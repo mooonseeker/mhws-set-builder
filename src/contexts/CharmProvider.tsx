@@ -189,10 +189,20 @@ export function CharmProvider({ children }: { children: ReactNode }) {
     dispatch({ type: "IMPORT_CHARMS", payload: charms });
   };
 
-  const resetCharms = () => {
-    // In this implementation, reset simply clears the charms.
-    // A more robust implementation might load from a default data file.
-    dispatch({ type: "SET_CHARMS", payload: [] });
+  const resetCharms = async () => {
+    try {
+      // Fetch initial data from the public directory.
+      const baseUrl = import.meta.env.BASE_URL;
+      const response = await fetch(`${baseUrl}data/initial-charms.json`);
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
+      const initialData = (await response.json()) as { charms: Charm[] };
+      const initialCharms = initialData.charms;
+      dispatch({ type: "SET_CHARMS", payload: initialCharms });
+    } catch (error) {
+      console.error("Failed to reset charms data:", error);
+      dispatch({ type: "SET_ERROR", payload: "Failed to reset charms" });
+    }
   };
 
   const value: CharmContextType = {

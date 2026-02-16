@@ -30,5 +30,5 @@ docs/
 
 # Local files
 *.local
-initial*
+/public/data/*.json
 local*

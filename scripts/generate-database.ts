@@ -78,8 +78,15 @@ async function processTask<TItem>(task: GenerationTask<TItem>): Promise<void> {
 
   const outputFilePath = path.resolve(
     __dirname,
-    `../src/data/${task.outputFileName}`,
+    `../public/data/${task.outputFileName}`,
   );
+
+  // Ensure the output directory exists
+  const outputDir = path.dirname(outputFilePath);
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+
   fs.writeFileSync(outputFilePath, JSON.stringify(finalJson, null, 2));
   console.log(`Successfully generated ${sortedItems.length} ${task.name}`);
 }

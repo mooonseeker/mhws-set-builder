@@ -142,9 +142,13 @@ export function WeaponProvider({ children }: { children: ReactNode }) {
 
   const resetWeapons = async () => {
     try {
-      // Dynamically import the initial data.
-      const initialData = await import("@/data/initial-weapons.json");
-      const initialWeapons = initialData.default.weapons as Weapon[];
+      // Fetch initial data from the public directory.
+      const baseUrl = import.meta.env.BASE_URL;
+      const response = await fetch(`${baseUrl}data/initial-weapons.json`);
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
+      const initialData = (await response.json()) as { weapons: Weapon[] };
+      const initialWeapons = initialData.weapons;
       dispatch({ type: "SET_WEAPONS", payload: initialWeapons });
     } catch (error) {
       console.error("Failed to reset weapons data:", error);

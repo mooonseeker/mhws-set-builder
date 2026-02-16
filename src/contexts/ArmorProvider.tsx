@@ -142,9 +142,13 @@ export function ArmorProvider({ children }: { children: ReactNode }) {
 
   const resetArmor = async () => {
     try {
-      // Dynamically import the initial data.
-      const initialData = await import("@/data/initial-armor.json");
-      const initialArmor = initialData.default.armor as Armor[];
+      // Fetch initial data from the public directory.
+      const baseUrl = import.meta.env.BASE_URL;
+      const response = await fetch(`${baseUrl}data/initial-armor.json`);
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
+      const initialData = (await response.json()) as { armor: Armor[] };
+      const initialArmor = initialData.armor;
       dispatch({ type: "SET_ARMOR", payload: initialArmor });
     } catch (error) {
       console.error("Failed to reset armor data:", error);

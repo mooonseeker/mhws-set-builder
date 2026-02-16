@@ -150,9 +150,13 @@ export function SkillProvider({ children }: { children: ReactNode }) {
 
   const resetSkills = async () => {
     try {
-      // Dynamically import the initial data.
-      const initialData = await import("@/data/initial-skills.json");
-      const initialSkills = initialData.default.skills as Skill[];
+      // Fetch initial data from the public directory.
+      const baseUrl = import.meta.env.BASE_URL;
+      const response = await fetch(`${baseUrl}data/initial-skills.json`);
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
+      const initialData = (await response.json()) as { skills: Skill[] };
+      const initialSkills = initialData.skills;
       dispatch({ type: "SET_SKILLS", payload: initialSkills });
     } catch (error) {
       console.error("Failed to reset skills data:", error);

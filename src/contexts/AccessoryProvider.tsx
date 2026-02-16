@@ -148,9 +148,15 @@ export function AccessoryProvider({ children }: { children: ReactNode }) {
 
   const resetAccessories = async () => {
     try {
-      // Dynamically import the initial data.
-      const initialData = await import("@/data/initial-accessories.json");
-      const initialAccessories = initialData.default.accessories as Accessory[];
+      // Fetch initial data from the public directory.
+      const baseUrl = import.meta.env.BASE_URL;
+      const response = await fetch(`${baseUrl}data/initial-accessories.json`);
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
+      const initialData = (await response.json()) as {
+        accessories: Accessory[];
+      };
+      const initialAccessories = initialData.accessories;
       dispatch({ type: "SET_ACCESSORIES", payload: initialAccessories });
     } catch (error) {
       console.error("Failed to reset accessories data:", error);
