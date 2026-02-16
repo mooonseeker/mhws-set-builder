@@ -14,7 +14,9 @@ import {
   DEFAULT_ACCESSORIES_PER_PAGE,
   DEFAULT_ARMOR_SERIES_PER_PAGE,
   DEFAULT_CHARMS_PER_PAGE,
+  DEFAULT_SEARCH_RESULT_LIMIT,
   DEFAULT_SKILLS_PER_PAGE,
+  DEFAULT_WEAPON_TYPE,
   STORAGE_KEYS,
   STORAGE_KEYS_DELTA,
 } from "@/constants";
@@ -321,20 +323,24 @@ class DataStorageService {
       // Settings are initialized with default values and saved fully.
       const key = STORAGE_KEYS.settings;
       const stored = localStorage.getItem(key);
+      const defaultSettings: AppSettings = {
+        id: "app-settings",
+        enableLimitBreak: false,
+        skillsPerPage: DEFAULT_SKILLS_PER_PAGE,
+        armorSeriesPerPage: DEFAULT_ARMOR_SERIES_PER_PAGE,
+        charmsPerPage: DEFAULT_CHARMS_PER_PAGE,
+        accessoriesPerPage: DEFAULT_ACCESSORIES_PER_PAGE,
+        defaultWeaponType: DEFAULT_WEAPON_TYPE,
+        searchResultLimit: DEFAULT_SEARCH_RESULT_LIMIT,
+      };
+
       let settings: AppSettings[];
       if (stored) {
-        settings = JSON.parse(stored) as AppSettings[];
+        const parsed = JSON.parse(stored) as AppSettings[];
+        // Merge with defaults to ensure all keys exist (backward compatibility)
+        settings = parsed.map((s) => ({ ...defaultSettings, ...s }));
       } else {
-        settings = [
-          {
-            id: "app-settings",
-            enableLimitBreak: false,
-            skillsPerPage: DEFAULT_SKILLS_PER_PAGE,
-            armorSeriesPerPage: DEFAULT_ARMOR_SERIES_PER_PAGE,
-            charmsPerPage: DEFAULT_CHARMS_PER_PAGE,
-            accessoriesPerPage: DEFAULT_ACCESSORIES_PER_PAGE,
-          },
-        ];
+        settings = [defaultSettings];
         localStorage.setItem(key, JSON.stringify(settings));
       }
       this.dataCache.set("settings", settings);

@@ -29,3 +29,7 @@ export const DEFAULT_ACCESSORIES_PER_PAGE = 16;
 export const DEFAULT_ARMOR_SERIES_PER_PAGE = 32;
 
 export const DEFAULT_CHARMS_PER_PAGE = 16;
+
+export const DEFAULT_WEAPON_TYPE = "rod";
+
+export const DEFAULT_SEARCH_RESULT_LIMIT = 20;

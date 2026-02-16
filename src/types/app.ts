@@ -6,7 +6,7 @@ import { type Accessory } from "./accessory";
 import { type Armor } from "./armor";
 import { type Charm } from "./charm";
 import { type Skill } from "./skill";
-import { type Weapon } from "./weapon";
+import { type Weapon, type WeaponType } from "./weapon";
 
 /**
  * Defines the application settings.
@@ -24,6 +24,10 @@ export interface AppSettings {
   charmsPerPage: number;
   /** Number of accessories to show per page. */
   accessoriesPerPage: number;
+  /** Default weapon type for new builds. */
+  defaultWeaponType: WeaponType;
+  /** Maximum number of set search results to return. */
+  searchResultLimit: number;
 }
 
 /**

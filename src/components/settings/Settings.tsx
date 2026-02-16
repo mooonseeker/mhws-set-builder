@@ -3,7 +3,7 @@
  * and data management.
  */
 
-import { Settings2, Trash2, Zap } from "lucide-react";
+import { Search, Settings2, Trash2, Zap } from "lucide-react";
 
 import { CharmShowcase } from "@/components/charms";
 import { Button } from "@/components/ui/button";
@@ -19,14 +19,23 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   DEFAULT_ACCESSORIES_PER_PAGE,
   DEFAULT_ARMOR_SERIES_PER_PAGE,
   DEFAULT_CHARMS_PER_PAGE,
+  DEFAULT_SEARCH_RESULT_LIMIT,
   DEFAULT_SKILLS_PER_PAGE,
+  WEAPON_TYPE_LABELS,
 } from "@/constants";
 import { useCharms, useSettings, useSkills } from "@/hooks";
-import type { AppSettings } from "@/types";
+import { WEAPON_TYPES, type AppSettings, type WeaponType } from "@/types";
 
 import { DataIO } from "./DataIO";
 import { SettingGroup, SettingItem } from "./SettingItem";
@@ -181,6 +190,63 @@ export function Settings() {
                     dialogs.limitBreak.setOpen(true);
                   }}
                 />
+              </SettingItem>
+
+              <SettingItem
+                label="配装搜索方案上限"
+                description="设置配装搜索时返回的最大方案数量。数值越大搜索可能越慢。"
+              >
+                <div className="flex items-center gap-2">
+                  <Search className="text-muted-foreground h-4 w-4" />
+                  <Input
+                    type="number"
+                    className="h-8 w-20 text-right"
+                    value={settings.searchResultLimit}
+                    onChange={(e) =>
+                      updateSetting(
+                        "searchResultLimit",
+                        parseInt(e.target.value) || DEFAULT_SEARCH_RESULT_LIMIT,
+                      )
+                    }
+                  />
+                </div>
+              </SettingItem>
+
+              <SettingItem
+                label="默认武器类型"
+                description="设置配装器默认选择的武器类型。"
+              >
+                <TooltipProvider>
+                  <ToggleGroup
+                    type="single"
+                    value={settings.defaultWeaponType}
+                    onValueChange={(value) =>
+                      value &&
+                      updateSetting("defaultWeaponType", value as WeaponType)
+                    }
+                    className="flex-wrap justify-end"
+                  >
+                    {WEAPON_TYPES.map((type) => (
+                      <Tooltip key={type}>
+                        <TooltipTrigger asChild>
+                          <ToggleGroupItem
+                            value={type}
+                            className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground h-8 w-8 p-0"
+                          >
+                            <img
+                              src={`/weapon-type/${type}.png`}
+                              alt={type}
+                              className="h-5 w-5"
+                            />
+                          </ToggleGroupItem>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{WEAPON_TYPE_LABELS[type]}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    ))}
+                  </ToggleGroup>
+                </TooltipProvider>
               </SettingItem>
             </SettingGroup>
 

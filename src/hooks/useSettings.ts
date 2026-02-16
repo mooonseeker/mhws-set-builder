@@ -8,7 +8,9 @@ import {
   DEFAULT_ACCESSORIES_PER_PAGE,
   DEFAULT_ARMOR_SERIES_PER_PAGE,
   DEFAULT_CHARMS_PER_PAGE,
+  DEFAULT_SEARCH_RESULT_LIMIT,
   DEFAULT_SKILLS_PER_PAGE,
+  DEFAULT_WEAPON_TYPE,
 } from "@/constants";
 import { DataStorage } from "@/services/storage";
 import type { AppSettings } from "@/types";
@@ -20,13 +22,15 @@ import { toggleLimitBreakGlobal } from "@/utils";
 export function useSettings() {
   const [settings, setSettings] = useState<AppSettings>(() => {
     const savedSettings = DataStorage.loadData<AppSettings>("settings")[0];
-    const defaultSettings = {
+    const defaultSettings: AppSettings = {
       id: "app-settings",
       enableLimitBreak: false,
       skillsPerPage: DEFAULT_SKILLS_PER_PAGE,
       armorSeriesPerPage: DEFAULT_ARMOR_SERIES_PER_PAGE,
       charmsPerPage: DEFAULT_CHARMS_PER_PAGE,
       accessoriesPerPage: DEFAULT_ACCESSORIES_PER_PAGE,
+      defaultWeaponType: DEFAULT_WEAPON_TYPE,
+      searchResultLimit: DEFAULT_SEARCH_RESULT_LIMIT,
     };
     return { ...defaultSettings, ...savedSettings };
   });
