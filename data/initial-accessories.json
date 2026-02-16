@@ -1,0 +1,6475 @@
+{
+  "version": "1.04.0",
+  "exportedAt": "2026-02-16T14:57:43.623Z",
+  "dataType": "accessories",
+  "accessories": [
+    {
+      "id": "ACC_ID_0000",
+      "name": "攻击珠【1】",
+      "type": "weapon",
+      "description": "发动攻击技能的装饰品。",
+      "sortID": 101,
+      "skills": [
+        {
+          "skillId": "HunterSkill_000",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "PINK"
+    },
+    {
+      "id": "ACC_ID_0001",
+      "name": "攻击珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动攻击技能的装饰品。",
+      "sortID": 102,
+      "skills": [
+        {
+          "skillId": "HunterSkill_000",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "PINK"
+    },
+    {
+      "id": "ACC_ID_0002",
+      "name": "攻击珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动攻击技能的装饰品。",
+      "sortID": 103,
+      "skills": [
+        {
+          "skillId": "HunterSkill_000",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "PINK"
+    },
+    {
+      "id": "ACC_ID_0125",
+      "name": "逆上珠【2】",
+      "type": "armor",
+      "description": "发动怨恨技能的装饰品。",
+      "sortID": 201,
+      "skills": [
+        {
+          "skillId": "HunterSkill_060",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0171",
+      "name": "反攻珠【3】",
+      "type": "armor",
+      "description": "发动巧击技能的装饰品。",
+      "sortID": 301,
+      "skills": [
+        {
+          "skillId": "HunterSkill_115",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0075",
+      "name": "守势珠【1】",
+      "type": "weapon",
+      "description": "发动攻击守势技能的装饰品。",
+      "sortID": 401,
+      "skills": [
+        {
+          "skillId": "HunterSkill_028",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0076",
+      "name": "守势珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动攻击守势技能的装饰品。",
+      "sortID": 402,
+      "skills": [
+        {
+          "skillId": "HunterSkill_028",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0077",
+      "name": "守势珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动攻击守势技能的装饰品。",
+      "sortID": 403,
+      "skills": [
+        {
+          "skillId": "HunterSkill_028",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0414",
+      "name": "守势·火炎珠【3】",
+      "type": "weapon",
+      "description": "发动攻击守势技能和火属性攻击强化技能的装饰品。",
+      "sortID": 410,
+      "skills": [
+        {
+          "skillId": "HunterSkill_028",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_005",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0415",
+      "name": "守势·流水珠【3】",
+      "type": "weapon",
+      "description": "发动攻击守势技能和水属性攻击强化技能的装饰品。",
+      "sortID": 415,
+      "skills": [
+        {
+          "skillId": "HunterSkill_028",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_006",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0416",
+      "name": "守势·雷光珠【3】",
+      "type": "weapon",
+      "description": "发动攻击守势技能和雷属性攻击强化技能的装饰品。",
+      "sortID": 420,
+      "skills": [
+        {
+          "skillId": "HunterSkill_028",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_008",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0417",
+      "name": "守势·冰结珠【3】",
+      "type": "weapon",
+      "description": "发动攻击守势技能和冰属性攻击强化技能的装饰品。",
+      "sortID": 425,
+      "skills": [
+        {
+          "skillId": "HunterSkill_028",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_007",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0418",
+      "name": "守势·破龙珠【3】",
+      "type": "weapon",
+      "description": "发动攻击守势技能和龙属性攻击强化技能的装饰品。",
+      "sortID": 430,
+      "skills": [
+        {
+          "skillId": "HunterSkill_028",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_009",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0230",
+      "name": "守势·匠珠【3】",
+      "type": "weapon",
+      "description": "发动攻击守势技能和匠技能的装饰品。",
+      "sortID": 435,
+      "skills": [
+        {
+          "skillId": "HunterSkill_028",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0231",
+      "name": "守势·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动攻击守势技能和格挡性能技能的装饰品。",
+      "sortID": 440,
+      "skills": [
+        {
+          "skillId": "HunterSkill_028",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0124",
+      "name": "无伤珠【2】",
+      "type": "armor",
+      "description": "发动无伤技能的装饰品。",
+      "sortID": 501,
+      "skills": [
+        {
+          "skillId": "HunterSkill_059",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0167",
+      "name": "逆袭珠【2】",
+      "type": "armor",
+      "description": "发动逆袭技能的装饰品。",
+      "sortID": 601,
+      "skills": [
+        {
+          "skillId": "HunterSkill_110",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0003",
+      "name": "达人珠【1】",
+      "type": "weapon",
+      "description": "发动看破技能的装饰品。",
+      "sortID": 701,
+      "skills": [
+        {
+          "skillId": "HunterSkill_001",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0004",
+      "name": "达人珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动看破技能的装饰品。",
+      "sortID": 702,
+      "skills": [
+        {
+          "skillId": "HunterSkill_001",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0005",
+      "name": "达人珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动看破技能的装饰品。",
+      "sortID": 703,
+      "skills": [
+        {
+          "skillId": "HunterSkill_001",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0006",
+      "name": "超心珠【1】",
+      "type": "weapon",
+      "description": "发动超会心技能的装饰品。",
+      "sortID": 801,
+      "skills": [
+        {
+          "skillId": "HunterSkill_002",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0007",
+      "name": "超心珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动超会心技能的装饰品。",
+      "sortID": 802,
+      "skills": [
+        {
+          "skillId": "HunterSkill_002",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0008",
+      "name": "超心珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动超会心技能的装饰品。",
+      "sortID": 803,
+      "skills": [
+        {
+          "skillId": "HunterSkill_002",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0126",
+      "name": "痛击珠【3】",
+      "type": "armor",
+      "description": "发动弱点特效技能的装饰品。",
+      "sortID": 901,
+      "skills": [
+        {
+          "skillId": "HunterSkill_062",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "DPURPLE"
+    },
+    {
+      "id": "ACC_ID_0078",
+      "name": "拔刀珠【1】",
+      "type": "weapon",
+      "description": "发动拔刀术【技】技能的装饰品。",
+      "sortID": 1001,
+      "skills": [
+        {
+          "skillId": "HunterSkill_029",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0079",
+      "name": "拔刀珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动拔刀术【技】技能的装饰品。",
+      "sortID": 1002,
+      "skills": [
+        {
+          "skillId": "HunterSkill_029",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0080",
+      "name": "拔刀珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动拔刀术【技】技能的装饰品。",
+      "sortID": 1003,
+      "skills": [
+        {
+          "skillId": "HunterSkill_029",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0128",
+      "name": "浑身珠【2】",
+      "type": "armor",
+      "description": "发动精神抖擞技能的装饰品。",
+      "sortID": 1101,
+      "skills": [
+        {
+          "skillId": "HunterSkill_064",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0015",
+      "name": "火炎珠【1】",
+      "type": "weapon",
+      "description": "发动火属性攻击强化技能的装饰品。",
+      "sortID": 1301,
+      "skills": [
+        {
+          "skillId": "HunterSkill_005",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0016",
+      "name": "火炎珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动火属性攻击强化技能的装饰品。",
+      "sortID": 1302,
+      "skills": [
+        {
+          "skillId": "HunterSkill_005",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0017",
+      "name": "火炎珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动火属性攻击强化技能的装饰品。",
+      "sortID": 1303,
+      "skills": [
+        {
+          "skillId": "HunterSkill_005",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0348",
+      "name": "火炎·守势珠【3】",
+      "type": "weapon",
+      "description": "发动火属性攻击强化技能和攻击守势技能的装饰品。",
+      "sortID": 1310,
+      "skills": [
+        {
+          "skillId": "HunterSkill_005",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_028",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0352",
+      "name": "火炎·属会珠【3】",
+      "type": "weapon",
+      "description": "发动火属性攻击强化技能和会心击【属性】技能的装饰品。",
+      "sortID": 1315,
+      "skills": [
+        {
+          "skillId": "HunterSkill_005",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_003",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0302",
+      "name": "火炎·匠珠【3】",
+      "type": "weapon",
+      "description": "发动火属性攻击强化技能和匠技能的装饰品。",
+      "sortID": 1320,
+      "skills": [
+        {
+          "skillId": "HunterSkill_005",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0344",
+      "name": "火炎·利刃珠【3】",
+      "type": "weapon",
+      "description": "发动火属性攻击强化技能和利刃技能的装饰品。",
+      "sortID": 1325,
+      "skills": [
+        {
+          "skillId": "HunterSkill_005",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_015",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0305",
+      "name": "火炎·射法珠【3】",
+      "type": "weapon",
+      "description": "发动火属性攻击强化技能和弹道强化技能的装饰品。",
+      "sortID": 1330,
+      "skills": [
+        {
+          "skillId": "HunterSkill_005",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_019",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0351",
+      "name": "火炎·初弹珠【3】",
+      "type": "weapon",
+      "description": "发动火属性攻击强化技能和首发迅击技能的装饰品。",
+      "sortID": 1340,
+      "skills": [
+        {
+          "skillId": "HunterSkill_005",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_198",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0350",
+      "name": "火炎·积弹珠【3】",
+      "type": "weapon",
+      "description": "发动火属性攻击强化技能和强四射击技能的装饰品。",
+      "sortID": 1345,
+      "skills": [
+        {
+          "skillId": "HunterSkill_005",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_197",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0345",
+      "name": "火炎·集中珠【3】",
+      "type": "weapon",
+      "description": "发动火属性攻击强化技能和集中技能的装饰品。",
+      "sortID": 1350,
+      "skills": [
+        {
+          "skillId": "HunterSkill_005",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_022",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0346",
+      "name": "火炎·昂扬珠【3】",
+      "type": "weapon",
+      "description": "发动火属性攻击强化技能和强化持续技能的装饰品。",
+      "sortID": 1355,
+      "skills": [
+        {
+          "skillId": "HunterSkill_005",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_023",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0304",
+      "name": "火炎·击晕珠【3】",
+      "type": "weapon",
+      "description": "发动火属性攻击强化技能和击晕术技能的装饰品。",
+      "sortID": 1360,
+      "skills": [
+        {
+          "skillId": "HunterSkill_005",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0349",
+      "name": "火炎·速变珠【3】",
+      "type": "weapon",
+      "description": "发动火属性攻击强化技能和高速变形技能的装饰品。",
+      "sortID": 1365,
+      "skills": [
+        {
+          "skillId": "HunterSkill_005",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_047",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0303",
+      "name": "火炎·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动火属性攻击强化技能和格挡性能技能的装饰品。",
+      "sortID": 1370,
+      "skills": [
+        {
+          "skillId": "HunterSkill_005",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0347",
+      "name": "火炎·强壁珠【3】",
+      "type": "weapon",
+      "description": "发动火属性攻击强化技能和格挡强化技能的装饰品。",
+      "sortID": 1375,
+      "skills": [
+        {
+          "skillId": "HunterSkill_005",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_027",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0018",
+      "name": "流水珠【1】",
+      "type": "weapon",
+      "description": "发动水属性攻击强化技能的装饰品。",
+      "sortID": 1401,
+      "skills": [
+        {
+          "skillId": "HunterSkill_006",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0019",
+      "name": "流水珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动水属性攻击强化技能的装饰品。",
+      "sortID": 1402,
+      "skills": [
+        {
+          "skillId": "HunterSkill_006",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0020",
+      "name": "流水珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动水属性攻击强化技能的装饰品。",
+      "sortID": 1403,
+      "skills": [
+        {
+          "skillId": "HunterSkill_006",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0358",
+      "name": "流水·守势珠【3】",
+      "type": "weapon",
+      "description": "发动水属性攻击强化技能和攻击守势技能的装饰品。",
+      "sortID": 1410,
+      "skills": [
+        {
+          "skillId": "HunterSkill_006",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_028",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0362",
+      "name": "流水·属会珠【3】",
+      "type": "weapon",
+      "description": "发动水属性攻击强化技能和会心击【属性】技能的装饰品。",
+      "sortID": 1415,
+      "skills": [
+        {
+          "skillId": "HunterSkill_006",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_003",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0309",
+      "name": "流水·匠珠【3】",
+      "type": "weapon",
+      "description": "发动水属性攻击强化技能和匠技能的装饰品。",
+      "sortID": 1420,
+      "skills": [
+        {
+          "skillId": "HunterSkill_006",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0354",
+      "name": "流水·利刃珠【3】",
+      "type": "weapon",
+      "description": "发动水属性攻击强化技能和利刃技能的装饰品。",
+      "sortID": 1425,
+      "skills": [
+        {
+          "skillId": "HunterSkill_006",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_015",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0312",
+      "name": "流水·射法珠【3】",
+      "type": "weapon",
+      "description": "发动水属性攻击强化技能和弹道强化技能的装饰品。",
+      "sortID": 1430,
+      "skills": [
+        {
+          "skillId": "HunterSkill_006",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_019",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0361",
+      "name": "流水·初弹珠【3】",
+      "type": "weapon",
+      "description": "发动水属性攻击强化技能和首发迅击技能的装饰品。",
+      "sortID": 1440,
+      "skills": [
+        {
+          "skillId": "HunterSkill_006",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_198",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0360",
+      "name": "流水·积弹珠【3】",
+      "type": "weapon",
+      "description": "发动水属性攻击强化技能和强四射击技能的装饰品。",
+      "sortID": 1445,
+      "skills": [
+        {
+          "skillId": "HunterSkill_006",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_197",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0355",
+      "name": "流水·集中珠【3】",
+      "type": "weapon",
+      "description": "发动水属性攻击强化技能和集中技能的装饰品。",
+      "sortID": 1450,
+      "skills": [
+        {
+          "skillId": "HunterSkill_006",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_022",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0356",
+      "name": "流水·昂扬珠【3】",
+      "type": "weapon",
+      "description": "发动水属性攻击强化技能和强化持续技能的装饰品。",
+      "sortID": 1455,
+      "skills": [
+        {
+          "skillId": "HunterSkill_006",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_023",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0311",
+      "name": "流水·击晕珠【3】",
+      "type": "weapon",
+      "description": "发动水属性攻击强化技能和击晕术技能的装饰品。",
+      "sortID": 1460,
+      "skills": [
+        {
+          "skillId": "HunterSkill_006",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0359",
+      "name": "流水·速变珠【3】",
+      "type": "weapon",
+      "description": "发动水属性攻击强化技能和高速变形技能的装饰品。",
+      "sortID": 1465,
+      "skills": [
+        {
+          "skillId": "HunterSkill_006",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_047",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0310",
+      "name": "流水·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动水属性攻击强化技能和格挡性能技能的装饰品。",
+      "sortID": 1470,
+      "skills": [
+        {
+          "skillId": "HunterSkill_006",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0357",
+      "name": "流水·强壁珠【3】",
+      "type": "weapon",
+      "description": "发动水属性攻击强化技能和格挡强化技能的装饰品。",
+      "sortID": 1475,
+      "skills": [
+        {
+          "skillId": "HunterSkill_006",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_027",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0021",
+      "name": "雷光珠【1】",
+      "type": "weapon",
+      "description": "发动雷属性攻击强化技能的装饰品。",
+      "sortID": 1501,
+      "skills": [
+        {
+          "skillId": "HunterSkill_008",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0022",
+      "name": "雷光珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动雷属性攻击强化技能的装饰品。",
+      "sortID": 1502,
+      "skills": [
+        {
+          "skillId": "HunterSkill_008",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0023",
+      "name": "雷光珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动雷属性攻击强化技能的装饰品。",
+      "sortID": 1503,
+      "skills": [
+        {
+          "skillId": "HunterSkill_008",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0368",
+      "name": "雷光·守势珠【3】",
+      "type": "weapon",
+      "description": "发动雷属性攻击强化技能和攻击守势技能的装饰品。",
+      "sortID": 1510,
+      "skills": [
+        {
+          "skillId": "HunterSkill_008",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_028",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0372",
+      "name": "雷光·属会珠【3】",
+      "type": "weapon",
+      "description": "发动雷属性攻击强化技能和会心击【属性】技能的装饰品。",
+      "sortID": 1515,
+      "skills": [
+        {
+          "skillId": "HunterSkill_008",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_003",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0316",
+      "name": "雷光·匠珠【3】",
+      "type": "weapon",
+      "description": "发动雷属性攻击强化技能和匠技能的装饰品。",
+      "sortID": 1520,
+      "skills": [
+        {
+          "skillId": "HunterSkill_008",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0364",
+      "name": "雷光·利刃珠【3】",
+      "type": "weapon",
+      "description": "发动雷属性攻击强化技能和利刃技能的装饰品。",
+      "sortID": 1525,
+      "skills": [
+        {
+          "skillId": "HunterSkill_008",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_015",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0319",
+      "name": "雷光·射法珠【3】",
+      "type": "weapon",
+      "description": "发动雷属性攻击强化技能和弹道强化技能的装饰品。",
+      "sortID": 1530,
+      "skills": [
+        {
+          "skillId": "HunterSkill_008",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_019",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0371",
+      "name": "雷光·初弹珠【3】",
+      "type": "weapon",
+      "description": "发动雷属性攻击强化技能和首发迅击技能的装饰品。",
+      "sortID": 1540,
+      "skills": [
+        {
+          "skillId": "HunterSkill_008",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_198",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0370",
+      "name": "雷光·积弹珠【3】",
+      "type": "weapon",
+      "description": "发动雷属性攻击强化技能和强四射击技能的装饰品。",
+      "sortID": 1545,
+      "skills": [
+        {
+          "skillId": "HunterSkill_008",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_197",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0365",
+      "name": "雷光·集中珠【3】",
+      "type": "weapon",
+      "description": "发动雷属性攻击强化技能和集中技能的装饰品。",
+      "sortID": 1550,
+      "skills": [
+        {
+          "skillId": "HunterSkill_008",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_022",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0366",
+      "name": "雷光·昂扬珠【3】",
+      "type": "weapon",
+      "description": "发动雷属性攻击强化技能和强化持续技能的装饰品。",
+      "sortID": 1555,
+      "skills": [
+        {
+          "skillId": "HunterSkill_008",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_023",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0318",
+      "name": "雷光·击晕珠【3】",
+      "type": "weapon",
+      "description": "发动雷属性攻击强化技能和击晕术技能的装饰品。",
+      "sortID": 1560,
+      "skills": [
+        {
+          "skillId": "HunterSkill_008",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0369",
+      "name": "雷光·速变珠【3】",
+      "type": "weapon",
+      "description": "发动雷属性攻击强化技能和高速变形技能的装饰品。",
+      "sortID": 1565,
+      "skills": [
+        {
+          "skillId": "HunterSkill_008",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_047",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0317",
+      "name": "雷光·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动雷属性攻击强化技能和格挡性能技能的装饰品。",
+      "sortID": 1570,
+      "skills": [
+        {
+          "skillId": "HunterSkill_008",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0367",
+      "name": "雷光·强壁珠【3】",
+      "type": "weapon",
+      "description": "发动雷属性攻击强化技能和格挡强化技能的装饰品。",
+      "sortID": 1575,
+      "skills": [
+        {
+          "skillId": "HunterSkill_008",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_027",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0024",
+      "name": "冰结珠【1】",
+      "type": "weapon",
+      "description": "发动冰属性攻击强化技能的装饰品。",
+      "sortID": 1601,
+      "skills": [
+        {
+          "skillId": "HunterSkill_007",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0025",
+      "name": "冰结珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动冰属性攻击强化技能的装饰品。",
+      "sortID": 1602,
+      "skills": [
+        {
+          "skillId": "HunterSkill_007",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0026",
+      "name": "冰结珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动冰属性攻击强化技能的装饰品。",
+      "sortID": 1603,
+      "skills": [
+        {
+          "skillId": "HunterSkill_007",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0378",
+      "name": "冰结·守势珠【3】",
+      "type": "weapon",
+      "description": "发动冰属性攻击强化技能和攻击守势技能的装饰品。",
+      "sortID": 1610,
+      "skills": [
+        {
+          "skillId": "HunterSkill_007",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_028",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0382",
+      "name": "冰结·属会珠【3】",
+      "type": "weapon",
+      "description": "发动冰属性攻击强化技能和会心击【属性】技能的装饰品。",
+      "sortID": 1615,
+      "skills": [
+        {
+          "skillId": "HunterSkill_007",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_003",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0323",
+      "name": "冰结·匠珠【3】",
+      "type": "weapon",
+      "description": "发动冰属性攻击强化技能和匠技能的装饰品。",
+      "sortID": 1620,
+      "skills": [
+        {
+          "skillId": "HunterSkill_007",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0374",
+      "name": "冰结·利刃珠【3】",
+      "type": "weapon",
+      "description": "发动冰属性攻击强化技能和利刃技能的装饰品。",
+      "sortID": 1625,
+      "skills": [
+        {
+          "skillId": "HunterSkill_007",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_015",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0326",
+      "name": "冰结·射法珠【3】",
+      "type": "weapon",
+      "description": "发动冰属性攻击强化技能和弹道强化技能的装饰品。",
+      "sortID": 1630,
+      "skills": [
+        {
+          "skillId": "HunterSkill_007",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_019",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0381",
+      "name": "冰结·初弹珠【3】",
+      "type": "weapon",
+      "description": "发动冰属性攻击强化技能和首发迅击技能的装饰品。",
+      "sortID": 1640,
+      "skills": [
+        {
+          "skillId": "HunterSkill_007",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_198",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0380",
+      "name": "冰结·积弹珠【3】",
+      "type": "weapon",
+      "description": "发动冰属性攻击强化技能和强四射击技能的装饰品。",
+      "sortID": 1645,
+      "skills": [
+        {
+          "skillId": "HunterSkill_007",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_197",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0375",
+      "name": "冰结·集中珠【3】",
+      "type": "weapon",
+      "description": "发动冰属性攻击强化技能和集中技能的装饰品。",
+      "sortID": 1650,
+      "skills": [
+        {
+          "skillId": "HunterSkill_007",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_022",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0376",
+      "name": "冰结·昂扬珠【3】",
+      "type": "weapon",
+      "description": "发动冰属性攻击强化技能和强化持续技能的装饰品。",
+      "sortID": 1655,
+      "skills": [
+        {
+          "skillId": "HunterSkill_007",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_023",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0325",
+      "name": "冰结·击晕珠【3】",
+      "type": "weapon",
+      "description": "发动冰属性攻击强化技能和击晕术技能的装饰品。",
+      "sortID": 1660,
+      "skills": [
+        {
+          "skillId": "HunterSkill_007",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0379",
+      "name": "冰结·速变珠【3】",
+      "type": "weapon",
+      "description": "发动冰属性攻击强化技能和高速变形技能的装饰品。",
+      "sortID": 1665,
+      "skills": [
+        {
+          "skillId": "HunterSkill_007",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_047",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0324",
+      "name": "冰结·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动冰属性攻击强化技能和格挡性能技能的装饰品。",
+      "sortID": 1670,
+      "skills": [
+        {
+          "skillId": "HunterSkill_007",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0377",
+      "name": "冰结·强壁珠【3】",
+      "type": "weapon",
+      "description": "发动冰属性攻击强化技能和格挡强化技能的装饰品。",
+      "sortID": 1675,
+      "skills": [
+        {
+          "skillId": "HunterSkill_007",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_027",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0027",
+      "name": "破龙珠【1】",
+      "type": "weapon",
+      "description": "发动龙属性攻击强化技能的装饰品。",
+      "sortID": 1701,
+      "skills": [
+        {
+          "skillId": "HunterSkill_009",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0028",
+      "name": "破龙珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动龙属性攻击强化技能的装饰品。",
+      "sortID": 1702,
+      "skills": [
+        {
+          "skillId": "HunterSkill_009",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0029",
+      "name": "破龙珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动龙属性攻击强化技能的装饰品。",
+      "sortID": 1703,
+      "skills": [
+        {
+          "skillId": "HunterSkill_009",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0388",
+      "name": "破龙·守势珠【3】",
+      "type": "weapon",
+      "description": "发动龙属性攻击强化技能和攻击守势技能的装饰品。",
+      "sortID": 1710,
+      "skills": [
+        {
+          "skillId": "HunterSkill_009",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_028",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0392",
+      "name": "破龙·属会珠【3】",
+      "type": "weapon",
+      "description": "发动龙属性攻击强化技能和会心击【属性】技能的装饰品。",
+      "sortID": 1715,
+      "skills": [
+        {
+          "skillId": "HunterSkill_009",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_003",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0330",
+      "name": "破龙·匠珠【3】",
+      "type": "weapon",
+      "description": "发动龙属性攻击强化技能和匠技能的装饰品。",
+      "sortID": 1720,
+      "skills": [
+        {
+          "skillId": "HunterSkill_009",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0384",
+      "name": "破龙·利刃珠【3】",
+      "type": "weapon",
+      "description": "发动龙属性攻击强化技能和利刃技能的装饰品。",
+      "sortID": 1725,
+      "skills": [
+        {
+          "skillId": "HunterSkill_009",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_015",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0333",
+      "name": "破龙·射法珠【3】",
+      "type": "weapon",
+      "description": "发动龙属性攻击强化技能和弹道强化技能的装饰品。",
+      "sortID": 1730,
+      "skills": [
+        {
+          "skillId": "HunterSkill_009",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_019",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0391",
+      "name": "破龙·初弹珠【3】",
+      "type": "weapon",
+      "description": "发动龙属性攻击强化技能和首发迅击技能的装饰品。",
+      "sortID": 1740,
+      "skills": [
+        {
+          "skillId": "HunterSkill_009",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_198",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0390",
+      "name": "破龙·积弹珠【3】",
+      "type": "weapon",
+      "description": "发动龙属性攻击强化技能和强四射击技能的装饰品。",
+      "sortID": 1745,
+      "skills": [
+        {
+          "skillId": "HunterSkill_009",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_197",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0385",
+      "name": "破龙·集中珠【3】",
+      "type": "weapon",
+      "description": "发动龙属性攻击强化技能和集中技能的装饰品。",
+      "sortID": 1750,
+      "skills": [
+        {
+          "skillId": "HunterSkill_009",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_022",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0386",
+      "name": "破龙·昂扬珠【3】",
+      "type": "weapon",
+      "description": "发动龙属性攻击强化技能和强化持续技能的装饰品。",
+      "sortID": 1755,
+      "skills": [
+        {
+          "skillId": "HunterSkill_009",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_023",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0332",
+      "name": "破龙·击晕珠【3】",
+      "type": "weapon",
+      "description": "发动龙属性攻击强化技能和击晕术技能的装饰品。",
+      "sortID": 1760,
+      "skills": [
+        {
+          "skillId": "HunterSkill_009",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0389",
+      "name": "破龙·速变珠【3】",
+      "type": "weapon",
+      "description": "发动龙属性攻击强化技能和高速变形技能的装饰品。",
+      "sortID": 1765,
+      "skills": [
+        {
+          "skillId": "HunterSkill_009",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_047",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0331",
+      "name": "破龙·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动龙属性攻击强化技能和格挡性能技能的装饰品。",
+      "sortID": 1770,
+      "skills": [
+        {
+          "skillId": "HunterSkill_009",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0387",
+      "name": "破龙·强壁珠【3】",
+      "type": "weapon",
+      "description": "发动龙属性攻击强化技能和格挡强化技能的装饰品。",
+      "sortID": 1775,
+      "skills": [
+        {
+          "skillId": "HunterSkill_009",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_027",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0030",
+      "name": "毒珠【1】",
+      "type": "weapon",
+      "description": "发动毒属性强化技能的装饰品。",
+      "sortID": 1801,
+      "skills": [
+        {
+          "skillId": "HunterSkill_010",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0031",
+      "name": "毒珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动毒属性强化技能的装饰品。",
+      "sortID": 1802,
+      "skills": [
+        {
+          "skillId": "HunterSkill_010",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0032",
+      "name": "毒珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动毒属性强化技能的装饰品。",
+      "sortID": 1803,
+      "skills": [
+        {
+          "skillId": "HunterSkill_010",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0033",
+      "name": "麻痹珠【1】",
+      "type": "weapon",
+      "description": "发动麻痹属性强化技能的装饰品。",
+      "sortID": 1901,
+      "skills": [
+        {
+          "skillId": "HunterSkill_011",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0034",
+      "name": "麻痹珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动麻痹属性强化技能的装饰品。",
+      "sortID": 1902,
+      "skills": [
+        {
+          "skillId": "HunterSkill_011",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0035",
+      "name": "麻痹珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动麻痹属性强化技能的装饰品。",
+      "sortID": 1903,
+      "skills": [
+        {
+          "skillId": "HunterSkill_011",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0036",
+      "name": "睡眠珠【1】",
+      "type": "weapon",
+      "description": "发动睡眠属性强化技能的装饰品。",
+      "sortID": 2001,
+      "skills": [
+        {
+          "skillId": "HunterSkill_012",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0037",
+      "name": "睡眠珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动睡眠属性强化技能的装饰品。",
+      "sortID": 2002,
+      "skills": [
+        {
+          "skillId": "HunterSkill_012",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0038",
+      "name": "睡眠珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动睡眠属性强化技能的装饰品。",
+      "sortID": 2003,
+      "skills": [
+        {
+          "skillId": "HunterSkill_012",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0039",
+      "name": "爆破珠【1】",
+      "type": "weapon",
+      "description": "发动爆破属性强化技能的装饰品。",
+      "sortID": 2101,
+      "skills": [
+        {
+          "skillId": "HunterSkill_013",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "VERMILION"
+    },
+    {
+      "id": "ACC_ID_0040",
+      "name": "爆破珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动爆破属性强化技能的装饰品。",
+      "sortID": 2102,
+      "skills": [
+        {
+          "skillId": "HunterSkill_013",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "VERMILION"
+    },
+    {
+      "id": "ACC_ID_0041",
+      "name": "爆破珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动爆破属性强化技能的装饰品。",
+      "sortID": 2103,
+      "skills": [
+        {
+          "skillId": "HunterSkill_013",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "VERMILION"
+    },
+    {
+      "id": "ACC_ID_0009",
+      "name": "属会珠【1】",
+      "type": "weapon",
+      "description": "发动会心击【属性】技能的装饰品。",
+      "sortID": 2201,
+      "skills": [
+        {
+          "skillId": "HunterSkill_003",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "ULTRAMARINE"
+    },
+    {
+      "id": "ACC_ID_0010",
+      "name": "属会珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动会心击【属性】技能的装饰品。",
+      "sortID": 2202,
+      "skills": [
+        {
+          "skillId": "HunterSkill_003",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "ULTRAMARINE"
+    },
+    {
+      "id": "ACC_ID_0011",
+      "name": "属会珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动会心击【属性】技能的装饰品。",
+      "sortID": 2203,
+      "skills": [
+        {
+          "skillId": "HunterSkill_003",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "ULTRAMARINE"
+    },
+    {
+      "id": "ACC_ID_0434",
+      "name": "属会·火炎珠【3】",
+      "type": "weapon",
+      "description": "发动会心击【属性】技能和火属性攻击强化技能的装饰品。",
+      "sortID": 2210,
+      "skills": [
+        {
+          "skillId": "HunterSkill_003",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_005",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "ULTRAMARINE"
+    },
+    {
+      "id": "ACC_ID_0435",
+      "name": "属会·流水珠【3】",
+      "type": "weapon",
+      "description": "发动会心击【属性】技能和水属性攻击强化技能的装饰品。",
+      "sortID": 2215,
+      "skills": [
+        {
+          "skillId": "HunterSkill_003",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_006",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "ULTRAMARINE"
+    },
+    {
+      "id": "ACC_ID_0436",
+      "name": "属会·雷光珠【3】",
+      "type": "weapon",
+      "description": "发动会心击【属性】技能和雷属性攻击强化技能的装饰品。",
+      "sortID": 2220,
+      "skills": [
+        {
+          "skillId": "HunterSkill_003",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_008",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "ULTRAMARINE"
+    },
+    {
+      "id": "ACC_ID_0437",
+      "name": "属会·冰结珠【3】",
+      "type": "weapon",
+      "description": "发动会心击【属性】技能和冰属性攻击强化技能的装饰品。",
+      "sortID": 2225,
+      "skills": [
+        {
+          "skillId": "HunterSkill_003",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_007",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "ULTRAMARINE"
+    },
+    {
+      "id": "ACC_ID_0438",
+      "name": "属会·破龙珠【3】",
+      "type": "weapon",
+      "description": "发动会心击【属性】技能和龙属性攻击强化技能的装饰品。",
+      "sortID": 2230,
+      "skills": [
+        {
+          "skillId": "HunterSkill_003",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_009",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "ULTRAMARINE"
+    },
+    {
+      "id": "ACC_ID_0279",
+      "name": "属会·匠珠【3】",
+      "type": "weapon",
+      "description": "发动会心击【属性】技能和匠技能的装饰品。",
+      "sortID": 2235,
+      "skills": [
+        {
+          "skillId": "HunterSkill_003",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "ULTRAMARINE"
+    },
+    {
+      "id": "ACC_ID_0282",
+      "name": "属会·射法珠【3】",
+      "type": "weapon",
+      "description": "发动会心击【属性】技能和弹道强化技能的装饰品。",
+      "sortID": 2240,
+      "skills": [
+        {
+          "skillId": "HunterSkill_003",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_019",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "ULTRAMARINE"
+    },
+    {
+      "id": "ACC_ID_0281",
+      "name": "属会·击晕珠【3】",
+      "type": "weapon",
+      "description": "发动会心击【属性】技能和击晕术技能的装饰品。",
+      "sortID": 2245,
+      "skills": [
+        {
+          "skillId": "HunterSkill_003",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "ULTRAMARINE"
+    },
+    {
+      "id": "ACC_ID_0280",
+      "name": "属会·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动会心击【属性】技能和格挡性能技能的装饰品。",
+      "sortID": 2250,
+      "skills": [
+        {
+          "skillId": "HunterSkill_003",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "ULTRAMARINE"
+    },
+    {
+      "id": "ACC_ID_0119",
+      "name": "特会珠【1】",
+      "type": "weapon",
+      "description": "发动会心击【特殊】技能的装饰品。",
+      "sortID": 2301,
+      "skills": [
+        {
+          "skillId": "HunterSkill_056",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0120",
+      "name": "特会珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动会心击【特殊】技能的装饰品。",
+      "sortID": 2302,
+      "skills": [
+        {
+          "skillId": "HunterSkill_056",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0121",
+      "name": "特会珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动会心击【特殊】技能的装饰品。",
+      "sortID": 2303,
+      "skills": [
+        {
+          "skillId": "HunterSkill_056",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0286",
+      "name": "特会·匠珠【3】",
+      "type": "weapon",
+      "description": "发动会心击【特殊】技能和匠技能的装饰品。",
+      "sortID": 2310,
+      "skills": [
+        {
+          "skillId": "HunterSkill_056",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0289",
+      "name": "特会·射法珠【3】",
+      "type": "weapon",
+      "description": "发动会心击【特殊】技能和弹道强化技能的装饰品。",
+      "sortID": 2315,
+      "skills": [
+        {
+          "skillId": "HunterSkill_056",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_019",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0288",
+      "name": "特会·击晕珠【3】",
+      "type": "weapon",
+      "description": "发动会心击【特殊】技能和击晕术技能的装饰品。",
+      "sortID": 2320,
+      "skills": [
+        {
+          "skillId": "HunterSkill_056",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0287",
+      "name": "特会·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动会心击【特殊】技能和格挡性能技能的装饰品。",
+      "sortID": 2325,
+      "skills": [
+        {
+          "skillId": "HunterSkill_056",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0110",
+      "name": "蓄幅珠【1】",
+      "type": "weapon",
+      "description": "发动蓄力大师技能的装饰品。",
+      "sortID": 2401,
+      "skills": [
+        {
+          "skillId": "HunterSkill_048",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0111",
+      "name": "蓄幅珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动蓄力大师技能的装饰品。",
+      "sortID": 2402,
+      "skills": [
+        {
+          "skillId": "HunterSkill_048",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0112",
+      "name": "蓄幅珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动蓄力大师技能的装饰品。",
+      "sortID": 2403,
+      "skills": [
+        {
+          "skillId": "HunterSkill_048",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0257",
+      "name": "蓄幅·匠珠【3】",
+      "type": "weapon",
+      "description": "发动蓄力大师技能和匠技能的装饰品。",
+      "sortID": 2410,
+      "skills": [
+        {
+          "skillId": "HunterSkill_048",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0258",
+      "name": "蓄幅·击晕珠【3】",
+      "type": "weapon",
+      "description": "发动蓄力大师技能和击晕术技能的装饰品。",
+      "sortID": 2415,
+      "skills": [
+        {
+          "skillId": "HunterSkill_048",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0042",
+      "name": "匠珠【1】",
+      "type": "weapon",
+      "description": "发动匠技能的装饰品。",
+      "sortID": 2601,
+      "skills": [
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0043",
+      "name": "匠珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动匠技能的装饰品。",
+      "sortID": 2602,
+      "skills": [
+        {
+          "skillId": "HunterSkill_014",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0044",
+      "name": "匠珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动匠技能的装饰品。",
+      "sortID": 2603,
+      "skills": [
+        {
+          "skillId": "HunterSkill_014",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0045",
+      "name": "利刃珠【1】",
+      "type": "weapon",
+      "description": "发动利刃技能的装饰品。",
+      "sortID": 2701,
+      "skills": [
+        {
+          "skillId": "HunterSkill_015",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0046",
+      "name": "利刃珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动利刃技能的装饰品。",
+      "sortID": 2702,
+      "skills": [
+        {
+          "skillId": "HunterSkill_015",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0047",
+      "name": "利刃珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动利刃技能的装饰品。",
+      "sortID": 2703,
+      "skills": [
+        {
+          "skillId": "HunterSkill_015",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0394",
+      "name": "利刃·火炎珠【3】",
+      "type": "weapon",
+      "description": "发动利刃技能和火属性攻击强化技能的装饰品。",
+      "sortID": 2710,
+      "skills": [
+        {
+          "skillId": "HunterSkill_015",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_005",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0395",
+      "name": "利刃·流水珠【3】",
+      "type": "weapon",
+      "description": "发动利刃技能和水属性攻击强化技能的装饰品。",
+      "sortID": 2715,
+      "skills": [
+        {
+          "skillId": "HunterSkill_015",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_006",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0396",
+      "name": "利刃·雷光珠【3】",
+      "type": "weapon",
+      "description": "发动利刃技能和雷属性攻击强化技能的装饰品。",
+      "sortID": 2720,
+      "skills": [
+        {
+          "skillId": "HunterSkill_015",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_008",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0397",
+      "name": "利刃·冰结珠【3】",
+      "type": "weapon",
+      "description": "发动利刃技能和冰属性攻击强化技能的装饰品。",
+      "sortID": 2725,
+      "skills": [
+        {
+          "skillId": "HunterSkill_015",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_007",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0398",
+      "name": "利刃·破龙珠【3】",
+      "type": "weapon",
+      "description": "发动利刃技能和龙属性攻击强化技能的装饰品。",
+      "sortID": 2730,
+      "skills": [
+        {
+          "skillId": "HunterSkill_015",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_009",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0206",
+      "name": "利刃·匠珠【3】",
+      "type": "weapon",
+      "description": "发动利刃技能和匠技能的装饰品。",
+      "sortID": 2735,
+      "skills": [
+        {
+          "skillId": "HunterSkill_015",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0208",
+      "name": "利刃·击晕珠【3】",
+      "type": "weapon",
+      "description": "发动利刃技能和击晕术技能的装饰品。",
+      "sortID": 2740,
+      "skills": [
+        {
+          "skillId": "HunterSkill_015",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0207",
+      "name": "利刃·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动利刃技能和格挡性能技能的装饰品。",
+      "sortID": 2745,
+      "skills": [
+        {
+          "skillId": "HunterSkill_015",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "EMERALD"
+    },
+    {
+      "id": "ACC_ID_0048",
+      "name": "刚刃珠【1】",
+      "type": "weapon",
+      "description": "发动刚刃打磨技能的装饰品。",
+      "sortID": 2801,
+      "skills": [
+        {
+          "skillId": "HunterSkill_017",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0049",
+      "name": "刚刃珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动刚刃打磨技能的装饰品。",
+      "sortID": 2802,
+      "skills": [
+        {
+          "skillId": "HunterSkill_017",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0050",
+      "name": "刚刃珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动刚刃打磨技能的装饰品。",
+      "sortID": 2803,
+      "skills": [
+        {
+          "skillId": "HunterSkill_017",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0051",
+      "name": "心眼珠【1】",
+      "type": "weapon",
+      "description": "发动心眼技能的装饰品。",
+      "sortID": 2901,
+      "skills": [
+        {
+          "skillId": "HunterSkill_018",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0052",
+      "name": "心眼珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动心眼技能的装饰品。",
+      "sortID": 2902,
+      "skills": [
+        {
+          "skillId": "HunterSkill_018",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0053",
+      "name": "心眼珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动心眼技能的装饰品。",
+      "sortID": 2903,
+      "skills": [
+        {
+          "skillId": "HunterSkill_018",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0057",
+      "name": "钝器珠【1】",
+      "type": "weapon",
+      "description": "发动钝器能手技能的装饰品。",
+      "sortID": 3001,
+      "skills": [
+        {
+          "skillId": "HunterSkill_020",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "LEMON"
+    },
+    {
+      "id": "ACC_ID_0058",
+      "name": "钝器珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动钝器能手技能的装饰品。",
+      "sortID": 3002,
+      "skills": [
+        {
+          "skillId": "HunterSkill_020",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "LEMON"
+    },
+    {
+      "id": "ACC_ID_0059",
+      "name": "钝器珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动钝器能手技能的装饰品。",
+      "sortID": 3003,
+      "skills": [
+        {
+          "skillId": "HunterSkill_020",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "LEMON"
+    },
+    {
+      "id": "ACC_ID_0012",
+      "name": "达艺珠【3】",
+      "type": "weapon",
+      "description": "发动达人艺技能的装饰品。",
+      "sortID": 3101,
+      "skills": [
+        {
+          "skillId": "HunterSkill_004",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0099",
+      "name": "强弹珠【3】",
+      "type": "weapon",
+      "description": "发动通常弹·通常箭强化技能的装饰品。",
+      "sortID": 3201,
+      "skills": [
+        {
+          "skillId": "HunterSkill_038",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0100",
+      "name": "贯穿珠【3】",
+      "type": "weapon",
+      "description": "发动贯穿弹·龙之箭强化技能的装饰品。",
+      "sortID": 3301,
+      "skills": [
+        {
+          "skillId": "HunterSkill_039",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0101",
+      "name": "散弹珠【3】",
+      "type": "weapon",
+      "description": "发动散弹·刚射强化技能的装饰品。",
+      "sortID": 3401,
+      "skills": [
+        {
+          "skillId": "HunterSkill_040",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "MOS"
+    },
+    {
+      "id": "ACC_ID_0054",
+      "name": "射法珠【1】",
+      "type": "weapon",
+      "description": "发动弹道强化技能的装饰品。",
+      "sortID": 3501,
+      "skills": [
+        {
+          "skillId": "HunterSkill_019",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "PINK"
+    },
+    {
+      "id": "ACC_ID_0055",
+      "name": "射法珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动弹道强化技能的装饰品。",
+      "sortID": 3502,
+      "skills": [
+        {
+          "skillId": "HunterSkill_019",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "PINK"
+    },
+    {
+      "id": "ACC_ID_0056",
+      "name": "射法珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动弹道强化技能的装饰品。",
+      "sortID": 3503,
+      "skills": [
+        {
+          "skillId": "HunterSkill_019",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "PINK"
+    },
+    {
+      "id": "ACC_ID_0102",
+      "name": "速射珠【3】",
+      "type": "weapon",
+      "description": "发动速射强化技能的装饰品。",
+      "sortID": 3601,
+      "skills": [
+        {
+          "skillId": "HunterSkill_045",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0194",
+      "name": "初弹珠【1】",
+      "type": "weapon",
+      "description": "发动首发迅击技能的装饰品。",
+      "sortID": 3701,
+      "skills": [
+        {
+          "skillId": "HunterSkill_198",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0195",
+      "name": "初弹珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动首发迅击技能的装饰品。",
+      "sortID": 3702,
+      "skills": [
+        {
+          "skillId": "HunterSkill_198",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0196",
+      "name": "初弹珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动首发迅击技能的装饰品。",
+      "sortID": 3703,
+      "skills": [
+        {
+          "skillId": "HunterSkill_198",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0429",
+      "name": "初弹·火炎珠【3】",
+      "type": "weapon",
+      "description": "发动首发迅击技能和火属性攻击强化技能的装饰品。",
+      "sortID": 3710,
+      "skills": [
+        {
+          "skillId": "HunterSkill_198",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_005",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0430",
+      "name": "初弹·流水珠【3】",
+      "type": "weapon",
+      "description": "发动首发迅击技能和水属性攻击强化技能的装饰品。",
+      "sortID": 3715,
+      "skills": [
+        {
+          "skillId": "HunterSkill_198",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_006",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0431",
+      "name": "初弹·雷光珠【3】",
+      "type": "weapon",
+      "description": "发动首发迅击技能和雷属性攻击强化技能的装饰品。",
+      "sortID": 3720,
+      "skills": [
+        {
+          "skillId": "HunterSkill_198",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_008",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0432",
+      "name": "初弹·冰结珠【3】",
+      "type": "weapon",
+      "description": "发动首发迅击技能和冰属性攻击强化技能的装饰品。",
+      "sortID": 3725,
+      "skills": [
+        {
+          "skillId": "HunterSkill_198",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_007",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0433",
+      "name": "初弹·破龙珠【3】",
+      "type": "weapon",
+      "description": "发动首发迅击技能和龙属性攻击强化技能的装饰品。",
+      "sortID": 3730,
+      "skills": [
+        {
+          "skillId": "HunterSkill_198",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_009",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0267",
+      "name": "初弹·射法珠【3】",
+      "type": "weapon",
+      "description": "发动首发迅击技能和弹道强化技能的装饰品。",
+      "sortID": 3735,
+      "skills": [
+        {
+          "skillId": "HunterSkill_198",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_019",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0266",
+      "name": "初弹·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动首发迅击技能和格挡性能技能的装饰品。",
+      "sortID": 3740,
+      "skills": [
+        {
+          "skillId": "HunterSkill_198",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0191",
+      "name": "积弹珠【1】",
+      "type": "weapon",
+      "description": "发动强四射击技能的装饰品。",
+      "sortID": 3801,
+      "skills": [
+        {
+          "skillId": "HunterSkill_197",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0192",
+      "name": "积弹珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动强四射击技能的装饰品。",
+      "sortID": 3802,
+      "skills": [
+        {
+          "skillId": "HunterSkill_197",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0193",
+      "name": "积弹珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动强四射击技能的装饰品。",
+      "sortID": 3803,
+      "skills": [
+        {
+          "skillId": "HunterSkill_197",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0424",
+      "name": "积弹·火炎珠【3】",
+      "type": "weapon",
+      "description": "发动强四射击技能和火属性攻击强化技能的装饰品。",
+      "sortID": 3810,
+      "skills": [
+        {
+          "skillId": "HunterSkill_197",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_005",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0425",
+      "name": "积弹·流水珠【3】",
+      "type": "weapon",
+      "description": "发动强四射击技能和水属性攻击强化技能的装饰品。",
+      "sortID": 3815,
+      "skills": [
+        {
+          "skillId": "HunterSkill_197",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_006",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0426",
+      "name": "积弹·雷光珠【3】",
+      "type": "weapon",
+      "description": "发动强四射击技能和雷属性攻击强化技能的装饰品。",
+      "sortID": 3820,
+      "skills": [
+        {
+          "skillId": "HunterSkill_197",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_008",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0427",
+      "name": "积弹·冰结珠【3】",
+      "type": "weapon",
+      "description": "发动强四射击技能和冰属性攻击强化技能的装饰品。",
+      "sortID": 3825,
+      "skills": [
+        {
+          "skillId": "HunterSkill_197",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_007",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0428",
+      "name": "积弹·破龙珠【3】",
+      "type": "weapon",
+      "description": "发动强四射击技能和龙属性攻击强化技能的装饰品。",
+      "sortID": 3830,
+      "skills": [
+        {
+          "skillId": "HunterSkill_197",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_009",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0263",
+      "name": "积弹·射法珠【3】",
+      "type": "weapon",
+      "description": "发动强四射击技能和弹道强化技能的装饰品。",
+      "sortID": 3835,
+      "skills": [
+        {
+          "skillId": "HunterSkill_197",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_019",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0262",
+      "name": "积弹·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动强四射击技能和格挡性能技能的装饰品。",
+      "sortID": 3840,
+      "skills": [
+        {
+          "skillId": "HunterSkill_197",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0097",
+      "name": "特射珠【1】",
+      "type": "weapon",
+      "description": "发动特殊射击强化技能的装饰品。",
+      "sortID": 3901,
+      "skills": [
+        {
+          "skillId": "HunterSkill_037",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0098",
+      "name": "特射珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动特殊射击强化技能的装饰品。",
+      "sortID": 3902,
+      "skills": [
+        {
+          "skillId": "HunterSkill_037",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0114",
+      "name": "毒瓶珠【2】",
+      "type": "weapon",
+      "description": "发动毒瓶追加技能的装饰品。",
+      "sortID": 4001,
+      "skills": [
+        {
+          "skillId": "HunterSkill_051",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0115",
+      "name": "痹瓶珠【3】",
+      "type": "weapon",
+      "description": "发动麻痹瓶追加技能的装饰品。",
+      "sortID": 4101,
+      "skills": [
+        {
+          "skillId": "HunterSkill_052",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0116",
+      "name": "眠瓶珠【3】",
+      "type": "weapon",
+      "description": "发动睡眠瓶追加技能的装饰品。",
+      "sortID": 4201,
+      "skills": [
+        {
+          "skillId": "HunterSkill_053",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0117",
+      "name": "爆瓶珠【2】",
+      "type": "weapon",
+      "description": "发动爆破瓶追加技能的装饰品。",
+      "sortID": 4301,
+      "skills": [
+        {
+          "skillId": "HunterSkill_054",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "VERMILION"
+    },
+    {
+      "id": "ACC_ID_0343",
+      "name": "疲瓶珠【2】",
+      "type": "weapon",
+      "description": "发动减气瓶追加技能的装饰品。",
+      "sortID": 4401,
+      "skills": [
+        {
+          "skillId": "HunterSkill_199",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "IVORY"
+    },
+    {
+      "id": "ACC_ID_0131",
+      "name": "防御珠【1】",
+      "type": "armor",
+      "description": "发动防御技能的装饰品。",
+      "sortID": 4501,
+      "skills": [
+        {
+          "skillId": "HunterSkill_067",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0132",
+      "name": "加护珠【1】",
+      "type": "armor",
+      "description": "发动精灵加护技能的装饰品。",
+      "sortID": 4601,
+      "skills": [
+        {
+          "skillId": "HunterSkill_068",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0141",
+      "name": "耐火珠【1】",
+      "type": "armor",
+      "description": "发动火耐性技能的装饰品。",
+      "sortID": 4701,
+      "skills": [
+        {
+          "skillId": "HunterSkill_077",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0142",
+      "name": "耐水珠【1】",
+      "type": "armor",
+      "description": "发动水耐性技能的装饰品。",
+      "sortID": 4801,
+      "skills": [
+        {
+          "skillId": "HunterSkill_078",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0143",
+      "name": "耐雷珠【1】",
+      "type": "armor",
+      "description": "发动雷耐性技能的装饰品。",
+      "sortID": 4901,
+      "skills": [
+        {
+          "skillId": "HunterSkill_080",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0144",
+      "name": "耐冰珠【1】",
+      "type": "armor",
+      "description": "发动冰耐性技能的装饰品。",
+      "sortID": 5001,
+      "skills": [
+        {
+          "skillId": "HunterSkill_079",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0145",
+      "name": "耐龙珠【1】",
+      "type": "armor",
+      "description": "发动龙耐性技能的装饰品。",
+      "sortID": 5101,
+      "skills": [
+        {
+          "skillId": "HunterSkill_081",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "ROSE"
+    },
+    {
+      "id": "ACC_ID_0146",
+      "name": "耐毒珠【1】",
+      "type": "armor",
+      "description": "发动毒耐性技能的装饰品。",
+      "sortID": 5201,
+      "skills": [
+        {
+          "skillId": "HunterSkill_083",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0147",
+      "name": "耐麻珠【1】",
+      "type": "armor",
+      "description": "发动麻痹耐性技能的装饰品。",
+      "sortID": 5301,
+      "skills": [
+        {
+          "skillId": "HunterSkill_084",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0148",
+      "name": "耐眠珠【1】",
+      "type": "armor",
+      "description": "发动睡眠耐性技能的装饰品。",
+      "sortID": 5401,
+      "skills": [
+        {
+          "skillId": "HunterSkill_085",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0174",
+      "name": "耐防珠【1】",
+      "type": "armor",
+      "description": "发动防御力下降耐性技能的装饰品。",
+      "sortID": 5501,
+      "skills": [
+        {
+          "skillId": "HunterSkill_120",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "IVORY"
+    },
+    {
+      "id": "ACC_ID_0149",
+      "name": "耐绝珠【1】",
+      "type": "armor",
+      "description": "发动昏厥耐性技能的装饰品。",
+      "sortID": 5701,
+      "skills": [
+        {
+          "skillId": "HunterSkill_086",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0173",
+      "name": "耐裂珠【1】",
+      "type": "armor",
+      "description": "发动裂伤耐性技能的装饰品。",
+      "sortID": 5801,
+      "skills": [
+        {
+          "skillId": "HunterSkill_119",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "IVORY"
+    },
+    {
+      "id": "ACC_ID_0186",
+      "name": "耐缚珠【1】",
+      "type": "armor",
+      "description": "发动束缚耐性技能的装饰品。",
+      "sortID": 5901,
+      "skills": [
+        {
+          "skillId": "HunterSkill_189",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0151",
+      "name": "耐爆珠【1】",
+      "type": "armor",
+      "description": "发动爆破异常耐性技能的装饰品。",
+      "sortID": 6001,
+      "skills": [
+        {
+          "skillId": "HunterSkill_087",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "VERMILION"
+    },
+    {
+      "id": "ACC_ID_0176",
+      "name": "耐臭珠【1】",
+      "type": "armor",
+      "description": "发动恶臭耐性技能的装饰品。",
+      "sortID": 6101,
+      "skills": [
+        {
+          "skillId": "HunterSkill_122",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0184",
+      "name": "适应珠【1】",
+      "type": "armor",
+      "description": "发动适应环境技能的装饰品。",
+      "sortID": 6201,
+      "skills": [
+        {
+          "skillId": "HunterSkill_144",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0133",
+      "name": "治愈珠【1】",
+      "type": "armor",
+      "description": "发动体力回复量提升技能的装饰品。",
+      "sortID": 6301,
+      "skills": [
+        {
+          "skillId": "HunterSkill_069",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "GREEN"
+    },
+    {
+      "id": "ACC_ID_0134",
+      "name": "早复珠【1】",
+      "type": "armor",
+      "description": "发动回复速度技能的装饰品。",
+      "sortID": 6401,
+      "skills": [
+        {
+          "skillId": "HunterSkill_070",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "GREEN"
+    },
+    {
+      "id": "ACC_ID_0179",
+      "name": "环境珠【1】",
+      "type": "armor",
+      "description": "发动环境利用知识技能的装饰品。",
+      "sortID": 6501,
+      "skills": [
+        {
+          "skillId": "HunterSkill_134",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0068",
+      "name": "体术珠【1】",
+      "type": "armor",
+      "description": "发动体术技能的装饰品。",
+      "sortID": 6601,
+      "skills": [
+        {
+          "skillId": "HunterSkill_025",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0129",
+      "name": "早气珠【2】",
+      "type": "armor",
+      "description": "发动耐力急速回复技能的装饰品。",
+      "sortID": 6701,
+      "skills": [
+        {
+          "skillId": "HunterSkill_065",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "IVORY"
+    },
+    {
+      "id": "ACC_ID_0067",
+      "name": "强走珠【1】",
+      "type": "armor",
+      "description": "发动跑者技能的装饰品。",
+      "sortID": 6801,
+      "skills": [
+        {
+          "skillId": "HunterSkill_024",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0164",
+      "name": "无食珠【1】",
+      "type": "armor",
+      "description": "发动饥饿耐性技能的装饰品。",
+      "sortID": 6901,
+      "skills": [
+        {
+          "skillId": "HunterSkill_105",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0123",
+      "name": "挑战珠【3】",
+      "type": "armor",
+      "description": "发动挑战者技能的装饰品。",
+      "sortID": 7001,
+      "skills": [
+        {
+          "skillId": "HunterSkill_058",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0127",
+      "name": "全开珠【3】",
+      "type": "armor",
+      "description": "发动力量解放技能的装饰品。",
+      "sortID": 7101,
+      "skills": [
+        {
+          "skillId": "HunterSkill_063",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0161",
+      "name": "底力珠【2】",
+      "type": "armor",
+      "description": "发动火场怪力技能的装饰品。",
+      "sortID": 7201,
+      "skills": [
+        {
+          "skillId": "HunterSkill_100",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0170",
+      "name": "连击珠【3】",
+      "type": "armor",
+      "description": "发动连击技能的装饰品。",
+      "sortID": 7301,
+      "skills": [
+        {
+          "skillId": "HunterSkill_114",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0168",
+      "name": "攻势珠【3】",
+      "type": "armor",
+      "description": "发动攻势技能的装饰品。",
+      "sortID": 7401,
+      "skills": [
+        {
+          "skillId": "HunterSkill_111",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "RED"
+    },
+    {
+      "id": "ACC_ID_0187",
+      "name": "刺击珠【3】",
+      "type": "armor",
+      "description": "发动锁刃刺击技能的装饰品。",
+      "sortID": 7501,
+      "skills": [
+        {
+          "skillId": "HunterSkill_146",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0061",
+      "name": "集中珠【1】",
+      "type": "weapon",
+      "description": "发动集中技能的装饰品。",
+      "sortID": 7701,
+      "skills": [
+        {
+          "skillId": "HunterSkill_022",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0062",
+      "name": "集中珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动集中技能的装饰品。",
+      "sortID": 7702,
+      "skills": [
+        {
+          "skillId": "HunterSkill_022",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0063",
+      "name": "集中珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动集中技能的装饰品。",
+      "sortID": 7703,
+      "skills": [
+        {
+          "skillId": "HunterSkill_022",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0399",
+      "name": "集中·火炎珠【3】",
+      "type": "weapon",
+      "description": "发动集中技能和火属性攻击强化技能的装饰品。",
+      "sortID": 7710,
+      "skills": [
+        {
+          "skillId": "HunterSkill_022",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_005",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0400",
+      "name": "集中·流水珠【3】",
+      "type": "weapon",
+      "description": "发动集中技能和水属性攻击强化技能的装饰品。",
+      "sortID": 7715,
+      "skills": [
+        {
+          "skillId": "HunterSkill_022",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_006",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0402",
+      "name": "集中·冰结珠【3】",
+      "type": "weapon",
+      "description": "发动集中技能和冰属性攻击强化技能的装饰品。",
+      "sortID": 7720,
+      "skills": [
+        {
+          "skillId": "HunterSkill_022",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_007",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0401",
+      "name": "集中·雷光珠【3】",
+      "type": "weapon",
+      "description": "发动集中技能和雷属性攻击强化技能的装饰品。",
+      "sortID": 7725,
+      "skills": [
+        {
+          "skillId": "HunterSkill_022",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_008",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0403",
+      "name": "集中·破龙珠【3】",
+      "type": "weapon",
+      "description": "发动集中技能和龙属性攻击强化技能的装饰品。",
+      "sortID": 7730,
+      "skills": [
+        {
+          "skillId": "HunterSkill_022",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_009",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0215",
+      "name": "集中·匠珠【3】",
+      "type": "weapon",
+      "description": "发动集中技能和匠技能的装饰品。",
+      "sortID": 7735,
+      "skills": [
+        {
+          "skillId": "HunterSkill_022",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0217",
+      "name": "集中·射法珠【3】",
+      "type": "weapon",
+      "description": "发动集中技能和弹道强化技能的装饰品。",
+      "sortID": 7740,
+      "skills": [
+        {
+          "skillId": "HunterSkill_022",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_019",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0216",
+      "name": "集中·击晕珠【3】",
+      "type": "weapon",
+      "description": "发动集中技能和击晕术技能的装饰品。",
+      "sortID": 7745,
+      "skills": [
+        {
+          "skillId": "HunterSkill_022",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0064",
+      "name": "昂扬珠【1】",
+      "type": "weapon",
+      "description": "发动强化持续技能的装饰品。",
+      "sortID": 7801,
+      "skills": [
+        {
+          "skillId": "HunterSkill_023",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "LEMON"
+    },
+    {
+      "id": "ACC_ID_0065",
+      "name": "昂扬珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动强化持续技能的装饰品。",
+      "sortID": 7802,
+      "skills": [
+        {
+          "skillId": "HunterSkill_023",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "LEMON"
+    },
+    {
+      "id": "ACC_ID_0066",
+      "name": "昂扬珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动强化持续技能的装饰品。",
+      "sortID": 7803,
+      "skills": [
+        {
+          "skillId": "HunterSkill_023",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "LEMON"
+    },
+    {
+      "id": "ACC_ID_0404",
+      "name": "昂扬·火炎珠【3】",
+      "type": "weapon",
+      "description": "发动强化持续技能和火属性攻击强化技能的装饰品。",
+      "sortID": 7810,
+      "skills": [
+        {
+          "skillId": "HunterSkill_023",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_005",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "LEMON"
+    },
+    {
+      "id": "ACC_ID_0405",
+      "name": "昂扬·流水珠【3】",
+      "type": "weapon",
+      "description": "发动强化持续技能和水属性攻击强化技能的装饰品。",
+      "sortID": 7815,
+      "skills": [
+        {
+          "skillId": "HunterSkill_023",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_006",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "LEMON"
+    },
+    {
+      "id": "ACC_ID_0406",
+      "name": "昂扬·雷光珠【3】",
+      "type": "weapon",
+      "description": "发动强化持续技能和雷属性攻击强化技能的装饰品。",
+      "sortID": 7820,
+      "skills": [
+        {
+          "skillId": "HunterSkill_023",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_008",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "LEMON"
+    },
+    {
+      "id": "ACC_ID_0407",
+      "name": "昂扬·冰结珠【3】",
+      "type": "weapon",
+      "description": "发动强化持续技能和冰属性攻击强化技能的装饰品。",
+      "sortID": 7825,
+      "skills": [
+        {
+          "skillId": "HunterSkill_023",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_007",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "LEMON"
+    },
+    {
+      "id": "ACC_ID_0408",
+      "name": "昂扬·破龙珠【3】",
+      "type": "weapon",
+      "description": "发动强化持续技能和龙属性攻击强化技能的装饰品。",
+      "sortID": 7830,
+      "skills": [
+        {
+          "skillId": "HunterSkill_023",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_009",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "LEMON"
+    },
+    {
+      "id": "ACC_ID_0221",
+      "name": "昂扬·匠珠【3】",
+      "type": "weapon",
+      "description": "发动强化持续技能和匠技能的装饰品。",
+      "sortID": 7835,
+      "skills": [
+        {
+          "skillId": "HunterSkill_023",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "LEMON"
+    },
+    {
+      "id": "ACC_ID_0081",
+      "name": "拔打珠【1】",
+      "type": "weapon",
+      "description": "发动拔刀术【力】技能的装饰品。",
+      "sortID": 7901,
+      "skills": [
+        {
+          "skillId": "HunterSkill_030",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0082",
+      "name": "拔打珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动拔刀术【力】技能的装饰品。",
+      "sortID": 7902,
+      "skills": [
+        {
+          "skillId": "HunterSkill_030",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0083",
+      "name": "拔打珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动拔刀术【力】技能的装饰品。",
+      "sortID": 7903,
+      "skills": [
+        {
+          "skillId": "HunterSkill_030",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0296",
+      "name": "拔打·匠珠【3】",
+      "type": "weapon",
+      "description": "发动拔刀术【力】技能和匠技能的装饰品。",
+      "sortID": 7910,
+      "skills": [
+        {
+          "skillId": "HunterSkill_030",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0298",
+      "name": "拔打·击晕珠【3】",
+      "type": "weapon",
+      "description": "发动拔刀术【力】技能和击晕术技能的装饰品。",
+      "sortID": 7915,
+      "skills": [
+        {
+          "skillId": "HunterSkill_030",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0297",
+      "name": "拔打·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动拔刀术【力】技能和格挡性能技能的装饰品。",
+      "sortID": 7920,
+      "skills": [
+        {
+          "skillId": "HunterSkill_030",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0085",
+      "name": "击晕珠【1】",
+      "type": "weapon",
+      "description": "发动击晕术技能的装饰品。",
+      "sortID": 8001,
+      "skills": [
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0086",
+      "name": "击晕珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动击晕术技能的装饰品。",
+      "sortID": 8002,
+      "skills": [
+        {
+          "skillId": "HunterSkill_032",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0087",
+      "name": "击晕珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动击晕术技能的装饰品。",
+      "sortID": 8003,
+      "skills": [
+        {
+          "skillId": "HunterSkill_032",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0088",
+      "name": "夺气珠【1】",
+      "type": "weapon",
+      "description": "发动夺取耐力技能的装饰品。",
+      "sortID": 8101,
+      "skills": [
+        {
+          "skillId": "HunterSkill_033",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0089",
+      "name": "夺气珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动夺取耐力技能的装饰品。",
+      "sortID": 8102,
+      "skills": [
+        {
+          "skillId": "HunterSkill_033",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0090",
+      "name": "夺气珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动夺取耐力技能的装饰品。",
+      "sortID": 8103,
+      "skills": [
+        {
+          "skillId": "HunterSkill_033",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0092",
+      "name": "炮术珠【1】",
+      "type": "weapon",
+      "description": "发动炮术技能的装饰品。",
+      "sortID": 8201,
+      "skills": [
+        {
+          "skillId": "HunterSkill_035",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0093",
+      "name": "炮术珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动炮术技能的装饰品。",
+      "sortID": 8202,
+      "skills": [
+        {
+          "skillId": "HunterSkill_035",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0094",
+      "name": "炮术珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动炮术技能的装饰品。",
+      "sortID": 8203,
+      "skills": [
+        {
+          "skillId": "HunterSkill_035",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0107",
+      "name": "速变珠【1】",
+      "type": "weapon",
+      "description": "发动高速变形技能的装饰品。",
+      "sortID": 8301,
+      "skills": [
+        {
+          "skillId": "HunterSkill_047",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0108",
+      "name": "速变珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动高速变形技能的装饰品。",
+      "sortID": 8302,
+      "skills": [
+        {
+          "skillId": "HunterSkill_047",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0109",
+      "name": "速变珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动高速变形技能的装饰品。",
+      "sortID": 8303,
+      "skills": [
+        {
+          "skillId": "HunterSkill_047",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0419",
+      "name": "速变·火炎珠【3】",
+      "type": "weapon",
+      "description": "发动高速变形技能和火属性攻击强化技能的装饰品。",
+      "sortID": 8310,
+      "skills": [
+        {
+          "skillId": "HunterSkill_047",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_005",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0420",
+      "name": "速变·流水珠【3】",
+      "type": "weapon",
+      "description": "发动高速变形技能和水属性攻击强化技能的装饰品。",
+      "sortID": 8315,
+      "skills": [
+        {
+          "skillId": "HunterSkill_047",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_006",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0421",
+      "name": "速变·雷光珠【3】",
+      "type": "weapon",
+      "description": "发动高速变形技能和雷属性攻击强化技能的装饰品。",
+      "sortID": 8320,
+      "skills": [
+        {
+          "skillId": "HunterSkill_047",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_008",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0422",
+      "name": "速变·冰结珠【3】",
+      "type": "weapon",
+      "description": "发动高速变形技能和冰属性攻击强化技能的装饰品。",
+      "sortID": 8325,
+      "skills": [
+        {
+          "skillId": "HunterSkill_047",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_007",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0423",
+      "name": "速变·破龙珠【3】",
+      "type": "weapon",
+      "description": "发动高速变形技能和龙属性攻击强化技能的装饰品。",
+      "sortID": 8330,
+      "skills": [
+        {
+          "skillId": "HunterSkill_047",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_009",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0251",
+      "name": "速变·匠珠【3】",
+      "type": "weapon",
+      "description": "发动高速变形技能和匠技能的装饰品。",
+      "sortID": 8335,
+      "skills": [
+        {
+          "skillId": "HunterSkill_047",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0253",
+      "name": "速变·击晕珠【3】",
+      "type": "weapon",
+      "description": "发动高速变形技能和击晕术技能的装饰品。",
+      "sortID": 8340,
+      "skills": [
+        {
+          "skillId": "HunterSkill_047",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0252",
+      "name": "速变·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动高速变形技能和格挡性能技能的装饰品。",
+      "sortID": 8345,
+      "skills": [
+        {
+          "skillId": "HunterSkill_047",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0155",
+      "name": "重击珠【2】",
+      "type": "armor",
+      "description": "发动破坏王技能的装饰品。",
+      "sortID": 8401,
+      "skills": [
+        {
+          "skillId": "HunterSkill_091",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0169",
+      "name": "转福珠【2】",
+      "type": "armor",
+      "description": "发动因祸得福技能的装饰品。",
+      "sortID": 8501,
+      "skills": [
+        {
+          "skillId": "HunterSkill_113",
+          "level": 1
+        }
+      ],
+      "rarity": 6,
+      "slotLevel": 2,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0172",
+      "name": "急袭珠【2】",
+      "type": "armor",
+      "description": "发动急袭技能的装饰品。",
+      "sortID": 8601,
+      "skills": [
+        {
+          "skillId": "HunterSkill_116",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0190",
+      "name": "抗狂珠【1】",
+      "type": "armor",
+      "description": "发动无我之境技能的装饰品。",
+      "sortID": 8701,
+      "skills": [
+        {
+          "skillId": "HunterSkill_195",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 1,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0091",
+      "name": "鼓笛珠【2】",
+      "type": "weapon",
+      "description": "发动吹笛名人技能的装饰品。",
+      "sortID": 8901,
+      "skills": [
+        {
+          "skillId": "HunterSkill_034",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0233",
+      "name": "鼓笛·攻击珠【3】",
+      "type": "weapon",
+      "description": "发动吹笛名人技能和攻击技能的装饰品。",
+      "sortID": 8910,
+      "skills": [
+        {
+          "skillId": "HunterSkill_034",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_000",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0234",
+      "name": "鼓笛·达人珠【3】",
+      "type": "weapon",
+      "description": "发动吹笛名人技能和看破技能的装饰品。",
+      "sortID": 8915,
+      "skills": [
+        {
+          "skillId": "HunterSkill_034",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_001",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0237",
+      "name": "鼓笛·拔刀珠【3】",
+      "type": "weapon",
+      "description": "发动吹笛名人技能和拔刀术【技】技能的装饰品。",
+      "sortID": 8920,
+      "skills": [
+        {
+          "skillId": "HunterSkill_034",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_029",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0235",
+      "name": "鼓笛·匠珠【3】",
+      "type": "weapon",
+      "description": "发动吹笛名人技能和匠技能的装饰品。",
+      "sortID": 8925,
+      "skills": [
+        {
+          "skillId": "HunterSkill_034",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0236",
+      "name": "鼓笛·击晕珠【3】",
+      "type": "weapon",
+      "description": "发动吹笛名人技能和击晕术技能的装饰品。",
+      "sortID": 8930,
+      "skills": [
+        {
+          "skillId": "HunterSkill_034",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0122",
+      "name": "蓄击珠【2】",
+      "type": "weapon",
+      "description": "发动蓄击强化技能的装饰品。",
+      "sortID": 9001,
+      "skills": [
+        {
+          "skillId": "HunterSkill_057",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0272",
+      "name": "蓄击·攻击珠【3】",
+      "type": "weapon",
+      "description": "发动蓄击强化技能和攻击技能的装饰品。",
+      "sortID": 9010,
+      "skills": [
+        {
+          "skillId": "HunterSkill_057",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_000",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0273",
+      "name": "蓄击·达人珠【3】",
+      "type": "weapon",
+      "description": "发动蓄击强化技能和看破技能的装饰品。",
+      "sortID": 9015,
+      "skills": [
+        {
+          "skillId": "HunterSkill_057",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_001",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0276",
+      "name": "蓄击·拔刀珠【3】",
+      "type": "weapon",
+      "description": "发动蓄击强化技能和拔刀术【技】技能的装饰品。",
+      "sortID": 9020,
+      "skills": [
+        {
+          "skillId": "HunterSkill_057",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_029",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0274",
+      "name": "蓄击·匠珠【3】",
+      "type": "weapon",
+      "description": "发动蓄击强化技能和匠技能的装饰品。",
+      "sortID": 9025,
+      "skills": [
+        {
+          "skillId": "HunterSkill_057",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0275",
+      "name": "蓄击·击晕珠【3】",
+      "type": "weapon",
+      "description": "发动蓄击强化技能和击晕术技能的装饰品。",
+      "sortID": 9030,
+      "skills": [
+        {
+          "skillId": "HunterSkill_057",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0118",
+      "name": "飞燕珠【2】",
+      "type": "weapon",
+      "description": "发动飞燕技能的装饰品。",
+      "sortID": 9101,
+      "skills": [
+        {
+          "skillId": "HunterSkill_055",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0268",
+      "name": "飞燕·攻击珠【3】",
+      "type": "weapon",
+      "description": "发动飞燕技能和攻击技能的装饰品。",
+      "sortID": 9110,
+      "skills": [
+        {
+          "skillId": "HunterSkill_055",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_000",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0269",
+      "name": "飞燕·达人珠【3】",
+      "type": "weapon",
+      "description": "发动飞燕技能和看破技能的装饰品。",
+      "sortID": 9115,
+      "skills": [
+        {
+          "skillId": "HunterSkill_055",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_001",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0271",
+      "name": "飞燕·拔刀珠【3】",
+      "type": "weapon",
+      "description": "发动飞燕技能和拔刀术【技】技能的装饰品。",
+      "sortID": 9120,
+      "skills": [
+        {
+          "skillId": "HunterSkill_055",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_029",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0270",
+      "name": "飞燕·匠珠【3】",
+      "type": "weapon",
+      "description": "发动飞燕技能和匠技能的装饰品。",
+      "sortID": 9125,
+      "skills": [
+        {
+          "skillId": "HunterSkill_055",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "BLUE"
+    },
+    {
+      "id": "ACC_ID_0185",
+      "name": "钻研珠【1】",
+      "type": "armor",
+      "description": "发动钻研技能的装饰品。",
+      "sortID": 9201,
+      "skills": [
+        {
+          "skillId": "HunterSkill_145",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0335",
+      "name": "强毒珠【2】",
+      "type": "weapon",
+      "description": "发动毒伤害强化技能的装饰品。",
+      "sortID": 9301,
+      "skills": [
+        {
+          "skillId": "HunterSkill_141",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 2,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0336",
+      "name": "强毒·攻击珠【3】",
+      "type": "weapon",
+      "description": "发动毒伤害强化技能和攻击技能的装饰品。",
+      "sortID": 9310,
+      "skills": [
+        {
+          "skillId": "HunterSkill_141",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_000",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0337",
+      "name": "强毒·达人珠【3】",
+      "type": "weapon",
+      "description": "发动毒伤害强化技能和看破技能的装饰品。",
+      "sortID": 9315,
+      "skills": [
+        {
+          "skillId": "HunterSkill_141",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_001",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0342",
+      "name": "强毒·拔刀珠【3】",
+      "type": "weapon",
+      "description": "发动毒伤害强化技能和拔刀术【技】技能的装饰品。",
+      "sortID": 9320,
+      "skills": [
+        {
+          "skillId": "HunterSkill_141",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_029",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0338",
+      "name": "强毒·匠珠【3】",
+      "type": "weapon",
+      "description": "发动毒伤害强化技能和匠技能的装饰品。",
+      "sortID": 9325,
+      "skills": [
+        {
+          "skillId": "HunterSkill_141",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0341",
+      "name": "强毒·射法珠【3】",
+      "type": "weapon",
+      "description": "发动毒伤害强化技能和弹道强化技能的装饰品。",
+      "sortID": 9330,
+      "skills": [
+        {
+          "skillId": "HunterSkill_141",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_019",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0340",
+      "name": "强毒·击晕珠【3】",
+      "type": "weapon",
+      "description": "发动毒伤害强化技能和击晕术技能的装饰品。",
+      "sortID": 9335,
+      "skills": [
+        {
+          "skillId": "HunterSkill_141",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0339",
+      "name": "强毒·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动毒伤害强化技能和格挡性能技能的装饰品。",
+      "sortID": 9340,
+      "skills": [
+        {
+          "skillId": "HunterSkill_141",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0069",
+      "name": "铁壁珠【1】",
+      "type": "weapon",
+      "description": "发动格挡性能技能的装饰品。",
+      "sortID": 9401,
+      "skills": [
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0070",
+      "name": "铁壁珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动格挡性能技能的装饰品。",
+      "sortID": 9402,
+      "skills": [
+        {
+          "skillId": "HunterSkill_026",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0071",
+      "name": "铁壁珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动格挡性能技能的装饰品。",
+      "sortID": 9403,
+      "skills": [
+        {
+          "skillId": "HunterSkill_026",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0139",
+      "name": "回避珠【2】",
+      "type": "armor",
+      "description": "发动回避性能技能的装饰品。",
+      "sortID": 9501,
+      "skills": [
+        {
+          "skillId": "HunterSkill_075",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0140",
+      "name": "跳跃珠【2】",
+      "type": "armor",
+      "description": "发动回避距离提升技能的装饰品。",
+      "sortID": 9601,
+      "skills": [
+        {
+          "skillId": "HunterSkill_076",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0136",
+      "name": "防音珠【2】",
+      "type": "armor",
+      "description": "发动耳塞技能的装饰品。",
+      "sortID": 9701,
+      "skills": [
+        {
+          "skillId": "HunterSkill_072",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0072",
+      "name": "强壁珠【1】",
+      "type": "weapon",
+      "description": "发动格挡强化技能的装饰品。",
+      "sortID": 9801,
+      "skills": [
+        {
+          "skillId": "HunterSkill_027",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0073",
+      "name": "强壁珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动格挡强化技能的装饰品。",
+      "sortID": 9802,
+      "skills": [
+        {
+          "skillId": "HunterSkill_027",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0074",
+      "name": "强壁珠Ⅲ【3】",
+      "type": "weapon",
+      "description": "发动格挡强化技能的装饰品。",
+      "sortID": 9803,
+      "skills": [
+        {
+          "skillId": "HunterSkill_027",
+          "level": 3
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0409",
+      "name": "强壁·火炎珠【3】",
+      "type": "weapon",
+      "description": "发动格挡强化技能和火属性攻击强化技能的装饰品。",
+      "sortID": 9810,
+      "skills": [
+        {
+          "skillId": "HunterSkill_027",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_005",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0410",
+      "name": "强壁·流水珠【3】",
+      "type": "weapon",
+      "description": "发动格挡强化技能和水属性攻击强化技能的装饰品。",
+      "sortID": 9815,
+      "skills": [
+        {
+          "skillId": "HunterSkill_027",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_006",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0411",
+      "name": "强壁·雷光珠【3】",
+      "type": "weapon",
+      "description": "发动格挡强化技能和雷属性攻击强化技能的装饰品。",
+      "sortID": 9820,
+      "skills": [
+        {
+          "skillId": "HunterSkill_027",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_008",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0412",
+      "name": "强壁·冰结珠【3】",
+      "type": "weapon",
+      "description": "发动格挡强化技能和冰属性攻击强化技能的装饰品。",
+      "sortID": 9825,
+      "skills": [
+        {
+          "skillId": "HunterSkill_027",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_007",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0413",
+      "name": "强壁·破龙珠【3】",
+      "type": "weapon",
+      "description": "发动格挡强化技能和龙属性攻击强化技能的装饰品。",
+      "sortID": 9830,
+      "skills": [
+        {
+          "skillId": "HunterSkill_027",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_009",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0225",
+      "name": "强壁·匠珠【3】",
+      "type": "weapon",
+      "description": "发动格挡强化技能和匠技能的装饰品。",
+      "sortID": 9835,
+      "skills": [
+        {
+          "skillId": "HunterSkill_027",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0226",
+      "name": "强壁·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动格挡强化技能和格挡性能技能的装饰品。",
+      "sortID": 9840,
+      "skills": [
+        {
+          "skillId": "HunterSkill_027",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 5,
+      "slotLevel": 3,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0084",
+      "name": "速纳珠【1】",
+      "type": "armor",
+      "description": "发动纳刀术技能的装饰品。",
+      "sortID": 9901,
+      "skills": [
+        {
+          "skillId": "HunterSkill_031",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0137",
+      "name": "防风珠【1】",
+      "type": "armor",
+      "description": "发动风压耐性技能的装饰品。",
+      "sortID": 10001,
+      "skills": [
+        {
+          "skillId": "HunterSkill_073",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0138",
+      "name": "耐震珠【1】",
+      "type": "armor",
+      "description": "发动耐震技能的装饰品。",
+      "sortID": 10101,
+      "skills": [
+        {
+          "skillId": "HunterSkill_074",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0162",
+      "name": "耐冲珠【1】",
+      "type": "armor",
+      "description": "发动减轻胆怯技能的装饰品。",
+      "sortID": 10201,
+      "skills": [
+        {
+          "skillId": "HunterSkill_102",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0183",
+      "name": "威吓珠【1】",
+      "type": "armor",
+      "description": "发动威吓技能的装饰品。",
+      "sortID": 10301,
+      "skills": [
+        {
+          "skillId": "HunterSkill_139",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0135",
+      "name": "快吃珠【1】",
+      "type": "armor",
+      "description": "发动快吃技能的装饰品。",
+      "sortID": 10401,
+      "skills": [
+        {
+          "skillId": "HunterSkill_071",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "BROWN"
+    },
+    {
+      "id": "ACC_ID_0095",
+      "name": "增弹珠【1】",
+      "type": "weapon",
+      "description": "发动炮弹装填技能的装饰品。",
+      "sortID": 10501,
+      "skills": [
+        {
+          "skillId": "HunterSkill_036",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0096",
+      "name": "增弹珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动炮弹装填技能的装饰品。",
+      "sortID": 10502,
+      "skills": [
+        {
+          "skillId": "HunterSkill_036",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0238",
+      "name": "增弹·攻击珠【3】",
+      "type": "weapon",
+      "description": "发动炮弹装填技能和攻击技能的装饰品。",
+      "sortID": 10510,
+      "skills": [
+        {
+          "skillId": "HunterSkill_036",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_000",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0239",
+      "name": "增弹·达人珠【3】",
+      "type": "weapon",
+      "description": "发动炮弹装填技能和看破技能的装饰品。",
+      "sortID": 10515,
+      "skills": [
+        {
+          "skillId": "HunterSkill_036",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_001",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0242",
+      "name": "增弹·拔刀珠【3】",
+      "type": "weapon",
+      "description": "发动炮弹装填技能和拔刀术【技】技能的装饰品。",
+      "sortID": 10520,
+      "skills": [
+        {
+          "skillId": "HunterSkill_036",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_029",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0240",
+      "name": "增弹·匠珠【3】",
+      "type": "weapon",
+      "description": "发动炮弹装填技能和匠技能的装饰品。",
+      "sortID": 10525,
+      "skills": [
+        {
+          "skillId": "HunterSkill_036",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0241",
+      "name": "增弹·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动炮弹装填技能和格挡性能技能的装饰品。",
+      "sortID": 10530,
+      "skills": [
+        {
+          "skillId": "HunterSkill_036",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0152",
+      "name": "沼渡珠【1】",
+      "type": "armor",
+      "description": "发动适应水域·油泥技能的装饰品。",
+      "sortID": 10601,
+      "skills": [
+        {
+          "skillId": "HunterSkill_088",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0113",
+      "name": "缓冲珠【1】",
+      "type": "armor",
+      "description": "发动缓冲技能的装饰品。",
+      "sortID": 10701,
+      "skills": [
+        {
+          "skillId": "HunterSkill_050",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "GRAY"
+    },
+    {
+      "id": "ACC_ID_0165",
+      "name": "飞跃珠【1】",
+      "type": "armor",
+      "description": "发动飞身跃入技能的装饰品。",
+      "sortID": 10801,
+      "skills": [
+        {
+          "skillId": "HunterSkill_106",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "SKY"
+    },
+    {
+      "id": "ACC_ID_0163",
+      "name": "强跳珠【1】",
+      "type": "armor",
+      "description": "发动跳跃铁人技能的装饰品。",
+      "sortID": 10901,
+      "skills": [
+        {
+          "skillId": "HunterSkill_103",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "ULTRAMARINE"
+    },
+    {
+      "id": "ACC_ID_0166",
+      "name": "登壁珠【1】",
+      "type": "armor",
+      "description": "发动攀岩者技能的装饰品。",
+      "sortID": 11001,
+      "skills": [
+        {
+          "skillId": "HunterSkill_109",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "IVORY"
+    },
+    {
+      "id": "ACC_ID_0159",
+      "name": "友爱珠【1】",
+      "type": "armor",
+      "description": "发动广域化技能的装饰品。",
+      "sortID": 11101,
+      "skills": [
+        {
+          "skillId": "HunterSkill_098",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "WHITE"
+    },
+    {
+      "id": "ACC_ID_0182",
+      "name": "整备珠【2】",
+      "type": "armor",
+      "description": "发动整备技能的装饰品。",
+      "sortID": 11201,
+      "skills": [
+        {
+          "skillId": "HunterSkill_138",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "IVORY"
+    },
+    {
+      "id": "ACC_ID_0156",
+      "name": "爆师珠【1】",
+      "type": "armor",
+      "description": "发动炸弹客技能的装饰品。",
+      "sortID": 11301,
+      "skills": [
+        {
+          "skillId": "HunterSkill_095",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "VERMILION"
+    },
+    {
+      "id": "ACC_ID_0157",
+      "name": "嗜菇珠【2】",
+      "type": "armor",
+      "description": "发动最爱蘑菇技能的装饰品。",
+      "sortID": 11401,
+      "skills": [
+        {
+          "skillId": "HunterSkill_096",
+          "level": 1
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "PURPLE"
+    },
+    {
+      "id": "ACC_ID_0158",
+      "name": "持续珠【1】",
+      "type": "armor",
+      "description": "发动道具使用强化技能的装饰品。",
+      "sortID": 11501,
+      "skills": [
+        {
+          "skillId": "HunterSkill_097",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "IVORY"
+    },
+    {
+      "id": "ACC_ID_0160",
+      "name": "节食珠【1】",
+      "type": "armor",
+      "description": "发动满足感技能的装饰品。",
+      "sortID": 11601,
+      "skills": [
+        {
+          "skillId": "HunterSkill_099",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "IVORY"
+    },
+    {
+      "id": "ACC_ID_0105",
+      "name": "打磨珠【1】",
+      "type": "weapon",
+      "description": "发动砥石使用高速化技能的装饰品。",
+      "sortID": 11701,
+      "skills": [
+        {
+          "skillId": "HunterSkill_046",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0106",
+      "name": "打磨珠Ⅱ【2】",
+      "type": "weapon",
+      "description": "发动砥石使用高速化技能的装饰品。",
+      "sortID": 11702,
+      "skills": [
+        {
+          "skillId": "HunterSkill_046",
+          "level": 2
+        }
+      ],
+      "rarity": 3,
+      "slotLevel": 2,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0243",
+      "name": "打磨·攻击珠【3】",
+      "type": "weapon",
+      "description": "发动砥石使用高速化技能和攻击技能的装饰品。",
+      "sortID": 11710,
+      "skills": [
+        {
+          "skillId": "HunterSkill_046",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_000",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0244",
+      "name": "打磨·达人珠【3】",
+      "type": "weapon",
+      "description": "发动砥石使用高速化技能和看破技能的装饰品。",
+      "sortID": 11715,
+      "skills": [
+        {
+          "skillId": "HunterSkill_046",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_001",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0248",
+      "name": "打磨·拔刀珠【3】",
+      "type": "weapon",
+      "description": "发动砥石使用高速化技能和拔刀术【技】技能的装饰品。",
+      "sortID": 11720,
+      "skills": [
+        {
+          "skillId": "HunterSkill_046",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_029",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0245",
+      "name": "打磨·匠珠【3】",
+      "type": "weapon",
+      "description": "发动砥石使用高速化技能和匠技能的装饰品。",
+      "sortID": 11725,
+      "skills": [
+        {
+          "skillId": "HunterSkill_046",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_014",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0247",
+      "name": "打磨·击晕珠【3】",
+      "type": "weapon",
+      "description": "发动砥石使用高速化技能和击晕术技能的装饰品。",
+      "sortID": 11730,
+      "skills": [
+        {
+          "skillId": "HunterSkill_046",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_032",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0246",
+      "name": "打磨·铁壁珠【3】",
+      "type": "weapon",
+      "description": "发动砥石使用高速化技能和格挡性能技能的装饰品。",
+      "sortID": 11735,
+      "skills": [
+        {
+          "skillId": "HunterSkill_046",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_026",
+          "level": 1
+        }
+      ],
+      "rarity": 4,
+      "slotLevel": 3,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0180",
+      "name": "闪光珠【1】",
+      "type": "armor",
+      "description": "发动闪光强化技能的装饰品。",
+      "sortID": 11901,
+      "skills": [
+        {
+          "skillId": "HunterSkill_136",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "YELLOW"
+    },
+    {
+      "id": "ACC_ID_0153",
+      "name": "植学珠【1】",
+      "type": "armor",
+      "description": "发动植生学技能的装饰品。",
+      "sortID": 12001,
+      "skills": [
+        {
+          "skillId": "HunterSkill_089",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "SGREEN"
+    },
+    {
+      "id": "ACC_ID_0154",
+      "name": "地学珠【1】",
+      "type": "armor",
+      "description": "发动地质学技能的装饰品。",
+      "sortID": 12101,
+      "skills": [
+        {
+          "skillId": "HunterSkill_090",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "IVORY"
+    },
+    {
+      "id": "ACC_ID_0181",
+      "name": "标本珠【1】",
+      "type": "armor",
+      "description": "发动昆虫标本达人技能的装饰品。",
+      "sortID": 12201,
+      "skills": [
+        {
+          "skillId": "HunterSkill_137",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "MOS"
+    },
+    {
+      "id": "ACC_ID_0178",
+      "name": "猎手珠【1】",
+      "type": "armor",
+      "description": "发动猎人生活技能的装饰品。",
+      "sortID": 12301,
+      "skills": [
+        {
+          "skillId": "HunterSkill_126",
+          "level": 1
+        }
+      ],
+      "rarity": 2,
+      "slotLevel": 1,
+      "color": "IVORY"
+    }
+  ]
+}
