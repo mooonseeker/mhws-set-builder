@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { Armor, Charm, Equipment, Weapon } from "@/types";
-import { compareSkillsPriority } from "@/utils";
+import { compareSkillsPriority, getAssetPath } from "@/utils";
 
 /** Props for the EquipmentCard component. */
 export interface EquipmentCardProps {
@@ -31,33 +31,33 @@ export function EquipmentCard({
 }: EquipmentCardProps) {
   // Get accessory icon path
   const getAccessoryIcon = (slotType: "weapon" | "armor", level: number) => {
-    return `/slot/${slotType}-slot-${level}.png`;
+    return getAssetPath(`/slot/${slotType}-slot-${level}.png`);
   };
 
   const ARMOR_RESISTANCE_META = [
     {
       key: "fire",
-      icon: "/equipment-status/resistance_fire.png",
+      icon: getAssetPath("/equipment-status/resistance_fire.png"),
       alt: "Fire Res",
     },
     {
       key: "water",
-      icon: "/equipment-status/resistance_water.png",
+      icon: getAssetPath("/equipment-status/resistance_water.png"),
       alt: "Water Res",
     },
     {
       key: "elec",
-      icon: "/equipment-status/resistance_elec.png",
+      icon: getAssetPath("/equipment-status/resistance_elec.png"),
       alt: "Elec Res",
     },
     {
       key: "ice",
-      icon: "/equipment-status/resistance_ice.png",
+      icon: getAssetPath("/equipment-status/resistance_ice.png"),
       alt: "Ice Res",
     },
     {
       key: "dragon",
-      icon: "/equipment-status/resistance_dragon.png",
+      icon: getAssetPath("/equipment-status/resistance_dragon.png"),
       alt: "Dragon Res",
     },
   ];
@@ -70,15 +70,15 @@ export function EquipmentCard({
   // Get equipment icon path
   const getEquipmentIcon = (item: Equipment) => {
     if (isCharm(item)) {
-      return "/charm.png";
+      return getAssetPath("/charm.png");
     }
     if (isArmor(item)) {
-      return `/armor-type/${item.type}.png`;
+      return getAssetPath(`/armor-type/${item.type}.png`);
     }
     if (isWeapon(item)) {
-      return `/weapon-type/${item.type}.png`;
+      return getAssetPath(`/weapon-type/${item.type}.png`);
     }
-    return "/set.png"; // Fallback icon
+    return getAssetPath("/set.png"); // Fallback icon
   };
 
   const { getSkillById } = useSkills();
@@ -159,7 +159,7 @@ export function EquipmentCard({
             <div className="card-stats mb-3 grid grid-cols-2 gap-2 text-xs">
               <div className="flex items-center justify-center gap-1">
                 <img
-                  src="/equipment-status/attack.png"
+                  src={getAssetPath("/equipment-status/attack.png")}
                   alt="Attack"
                   className="h-4 w-4"
                 />
@@ -167,7 +167,7 @@ export function EquipmentCard({
               </div>
               <div className="flex items-center justify-center gap-1">
                 <img
-                  src="/equipment-status/critical.png"
+                  src={getAssetPath("/equipment-status/critical.png")}
                   alt="Critical"
                   className="h-4 w-4"
                 />
@@ -180,7 +180,7 @@ export function EquipmentCard({
               {[
                 {
                   key: "defense",
-                  icon: "/equipment-status/defense.png",
+                  icon: getAssetPath("/equipment-status/defense.png"),
                   alt: "Defense",
                   value: item.defense,
                 },

@@ -31,6 +31,7 @@ import {
 } from "@/constants";
 import { useCharms, useSettings, useSkills } from "@/hooks";
 import { WEAPON_TYPES, type AppSettings, type WeaponType } from "@/types";
+import { getAssetPath } from "@/utils";
 
 import { DataIO } from "./DataIO";
 import { SettingGroup, SettingItem } from "./SettingItem";
@@ -229,7 +230,7 @@ export function Settings() {
                         className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground hover:bg-accent hover:text-accent-foreground"
                       >
                         <img
-                          src={`/weapon-type/${type}.png`}
+                          src={getAssetPath(`/weapon-type/${type}.png`)}
                           alt={type}
                           className="h-5 w-5"
                         />

@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSetBuilder, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
-import { compareSkillsPriority } from "@/utils";
+import { compareSkillsPriority, getAssetPath } from "@/utils";
 
 /**
  * Renders a list of required skills and a selector to add more.
@@ -64,7 +64,7 @@ export function SkillRequirements() {
       <li key={skill.skillId} className="flex h-8 items-center justify-between">
         <div className="flex min-w-0 items-center gap-1.5">
           <img
-            src={`/skill-type/${skillInfo.type}.png`}
+            src={getAssetPath(`/skill-type/${skillInfo.type}.png`)}
             alt={skillInfo.name}
             className="h-5 w-5"
             onError={(e) => {

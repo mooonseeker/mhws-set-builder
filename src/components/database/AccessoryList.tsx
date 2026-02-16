@@ -31,6 +31,7 @@ import { useAccessories, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { DataStorage } from "@/services/storage";
 import type { Accessory, AppSettings, SlotLevel } from "@/types";
+import { getAssetPath } from "@/utils";
 
 export interface AccessoryListProps {
   onEdit?: (accessory: Accessory) => void;
@@ -73,7 +74,7 @@ export function AccessoryList({
   // Helper to get the slot icon path.
   const getSlotIcon = (type: "weapon" | "armor", level: number) => {
     if (level >= 1 && level <= 3) {
-      return `/slot/${type}-slot-${level}.png`;
+      return getAssetPath(`/slot/${type}-slot-${level}.png`);
     }
     return "";
   };
@@ -135,11 +136,11 @@ export function AccessoryList({
                   <TooltipTrigger asChild>
                     <Button variant="default" size="icon" disabled>
                       <img
-                        src={
+                        src={getAssetPath(
                           filterBySlotType === "weapon"
                             ? "/weapon.png"
-                            : "/armor.png"
-                        }
+                            : "/armor.png",
+                        )}
                         alt={filterBySlotType === "weapon" ? "武器" : "防具"}
                         className="h-5 w-5"
                       />
@@ -180,7 +181,11 @@ export function AccessoryList({
                           setCurrentPage(1);
                         }}
                       >
-                        <img src="/weapon.png" alt="武器" className="h-5 w-5" />
+                        <img
+                          src={getAssetPath("/weapon.png")}
+                          alt="武器"
+                          className="h-5 w-5"
+                        />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -197,7 +202,11 @@ export function AccessoryList({
                           setCurrentPage(1);
                         }}
                       >
-                        <img src="/armor.png" alt="防具" className="h-5 w-5" />
+                        <img
+                          src={getAssetPath("/armor.png")}
+                          alt="防具"
+                          className="h-5 w-5"
+                        />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>

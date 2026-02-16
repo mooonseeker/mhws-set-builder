@@ -60,3 +60,6 @@ export { upgradeArmor, toggleLimitBreakGlobal } from "./limit-break";
 
 // Weapon grouping utilities
 export { groupWeaponsIntoRows } from "./weapon-grouper";
+
+// Asset utilities
+export { getAssetPath } from "./assets";

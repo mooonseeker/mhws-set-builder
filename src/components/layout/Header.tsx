@@ -3,6 +3,7 @@
  */
 
 import { DATABASE_VERSION } from "@/constants";
+import { getAssetPath } from "@/utils";
 
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -18,7 +19,7 @@ export function Header() {
         <div className="flex items-center justify-between gap-2 sm:gap-3">
           <div className="flex items-center gap-2 sm:gap-3">
             <img
-              src="/set.png"
+              src={getAssetPath("/set.png")}
               alt="Charm"
               className="mobile-landscape:h-5 mobile-landscape:w-5 h-6 w-6 sm:h-8 sm:w-8"
             />

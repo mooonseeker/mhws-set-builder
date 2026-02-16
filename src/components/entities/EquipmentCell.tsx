@@ -16,6 +16,7 @@ import { useSettings } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { Armor, Charm, Slot, Weapon, WeaponType } from "@/types";
 import type { EquipmentCellType, SlottedEquipment } from "@/types/set-builder";
+import { getAssetPath } from "@/utils";
 
 import { EquipmentCard } from "./EquipmentCard";
 
@@ -48,17 +49,17 @@ const getIconPath = (
 ): string => {
   if (type === "weapon") {
     if (equipment && "type" in equipment) {
-      return `/weapon-type/${(equipment as Weapon).type}.png`;
+      return getAssetPath(`/weapon-type/${(equipment as Weapon).type}.png`);
     }
-    return `/weapon-type/${defaultWeaponType}.png`;
+    return getAssetPath(`/weapon-type/${defaultWeaponType}.png`);
   }
-  if (type === "charm") return "/charm.png";
-  return `/armor-type/${type}.png`;
+  if (type === "charm") return getAssetPath("/charm.png");
+  return getAssetPath(`/armor-type/${type}.png`);
 };
 
 const getAccessoryIcon = (slotType: "weapon" | "armor", level: number) => {
   const validLevel = Math.min(level, 3);
-  return `/slot/${slotType}-slot-${validLevel}.png`;
+  return getAssetPath(`/slot/${slotType}-slot-${validLevel}.png`);
 };
 
 /**

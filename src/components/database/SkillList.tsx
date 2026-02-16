@@ -30,6 +30,7 @@ import { DEFAULT_SKILLS_PER_PAGE, SKILL_CATEGORY_LABELS } from "@/constants";
 import { useSkills } from "@/hooks";
 import { DataStorage } from "@/services/storage";
 import type { AppSettings, Skill, SkillCategory, SlotLevel } from "@/types";
+import { getAssetPath } from "@/utils";
 
 interface SkillListProps {
   onEdit: (skill: Skill) => void;
@@ -60,19 +61,19 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
   ) => {
     switch (skillCategory) {
       case "weapon":
-        return `/slot/weapon-slot-${accessoryLevel}.png`;
+        return getAssetPath(`/slot/weapon-slot-${accessoryLevel}.png`);
       case "armor":
-        return `/slot/armor-slot-${accessoryLevel}.png`;
+        return getAssetPath(`/slot/armor-slot-${accessoryLevel}.png`);
       case "series":
       case "group":
       default:
-        return `/set.png`;
+        return getAssetPath(`/set.png`);
     }
   };
 
   // Gets the skill category icon.
   const getCategoryIcon = (skillCategory: SkillCategory) => {
-    return `/skill-category/${skillCategory}.png`;
+    return getAssetPath(`/skill-category/${skillCategory}.png`);
   };
 
   // Filter skills based on current filter settings.
@@ -156,7 +157,7 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
                         onClick={() => handleCategoryChange(category)}
                       >
                         <img
-                          src={`/skill-category/${category}.png`}
+                          src={getAssetPath(`/skill-category/${category}.png`)}
                           alt={SKILL_CATEGORY_LABELS[category]}
                           className="h-6 w-6"
                         />
@@ -261,7 +262,7 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
                   <TableCell className="text-left font-medium md:pl-4 lg:pl-8">
                     <div className="flex items-center gap-2">
                       <img
-                        src={`/skill-type/${skill.type}.png`}
+                        src={getAssetPath(`/skill-type/${skill.type}.png`)}
                         alt={`${skill.type} icon`}
                         style={{ width: "1.5rem", height: "1.5rem" }}
                         onError={(e) => {

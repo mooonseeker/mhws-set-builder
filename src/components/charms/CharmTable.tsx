@@ -23,7 +23,7 @@ import type {
   CharmSortField,
   SortDirection,
 } from "@/types";
-import { isOfficialCharmId } from "@/utils";
+import { getAssetPath, isOfficialCharmId } from "@/utils";
 
 interface CharmTableProps {
   charms: CharmEnhanced[];
@@ -68,7 +68,7 @@ export function CharmTable({
 }: CharmTableProps) {
   // Gets the icon for a decoration slot based on its type and level.
   const getAccessoryIcon = (slotType: "weapon" | "armor", level: number) => {
-    return `/slot/${slotType}-slot-${level}.png`;
+    return getAssetPath(`/slot/${slotType}-slot-${level}.png`);
   };
 
   return (
@@ -239,7 +239,7 @@ export function CharmTable({
                   <div className="flex flex-col justify-center gap-2 text-sm md:flex-row md:gap-4">
                     <div className="flex items-center gap-1">
                       <img
-                        src="/weapon.png"
+                        src={getAssetPath("/weapon.png")}
                         alt="WeaponSlot"
                         style={{ width: "1.5rem", height: "1.5rem" }}
                       />
@@ -249,7 +249,7 @@ export function CharmTable({
                     </div>
                     <div className="flex items-center gap-1">
                       <img
-                        src="/armor.png"
+                        src={getAssetPath("/armor.png")}
                         alt="ArmorSlot"
                         style={{ width: "1.5rem", height: "1.5rem" }}
                       />

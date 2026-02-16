@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
+import { getAssetPath } from "@/utils";
 
 /** Props for the SkillItem component. */
 interface SkillItemProps {
@@ -87,7 +88,7 @@ export function SkillItem({
       <div className="flex min-w-0 items-center gap-1.5">
         {showIcon && (
           <img
-            src={`/skill-type/${type}.png`}
+            src={getAssetPath(`/skill-type/${type}.png`)}
             alt={name}
             className={cn(iconSizeClass)}
             onError={(e) => {

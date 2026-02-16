@@ -37,7 +37,7 @@ import {
   type WeaponType,
 } from "@/types";
 import type { EquipmentCellType } from "@/types/set-builder";
-import { groupWeaponsIntoRows } from "@/utils";
+import { getAssetPath, groupWeaponsIntoRows } from "@/utils";
 
 const RARITY_COLUMNS_MAP = {
   low: [1, 2, 3, 4],
@@ -162,7 +162,7 @@ export function WeaponList({
                   className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground hover:bg-accent hover:text-accent-foreground"
                 >
                   <img
-                    src={`/weapon-type/${type}.png`}
+                    src={getAssetPath(`/weapon-type/${type}.png`)}
                     alt={type}
                     className="h-6 w-6"
                   />

@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { SKILL_CATEGORY_LABELS } from "@/constants";
 import { useSkills } from "@/hooks";
 import { SKILL_CATEGORIES, type Skill, type SkillCategory } from "@/types";
+import { getAssetPath } from "@/utils";
 
 interface KeySkillManagerProps {
   open: boolean;
@@ -79,7 +80,9 @@ export function KeySkillManager({ open, onOpenChange }: KeySkillManagerProps) {
                         <div key={category} className="flex flex-col gap-2">
                           <div className="flex items-center gap-2">
                             <img
-                              src={`/skill-category/${category}.png`}
+                              src={getAssetPath(
+                                `/skill-category/${category}.png`,
+                              )}
                               alt={SKILL_CATEGORY_LABELS[category]}
                               className="h-4 w-4 opacity-70"
                             />
@@ -145,7 +148,9 @@ export function KeySkillManager({ open, onOpenChange }: KeySkillManagerProps) {
                       >
                         <div className="flex items-center gap-2">
                           <img
-                            src={`/skill-category/${skill.category}.png`}
+                            src={getAssetPath(
+                              `/skill-category/${skill.category}.png`,
+                            )}
                             alt={skill.category}
                             className="h-4 w-4 opacity-70"
                           />

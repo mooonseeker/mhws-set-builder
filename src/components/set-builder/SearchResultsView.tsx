@@ -13,6 +13,7 @@ import {
   evaluateAndSortResults,
 } from "@/services/set-search/result-evaluator";
 import type { FinalSet, Slot, SlotType } from "@/types";
+import { getAssetPath } from "@/utils";
 
 /**
  * Counts the remaining empty slots grouped by equipment type and slot level.
@@ -131,7 +132,9 @@ export function SearchResultsView() {
                                       className="flex items-center gap-1"
                                     >
                                       <img
-                                        src={`/slot/${type}-slot-${level}.png`}
+                                        src={getAssetPath(
+                                          `/slot/${type}-slot-${level}.png`,
+                                        )}
                                         alt={`${type} slot lv${level}`}
                                         className={`h-5 w-5 ${isEmpty ? "opacity-30" : ""}`}
                                       />

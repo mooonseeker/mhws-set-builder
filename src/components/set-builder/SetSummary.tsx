@@ -16,7 +16,7 @@ import type {
   Weapon,
 } from "@/types";
 import type { EquipmentSet, SlottedEquipment } from "@/types/set-builder";
-import { compareSkillsPriority } from "@/utils";
+import { compareSkillsPriority, getAssetPath } from "@/utils";
 
 /** Props for SetSummary component. */
 export interface SetSummaryProps {
@@ -157,11 +157,31 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
   }, [aggregatedSkills]);
 
   const ARMOR_RESISTANCE_META = [
-    { key: "fire", icon: "/attribute-type/fire.png", alt: "火耐性" },
-    { key: "water", icon: "/attribute-type/water.png", alt: "水耐性" },
-    { key: "elec", icon: "/attribute-type/elec.png", alt: "雷耐性" },
-    { key: "ice", icon: "/attribute-type/ice.png", alt: "冰耐性" },
-    { key: "dragon", icon: "/attribute-type/dragon.png", alt: "龙耐性" },
+    {
+      key: "fire",
+      icon: getAssetPath("/attribute-type/fire.png"),
+      alt: "火耐性",
+    },
+    {
+      key: "water",
+      icon: getAssetPath("/attribute-type/water.png"),
+      alt: "水耐性",
+    },
+    {
+      key: "elec",
+      icon: getAssetPath("/attribute-type/elec.png"),
+      alt: "雷耐性",
+    },
+    {
+      key: "ice",
+      icon: getAssetPath("/attribute-type/ice.png"),
+      alt: "冰耐性",
+    },
+    {
+      key: "dragon",
+      icon: getAssetPath("/attribute-type/dragon.png"),
+      alt: "龙耐性",
+    },
   ];
 
   return (
@@ -177,7 +197,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
             {/* Attack */}
             <div className="flex items-center justify-center gap-2">
               <img
-                src="/skill-type/SKILL_0000.png"
+                src={getAssetPath("/skill-type/SKILL_0000.png")}
                 alt="攻击"
                 className="h-4 w-4"
               />
@@ -186,7 +206,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
             {/* Critical */}
             <div className="flex items-center justify-center gap-2">
               <img
-                src="/skill-type/SKILL_0001.png"
+                src={getAssetPath("/skill-type/SKILL_0001.png")}
                 alt="会心"
                 className="h-4 w-4"
               />
@@ -195,7 +215,7 @@ export function SetSummary({ equipmentSet }: SetSummaryProps) {
             {/* Defense */}
             <div className="flex items-center justify-center gap-2">
               <img
-                src="/skill-type/SKILL_0005.png"
+                src={getAssetPath("/skill-type/SKILL_0005.png")}
                 alt="防御"
                 className="h-4 w-4"
               />

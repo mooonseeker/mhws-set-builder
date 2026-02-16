@@ -19,6 +19,7 @@ import {
   type SlotLevel,
   type SlotType,
 } from "@/types";
+import { getAssetPath } from "@/utils";
 
 interface CharmFormProps {
   isEditMode: boolean;
@@ -128,7 +129,7 @@ export function CharmForm({
           <div className="flex gap-2 text-sm md:gap-4">
             <div className="flex items-center gap-1">
               <img
-                src="/weapon.png"
+                src={getAssetPath("/weapon.png")}
                 alt="WeaponSlot"
                 style={{ width: "1.5rem", height: "1.5rem" }}
               />
@@ -137,7 +138,7 @@ export function CharmForm({
             </div>
             <div className="flex items-center gap-1">
               <img
-                src="/armor.png"
+                src={getAssetPath("/armor.png")}
                 alt="ArmorSlot"
                 style={{ width: "1.5rem", height: "1.5rem" }}
               />
