@@ -26,7 +26,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { RARITY_FILTERS, WEAPON_TYPE_LABELS } from "@/constants";
-import { useWeapon } from "@/hooks";
+import { useSettings, useWeapon } from "@/hooks";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import {
@@ -67,14 +67,16 @@ export function WeaponList({
   onEdit,
   isLocked,
 }: WeaponListProps) {
+  // Fetch weapon data and settings.
+  const { weapons, loading, error } = useWeapon();
+  const { settings } = useSettings();
+
   // MARK: State Management
-  const [selectedWeaponType, setSelectedWeaponType] =
-    useState<WeaponType>("rod");
+  const [selectedWeaponType, setSelectedWeaponType] = useState<WeaponType>(
+    settings.defaultWeaponType,
+  );
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedRarity, setSelectedRarity] = useState<RarityRangeKey>("all");
-
-  // Fetch weapon data.
-  const { weapons, loading, error } = useWeapon();
 
   // Responsive card variant.
   const is2Xl = useMediaQuery("(min-width: 1536px)");

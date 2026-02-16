@@ -12,8 +12,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useSettings } from "@/hooks";
 import { cn } from "@/lib/utils";
-import type { Armor, Charm, Slot, Weapon } from "@/types";
+import type { Armor, Charm, Slot, Weapon, WeaponType } from "@/types";
 import type { EquipmentCellType, SlottedEquipment } from "@/types/set-builder";
 
 import { EquipmentCard } from "./EquipmentCard";
@@ -42,13 +43,14 @@ const typeToLabel: Record<EquipmentCellType, string> = {
 
 const getIconPath = (
   type: EquipmentCellType,
+  defaultWeaponType: WeaponType,
   equipment?: Weapon | Armor | Charm,
 ): string => {
   if (type === "weapon") {
     if (equipment && "type" in equipment) {
       return `/weapon-type/${(equipment as Weapon).type}.png`;
     }
-    return "/weapon.png";
+    return `/weapon-type/${defaultWeaponType}.png`;
   }
   if (type === "charm") return "/charm.png";
   return `/armor-type/${type}.png`;
@@ -73,9 +75,10 @@ export function EquipmentCell({
   onToggleLock,
   onClear,
 }: EquipmentCellProps) {
+  const { settings } = useSettings();
   const label = typeToLabel[type];
   const { equipment, accessories } = slottedEquipment ?? {};
-  const iconPath = getIconPath(type, equipment);
+  const iconPath = getIconPath(type, settings.defaultWeaponType, equipment);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const handleToggleLock = (e: React.MouseEvent) => {

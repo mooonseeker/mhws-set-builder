@@ -20,12 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   DEFAULT_ACCESSORIES_PER_PAGE,
   DEFAULT_ARMOR_SERIES_PER_PAGE,
@@ -227,23 +222,18 @@ export function Settings() {
                     className="flex-wrap justify-end"
                   >
                     {WEAPON_TYPES.map((type) => (
-                      <Tooltip key={type}>
-                        <TooltipTrigger asChild>
-                          <ToggleGroupItem
-                            value={type}
-                            className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground h-8 w-8 p-0"
-                          >
-                            <img
-                              src={`/weapon-type/${type}.png`}
-                              alt={type}
-                              className="h-5 w-5"
-                            />
-                          </ToggleGroupItem>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{WEAPON_TYPE_LABELS[type]}</p>
-                        </TooltipContent>
-                      </Tooltip>
+                      <ToggleGroupItem
+                        key={type}
+                        value={type}
+                        tooltip={WEAPON_TYPE_LABELS[type]}
+                        className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground hover:bg-accent hover:text-accent-foreground"
+                      >
+                        <img
+                          src={`/weapon-type/${type}.png`}
+                          alt={type}
+                          className="h-5 w-5"
+                        />
+                      </ToggleGroupItem>
                     ))}
                   </ToggleGroup>
                 </TooltipProvider>

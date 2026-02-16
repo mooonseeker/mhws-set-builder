@@ -5,6 +5,7 @@
 
 import { useCallback, useRef, useState } from "react";
 
+import { DEFAULT_WEAPON_IDS } from "@/constants/default-equipment";
 import {
   useAccessories,
   useArmor,
@@ -126,7 +127,8 @@ export function useSearchService({
 
     // Ensure a default weapon exists if none is selected (required for slot calculations)
     if (!cleanedEquipmentSet.weapon) {
-      const defaultWeapon = weapons.find((w) => w.id === "Rod_075");
+      const defaultWeaponId = DEFAULT_WEAPON_IDS[settings.defaultWeaponType];
+      const defaultWeapon = weapons.find((w) => w.id === defaultWeaponId);
       if (defaultWeapon) {
         cleanedEquipmentSet.weapon = {
           equipment: defaultWeapon,
@@ -180,6 +182,7 @@ export function useSearchService({
     charms,
     onSearchSuccess,
     settings.searchResultLimit,
+    settings.defaultWeaponType,
   ]);
 
   return {
