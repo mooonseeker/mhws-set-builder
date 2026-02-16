@@ -11,6 +11,7 @@ export { useArmor } from "./useArmor";
 export { useCharms } from "./useCharms";
 export { useDataIO } from "./useDataIO";
 export { useSetBuilder } from "./useSetBuilder";
+export { useSettings } from "./useSettings";
 export { useSkills } from "./useSkills";
 export { useTheme } from "./useTheme";
 export { useWeapon } from "./useWeapon";

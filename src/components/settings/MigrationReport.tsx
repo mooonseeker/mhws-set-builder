@@ -26,7 +26,7 @@ import type { MigrationStats } from "@/utils";
 /**
  * Dialog component that shows statistics about data migration.
  */
-export function MigrationReportDialog() {
+export function MigrationReport() {
   // Retrieve report during initialization to avoid setState in useEffect
   const [report] = useState<Map<DataId, MigrationStats> | null>(() =>
     DataStorage.getAndClearMigrationReport(),

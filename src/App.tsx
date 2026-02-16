@@ -10,8 +10,7 @@ import { CharmManager } from "@/components/charms";
 import { DatabaseManager } from "@/components/database";
 import { MainLayout, type NavigationTab } from "@/components/layout";
 import { SetBuilder } from "@/components/set-builder";
-import { Settings } from "@/components/settings";
-import { MigrationReportDialog } from "@/components/settings/MigrationReportDialog";
+import { MigrationReport, Settings } from "@/components/settings";
 import { AppProvider } from "@/contexts";
 
 function App() {
@@ -34,7 +33,7 @@ function App() {
 
   return (
     <AppProvider>
-      <MigrationReportDialog />
+      <MigrationReport />
       <MainLayout currentTab={currentTab} onTabChange={setCurrentTab}>
         {renderContent()}
       </MainLayout>
