@@ -13,4 +13,6 @@ export { CharmProvider } from "./CharmProvider";
 export * from "./set-builder";
 export { AppProvider } from "./AppContext";
 export { ThemeProvider } from "./ThemeProvider";
+export { SettingsProvider } from "./SettingsProvider";
+export { SettingsContext, type SettingsContextType } from "./SettingsContext";
 export type { Theme, ThemeContextType } from "./ThemeContext";

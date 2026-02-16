@@ -26,6 +26,7 @@ export interface SearchRequest {
     skills: Skill[];
     charms: Charm[];
   };
+  searchLimit: number;
 }
 
 /**

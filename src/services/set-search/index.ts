@@ -41,6 +41,8 @@ export interface CancellableSearch {
  * @param requiredSkills An array of skills the user requires.
  * @param fixedEquipment The specific equipment set to build around.
  * @param allData All game data including armors, weapons, accessories, skills, and charms.
+ * @param onProgress Callback for progress updates.
+ * @param searchLimit Maximum number of results to return.
  * @returns A CancellableSearch object containing the result promise and a cancel function.
  */
 export const findOptimalSets = (
@@ -48,6 +50,7 @@ export const findOptimalSets = (
   fixedEquipment: EquipmentSet,
   allData: AllGameData,
   onProgress?: (current: number, total: number) => void,
+  searchLimit = 20,
 ): CancellableSearch => {
   let worker: Worker | null = null;
 
@@ -69,6 +72,7 @@ export const findOptimalSets = (
       requiredSkills,
       fixedEquipment,
       allData,
+      searchLimit,
     };
 
     worker.onmessage = (e: MessageEvent<SearchResponse>) => {

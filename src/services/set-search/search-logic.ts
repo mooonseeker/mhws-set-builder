@@ -27,8 +27,6 @@ import { preprocess } from "./preprocess";
 import { generateArmorScaffolds } from "./scaffold-generator";
 import { categorizeTargetSkills } from "./utils";
 
-const SEARCH_LIMIT = 20; // Stop search if more than this many results are found
-
 /**
  * Represents all the raw game data needed for the search.
  */
@@ -50,6 +48,8 @@ interface AllGameData {
  * @param requiredSkills An array of skills the user requires.
  * @param fixedEquipment The specific equipment set to build around.
  * @param allData All game data including armors, weapons, accessories, skills, and charms.
+ * @param onProgress Callback function for progress updates.
+ * @param searchLimit Stop search if more than this many results are found.
  * @returns A promise that resolves to an array of final, sorted sets.
  */
 export const findOptimalSets = (
@@ -57,6 +57,7 @@ export const findOptimalSets = (
   fixedEquipment: EquipmentSet,
   allData: AllGameData,
   onProgress?: (current: number, total: number) => void,
+  searchLimit = 20,
 ): Promise<FinalSet[]> => {
   console.log("[+] Starting MHWS Set Builder search...");
   const startTime = performance.now();
@@ -298,7 +299,7 @@ export const findOptimalSets = (
             preprocessedData.filteredArmors,
             preprocessedData,
             finalResults,
-            SEARCH_LIMIT,
+            searchLimit,
           );
 
           if (!shouldContinue) {
@@ -355,7 +356,7 @@ export const findOptimalSets = (
           preprocessedData.filteredArmors,
           preprocessedData,
           finalResults,
-          SEARCH_LIMIT,
+          searchLimit,
         );
 
         if (!shouldContinue) {
@@ -373,7 +374,7 @@ export const findOptimalSets = (
 
     if (limitReached) {
       console.log(
-        `[!] Search limit of ${SEARCH_LIMIT} reached. Aborting search.`,
+        `[!] Search limit of ${searchLimit} reached. Aborting search.`,
       );
       break; // Exit charm loop.
     }
@@ -382,7 +383,7 @@ export const findOptimalSets = (
   // 4. Finalize and return results.
   if (limitReached) {
     console.warn(
-      `[!] The search was stopped because the number of combinations found reached the limit of ${SEARCH_LIMIT}. The results may be incomplete. Please add more specific skill requirements to narrow down the search.`,
+      `[!] The search was stopped because the number of combinations found reached the limit of ${searchLimit}. The results may be incomplete. Please add more specific skill requirements to narrow down the search.`,
     );
   }
   console.log(
@@ -393,5 +394,5 @@ export const findOptimalSets = (
   console.log(
     `[+] Full search completed in ${(endTime - startTime).toFixed(2)}ms.`,
   );
-  return Promise.resolve(finalResults.slice(0, SEARCH_LIMIT));
+  return Promise.resolve(finalResults.slice(0, searchLimit));
 };

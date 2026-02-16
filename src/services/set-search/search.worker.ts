@@ -8,7 +8,7 @@ import type { SearchRequest, SearchResponse } from "./worker-types";
 
 // Listen for messages from the main thread
 self.onmessage = async (e: MessageEvent<SearchRequest>) => {
-  const { requiredSkills, fixedEquipment, allData } = e.data;
+  const { requiredSkills, fixedEquipment, allData, searchLimit } = e.data;
 
   try {
     // Execute the search logic (CPU intensive)
@@ -24,6 +24,7 @@ self.onmessage = async (e: MessageEvent<SearchRequest>) => {
         };
         self.postMessage(progressResponse);
       },
+      searchLimit,
     );
 
     // Send the results back to the main thread

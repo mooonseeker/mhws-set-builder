@@ -9,6 +9,7 @@ import {
   useAccessories,
   useArmor,
   useCharms,
+  useSettings,
   useSkills,
   useWeapon,
 } from "@/hooks";
@@ -46,6 +47,7 @@ export function useSearchService({
   const { accessories } = useAccessories();
   const { skills } = useSkills();
   const { charms } = useCharms();
+  const { settings } = useSettings();
 
   // Search state
   const [requiredSkills, setRequiredSkills] = useState<SkillWithLevel[]>([]);
@@ -149,6 +151,7 @@ export function useSearchService({
           setSearchProgress(percentage);
           setSearchStatus(`正在处理... ${current}/${total}`);
         },
+        settings.searchResultLimit,
       );
 
       cancelSearchRef.current = cancel;
@@ -176,6 +179,7 @@ export function useSearchService({
     skills,
     charms,
     onSearchSuccess,
+    settings.searchResultLimit,
   ]);
 
   return {
