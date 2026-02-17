@@ -1,5 +1,6 @@
 /**
- * @fileoverview SkillSelector component for searching and adding skills with levels.
+ * @fileoverview SkillSelector component for searching and adding skills.
+ * Default level is 1; level adjustment is handled by the parent list.
  */
 
 import { useState } from "react";
@@ -8,13 +9,6 @@ import { Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useSkills } from "@/hooks";
 import type { SkillWithLevel } from "@/types";
 
@@ -25,7 +19,7 @@ interface SkillSelectorProps {
 }
 
 /**
- * Skill selector component that allows searching for skills and setting their level.
+ * Skill selector component that allows searching for and selecting skills.
  */
 export function SkillSelector({
   onSelect,
@@ -34,21 +28,17 @@ export function SkillSelector({
   const { skills } = useSkills();
   const [search, setSearch] = useState("");
   const [selectedSkillId, setSelectedSkillId] = useState<string>("");
-  const [level, setLevel] = useState(1);
 
   // Filter available skills based on search and exclusions
   const availableSkills = skills.filter(
     (s) => !excludeSkillIds.includes(s.id) && s.name.includes(search),
   );
 
-  const selectedSkill = skills.find((s) => s.id === selectedSkillId);
-
   const handleAdd = () => {
-    if (selectedSkillId && level > 0) {
-      onSelect({ skillId: selectedSkillId, level });
+    if (selectedSkillId) {
+      onSelect({ skillId: selectedSkillId, level: 1 });
       setSearch("");
       setSelectedSkillId("");
-      setLevel(1);
     }
   };
 
@@ -61,6 +51,11 @@ export function SkillSelector({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="h-10 pl-9"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && selectedSkillId) {
+              handleAdd();
+            }
+          }}
         />
         {search && availableSkills.length > 0 && (
           <div className="bg-background absolute top-full right-0 left-0 z-10 mt-1 max-h-48 overflow-y-auto rounded-md border shadow-lg">
@@ -79,27 +74,6 @@ export function SkillSelector({
           </div>
         )}
       </div>
-
-      {selectedSkill && (
-        <Select
-          value={level.toString()}
-          onValueChange={(v) => setLevel(parseInt(v))}
-        >
-          <SelectTrigger className="h-10 w-24">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {Array.from(
-              { length: selectedSkill.maxLevel },
-              (_, i) => i + 1,
-            ).map((l) => (
-              <SelectItem key={l} value={l.toString()}>
-                Lv.{l}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      )}
 
       <Button onClick={handleAdd} disabled={!selectedSkillId} className="h-10">
         添加

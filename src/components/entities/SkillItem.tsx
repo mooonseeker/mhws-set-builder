@@ -1,11 +1,13 @@
 /**
  * @fileoverview SkillItem component for displaying a single skill and its level.
+ * Supports full, default, and compact variants with optional interactive level adjustment.
  */
 
 import { useLayoutEffect, useRef, useState } from "react";
 
-import { Square } from "lucide-react";
+import { Minus, Plus, Square } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -21,16 +23,18 @@ interface SkillItemProps {
   skillId: string;
   level: number;
   variant?: "full" | "default" | "compact";
+  /** Callback for level changes. If provided, the item becomes interactive (except in compact variant). */
+  onLevelChange?: (delta: number) => void;
 }
 
 /**
- * Displays a skill name, icon, and level blocks.
- * Supports different variants: full, default, and compact.
+ * Displays a skill name, icon, and level information.
  */
 export function SkillItem({
   skillId,
   level,
   variant = "default",
+  onLevelChange,
 }: SkillItemProps) {
   const { getSkillById } = useSkills();
   const skill = getSkillById(skillId);
@@ -60,33 +64,53 @@ export function SkillItem({
   const { maxLevel, type, isKey } = skill;
   const isMaxLevel = level >= maxLevel;
   const isOverflow = level > maxLevel;
+  const canInteract = onLevelChange && variant !== "compact";
 
-  // Generate level blocks using lucide Square icons
+  // Generate level blocks (progress squares)
   const levelBlocks = Array.from({ length: maxLevel }, (_, i) => {
     const isActive = i < level;
     return (
       <Square
         key={i}
         className={cn(
-          "h-3 w-3",
+          "h-4 w-4",
           isActive
             ? "fill-warning text-warning"
-            : "fill-foreground text-foreground",
+            : "fill-foreground/20 text-foreground/20",
         )}
       />
     );
   });
 
-  // Determine styles based on variant
+  // Common UI configs
   const heightClass = variant === "full" ? "h-8" : "h-6";
-  const iconSizeClass = variant === "full" ? "w-5 h-5" : "w-4 h-4";
+  const iconSizeClass = variant === "full" ? "w-6 h-6" : "w-4 h-4";
   const textSizeClass = variant === "full" ? "text-sm" : "text-xs";
-  const showIcon = variant !== "compact";
+  const btnSizeClass = variant === "full" ? "h-6 w-6" : "h-5 w-5";
+
+  // Level text formatting
+  const levelDisplay =
+    variant === "full" ? `Lv${level}` : `Lv ${level}/${maxLevel}`;
+
+  // Category-specific styles (Using negative margins to maintain alignment without bloat)
+  const categoryStyles = {
+    series: "border border-orange-400/50 bg-orange-400/10 rounded-sm px-1.5 -mx-1.5",
+    group: "border border-blue-400/50 bg-blue-400/10 rounded-sm px-1.5 -mx-1.5",
+    armor: "",
+    weapon: "",
+  }[skill.category];
 
   return (
-    <div className={cn("flex items-center justify-between gap-2", heightClass)}>
+    <div
+      className={cn(
+        "flex items-center justify-between gap-2 transition-colors",
+        heightClass,
+        categoryStyles,
+      )}
+    >
+      {/* MARK: Left Side - Icon and Name */}
       <div className="flex min-w-0 items-center gap-1.5">
-        {showIcon && (
+        {variant !== "compact" && (
           <img
             src={getAssetPath(`/skill-type/${type}.png`)}
             alt={name}
@@ -118,37 +142,73 @@ export function SkillItem({
           </Tooltip>
         </TooltipProvider>
       </div>
-      <div className="flex shrink-0 items-center">
-        {variant === "full" ? (
-          <>
-            <div
-              className="flex items-center gap-0.5 text-xs"
-              aria-label={`等级 ${level}/${maxLevel}`}
-            >
-              {levelBlocks}
+
+      {/* MARK: Right Side - Details and Interaction */}
+      <div className="flex shrink-0 items-center gap-2">
+        {/* Visual blocks (Full mode only) */}
+        {variant === "full" && (
+          <div
+            className="flex items-center gap-0.5 text-xs"
+            aria-label={`等级进度 ${level}/${maxLevel}`}
+          >
+            {levelBlocks}
+          </div>
+        )}
+
+        {/* Level Control/Display Area */}
+        <div className="flex items-center">
+          {canInteract ? (
+            <div className="flex items-center gap-1">
+              <Button
+                size="icon"
+                variant="outline"
+                className={btnSizeClass}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onLevelChange(-1);
+                }}
+                disabled={level <= 0}
+              >
+                <Minus className="h-3 w-3" />
+              </Button>
+              <span
+                className={cn(
+                  "text-center text-sm font-medium",
+                  variant === "full" ? "w-8" : "w-12",
+                  isOverflow
+                    ? "text-destructive font-bold"
+                    : isMaxLevel && "text-accent font-bold",
+                )}
+              >
+                {levelDisplay}
+              </span>
+              <Button
+                size="icon"
+                variant="outline"
+                className={btnSizeClass}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onLevelChange(1);
+                }}
+                disabled={level >= maxLevel}
+              >
+                <Plus className="h-3 w-3" />
+              </Button>
             </div>
+          ) : (
             <span
               className={cn(
-                "w-8 text-right text-sm",
-                isOverflow
-                  ? "text-destructive text-base font-bold"
-                  : isMaxLevel && "text-accent text-base font-bold",
+                "text-right font-medium",
+                variant === "full" ? "w-8 text-sm" : "w-12 text-xs",
+                "text-muted-foreground",
+                isMaxLevel && "text-accent font-bold",
+                isOverflow && "text-destructive font-bold",
               )}
             >
-              Lv{level}
+              {levelDisplay}
             </span>
-          </>
-        ) : (
-          <span
-            className={cn(
-              "text-muted-foreground text-right text-xs",
-              "w-10",
-              isMaxLevel && "text-accent font-bold",
-            )}
-          >
-            Lv {level}/{maxLevel}
-          </span>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

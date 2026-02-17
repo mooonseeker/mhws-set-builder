@@ -197,6 +197,13 @@ export function AccessoryForm({
           onRemove={(skillId) =>
             setSkills((prev) => prev.filter((s) => s.skillId !== skillId))
           }
+          onUpdate={(updatedSkill) =>
+            setSkills((prev) =>
+              prev.map((s) =>
+                s.skillId === updatedSkill.skillId ? updatedSkill : s,
+              ),
+            )
+          }
           maxSkills={2}
           variant={is2Xl ? "full" : "default"}
         />

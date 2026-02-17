@@ -24,6 +24,8 @@ interface SkillEditorProps {
   onAdd: (skill: SkillWithLevel) => void;
   /** Callback fired when a skill is removed. */
   onRemove: (skillId: string) => void;
+  /** Callback fired when a skill's level is updated. */
+  onUpdate?: (skill: SkillWithLevel) => void;
   /** Maximum number of skills allowed. Defaults to 3. */
   maxSkills?: number;
   /** Visual variant of the editor items. */
@@ -38,6 +40,7 @@ export function SkillEditor({
   skills,
   onAdd,
   onRemove,
+  onUpdate,
   maxSkills,
   variant = "default",
 }: SkillEditorProps) {
@@ -85,6 +88,16 @@ export function SkillEditor({
 
   const config = variantConfig[variant];
 
+  const handleLevelChange = (
+    skillId: string,
+    currentLevel: number,
+    delta: number,
+  ) => {
+    if (onUpdate) {
+      onUpdate({ skillId, level: currentLevel + delta });
+    }
+  };
+
   return (
     <div className={cn("flex flex-col", config.gap)}>
       <Label className={cn("font-medium", config.labelClass)}>
@@ -119,6 +132,16 @@ export function SkillEditor({
                 skillId={skillWithLevel.skillId}
                 level={skillWithLevel.level}
                 variant={config.itemVariant}
+                onLevelChange={
+                  onUpdate
+                    ? (delta) =>
+                        handleLevelChange(
+                          skillWithLevel.skillId,
+                          skillWithLevel.level,
+                          delta,
+                        )
+                    : undefined
+                }
               />
             </div>
             <Button

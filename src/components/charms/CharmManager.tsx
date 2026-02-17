@@ -144,6 +144,15 @@ export function CharmManager() {
     setSelectedSkills(selectedSkills.filter((s) => s.skillId !== skillId));
   };
 
+  // Updates a skill's level.
+  const handleUpdateSkill = (updatedSkill: SkillWithLevel) => {
+    setSelectedSkills(
+      selectedSkills.map((s) =>
+        s.skillId === updatedSkill.skillId ? updatedSkill : s,
+      ),
+    );
+  };
+
   // Adds a slot to the charm.
   const handleAddSlot = () => {
     if (slots.length >= 3) return;
@@ -252,6 +261,7 @@ export function CharmManager() {
                       slots={slots}
                       handleAddSkill={handleAddSkill}
                       handleRemoveSkill={handleRemoveSkill}
+                      handleUpdateSkill={handleUpdateSkill}
                       handleAddSlot={handleAddSlot}
                       handleUpdateSlot={handleUpdateSlot}
                       handleRemoveSlot={handleRemoveSlot}

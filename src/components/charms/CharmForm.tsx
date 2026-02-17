@@ -30,6 +30,7 @@ interface CharmFormProps {
   slots: Slot[];
   handleAddSkill: (skill: SkillWithLevel) => void;
   handleRemoveSkill: (skillId: string) => void;
+  handleUpdateSkill: (skill: SkillWithLevel) => void;
   handleAddSlot: () => void;
   handleUpdateSlot: (index: number, type: SlotType, level: SlotLevel) => void;
   handleRemoveSlot: (index: number) => void;
@@ -53,6 +54,7 @@ export function CharmForm({
   slots,
   handleAddSkill,
   handleRemoveSkill,
+  handleUpdateSkill,
   handleAddSlot,
   handleUpdateSlot,
   handleRemoveSlot,
@@ -106,6 +108,7 @@ export function CharmForm({
           skills={selectedSkills}
           onAdd={handleAddSkill}
           onRemove={handleRemoveSkill}
+          onUpdate={handleUpdateSkill}
           maxSkills={3}
           variant={is2Xl ? "full" : "default"}
         />

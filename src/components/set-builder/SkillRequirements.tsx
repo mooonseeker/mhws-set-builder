@@ -6,12 +6,11 @@ import { useMemo } from "react";
 
 import { RefreshCw, Search } from "lucide-react";
 
-import { SkillSelector } from "@/components/entities/";
+import { SkillItem, SkillSelector } from "@/components/entities/";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSetBuilder, useSkills } from "@/hooks";
-import { cn } from "@/lib/utils";
-import { compareSkillsPriority, getAssetPath } from "@/utils";
+import { compareSkillsPriority } from "@/utils";
 
 /**
  * Renders a list of required skills and a selector to add more.
@@ -30,10 +29,9 @@ export function SkillRequirements() {
   const handleLevelChange = (
     skillId: string,
     currentLevel: number,
-    change: number,
+    delta: number,
   ) => {
-    const newLevel = currentLevel + change;
-    updateRequiredSkillLevel(skillId, newLevel);
+    updateRequiredSkillLevel(skillId, currentLevel + delta);
   };
 
   const sortedSkills = useMemo(() => {
@@ -57,46 +55,16 @@ export function SkillRequirements() {
   }, [sortedSkills]);
 
   const renderSkillItem = (skill: (typeof sortedSkills)[0]) => {
-    const skillInfo = skill.skillData;
-    if (!skillInfo) return null;
-
     return (
-      <li key={skill.skillId} className="flex h-8 items-center justify-between">
-        <div className="flex min-w-0 items-center gap-1.5">
-          <img
-            src={getAssetPath(`/skill-type/${skillInfo.type}.png`)}
-            alt={skillInfo.name}
-            className="h-5 w-5"
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-            }}
-          />
-          <span
-            className={cn(
-              "truncate text-sm",
-              skillInfo.isKey ? "font-bold" : "font-medium",
-            )}
-          >
-            {skillInfo.name}
-          </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => handleLevelChange(skill.skillId, skill.level, -1)}
-          >
-            -
-          </Button>
-          <span className="w-8 text-center">Lv {skill.level}</span>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => handleLevelChange(skill.skillId, skill.level, 1)}
-          >
-            +
-          </Button>
-        </div>
+      <li key={skill.skillId}>
+        <SkillItem
+          skillId={skill.skillId}
+          level={skill.level}
+          variant="full"
+          onLevelChange={(delta) =>
+            handleLevelChange(skill.skillId, skill.level, delta)
+          }
+        />
       </li>
     );
   };
