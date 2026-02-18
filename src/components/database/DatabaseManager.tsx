@@ -21,7 +21,12 @@ import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useAccessories, useArmor, useSkills, useWeapon } from "@/hooks";
 import type { Accessory, Armor, DataId, Skill, Weapon } from "@/types";
-import { generateSkillId } from "@/utils";
+import {
+  generateAccessoryId,
+  generateArmorId,
+  generateSkillId,
+  generateWeaponId,
+} from "@/utils";
 
 import { AccessoryList } from "./AccessoryList";
 import { ArmorList } from "./ArmorList";
@@ -198,7 +203,8 @@ export function DatabaseManager() {
               id: (editingItem.data as Accessory).id,
             });
           } else {
-            addAccessory(data as Accessory);
+            const newAccessory = { ...data, id: generateAccessoryId() };
+            addAccessory(newAccessory as Accessory);
           }
           break;
         }
@@ -207,7 +213,8 @@ export function DatabaseManager() {
           if (isEditMode) {
             updateArmor({ ...data, id: (editingItem.data as Armor).id });
           } else {
-            addArmor(data as Armor);
+            const newArmor = { ...data, id: generateArmorId() };
+            addArmor(newArmor as Armor);
           }
           break;
         }
@@ -216,7 +223,8 @@ export function DatabaseManager() {
           if (isEditMode) {
             updateWeapon({ ...data, id: (editingItem.data as Weapon).id });
           } else {
-            addWeapon(data as Weapon);
+            const newWeapon = { ...data, id: generateWeaponId() };
+            addWeapon(newWeapon as Weapon);
           }
           break;
         }
@@ -332,11 +340,13 @@ export function DatabaseManager() {
       {formOpen &&
         editingItem &&
         (() => {
+          const isEditMode = !!editingItem.data.id;
           const commonProps = {
             open: formOpen,
             onClose: () => setFormOpen(false),
             onSubmit: handleSubmit,
             error: formError,
+            isEditMode,
           };
 
           switch (editingItem.type) {

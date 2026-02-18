@@ -37,6 +37,7 @@ interface WeaponFormProps {
   onClose: () => void;
   onSubmit: (weapon: Omit<Weapon, "id">) => void;
   error?: string | null;
+  isEditMode: boolean;
 }
 
 /**
@@ -47,6 +48,7 @@ export function WeaponForm({
   onClose,
   onSubmit,
   error,
+  isEditMode,
 }: WeaponFormProps) {
   const [name, setName] = useState(weapon?.name ?? "");
   const [type, setType] = useState<WeaponType>(weapon?.type ?? "hammer");
@@ -328,7 +330,7 @@ export function WeaponForm({
         <Button type="button" variant="outline" onClick={onClose}>
           取消
         </Button>
-        <Button type="submit">{weapon ? "保存" : "创建"}</Button>
+        <Button type="submit">{isEditMode ? "保存" : "添加"}</Button>
       </DialogFooter>
     </form>
   );

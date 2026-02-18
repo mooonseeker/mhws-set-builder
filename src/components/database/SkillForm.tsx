@@ -25,6 +25,7 @@ interface SkillFormProps {
   onSubmit: (skill: Omit<Skill, "id">) => void;
   error: string | null;
   skills: Skill[];
+  isEditMode: boolean;
 }
 
 // Define the state for the form.
@@ -88,6 +89,7 @@ export function SkillForm({
   onSubmit,
   error,
   skills,
+  isEditMode,
 }: SkillFormProps) {
   // Initial state for the reducer.
   const initialFormState: SkillFormState = {
@@ -262,7 +264,7 @@ export function SkillForm({
         <Button type="button" variant="outline" onClick={onClose}>
           取消
         </Button>
-        <Button type="submit">{skill ? "保存" : "添加"}</Button>
+        <Button type="submit">{isEditMode ? "保存" : "添加"}</Button>
       </DialogFooter>
     </form>
   );

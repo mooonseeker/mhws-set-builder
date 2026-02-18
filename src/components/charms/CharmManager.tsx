@@ -26,6 +26,7 @@ import type { Charm, SkillWithLevel, Slot, SlotLevel, SlotType } from "@/types";
 import {
   calculateCharmEquivalentSlots,
   calculateKeySkillValue,
+  isOfficialCharmId,
   validateCharm,
 } from "@/utils";
 
@@ -245,6 +246,11 @@ export function CharmManager() {
                     ? "修改护石信息，系统将重新计算等效孔位和核心技能价值"
                     : "填写护石信息，系统将自动计算等效孔位和核心技能价值"}
                 </DialogDescription>
+                {charmToEdit && isOfficialCharmId(charmToEdit.id) && (
+                  <DialogDescription className="text-warning font-medium">
+                    ⚠️ 当前正在编辑官方数据，请慎重操作！
+                  </DialogDescription>
+                )}
               </DialogHeader>
 
               {/* Popover layout: Use PopoverAnchor for positioning, validation info floats automatically */}

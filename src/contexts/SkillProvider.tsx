@@ -109,7 +109,7 @@ export function SkillProvider({ children }: { children: ReactNode }) {
 
   // Initialize state from DataStorage on mount.
   useEffect(() => {
-    const init = async () => {
+    const init = () => {
       try {
         const skills = DataStorage.loadData<Skill>("skills");
         dispatch({ type: "SET_SKILLS", payload: skills });
@@ -128,7 +128,7 @@ export function SkillProvider({ children }: { children: ReactNode }) {
             console.error("Failed to parse stored key skills:", e);
           }
         }
-        
+
         dispatch({ type: "SET_KEY_SKILLS", payload: keySkillIds });
       } catch (error) {
         console.error("Failed to load skills from storage:", error);
@@ -140,7 +140,7 @@ export function SkillProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    void init();
+    init();
   }, []);
 
   // Auto-save to DataStorage whenever skills change.

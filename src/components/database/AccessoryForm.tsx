@@ -34,6 +34,7 @@ interface AccessoryFormProps {
   onSubmit: (accessory: Omit<Accessory, "id">) => void;
   error: string | null;
   accessories: Accessory[];
+  isEditMode: boolean;
 }
 
 /**
@@ -45,6 +46,7 @@ export function AccessoryForm({
   onSubmit,
   error,
   accessories,
+  isEditMode,
 }: AccessoryFormProps) {
   const [name, setName] = useState(accessory?.name ?? "");
   const [type, setType] = useState<"weapon" | "armor">(
@@ -213,7 +215,7 @@ export function AccessoryForm({
         <Button type="button" variant="outline" onClick={onClose}>
           取消
         </Button>
-        <Button type="submit">{accessory ? "保存" : "添加"}</Button>
+        <Button type="submit">{isEditMode ? "保存" : "添加"}</Button>
       </DialogFooter>
     </form>
   );

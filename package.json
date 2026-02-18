@@ -1,7 +1,7 @@
 {
   "name": "mhws-set-builder",
   "private": true,
-  "version": "1.6.8",
+  "version": "1.6.9",
   "license": "MIT",
   "homepage": "https://mooonseeker.github.io/mhws-set-builder/",
   "type": "module",

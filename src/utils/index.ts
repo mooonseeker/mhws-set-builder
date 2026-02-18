@@ -26,7 +26,9 @@ export {
   generateAccessoryId,
   generateArmorId,
   generateWeaponId,
+  isOfficialId,
   isOfficialCharmId,
+  isCustomId,
 } from "./id-generator";
 
 // Charm sorting utilities

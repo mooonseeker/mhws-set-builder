@@ -35,12 +35,19 @@ interface ArmorFormProps {
   onClose: () => void;
   onSubmit: (armor: Omit<Armor, "id">) => void;
   error?: string | null;
+  isEditMode: boolean;
 }
 
 /**
  * Form content for creating and editing armor pieces.
  */
-export function ArmorForm({ armor, onClose, onSubmit, error }: ArmorFormProps) {
+export function ArmorForm({
+  armor,
+  onClose,
+  onSubmit,
+  error,
+  isEditMode,
+}: ArmorFormProps) {
   const [name, setName] = useState(armor?.name ?? "");
   const [type, setType] = useState<ArmorType>(armor?.type ?? "helm");
   const [rarity, setRarity] = useState(armor?.rarity ?? 1);
@@ -239,7 +246,7 @@ export function ArmorForm({ armor, onClose, onSubmit, error }: ArmorFormProps) {
         <Button type="button" variant="outline" onClick={onClose}>
           取消
         </Button>
-        <Button type="submit">{armor ? "保存" : "创建"}</Button>
+        <Button type="submit">{isEditMode ? "保存" : "添加"}</Button>
       </DialogFooter>
     </form>
   );

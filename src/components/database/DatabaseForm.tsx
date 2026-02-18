@@ -6,10 +6,12 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { Accessory, Armor, Skill, Weapon } from "@/types";
+import { isOfficialId } from "@/utils";
 
 import { AccessoryForm } from "./AccessoryForm";
 import { ArmorForm } from "./ArmorForm";
@@ -22,6 +24,7 @@ interface CommonProps {
   open: boolean;
   onClose: () => void;
   error: string | null;
+  isEditMode: boolean;
 }
 
 interface SkillProps extends CommonProps {
@@ -60,21 +63,42 @@ export type DatabaseFormProps =
  * A unified form component for managing different types of database entries.
  */
 export function DatabaseForm(props: DatabaseFormProps) {
-  const { open, onClose, dataType } = props;
+  const { open, onClose, dataType, isEditMode } = props;
 
   const getTitle = () => {
     switch (dataType) {
       case "skills":
-        return props.skill ? "编辑技能" : "添加技能";
+        return isEditMode ? "编辑技能" : "添加技能";
       case "accessories":
-        return props.accessory ? "编辑装饰品" : "添加装饰品";
+        return isEditMode ? "编辑装饰品" : "添加装饰品";
       case "armor":
-        return props.armor ? "编辑防具" : "添加防具";
+        return isEditMode ? "编辑防具" : "添加防具";
       case "weapons":
-        return props.weapon ? "编辑武器" : "添加武器";
+        return isEditMode ? "编辑武器" : "添加武器";
       default:
         return "";
     }
+  };
+
+  const isEditingOfficialData = () => {
+    if (!isEditMode) return false;
+
+    let id = "";
+    switch (dataType) {
+      case "skills":
+        id = props.skill?.id ?? "";
+        break;
+      case "accessories":
+        id = props.accessory?.id ?? "";
+        break;
+      case "armor":
+        id = props.armor?.id ?? "";
+        break;
+      case "weapons":
+        id = props.weapon?.id ?? "";
+        break;
+    }
+    return isOfficialId(id);
   };
 
   const renderContent = () => {
@@ -97,6 +121,11 @@ export function DatabaseForm(props: DatabaseFormProps) {
       <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{getTitle()}</DialogTitle>
+          {isEditingOfficialData() && (
+            <DialogDescription className="text-warning font-medium">
+              ⚠️ 当前正在编辑官方数据，请慎重操作！
+            </DialogDescription>
+          )}
         </DialogHeader>
         {renderContent()}
       </DialogContent>
