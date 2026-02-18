@@ -143,14 +143,55 @@ function getSkillInfo(
 
 /**
  * Internal: Compares two slot lists (P1/P2/P3/P4 logic).
+ * Now respects slot types (weapon vs armor).
  */
 function compareSlots(
   slotsA: Slot[],
   slotsB: Slot[],
-): "superior" | "inferior" | "equal" | "incomparable" {
-  const levelsA = slotsA.map((s) => s.level).sort((a, b) => b - a);
-  const levelsB = slotsB.map((s) => s.level).sort((a, b) => b - a);
+): EquipmentComparisonResult {
+  const armorA = slotsA
+    .filter((s) => s.type === "armor")
+    .map((s) => s.level)
+    .sort((a, b) => b - a);
+  const armorB = slotsB
+    .filter((s) => s.type === "armor")
+    .map((s) => s.level)
+    .sort((a, b) => b - a);
+  const weaponA = slotsA
+    .filter((s) => s.type === "weapon")
+    .map((s) => s.level)
+    .sort((a, b) => b - a);
+  const weaponB = slotsB
+    .filter((s) => s.type === "weapon")
+    .map((s) => s.level)
+    .sort((a, b) => b - a);
 
+  const armorRes = compareLevelLists(armorA, armorB);
+  const weaponRes = compareLevelLists(weaponA, weaponB);
+
+  if (armorRes === "equal" && weaponRes === "equal") return "equal";
+
+  // A is better or equal if it's better or equal in BOTH types
+  const aBetterOrEqual =
+    (armorRes === "superior" || armorRes === "equal") &&
+    (weaponRes === "superior" || weaponRes === "equal");
+  const bBetterOrEqual =
+    (armorRes === "inferior" || armorRes === "equal") &&
+    (weaponRes === "inferior" || weaponRes === "equal");
+
+  if (aBetterOrEqual && !bBetterOrEqual) return "superior";
+  if (bBetterOrEqual && !aBetterOrEqual) return "inferior";
+
+  return "incomparable";
+}
+
+/**
+ * Internal: Compares two sorted lists of levels to determine dominance.
+ */
+function compareLevelLists(
+  levelsA: number[],
+  levelsB: number[],
+): EquipmentComparisonResult {
   let aDominatesB = levelsA.length >= levelsB.length;
   let bDominatesA = levelsB.length >= levelsA.length;
 

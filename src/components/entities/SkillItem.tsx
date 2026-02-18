@@ -94,7 +94,8 @@ export function SkillItem({
 
   // Category-specific styles (Using negative margins to maintain alignment without bloat)
   const categoryStyles = {
-    series: "border border-orange-400/50 bg-orange-400/10 rounded-sm px-1.5 -mx-1.5",
+    series:
+      "border border-orange-400/50 bg-orange-400/10 rounded-sm px-1.5 -mx-1.5",
     group: "border border-blue-400/50 bg-blue-400/10 rounded-sm px-1.5 -mx-1.5",
     armor: "",
     weapon: "",
