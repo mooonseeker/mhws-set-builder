@@ -50,10 +50,15 @@ export function ArmorForm({
 }: ArmorFormProps) {
   const [name, setName] = useState(armor?.name ?? "");
   const [type, setType] = useState<ArmorType>(armor?.type ?? "helm");
-  const [rarity, setRarity] = useState(armor?.rarity ?? 1);
-  const [defense, setDefense] = useState(armor?.defense ?? 0);
+  // Robust numeric initialization.
+  const [rarity, setRarity] = useState<number>(
+    armor?.rarity !== undefined ? Number(armor.rarity) : 1,
+  );
+  const [defense, setDefense] = useState<number>(
+    armor?.defense !== undefined ? Number(armor.defense) : 0,
+  );
   const [resistance, setResistance] = useState<Resistance>(
-    armor?.resistance ?? [0, 0, 0, 0, 0],
+    (armor?.resistance as Resistance) ?? [0, 0, 0, 0, 0],
   );
   const [series, setSeries] = useState(armor?.series ?? "");
   const [skills, setSkills] = useState<SkillWithLevel[]>(armor?.skills ?? []);

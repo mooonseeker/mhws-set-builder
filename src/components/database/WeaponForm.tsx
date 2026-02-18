@@ -52,21 +52,34 @@ export function WeaponForm({
 }: WeaponFormProps) {
   const [name, setName] = useState(weapon?.name ?? "");
   const [type, setType] = useState<WeaponType>(weapon?.type ?? "hammer");
-  const [rarity, setRarity] = useState(weapon?.rarity ?? 1);
-  const [attack, setAttack] = useState(weapon?.attack ?? 0);
-  const [critical, setCritical] = useState(weapon?.critical ?? 0);
-  const [defense, setDefense] = useState(weapon?.defense ?? 0);
+  
+  // Robust numeric initialization to handle CSV/JSON string mismatches.
+  const [rarity, setRarity] = useState<number>(
+    weapon?.rarity !== undefined ? Number(weapon.rarity) : 1,
+  );
+  const [attack, setAttack] = useState<number>(
+    weapon?.attack !== undefined ? Number(weapon.attack) : 0,
+  );
+  const [critical, setCritical] = useState<number>(
+    weapon?.critical !== undefined ? Number(weapon.critical) : 0,
+  );
+  const [defense, setDefense] = useState<number>(
+    weapon?.defense !== undefined ? Number(weapon.defense) : 0,
+  );
+  
   const [attribute, setAttribute] = useState<AttributeType | undefined>(
     weapon?.attribute,
   );
-  const [attributeValue, setAttributeValue] = useState(
-    weapon?.attributeValue ?? 0,
+  const [attributeValue, setAttributeValue] = useState<number>(
+    weapon?.attributeValue !== undefined ? Number(weapon.attributeValue) : 0,
   );
   const [subattribute, setSubattribute] = useState<AttributeType | undefined>(
     weapon?.subattribute,
   );
-  const [subattributeValue, setSubattributeValue] = useState(
-    weapon?.subattributeValue ?? 0,
+  const [subattributeValue, setSubattributeValue] = useState<number>(
+    weapon?.subattributeValue !== undefined
+      ? Number(weapon.subattributeValue)
+      : 0,
   );
   const [skills, setSkills] = useState<SkillWithLevel[]>(weapon?.skills ?? []);
   const [slots, setSlots] = useState<Slot[]>(weapon?.slots ?? []);

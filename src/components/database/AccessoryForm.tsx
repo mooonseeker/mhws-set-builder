@@ -52,9 +52,14 @@ export function AccessoryForm({
   const [type, setType] = useState<"weapon" | "armor">(
     accessory?.type ?? "weapon",
   );
-  const [rarity, setRarity] = useState(accessory?.rarity ?? 1);
+  // Robust initialization for numeric fields.
+  const [rarity, setRarity] = useState<number>(
+    accessory?.rarity !== undefined ? Number(accessory.rarity) : 1,
+  );
   const [slotLevel, setSlotLevel] = useState<SlotLevel>(
-    accessory?.slotLevel ?? 1,
+    (accessory?.slotLevel !== undefined
+      ? (Number(accessory.slotLevel) as SlotLevel)
+      : 1) ?? 1,
   );
   const [skills, setSkills] = useState<SkillWithLevel[]>(
     accessory?.skills ?? [],
@@ -163,7 +168,7 @@ export function AccessoryForm({
             onValueChange={(v) => setType(v as "weapon" | "armor")}
           >
             <SelectTrigger id="type">
-              <SelectValue />
+              <SelectValue placeholder="选择类型" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="weapon">武器</SelectItem>
@@ -181,7 +186,7 @@ export function AccessoryForm({
             onValueChange={(v) => setSlotLevel(parseInt(v) as SlotLevel)}
           >
             <SelectTrigger id="slotLevel">
-              <SelectValue />
+              <SelectValue placeholder="选择等级" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="1">1级孔</SelectItem>

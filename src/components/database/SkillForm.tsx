@@ -47,6 +47,28 @@ type SkillFormAction =
   | { type: "RESET_FORM"; skill?: Skill }
   | { type: "SET_LOCAL_ERROR"; error: string | null };
 
+/**
+ * Initializes the form state from a skill object or defaults.
+ */
+function initSkillFormState(skill?: Skill): SkillFormState {
+  if (skill) {
+    return {
+      name: skill.name,
+      category: skill.category,
+      maxLevel: skill.maxLevel,
+      accessoryLevel: skill.accessoryLevel,
+      localError: null,
+    };
+  }
+  return {
+    name: "",
+    category: "armor",
+    maxLevel: 3,
+    accessoryLevel: 2,
+    localError: null,
+  };
+}
+
 // Reducer for the skill form state.
 function skillFormReducer(
   state: SkillFormState,
@@ -56,23 +78,7 @@ function skillFormReducer(
     case "SET_FIELD":
       return { ...state, [action.field]: action.value };
     case "RESET_FORM":
-      if (action.skill) {
-        return {
-          name: action.skill.name,
-          category: action.skill.category,
-          maxLevel: action.skill.maxLevel,
-          accessoryLevel: action.skill.accessoryLevel,
-          localError: null,
-        };
-      } else {
-        return {
-          name: "",
-          category: "armor",
-          maxLevel: 3,
-          accessoryLevel: 2,
-          localError: null,
-        };
-      }
+      return initSkillFormState(action.skill);
     case "SET_LOCAL_ERROR":
       return { ...state, localError: action.error };
     default:
@@ -91,19 +97,17 @@ export function SkillForm({
   skills,
   isEditMode,
 }: SkillFormProps) {
-  // Initial state for the reducer.
-  const initialFormState: SkillFormState = {
-    name: "",
-    category: "armor",
-    maxLevel: 3,
-    accessoryLevel: 2,
-    localError: null,
-  };
-
-  const [state, dispatch] = useReducer(skillFormReducer, initialFormState);
+  // Initialize reducer state directly from the skill prop.
+  const [state, dispatch] = useReducer(
+    skillFormReducer,
+    skill,
+    initSkillFormState,
+  );
 
   const { name, category, maxLevel, accessoryLevel, localError } = state;
 
+  // We still keep the effect to handle external prop changes, though 'key' prop 
+  // in DatabaseForm usually handles this by remounting.
   useEffect(() => {
     dispatch({ type: "RESET_FORM", skill });
   }, [skill]);
@@ -192,7 +196,7 @@ export function SkillForm({
             }
           >
             <SelectTrigger id="category">
-              <SelectValue />
+              <SelectValue placeholder="选择分类" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="weapon">
@@ -248,7 +252,7 @@ export function SkillForm({
             }
           >
             <SelectTrigger id="accessoryLevel">
-              <SelectValue />
+              <SelectValue placeholder="选择等级" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="-1">{SLOT_LEVEL_LABELS[-1]}</SelectItem>
