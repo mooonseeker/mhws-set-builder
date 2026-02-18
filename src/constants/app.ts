@@ -11,6 +11,7 @@ export const DATABASE_VERSION_KEY = `${APP_NAME}-db-version`;
 /** Key mapping for data storage. */
 export const STORAGE_KEYS = {
   settings: `${APP_NAME}-settings`,
+  keySkills: `${APP_NAME}-key-skills`,
 } as const;
 
 /** Key mapping for delta data storage. */

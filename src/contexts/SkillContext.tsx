@@ -15,6 +15,8 @@ import type { Skill } from "@/types";
 interface SkillState {
   /** The list of all available skills. */
   skills: Skill[];
+  /** The list of IDs of skills that are marked as key skills. */
+  keySkillIds: string[];
   /** True if the skills are currently being loaded. */
   loading: boolean;
   /** An error message if something went wrong, otherwise null. */
@@ -43,6 +45,12 @@ export interface SkillContextType extends SkillState {
    * @param id - The ID of the skill to delete.
    */
   deleteSkill: (id: string) => void;
+
+  /**
+   * Toggles the key status of a skill.
+   * @param id - The ID of the skill to toggle.
+   */
+  toggleKeySkill: (id: string) => void;
 
   /**
    * Retrieves a skill by its ID.

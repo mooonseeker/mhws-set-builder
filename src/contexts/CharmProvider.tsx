@@ -94,7 +94,7 @@ export function CharmProvider({ children }: { children: ReactNode }) {
     error: null,
   });
 
-  const { skills } = useSkills();
+  const { skills, keySkillIds } = useSkills();
 
   // Enhanced charms with calculated values
   const enhancedCharms = useMemo(() => {
@@ -109,11 +109,11 @@ export function CharmProvider({ children }: { children: ReactNode }) {
         keySkillValue: calculateKeySkillValue(
           charm.skills,
           charm.slots,
-          skills,
+          keySkillIds,
         ),
       };
     });
-  }, [state.charms, skills]);
+  }, [state.charms, skills, keySkillIds]);
 
   // Used to track the initial render to avoid unnecessary saves.
   const isFirstRender = useRef(true);

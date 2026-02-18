@@ -4,25 +4,40 @@
  * and sort them based on criteria like remaining slots and extra skills.
  */
 
-import type { Accessory, FinalSet, Skill, SkillWithLevel, Slot } from "@/types";
+import type { Accessory, FinalSet, SkillWithLevel, Slot } from "@/types";
 
 /**
  * Calculates a score based on the value of remaining slots.
- * The scoring is weighted: level 3 = 4, level 2 = 2, level 1 = 1.
+ * Weights:
+ * - Weapon: Level 3 = 6, Level 2 = 4, Level 1 = 3
+ * - Armor:  Level 3 = 3, Level 2 = 2, Level 1 = 1
  * @param slots An array of remaining slots.
  * @returns The total slot value score.
  */
 function calculateSlotValue(slots: Slot[]): number {
   return slots.reduce((total, slot) => {
-    switch (slot.level) {
-      case 3:
-        return total + 4;
-      case 2:
-        return total + 2;
-      case 1:
-        return total + 1;
-      default:
-        return total;
+    if (slot.type === "weapon") {
+      switch (slot.level) {
+        case 3:
+          return total + 6;
+        case 2:
+          return total + 4;
+        case 1:
+          return total + 3;
+        default:
+          return total;
+      }
+    } else {
+      switch (slot.level) {
+        case 3:
+          return total + 3;
+        case 2:
+          return total + 2;
+        case 1:
+          return total + 1;
+        default:
+          return total;
+      }
     }
   }, 0);
 }
@@ -90,16 +105,16 @@ export function calculateExtraSkills(
 
 /**
  * Evaluates and sorts a list of final sets based on a comprehensive set of criteria.
- * The primary sorting goals are to maximize useful remaining slots and minimize unwanted extra skills.
+ * The primary sorting goals are to maximize useful remaining slots and maximize extra key skills.
  * @param sets The list of sets to evaluate and sort.
  * @param requiredSkills The user's required skills.
- * @param skillDetails A map of skill details for reference.
+ * @param keySkillIds The list of IDs of skills marked as key skills.
  * @returns A new array of sorted `FinalSet` objects.
  */
 export function evaluateAndSortResults(
   sets: FinalSet[],
   requiredSkills: SkillWithLevel[],
-  skillDetails: Map<string, Skill>,
+  keySkillIds: string[],
 ): FinalSet[] {
   if (sets.length <= 1) {
     return sets;
@@ -114,19 +129,20 @@ export function evaluateAndSortResults(
       return bSlotValue - aSlotValue;
     }
 
-    // 2. Sort by the total level of extra "key" skills (ascending).
-    // This penalizes sets with more unwanted high-value skills.
+    // 2. Sort by the total level of extra "key" skills (descending).
+    // This rewards sets with more additional valuable skills.
     const aExtraSkills = calculateExtraSkills(a, requiredSkills);
     const bExtraSkills = calculateExtraSkills(b, requiredSkills);
 
     const aExtraKeySum = aExtraSkills
-      .filter((skill) => skillDetails.get(skill.skillId)?.isKey)
+      .filter((skill) => keySkillIds.includes(skill.skillId))
       .reduce((sum, skill) => sum + skill.level, 0);
 
     const bExtraKeySum = bExtraSkills
-      .filter((skill) => skillDetails.get(skill.skillId)?.isKey)
+      .filter((skill) => keySkillIds.includes(skill.skillId))
       .reduce((sum, skill) => sum + skill.level, 0);
 
-    return aExtraKeySum - bExtraKeySum;
+    return bExtraKeySum - aExtraKeySum;
   });
 }
+

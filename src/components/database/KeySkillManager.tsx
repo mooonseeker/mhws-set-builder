@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -22,11 +23,17 @@ interface KeySkillManagerProps {
 }
 
 export function KeySkillManager({ open, onOpenChange }: KeySkillManagerProps) {
-  const { skills, updateSkill } = useSkills();
+  const { skills, toggleKeySkill, isKeySkill } = useSkills();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const keySkills = useMemo(() => skills.filter((s) => s.isKey), [skills]);
-  const otherSkills = useMemo(() => skills.filter((s) => !s.isKey), [skills]);
+  const keySkills = useMemo(
+    () => skills.filter((s) => isKeySkill(s.id)),
+    [skills, isKeySkill],
+  );
+  const otherSkills = useMemo(
+    () => skills.filter((s) => !isKeySkill(s.id)),
+    [skills, isKeySkill],
+  );
 
   // Group key skills by category
   const keySkillsByCategory = useMemo(() => {
@@ -49,17 +56,20 @@ export function KeySkillManager({ open, onOpenChange }: KeySkillManagerProps) {
   }, [otherSkills, searchQuery]);
 
   const toggleKey = (skill: Skill) => {
-    updateSkill({ ...skill, isKey: !skill.isKey });
+    toggleKeySkill(skill.id);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex h-auto max-h-[80vh] !w-[80vw] !max-w-[80vw] flex-col gap-0 p-0">
+      <DialogContent className="flex h-auto max-h-[80vh] w-[80vw]! max-w-[80vw]! flex-col gap-0 p-0">
         <DialogHeader className="p-6 pb-2">
           <DialogTitle className="flex items-center gap-2">
             <Star className="text-warning-foreground fill-warning h-5 w-5" />
             核心技能管理
           </DialogTitle>
+          <DialogDescription>
+            记录对你的武器、打法流派或习惯来说最核心的技能，用于护石排序及配装排序推荐。
+          </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-1 flex-col gap-6 overflow-hidden p-6 pt-2">

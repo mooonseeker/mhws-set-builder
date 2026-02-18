@@ -41,7 +41,7 @@ import { SettingGroup, SettingItem } from "./SettingItem";
  * Provides game mechanics adjustment, display settings, and data management.
  */
 export function Settings() {
-  const { skills } = useSkills();
+  const { skills, keySkillIds } = useSkills();
   const { enhancedCharms } = useCharms();
   const {
     settings,
@@ -282,9 +282,7 @@ export function Settings() {
                 </div>
                 <div>
                   <p className="text-foreground text-sm">核心技能</p>
-                  <p className="text-2xl font-bold">
-                    {skills.filter((s) => s.isKey).length}
-                  </p>
+                  <p className="text-2xl font-bold">{keySkillIds.length}</p>
                 </div>
                 <div>
                   <p className="text-foreground text-sm">护石总数</p>

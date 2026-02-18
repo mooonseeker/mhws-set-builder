@@ -141,28 +141,26 @@ export function calculateCharmEquivalentSlots(
  * Calculates the key skill value of a charm.
  *
  * Rules:
- * 1. Key Skill Value: Sum of levels of key skills (isKey=true).
+ * 1. Key Skill Value: Sum of levels of key skills (based on keySkillIds).
  * 2. Slot Value:
  *    - Weapon Slots: Level 1=1, Level 2=2, Level 3=3
  *    - Armor Slots: Level 1=0, Level 2=1, Level 3=1
  *
  * @param skills - The list of skills on the charm.
  * @param slots - The list of slots on the charm.
- * @param skillsData - The complete skill data for lookup.
+ * @param keySkillIds - The list of IDs of skills marked as key skills.
  * @returns The integer key skill value.
  */
 export function calculateKeySkillValue(
   skills: SkillWithLevel[],
   slots: Slot[],
-  skillsData: Skill[],
+  keySkillIds: string[],
 ): number {
   let keySkillValue = 0;
 
   // 1. Calculate value from key skills by summing their levels.
   for (const skillWithLevel of skills) {
-    const skill = skillsData.find((s) => s.id === skillWithLevel.skillId);
-
-    if (skill?.isKey) {
+    if (keySkillIds.includes(skillWithLevel.skillId)) {
       keySkillValue += skillWithLevel.level;
     }
   }

@@ -92,7 +92,6 @@ export function DatabaseManager() {
             category: "armor",
             maxLevel: 1,
             accessoryLevel: -1,
-            isKey: false,
             description: "",
             type: "SKILL_0000",
             sortId: 999,

@@ -7,6 +7,7 @@
 
 import { useEffect, useReducer, useRef, type ReactNode } from "react";
 
+import { DEFAULT_KEY_SKILL_IDS, STORAGE_KEYS } from "@/constants";
 import { DataStorage } from "@/services/storage";
 import type { Skill } from "@/types";
 
@@ -18,6 +19,8 @@ import { SkillContext, type SkillContextType } from "./SkillContext";
 interface SkillState {
   /** The list of all available skills. */
   skills: Skill[];
+  /** The list of IDs of skills that are marked as key skills. */
+  keySkillIds: string[];
   /** True if the skills are currently being loaded. */
   loading: boolean;
   /** An error message if something went wrong, otherwise null. */
@@ -34,7 +37,9 @@ type SkillAction =
   | { type: "DELETE_SKILL"; payload: string }
   | { type: "IMPORT_SKILLS"; payload: Skill[] }
   | { type: "SET_LOADING"; payload: boolean }
-  | { type: "SET_ERROR"; payload: string | null };
+  | { type: "SET_ERROR"; payload: string | null }
+  | { type: "SET_KEY_SKILLS"; payload: string[] }
+  | { type: "TOGGLE_KEY_SKILL"; payload: string };
 
 /**
  * Reducer for skill state management.
@@ -43,7 +48,7 @@ type SkillAction =
 function skillReducer(state: SkillState, action: SkillAction): SkillState {
   switch (action.type) {
     case "SET_SKILLS":
-      return { ...state, skills: action.payload, loading: false };
+      return { ...state, skills: action.payload };
     case "ADD_SKILL":
       return { ...state, skills: [...state.skills, action.payload] };
     case "UPDATE_SKILL":
@@ -57,6 +62,7 @@ function skillReducer(state: SkillState, action: SkillAction): SkillState {
       return {
         ...state,
         skills: state.skills.filter((s) => s.id !== action.payload),
+        keySkillIds: state.keySkillIds.filter((id) => id !== action.payload),
       };
     case "IMPORT_SKILLS":
       return { ...state, skills: action.payload, loading: false };
@@ -64,6 +70,17 @@ function skillReducer(state: SkillState, action: SkillAction): SkillState {
       return { ...state, loading: action.payload };
     case "SET_ERROR":
       return { ...state, error: action.payload };
+    case "SET_KEY_SKILLS":
+      return { ...state, keySkillIds: action.payload };
+    case "TOGGLE_KEY_SKILL": {
+      const isKey = state.keySkillIds.includes(action.payload);
+      return {
+        ...state,
+        keySkillIds: isKey
+          ? state.keySkillIds.filter((id) => id !== action.payload)
+          : [...state.keySkillIds, action.payload],
+      };
+    }
     default:
       return state;
   }
@@ -82,6 +99,7 @@ function skillReducer(state: SkillState, action: SkillAction): SkillState {
 export function SkillProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(skillReducer, {
     skills: [],
+    keySkillIds: [],
     loading: true,
     error: null,
   });
@@ -91,30 +109,70 @@ export function SkillProvider({ children }: { children: ReactNode }) {
 
   // Initialize state from DataStorage on mount.
   useEffect(() => {
-    try {
-      const skills = DataStorage.loadData<Skill>("skills");
-      dispatch({ type: "SET_SKILLS", payload: skills });
-    } catch (error) {
-      console.error("Failed to load skills from storage:", error);
-      dispatch({ type: "SET_ERROR", payload: "Failed to load skills" });
-      dispatch({ type: "SET_SKILLS", payload: [] });
-    }
+    const init = async () => {
+      try {
+        const skills = DataStorage.loadData<Skill>("skills");
+        dispatch({ type: "SET_SKILLS", payload: skills });
+
+        // Load key skills from localStorage.
+        const storedKeySkills = localStorage.getItem(STORAGE_KEYS.keySkills);
+        let keySkillIds = DEFAULT_KEY_SKILL_IDS;
+
+        if (storedKeySkills) {
+          try {
+            const parsed = JSON.parse(storedKeySkills) as string[];
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              keySkillIds = parsed;
+            }
+          } catch (e) {
+            console.error("Failed to parse stored key skills:", e);
+          }
+        }
+        
+        dispatch({ type: "SET_KEY_SKILLS", payload: keySkillIds });
+      } catch (error) {
+        console.error("Failed to load skills from storage:", error);
+        dispatch({ type: "SET_ERROR", payload: "Failed to load skills" });
+        dispatch({ type: "SET_SKILLS", payload: [] });
+        dispatch({ type: "SET_KEY_SKILLS", payload: DEFAULT_KEY_SKILL_IDS });
+      } finally {
+        dispatch({ type: "SET_LOADING", payload: false });
+      }
+    };
+
+    void init();
   }, []);
 
   // Auto-save to DataStorage whenever skills change.
   useEffect(() => {
-    // Skip the very first render to prevent saving the initial empty/loading state.
+    if (state.loading) return;
+
+    // Skip the very first render to prevent saving the initial empty state.
     if (isFirstRender.current) {
+      return;
+    }
+
+    DataStorage.saveData("skills", state.skills).catch((error) => {
+      console.error("Failed to save skills to storage:", error);
+    });
+  }, [state.skills, state.loading]);
+
+  // Auto-save key skills to localStorage whenever they change.
+  useEffect(() => {
+    if (state.loading) return;
+
+    if (isFirstRender.current) {
+      // Once we've finished the initial load (indicated by loading: false),
+      // we can allow subsequent saves.
       isFirstRender.current = false;
       return;
     }
 
-    if (!state.loading) {
-      DataStorage.saveData("skills", state.skills).catch((error) => {
-        console.error("Failed to save skills to storage:", error);
-      });
-    }
-  }, [state.skills, state.loading]);
+    localStorage.setItem(
+      STORAGE_KEYS.keySkills,
+      JSON.stringify(state.keySkillIds),
+    );
+  }, [state.keySkillIds, state.loading]);
 
   const addSkill = (skill: Skill) => {
     // Prevent duplicate names (case-insensitive) and IDs.
@@ -140,6 +198,10 @@ export function SkillProvider({ children }: { children: ReactNode }) {
     dispatch({ type: "DELETE_SKILL", payload: id });
   };
 
+  const toggleKeySkill = (id: string) => {
+    dispatch({ type: "TOGGLE_KEY_SKILL", payload: id });
+  };
+
   const getSkillById = (id: string) => {
     return state.skills.find((s) => s.id === id);
   };
@@ -158,6 +220,12 @@ export function SkillProvider({ children }: { children: ReactNode }) {
       const initialData = (await response.json()) as { skills: Skill[] };
       const initialSkills = initialData.skills;
       dispatch({ type: "SET_SKILLS", payload: initialSkills });
+
+      // Reset key skills to default.
+      dispatch({
+        type: "SET_KEY_SKILLS",
+        payload: DEFAULT_KEY_SKILL_IDS,
+      });
     } catch (error) {
       console.error("Failed to reset skills data:", error);
       dispatch({ type: "SET_ERROR", payload: "Failed to reset skills" });
@@ -169,6 +237,7 @@ export function SkillProvider({ children }: { children: ReactNode }) {
     addSkill,
     updateSkill,
     deleteSkill,
+    toggleKeySkill,
     getSkillById,
     importSkills,
     resetSkills,

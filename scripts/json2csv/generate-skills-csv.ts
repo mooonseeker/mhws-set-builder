@@ -98,7 +98,6 @@ const main = () => {
       "category",
       "maxLevel",
       "accessoryLevel",
-      "isKey",
     ];
 
     const rows: string[] = [headers.join(",")];
@@ -127,7 +126,6 @@ const main = () => {
       // Default values, can be overridden by specific logic below.
       let maxLevel = 10;
       const accessoryLevel = -1;
-      const isKey = false;
 
       // Handle the "NONE" skill specifically to match existing data format.
       if (id === "NONE") {
@@ -154,7 +152,6 @@ const main = () => {
         escapeCsv(category),
         escapeCsv(maxLevel),
         escapeCsv(accessoryLevel),
-        escapeCsv(isKey),
       ];
 
       rows.push(row.join(","));

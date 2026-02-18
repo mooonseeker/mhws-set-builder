@@ -47,7 +47,7 @@ export function CharmManager() {
 
   // Data and operations from context and hooks
   const { charms } = useCharms();
-  const { skills: allSkills } = useSkills();
+  const { skills: allSkills, keySkillIds, isKeySkill } = useSkills();
   const { createCharm, updateAndRecalculateCharm } = useCharmOperations();
 
   // Form state
@@ -92,9 +92,9 @@ export function CharmManager() {
   // Calculates equivalent slots and key skill value in real-time.
   const { equivalentSlots, keySkillValue } = useMemo(() => {
     const eq = calculateCharmEquivalentSlots(selectedSkills, slots, allSkills);
-    const kv = calculateKeySkillValue(selectedSkills, slots, allSkills);
+    const kv = calculateKeySkillValue(selectedSkills, slots, keySkillIds);
     return { equivalentSlots: eq, keySkillValue: kv };
-  }, [selectedSkills, slots, allSkills]);
+  }, [selectedSkills, slots, allSkills, keySkillIds]);
 
   // Performs real-time validation of the charm.
   const validation = useMemo(() => {
@@ -130,10 +130,9 @@ export function CharmManager() {
   const handleAddSkill = (skill: SkillWithLevel) => {
     if (selectedSkills.length >= 3) return;
     const newSkills = [...selectedSkills, skill].sort((a, b) => {
-      const skillA = allSkills.find((s) => s.id === a.skillId);
-      const skillB = allSkills.find((s) => s.id === b.skillId);
-      if (!skillA || !skillB) return 0;
-      if (skillA.isKey !== skillB.isKey) return skillA.isKey ? -1 : 1;
+      const isKeyA = isKeySkill(a.skillId);
+      const isKeyB = isKeySkill(b.skillId);
+      if (isKeyA !== isKeyB) return isKeyA ? -1 : 1;
       return b.level - a.level;
     });
     setSelectedSkills(newSkills);

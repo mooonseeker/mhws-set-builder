@@ -274,9 +274,7 @@ class DataStorageService {
 
     // Determine fields to ignore based on data type.
     const ignoredFields: string[] = [];
-    if (id === "skills") {
-      ignoredFields.push("isKey");
-    } else if (id === "charms") {
+    if (id === "charms") {
       ignoredFields.push("keySkillValue");
     }
 

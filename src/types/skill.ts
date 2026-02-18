@@ -23,8 +23,6 @@ export interface Skill {
   maxLevel: number;
   /** The slot level required for the accessory that provides this skill. */
   accessoryLevel: SlotLevel;
-  /** Whether the skill is considered a key skill for builds. */
-  isKey: boolean;
   /** In-game description of the skill. */
   description: string;
   /** The type of the skill, which can affect its icon. */

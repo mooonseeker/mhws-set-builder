@@ -32,5 +32,20 @@ export function useSkills() {
   if (!context) {
     throw new Error("useSkills must be used within SkillProvider");
   }
-  return context;
+
+  const { keySkillIds } = context;
+
+  /**
+   * Checks if a skill is a key skill.
+   * @param id - The ID of the skill to check.
+   * @returns True if the skill is a key skill.
+   */
+  const isKeySkill = (id: string) => {
+    return keySkillIds.includes(id);
+  };
+
+  return {
+    ...context,
+    isKeySkill,
+  };
 }

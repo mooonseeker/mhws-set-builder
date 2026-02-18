@@ -16,7 +16,6 @@ import type {
 } from "../../src/types";
 import {
   armorTypeSchema,
-  boolFromString,
   intField,
   optionalAttributeFromString,
   optionalIntFromString,
@@ -43,7 +42,6 @@ export const skillRowSchema: z.ZodType<Skill> = z
     category: skillCategoryFromString,
     maxLevel: intField("maxLevel"),
     accessoryLevel: slotLevelFromString,
-    isKey: boolFromString,
   })
   .passthrough()
   .transform((row) => ({
@@ -55,7 +53,6 @@ export const skillRowSchema: z.ZodType<Skill> = z
     category: row.category,
     maxLevel: row.maxLevel,
     accessoryLevel: row.accessoryLevel,
-    isKey: row.isKey,
   }));
 
 /**

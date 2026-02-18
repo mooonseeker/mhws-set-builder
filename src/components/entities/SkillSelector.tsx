@@ -25,7 +25,7 @@ export function SkillSelector({
   onSelect,
   excludeSkillIds = [],
 }: SkillSelectorProps) {
-  const { skills } = useSkills();
+  const { skills, isKeySkill } = useSkills();
   const [search, setSearch] = useState("");
   const [selectedSkillId, setSelectedSkillId] = useState<string>("");
 
@@ -68,7 +68,7 @@ export function SkillSelector({
                   setSearch(skill.name);
                 }}
               >
-                {skill.name} {skill.isKey && "⭐"}
+                {skill.name} {isKeySkill(skill.id) && "⭐"}
               </button>
             ))}
           </div>

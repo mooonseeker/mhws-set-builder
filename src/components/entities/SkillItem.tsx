@@ -36,7 +36,7 @@ export function SkillItem({
   variant = "default",
   onLevelChange,
 }: SkillItemProps) {
-  const { getSkillById } = useSkills();
+  const { getSkillById, isKeySkill } = useSkills();
   const skill = getSkillById(skillId);
   const [isTruncated, setIsTruncated] = useState(false);
   const nameRef = useRef<HTMLSpanElement>(null);
@@ -61,10 +61,11 @@ export function SkillItem({
     return null;
   }
 
-  const { maxLevel, type, isKey } = skill;
+  const { maxLevel, type } = skill;
   const isMaxLevel = level >= maxLevel;
   const isOverflow = level > maxLevel;
   const canInteract = onLevelChange && variant !== "compact";
+  const isKey = isKeySkill(skillId);
 
   // Generate level blocks (progress squares)
   const levelBlocks = Array.from({ length: maxLevel }, (_, i) => {

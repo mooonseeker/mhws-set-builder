@@ -6,7 +6,6 @@
 import { useEffect, useReducer } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,7 +33,6 @@ interface SkillFormState {
   category: SkillCategory;
   maxLevel: number;
   accessoryLevel: SlotLevel;
-  isKey: boolean;
   localError: string | null;
 }
 
@@ -63,7 +61,6 @@ function skillFormReducer(
           category: action.skill.category,
           maxLevel: action.skill.maxLevel,
           accessoryLevel: action.skill.accessoryLevel,
-          isKey: action.skill.isKey,
           localError: null,
         };
       } else {
@@ -72,7 +69,6 @@ function skillFormReducer(
           category: "armor",
           maxLevel: 3,
           accessoryLevel: 2,
-          isKey: false,
           localError: null,
         };
       }
@@ -99,13 +95,12 @@ export function SkillForm({
     category: "armor",
     maxLevel: 3,
     accessoryLevel: 2,
-    isKey: false,
     localError: null,
   };
 
   const [state, dispatch] = useReducer(skillFormReducer, initialFormState);
 
-  const { name, category, maxLevel, accessoryLevel, isKey, localError } = state;
+  const { name, category, maxLevel, accessoryLevel, localError } = state;
 
   useEffect(() => {
     dispatch({ type: "RESET_FORM", skill });
@@ -142,7 +137,6 @@ export function SkillForm({
       category,
       maxLevel,
       accessoryLevel,
-      isKey,
       description: "", // User-defined skills have no description by default.
       type: "", // User-defined skills have no type by default.
       sortId: 9999, // User-defined skills are sorted to the end by default.
@@ -261,25 +255,6 @@ export function SkillForm({
               <SelectItem value="3">{SLOT_LEVEL_LABELS[3]}</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-6 items-center gap-4 px-6">
-        <div className="col-span-5 col-start-2 flex items-center space-x-2">
-          <Checkbox
-            id="isKey"
-            checked={isKey}
-            onCheckedChange={(checked) =>
-              dispatch({
-                type: "SET_FIELD",
-                field: "isKey",
-                value: checked as boolean,
-              })
-            }
-          />
-          <Label htmlFor="isKey" className="cursor-pointer">
-            标记为核心技能
-          </Label>
         </div>
       </div>
 

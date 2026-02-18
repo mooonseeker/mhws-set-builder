@@ -46,17 +46,12 @@ export function SearchResultsView() {
     searchProgress,
     searchStatus,
   } = useSetBuilder();
-  const { skills, getSkillById } = useSkills();
-
-  const skillDetails = useMemo(
-    () => new Map(skills.map((skill) => [skill.id, skill])),
-    [skills],
-  );
+  const { getSkillById, keySkillIds } = useSkills();
 
   const sortedResults = useMemo(() => {
     if (!searchResults || searchResults.length === 0) return [];
-    return evaluateAndSortResults(searchResults, requiredSkills, skillDetails);
-  }, [searchResults, requiredSkills, skillDetails]);
+    return evaluateAndSortResults(searchResults, requiredSkills, keySkillIds);
+  }, [searchResults, requiredSkills, keySkillIds]);
 
   const handleSelectSet = (set: FinalSet) => {
     loadSetToBuilder(set);

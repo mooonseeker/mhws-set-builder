@@ -58,7 +58,7 @@ export function CharmFilterBar({
   onClearFilters,
   showCount = true,
 }: CharmFilterBarProps) {
-  const { skills } = useSkills();
+  const { skills, isKeySkill } = useSkills();
 
   return (
     <>
@@ -175,7 +175,7 @@ export function CharmFilterBar({
                   <SelectItem value="all">全部技能</SelectItem>
                   {skills.map((skill) => (
                     <SelectItem key={skill.id} value={skill.id}>
-                      {skill.name} {skill.isKey && "⭐"}
+                      {skill.name} {isKeySkill(skill.id) && "⭐"}
                     </SelectItem>
                   ))}
                 </SelectContent>

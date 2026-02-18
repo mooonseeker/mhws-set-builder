@@ -42,7 +42,7 @@ interface SkillListProps {
  * with support for filtering, sorting, editing, and deleting.
  */
 export function SkillList({ onEdit, isLocked }: SkillListProps) {
-  const { skills, deleteSkill, updateSkill } = useSkills();
+  const { skills, deleteSkill, toggleKeySkill, isKeySkill } = useSkills();
   const [categoryFilter, setCategoryFilter] = useState<SkillCategory | "all">(
     "all",
   );
@@ -80,7 +80,7 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
   const filteredSkills = skills.filter((skill) => {
     if (categoryFilter !== "all" && skill.category !== categoryFilter)
       return false;
-    if (keyOnlyFilter && !skill.isKey) return false;
+    if (keyOnlyFilter && !isKeySkill(skill.id)) return false;
     if (searchQuery) {
       // Check for exact match (if query starts with '=').
       const isExactMatch = searchQuery.startsWith("=");
@@ -250,12 +250,10 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
                   <TableCell className="text-center">
                     <button
                       className="cursor-pointer transition-transform hover:scale-150 focus:outline-hidden"
-                      onClick={() =>
-                        updateSkill({ ...skill, isKey: !skill.isKey })
-                      }
+                      onClick={() => toggleKeySkill(skill.id)}
                     >
                       <Star
-                        className={`h-4 w-4 ${skill.isKey ? "fill-warning text-warning-foreground" : "text-muted-foreground"} inline`}
+                        className={`h-4 w-4 ${isKeySkill(skill.id) ? "fill-warning text-warning-foreground" : "text-muted-foreground"} inline`}
                       />
                     </button>
                   </TableCell>
