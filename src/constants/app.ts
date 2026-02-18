@@ -4,7 +4,7 @@
 
 export const APP_NAME = "mhws-set-builder";
 
-export const DATABASE_VERSION = "1.04.0";
+export const DATABASE_VERSION = "1.041.0";
 
 export const DATABASE_VERSION_KEY = `${APP_NAME}-db-version`;
 

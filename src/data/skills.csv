@@ -177,3 +177,5 @@ id,name,type,description,sortId,category,maxLevel,accessoryLevel
 "HunterSkill_237","欧米茄共鸣","SKILL_0013","SkillCommon_EXP31540","569","series","5","-1"
 "HunterSkill_238","喵喵棒","SKILL_0011","会心攻击时，有较低概率获得各种道具","479","weapon","1","-1"
 "HunterSkill_239","巨戟龙的默示录","SKILL_0013","SkillCommon_EXP5590","570","series","5","-1"
+"HunterSkill_243","耐性变换【水】","SKILL_0002","按水属性耐性值提升武器的属性攻击值，水属性耐性值越高，上升幅度越大。","113","weapon","1","-1"
+"HunterSkill_244","解放镜刃碎片","SKILL_0000","蓄力至第3阶段的蓄力斩敲打地面时，会对一定范围造成伤害。","9","weapon","1","-1"
