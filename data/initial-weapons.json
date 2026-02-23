@@ -1,6 +1,6 @@
 {
-  "version": "1.04.0",
-  "exportedAt": "2026-02-18T00:52:32.391Z",
+  "version": "1.041.0",
+  "exportedAt": "2026-02-23T17:17:20.194Z",
   "dataType": "weapons",
   "weapons": [
     {
@@ -2450,6 +2450,76 @@
       "attack": 180,
       "critical": 15,
       "defense": 0
+    },
+    {
+      "id": "Bow_188",
+      "name": "苍世龙弓",
+      "type": "bow",
+      "description": "让人联想到璀璨苍蓝星的弓。有所觉悟的猎人拿在手上，心中就会涌现坚毅勇敢的苍蓝精神。",
+      "sortId": 117,
+      "skills": [
+        {
+          "skillId": "HunterSkill_243",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_003",
+          "level": 2
+        }
+      ],
+      "slots": [
+        {
+          "type": "weapon",
+          "level": 3
+        },
+        {
+          "type": "weapon",
+          "level": 2
+        }
+      ],
+      "rarity": 7,
+      "attack": 190,
+      "critical": 25,
+      "defense": 0,
+      "attribute": "water",
+      "attributeValue": 25
+    },
+    {
+      "id": "Bow_189",
+      "name": "苍世龙弓【天翔】",
+      "type": "bow",
+      "description": "在勇猛猎人手中获得升华的苍世龙弓。离弦的璀璨之箭，宛若翱翔天际之龙。",
+      "sortId": 118,
+      "skills": [
+        {
+          "skillId": "HunterSkill_243",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_003",
+          "level": 2
+        }
+      ],
+      "slots": [
+        {
+          "type": "weapon",
+          "level": 3
+        },
+        {
+          "type": "weapon",
+          "level": 2
+        },
+        {
+          "type": "weapon",
+          "level": 1
+        }
+      ],
+      "rarity": 8,
+      "attack": 210,
+      "critical": 25,
+      "defense": 0,
+      "attribute": "water",
+      "attributeValue": 30
     },
     {
       "id": "Bow_193",
@@ -25316,6 +25386,106 @@
       ]
     },
     {
+      "id": "LongSword_169",
+      "name": "碎裂封镜之剑",
+      "type": "long-sword",
+      "description": "像是被某人击碎的镜之大剑。散落的碎片仿佛忆起往昔般彼此牵引，再度凝聚成刃。",
+      "sortId": 119,
+      "skills": [
+        {
+          "skillId": "HunterSkill_244",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_022",
+          "level": 3
+        }
+      ],
+      "slots": [
+        {
+          "type": "weapon",
+          "level": 2
+        },
+        {
+          "type": "weapon",
+          "level": 2
+        },
+        {
+          "type": "weapon",
+          "level": 2
+        }
+      ],
+      "rarity": 7,
+      "attack": 190,
+      "critical": 0,
+      "defense": 0,
+      "sharpness": [
+        20,
+        20,
+        20,
+        20,
+        20,
+        250,
+        0
+      ],
+      "takumi": [
+        50,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "LongSword_170",
+      "name": "碎裂封镜之剑【龙窝】",
+      "type": "long-sword",
+      "description": "经打磨的封镜之剑渴求的是昔日被夺走的眼眸。在魇迷的尽头，被深渊的眼窝吞噬的是己，还是龙？",
+      "sortId": 120,
+      "skills": [
+        {
+          "skillId": "HunterSkill_244",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_022",
+          "level": 3
+        }
+      ],
+      "slots": [
+        {
+          "type": "weapon",
+          "level": 3
+        },
+        {
+          "type": "weapon",
+          "level": 3
+        },
+        {
+          "type": "weapon",
+          "level": 3
+        }
+      ],
+      "rarity": 8,
+      "attack": 210,
+      "critical": 0,
+      "defense": 0,
+      "sharpness": [
+        10,
+        10,
+        10,
+        10,
+        10,
+        350,
+        0
+      ],
+      "takumi": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
       "id": "LongSword_171",
       "name": "炽光剑维亚",
       "type": "long-sword",
@@ -40561,6 +40731,106 @@
         50,
         70,
         10,
+        0
+      ],
+      "takumi": [
+        50,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "Tachi_182",
+      "name": "苍星太刀",
+      "type": "tachi",
+      "description": "令人联想到苍星光芒的太刀。据说给人们越多的梦想或希望，它就会绽放越强的光芒。",
+      "sortId": 119,
+      "skills": [
+        {
+          "skillId": "HunterSkill_243",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_003",
+          "level": 2
+        }
+      ],
+      "slots": [
+        {
+          "type": "weapon",
+          "level": 3
+        },
+        {
+          "type": "weapon",
+          "level": 2
+        }
+      ],
+      "rarity": 7,
+      "attack": 190,
+      "critical": 25,
+      "defense": 0,
+      "attribute": "water",
+      "attributeValue": 40,
+      "sharpness": [
+        30,
+        50,
+        70,
+        60,
+        80,
+        60,
+        0
+      ],
+      "takumi": [
+        50,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "Tachi_183",
+      "name": "苍星太刀【舞龙】",
+      "type": "tachi",
+      "description": "苍星太刀因无数梦想与希望而绽放出更为璀璨的光芒。挥刀之姿宛若起舞之龙。",
+      "sortId": 120,
+      "skills": [
+        {
+          "skillId": "HunterSkill_243",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_003",
+          "level": 2
+        }
+      ],
+      "slots": [
+        {
+          "type": "weapon",
+          "level": 3
+        },
+        {
+          "type": "weapon",
+          "level": 2
+        },
+        {
+          "type": "weapon",
+          "level": 1
+        }
+      ],
+      "rarity": 8,
+      "attack": 210,
+      "critical": 25,
+      "defense": 0,
+      "attribute": "water",
+      "attributeValue": 45,
+      "sharpness": [
+        30,
+        40,
+        60,
+        60,
+        80,
+        80,
         0
       ],
       "takumi": [

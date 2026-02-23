@@ -1,6 +1,6 @@
 {
-  "version": "1.04.0",
-  "exportedAt": "2026-02-18T00:52:32.284Z",
+  "version": "1.041.0",
+  "exportedAt": "2026-02-23T17:17:20.106Z",
   "dataType": "skills",
   "skills": [
     {
@@ -11,8 +11,7 @@
       "sortId": 0,
       "category": "armor",
       "maxLevel": 1,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_000",
@@ -22,8 +21,7 @@
       "sortId": 1,
       "category": "weapon",
       "maxLevel": 5,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_060",
@@ -33,8 +31,7 @@
       "sortId": 2,
       "category": "armor",
       "maxLevel": 5,
-      "accessoryLevel": 2,
-      "isKey": true
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_115",
@@ -44,8 +41,7 @@
       "sortId": 3,
       "category": "armor",
       "maxLevel": 5,
-      "accessoryLevel": 3,
-      "isKey": false
+      "accessoryLevel": 3
     },
     {
       "id": "HunterSkill_028",
@@ -55,8 +51,7 @@
       "sortId": 4,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_059",
@@ -66,8 +61,7 @@
       "sortId": 5,
       "category": "armor",
       "maxLevel": 5,
-      "accessoryLevel": 2,
-      "isKey": false
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_110",
@@ -77,8 +71,7 @@
       "sortId": 6,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 2,
-      "isKey": true
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_229",
@@ -88,8 +81,7 @@
       "sortId": 7,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_233",
@@ -99,8 +91,17 @@
       "sortId": 8,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
+    },
+    {
+      "id": "HunterSkill_244",
+      "name": "解放镜刃碎片",
+      "type": "SKILL_0000",
+      "description": "蓄力至第3阶段的蓄力斩敲打地面时，会对一定范围造成伤害。",
+      "sortId": 9,
+      "category": "weapon",
+      "maxLevel": 1,
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_001",
@@ -110,8 +111,7 @@
       "sortId": 50,
       "category": "weapon",
       "maxLevel": 5,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_002",
@@ -121,8 +121,7 @@
       "sortId": 51,
       "category": "weapon",
       "maxLevel": 5,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_062",
@@ -132,8 +131,7 @@
       "sortId": 52,
       "category": "armor",
       "maxLevel": 5,
-      "accessoryLevel": 3,
-      "isKey": true
+      "accessoryLevel": 3
     },
     {
       "id": "HunterSkill_029",
@@ -143,8 +141,7 @@
       "sortId": 53,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_064",
@@ -154,8 +151,7 @@
       "sortId": 54,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 2,
-      "isKey": true
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_202",
@@ -165,8 +161,7 @@
       "sortId": 56,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_235",
@@ -176,8 +171,7 @@
       "sortId": 57,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_005",
@@ -187,8 +181,7 @@
       "sortId": 100,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_006",
@@ -198,8 +191,7 @@
       "sortId": 101,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_008",
@@ -209,8 +201,7 @@
       "sortId": 102,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_007",
@@ -220,8 +211,7 @@
       "sortId": 103,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_009",
@@ -231,8 +221,7 @@
       "sortId": 104,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_010",
@@ -242,8 +231,7 @@
       "sortId": 105,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_011",
@@ -253,8 +241,7 @@
       "sortId": 106,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_012",
@@ -264,8 +251,7 @@
       "sortId": 107,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_013",
@@ -275,8 +261,7 @@
       "sortId": 108,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_003",
@@ -286,8 +271,7 @@
       "sortId": 109,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_056",
@@ -297,8 +281,7 @@
       "sortId": 110,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_048",
@@ -308,8 +291,7 @@
       "sortId": 111,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_191",
@@ -319,8 +301,17 @@
       "sortId": 112,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
+    },
+    {
+      "id": "HunterSkill_243",
+      "name": "耐性变换【水】",
+      "type": "SKILL_0002",
+      "description": "按水属性耐性值提升武器的属性攻击值，水属性耐性值越高，上升幅度越大。",
+      "sortId": 113,
+      "category": "weapon",
+      "maxLevel": 1,
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_214",
@@ -330,8 +321,7 @@
       "sortId": 114,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_231",
@@ -341,8 +331,7 @@
       "sortId": 115,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_014",
@@ -352,8 +341,7 @@
       "sortId": 150,
       "category": "weapon",
       "maxLevel": 5,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_015",
@@ -363,8 +351,7 @@
       "sortId": 151,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_017",
@@ -374,8 +361,7 @@
       "sortId": 152,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_018",
@@ -385,8 +371,7 @@
       "sortId": 153,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_020",
@@ -396,8 +381,7 @@
       "sortId": 154,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_004",
@@ -407,8 +391,7 @@
       "sortId": 155,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": 3,
-      "isKey": true
+      "accessoryLevel": 3
     },
     {
       "id": "HunterSkill_217",
@@ -418,8 +401,7 @@
       "sortId": 156,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_038",
@@ -429,8 +411,7 @@
       "sortId": 200,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": 3,
-      "isKey": true
+      "accessoryLevel": 3
     },
     {
       "id": "HunterSkill_039",
@@ -440,8 +421,7 @@
       "sortId": 201,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": 3,
-      "isKey": true
+      "accessoryLevel": 3
     },
     {
       "id": "HunterSkill_040",
@@ -451,8 +431,7 @@
       "sortId": 202,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": 3,
-      "isKey": true
+      "accessoryLevel": 3
     },
     {
       "id": "HunterSkill_019",
@@ -462,8 +441,7 @@
       "sortId": 203,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_045",
@@ -473,8 +451,7 @@
       "sortId": 204,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": 3,
-      "isKey": true
+      "accessoryLevel": 3
     },
     {
       "id": "HunterSkill_198",
@@ -484,8 +461,7 @@
       "sortId": 205,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_197",
@@ -495,8 +471,7 @@
       "sortId": 206,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_037",
@@ -506,8 +481,7 @@
       "sortId": 207,
       "category": "weapon",
       "maxLevel": 2,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_051",
@@ -517,8 +491,7 @@
       "sortId": 208,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": 2,
-      "isKey": false
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_052",
@@ -528,8 +501,7 @@
       "sortId": 209,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": 3,
-      "isKey": true
+      "accessoryLevel": 3
     },
     {
       "id": "HunterSkill_053",
@@ -539,8 +511,7 @@
       "sortId": 210,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": 3,
-      "isKey": false
+      "accessoryLevel": 3
     },
     {
       "id": "HunterSkill_054",
@@ -550,8 +521,7 @@
       "sortId": 211,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": 2,
-      "isKey": false
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_199",
@@ -561,8 +531,7 @@
       "sortId": 212,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": 2,
-      "isKey": false
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_218",
@@ -572,8 +541,7 @@
       "sortId": 213,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_232",
@@ -583,8 +551,7 @@
       "sortId": 214,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_067",
@@ -594,8 +561,7 @@
       "sortId": 250,
       "category": "armor",
       "maxLevel": 7,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_068",
@@ -605,8 +571,7 @@
       "sortId": 251,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_077",
@@ -616,8 +581,7 @@
       "sortId": 252,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_078",
@@ -627,8 +591,7 @@
       "sortId": 253,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_080",
@@ -638,8 +601,7 @@
       "sortId": 254,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_079",
@@ -649,8 +611,7 @@
       "sortId": 255,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_081",
@@ -660,8 +621,7 @@
       "sortId": 256,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_083",
@@ -671,8 +631,7 @@
       "sortId": 257,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_084",
@@ -682,8 +641,7 @@
       "sortId": 258,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_085",
@@ -693,8 +651,7 @@
       "sortId": 259,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_120",
@@ -704,8 +661,7 @@
       "sortId": 260,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_082",
@@ -715,8 +671,7 @@
       "sortId": 261,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_086",
@@ -726,8 +681,7 @@
       "sortId": 262,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_119",
@@ -737,8 +691,7 @@
       "sortId": 263,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_189",
@@ -748,8 +701,7 @@
       "sortId": 264,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_087",
@@ -759,8 +711,7 @@
       "sortId": 265,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_122",
@@ -770,8 +721,7 @@
       "sortId": 266,
       "category": "armor",
       "maxLevel": 2,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_144",
@@ -781,8 +731,7 @@
       "sortId": 267,
       "category": "armor",
       "maxLevel": 2,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_234",
@@ -792,8 +741,7 @@
       "sortId": 268,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_069",
@@ -803,8 +751,7 @@
       "sortId": 300,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_070",
@@ -814,8 +761,7 @@
       "sortId": 301,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_134",
@@ -825,8 +771,7 @@
       "sortId": 302,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_025",
@@ -836,8 +781,7 @@
       "sortId": 325,
       "category": "armor",
       "maxLevel": 5,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_065",
@@ -847,8 +791,7 @@
       "sortId": 326,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 2,
-      "isKey": false
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_024",
@@ -858,8 +801,7 @@
       "sortId": 327,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_105",
@@ -869,8 +811,7 @@
       "sortId": 328,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_058",
@@ -880,8 +821,7 @@
       "sortId": 350,
       "category": "armor",
       "maxLevel": 5,
-      "accessoryLevel": 3,
-      "isKey": true
+      "accessoryLevel": 3
     },
     {
       "id": "HunterSkill_063",
@@ -891,8 +831,7 @@
       "sortId": 351,
       "category": "armor",
       "maxLevel": 5,
-      "accessoryLevel": 3,
-      "isKey": true
+      "accessoryLevel": 3
     },
     {
       "id": "HunterSkill_100",
@@ -902,8 +841,7 @@
       "sortId": 352,
       "category": "armor",
       "maxLevel": 5,
-      "accessoryLevel": 2,
-      "isKey": false
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_114",
@@ -913,8 +851,7 @@
       "sortId": 353,
       "category": "armor",
       "maxLevel": 5,
-      "accessoryLevel": 3,
-      "isKey": true
+      "accessoryLevel": 3
     },
     {
       "id": "HunterSkill_111",
@@ -924,8 +861,7 @@
       "sortId": 354,
       "category": "armor",
       "maxLevel": 5,
-      "accessoryLevel": 3,
-      "isKey": false
+      "accessoryLevel": 3
     },
     {
       "id": "HunterSkill_146",
@@ -935,8 +871,7 @@
       "sortId": 355,
       "category": "armor",
       "maxLevel": 5,
-      "accessoryLevel": 3,
-      "isKey": false
+      "accessoryLevel": 3
     },
     {
       "id": "HunterSkill_130",
@@ -946,8 +881,7 @@
       "sortId": 356,
       "category": "armor",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_022",
@@ -957,8 +891,7 @@
       "sortId": 357,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_023",
@@ -968,8 +901,7 @@
       "sortId": 358,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_030",
@@ -979,8 +911,7 @@
       "sortId": 359,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_032",
@@ -990,8 +921,7 @@
       "sortId": 360,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_033",
@@ -1001,8 +931,7 @@
       "sortId": 361,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_035",
@@ -1012,8 +941,7 @@
       "sortId": 362,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_047",
@@ -1023,8 +951,7 @@
       "sortId": 363,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_091",
@@ -1034,8 +961,7 @@
       "sortId": 364,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 2,
-      "isKey": false
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_113",
@@ -1045,8 +971,7 @@
       "sortId": 365,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 2,
-      "isKey": false
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_116",
@@ -1056,8 +981,7 @@
       "sortId": 366,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 2,
-      "isKey": false
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_195",
@@ -1067,8 +991,7 @@
       "sortId": 367,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_190",
@@ -1078,8 +1001,7 @@
       "sortId": 368,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_034",
@@ -1089,8 +1011,7 @@
       "sortId": 369,
       "category": "weapon",
       "maxLevel": 2,
-      "accessoryLevel": 2,
-      "isKey": true
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_057",
@@ -1100,8 +1021,7 @@
       "sortId": 370,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": 2,
-      "isKey": true
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_055",
@@ -1111,8 +1031,7 @@
       "sortId": 371,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": 2,
-      "isKey": true
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_145",
@@ -1122,8 +1041,7 @@
       "sortId": 372,
       "category": "armor",
       "maxLevel": 1,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_141",
@@ -1133,8 +1051,7 @@
       "sortId": 373,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": 2,
-      "isKey": false
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_204",
@@ -1144,8 +1061,7 @@
       "sortId": 374,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_211",
@@ -1155,8 +1071,7 @@
       "sortId": 375,
       "category": "armor",
       "maxLevel": 1,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_230",
@@ -1166,8 +1081,7 @@
       "sortId": 376,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_026",
@@ -1177,8 +1091,7 @@
       "sortId": 400,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_075",
@@ -1188,8 +1101,7 @@
       "sortId": 401,
       "category": "armor",
       "maxLevel": 5,
-      "accessoryLevel": 2,
-      "isKey": false
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_076",
@@ -1199,8 +1111,7 @@
       "sortId": 402,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 2,
-      "isKey": false
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_072",
@@ -1210,8 +1121,7 @@
       "sortId": 403,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 2,
-      "isKey": false
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_027",
@@ -1221,8 +1131,7 @@
       "sortId": 404,
       "category": "weapon",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_031",
@@ -1232,8 +1141,7 @@
       "sortId": 405,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_073",
@@ -1243,8 +1151,7 @@
       "sortId": 406,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_074",
@@ -1254,8 +1161,7 @@
       "sortId": 407,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_102",
@@ -1265,8 +1171,7 @@
       "sortId": 408,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_139",
@@ -1276,8 +1181,7 @@
       "sortId": 409,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_071",
@@ -1287,8 +1191,7 @@
       "sortId": 410,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_036",
@@ -1298,8 +1201,7 @@
       "sortId": 411,
       "category": "weapon",
       "maxLevel": 2,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_088",
@@ -1309,8 +1211,7 @@
       "sortId": 412,
       "category": "armor",
       "maxLevel": 2,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_050",
@@ -1320,8 +1221,7 @@
       "sortId": 413,
       "category": "armor",
       "maxLevel": 1,
-      "accessoryLevel": 1,
-      "isKey": true
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_106",
@@ -1331,8 +1231,7 @@
       "sortId": 414,
       "category": "armor",
       "maxLevel": 1,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_103",
@@ -1342,8 +1241,7 @@
       "sortId": 415,
       "category": "armor",
       "maxLevel": 1,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_109",
@@ -1353,8 +1251,7 @@
       "sortId": 416,
       "category": "armor",
       "maxLevel": 1,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_098",
@@ -1364,8 +1261,7 @@
       "sortId": 450,
       "category": "armor",
       "maxLevel": 5,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_138",
@@ -1375,8 +1271,7 @@
       "sortId": 451,
       "category": "armor",
       "maxLevel": 5,
-      "accessoryLevel": 2,
-      "isKey": false
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_095",
@@ -1386,8 +1281,7 @@
       "sortId": 452,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_096",
@@ -1397,8 +1291,7 @@
       "sortId": 453,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 2,
-      "isKey": false
+      "accessoryLevel": 2
     },
     {
       "id": "HunterSkill_097",
@@ -1408,8 +1301,7 @@
       "sortId": 454,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_099",
@@ -1419,8 +1311,7 @@
       "sortId": 455,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_046",
@@ -1430,8 +1321,7 @@
       "sortId": 456,
       "category": "weapon",
       "maxLevel": 2,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_136",
@@ -1441,8 +1331,7 @@
       "sortId": 458,
       "category": "armor",
       "maxLevel": 1,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_089",
@@ -1452,8 +1341,7 @@
       "sortId": 475,
       "category": "armor",
       "maxLevel": 4,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_090",
@@ -1463,8 +1351,7 @@
       "sortId": 476,
       "category": "armor",
       "maxLevel": 3,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_137",
@@ -1474,8 +1361,7 @@
       "sortId": 477,
       "category": "armor",
       "maxLevel": 1,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_126",
@@ -1485,8 +1371,7 @@
       "sortId": 478,
       "category": "armor",
       "maxLevel": 1,
-      "accessoryLevel": 1,
-      "isKey": false
+      "accessoryLevel": 1
     },
     {
       "id": "HunterSkill_238",
@@ -1496,8 +1381,7 @@
       "sortId": 479,
       "category": "weapon",
       "maxLevel": 1,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_162",
@@ -1507,8 +1391,7 @@
       "sortId": 500,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_163",
@@ -1518,8 +1401,7 @@
       "sortId": 501,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_166",
@@ -1529,8 +1411,7 @@
       "sortId": 502,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_167",
@@ -1540,8 +1421,7 @@
       "sortId": 503,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_164",
@@ -1551,8 +1431,7 @@
       "sortId": 504,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_165",
@@ -1562,8 +1441,7 @@
       "sortId": 505,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_168",
@@ -1573,8 +1451,7 @@
       "sortId": 506,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_169",
@@ -1584,8 +1461,7 @@
       "sortId": 507,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_170",
@@ -1595,8 +1471,7 @@
       "sortId": 508,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_171",
@@ -1606,8 +1481,7 @@
       "sortId": 509,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_205",
@@ -1617,8 +1491,7 @@
       "sortId": 510,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_172",
@@ -1628,8 +1501,7 @@
       "sortId": 511,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_173",
@@ -1639,8 +1511,7 @@
       "sortId": 512,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_174",
@@ -1650,8 +1521,7 @@
       "sortId": 513,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_219",
@@ -1661,8 +1531,7 @@
       "sortId": 514,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_227",
@@ -1672,8 +1541,7 @@
       "sortId": 515,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_209",
@@ -1683,8 +1551,7 @@
       "sortId": 516,
       "category": "group",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_175",
@@ -1694,8 +1561,7 @@
       "sortId": 550,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_180",
@@ -1705,8 +1571,7 @@
       "sortId": 551,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_188",
@@ -1716,8 +1581,7 @@
       "sortId": 552,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_181",
@@ -1727,8 +1591,7 @@
       "sortId": 553,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_182",
@@ -1738,8 +1601,7 @@
       "sortId": 554,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_186",
@@ -1749,8 +1611,7 @@
       "sortId": 555,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_187",
@@ -1760,8 +1621,7 @@
       "sortId": 556,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_177",
@@ -1771,8 +1631,7 @@
       "sortId": 557,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_176",
@@ -1782,8 +1641,7 @@
       "sortId": 558,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_178",
@@ -1793,8 +1651,7 @@
       "sortId": 559,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_179",
@@ -1804,8 +1661,7 @@
       "sortId": 560,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_183",
@@ -1815,8 +1671,7 @@
       "sortId": 561,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_185",
@@ -1826,8 +1681,7 @@
       "sortId": 562,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_184",
@@ -1837,8 +1691,7 @@
       "sortId": 563,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_200",
@@ -1848,8 +1701,7 @@
       "sortId": 564,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_203",
@@ -1859,8 +1711,7 @@
       "sortId": 565,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_212",
@@ -1870,8 +1721,7 @@
       "sortId": 566,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_215",
@@ -1881,8 +1731,7 @@
       "sortId": 567,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_236",
@@ -1892,8 +1741,7 @@
       "sortId": 568,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_237",
@@ -1903,8 +1751,7 @@
       "sortId": 569,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_239",
@@ -1914,8 +1761,7 @@
       "sortId": 570,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_207",
@@ -1925,8 +1771,7 @@
       "sortId": 571,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_221",
@@ -1936,8 +1781,7 @@
       "sortId": 572,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_223",
@@ -1947,8 +1791,7 @@
       "sortId": 573,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     },
     {
       "id": "HunterSkill_225",
@@ -1958,8 +1801,7 @@
       "sortId": 574,
       "category": "series",
       "maxLevel": 5,
-      "accessoryLevel": -1,
-      "isKey": false
+      "accessoryLevel": -1
     }
   ]
 }

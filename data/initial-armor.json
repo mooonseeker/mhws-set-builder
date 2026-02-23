@@ -1,6 +1,6 @@
 {
-  "version": "1.04.0",
-  "exportedAt": "2026-02-18T00:52:32.362Z",
+  "version": "1.041.0",
+  "exportedAt": "2026-02-23T17:17:20.172Z",
   "dataType": "armor",
   "armor": [
     {
@@ -22253,6 +22253,226 @@
       "series": "冻峰龙γ"
     },
     {
+      "id": "ARMOR_ID_0741",
+      "name": "锁刃龙头盔γ",
+      "type": "helm",
+      "description": "使用特殊的锁刃龙素材制作的头部防具。战痕累累的头盔彰显着历战王者应有的威严。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_185",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_205",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_062",
+          "level": 3
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 2
+        },
+        {
+          "type": "armor",
+          "level": 1
+        }
+      ],
+      "rarity": 8,
+      "defense": 68,
+      "resistance": [
+        2,
+        0,
+        -1,
+        0,
+        -3
+      ],
+      "series": "锁刃龙γ"
+    },
+    {
+      "id": "ARMOR_ID_0742",
+      "name": "锁刃龙铠甲γ",
+      "type": "body",
+      "description": "使用特殊的锁刃龙素材制作的身体防具。战痕累累的护胸彰显着历战王者应有的勇猛。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_185",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_205",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_191",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_082",
+          "level": 1
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 3
+        },
+        {
+          "type": "armor",
+          "level": 2
+        }
+      ],
+      "rarity": 8,
+      "defense": 68,
+      "resistance": [
+        2,
+        0,
+        -1,
+        0,
+        -3
+      ],
+      "series": "锁刃龙γ"
+    },
+    {
+      "id": "ARMOR_ID_0743",
+      "name": "锁刃龙腕甲γ",
+      "type": "arm",
+      "description": "使用特殊的锁刃龙素材制作的臂部防具。战痕累累的护臂彰显着历战王者应有的霸气。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_185",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_205",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_146",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_062",
+          "level": 2
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 1
+        },
+        {
+          "type": "armor",
+          "level": 1
+        }
+      ],
+      "rarity": 8,
+      "defense": 68,
+      "resistance": [
+        2,
+        0,
+        -1,
+        0,
+        -3
+      ],
+      "series": "锁刃龙γ"
+    },
+    {
+      "id": "ARMOR_ID_0744",
+      "name": "锁刃龙腰甲γ",
+      "type": "waist",
+      "description": "使用特殊的锁刃龙素材制作的腰部防具。战痕累累的腰带彰显着历战王者应有的不屈不挠。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_185",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_205",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_190",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_146",
+          "level": 1
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 2
+        },
+        {
+          "type": "armor",
+          "level": 2
+        },
+        {
+          "type": "armor",
+          "level": 1
+        }
+      ],
+      "rarity": 8,
+      "defense": 68,
+      "resistance": [
+        2,
+        0,
+        -1,
+        0,
+        -3
+      ],
+      "series": "锁刃龙γ"
+    },
+    {
+      "id": "ARMOR_ID_0745",
+      "name": "锁刃龙护腿γ",
+      "type": "leg",
+      "description": "使用特殊的锁刃龙素材制作的脚部防具。战痕累累的护腿彰显着历战王者应有的孤高姿态。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_185",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_205",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_146",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_082",
+          "level": 2
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 3
+        },
+        {
+          "type": "armor",
+          "level": 3
+        }
+      ],
+      "rarity": 8,
+      "defense": 68,
+      "resistance": [
+        2,
+        0,
+        -1,
+        0,
+        -3
+      ],
+      "series": "锁刃龙γ"
+    },
+    {
       "id": "ARMOR_ID_0746",
       "name": "落樱缤纷【武士头部】α",
       "type": "helm",
@@ -23871,6 +24091,214 @@
       "series": "祭典α"
     },
     {
+      "id": "ARMOR_ID_0791",
+      "name": "盛装头饰α",
+      "type": "helm",
+      "description": "使用盛装票制作的头部防具。象征高贵的巍峨高冠，是贵族最高规格的礼装。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_219",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_097",
+          "level": 3
+        },
+        {
+          "skillId": "HunterSkill_068",
+          "level": 2
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 3
+        },
+        {
+          "type": "armor",
+          "level": 2
+        }
+      ],
+      "rarity": 8,
+      "defense": 66,
+      "resistance": [
+        1,
+        1,
+        1,
+        1,
+        4
+      ],
+      "series": "盛装α"
+    },
+    {
+      "id": "ARMOR_ID_0792",
+      "name": "盛装战衣α",
+      "type": "body",
+      "description": "使用盛装票制作的身体防具。璀璨夺目的华服，带着高贵辉光，绽放极致奢华。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_219",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_113",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_068",
+          "level": 1
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 2
+        },
+        {
+          "type": "armor",
+          "level": 2
+        },
+        {
+          "type": "armor",
+          "level": 1
+        }
+      ],
+      "rarity": 8,
+      "defense": 66,
+      "resistance": [
+        1,
+        1,
+        1,
+        1,
+        4
+      ],
+      "series": "盛装α"
+    },
+    {
+      "id": "ARMOR_ID_0793",
+      "name": "盛装手套α",
+      "type": "arm",
+      "description": "使用盛装票制作的臂部防具。高贵的手套，以纤雅之姿，传达着谢意。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_219",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_059",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_064",
+          "level": 2
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 1
+        },
+        {
+          "type": "armor",
+          "level": 1
+        }
+      ],
+      "rarity": 8,
+      "defense": 66,
+      "resistance": [
+        1,
+        1,
+        1,
+        1,
+        4
+      ],
+      "series": "盛装α"
+    },
+    {
+      "id": "ARMOR_ID_0794",
+      "name": "盛装护腰α",
+      "type": "waist",
+      "description": "使用盛装票制作的腰部防具。那迤逦于后的独特裙摆，被视为尊贵的象征。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_219",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_059",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_113",
+          "level": 1
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 3
+        },
+        {
+          "type": "armor",
+          "level": 1
+        }
+      ],
+      "rarity": 8,
+      "defense": 66,
+      "resistance": [
+        1,
+        1,
+        1,
+        1,
+        4
+      ],
+      "series": "盛装α"
+    },
+    {
+      "id": "ARMOR_ID_0795",
+      "name": "盛装靴α",
+      "type": "leg",
+      "description": "使用盛装票制作的脚部防具。踏响尊贵的足音，唯有舞会方配其翩然莅临。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_219",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_059",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_064",
+          "level": 1
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 3
+        },
+        {
+          "type": "armor",
+          "level": 2
+        },
+        {
+          "type": "armor",
+          "level": 1
+        }
+      ],
+      "rarity": 8,
+      "defense": 66,
+      "resistance": [
+        1,
+        1,
+        1,
+        1,
+        4
+      ],
+      "series": "盛装α"
+    },
+    {
       "id": "ARMOR_ID_0796",
       "name": "鬼之念珠α",
       "type": "helm",
@@ -25206,6 +25634,479 @@
         0
       ],
       "series": "胶鲵α"
+    },
+    {
+      "id": "ARMOR_ID_0842",
+      "name": "苍世武士【艳发】α",
+      "type": "helm",
+      "description": "让人联想到璀璨苍蓝星的头部防具。怀抱新世界梦想的野心家，在此彰显豪杰的气魄。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_212",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_168",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_063",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_115",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_025",
+          "level": 2
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 1
+        },
+        {
+          "type": "armor",
+          "level": 1
+        },
+        {
+          "type": "armor",
+          "level": 1
+        }
+      ],
+      "rarity": 8,
+      "defense": 66,
+      "resistance": [
+        2,
+        4,
+        0,
+        0,
+        3
+      ],
+      "series": "苍世武士α"
+    },
+    {
+      "id": "ARMOR_ID_0843",
+      "name": "苍世武士【羽织】α",
+      "type": "body",
+      "description": "让人联想到璀璨苍蓝星的身体防具。怀抱新世界梦想的野心家，在此彰显企盼与决心。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_212",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_168",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_063",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_115",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_031",
+          "level": 1
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 3
+        }
+      ],
+      "rarity": 8,
+      "defense": 66,
+      "resistance": [
+        2,
+        4,
+        0,
+        0,
+        3
+      ],
+      "series": "苍世武士α"
+    },
+    {
+      "id": "ARMOR_ID_0844",
+      "name": "苍世武士【袖】α",
+      "type": "arm",
+      "description": "让人联想到璀璨苍蓝星的臂部防具。怀抱新世界梦想的野心家，为了理想阔步向前。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_212",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_168",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_063",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_115",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_025",
+          "level": 1
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 3
+        }
+      ],
+      "rarity": 8,
+      "defense": 66,
+      "resistance": [
+        2,
+        4,
+        0,
+        0,
+        3
+      ],
+      "series": "苍世武士α"
+    },
+    {
+      "id": "ARMOR_ID_0845",
+      "name": "苍世武士【带】α",
+      "type": "waist",
+      "description": "让人联想到璀璨苍蓝星的腰部防具。怀抱新世界梦想的野心家，借此宣示永不熄灭的热情。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_212",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_168",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_063",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_115",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_031",
+          "level": 2
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 2
+        },
+        {
+          "type": "armor",
+          "level": 1
+        }
+      ],
+      "rarity": 8,
+      "defense": 66,
+      "resistance": [
+        2,
+        4,
+        0,
+        0,
+        3
+      ],
+      "series": "苍世武士α"
+    },
+    {
+      "id": "ARMOR_ID_0846",
+      "name": "苍世武士【足履】α",
+      "type": "leg",
+      "description": "让人联想到璀璨苍蓝星的脚部防具。怀抱新世界梦想的野心家，将踏破乱世的狂浪前进。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_212",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_168",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_063",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_115",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_025",
+          "level": 2
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 2
+        },
+        {
+          "type": "armor",
+          "level": 1
+        }
+      ],
+      "rarity": 8,
+      "defense": 66,
+      "resistance": [
+        2,
+        4,
+        0,
+        0,
+        3
+      ],
+      "series": "苍世武士α"
+    },
+    {
+      "id": "ARMOR_ID_0847",
+      "name": "女王耳饰α",
+      "type": "helm",
+      "description": "王牌猎人娜迪娅爱用的头部防具。据说戴上这个耳饰，直觉就会变得敏锐，很是神奇。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_183",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_227",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_114",
+          "level": 1
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 3
+        },
+        {
+          "type": "armor",
+          "level": 1
+        },
+        {
+          "type": "armor",
+          "level": 1
+        }
+      ],
+      "rarity": 8,
+      "defense": 66,
+      "resistance": [
+        4,
+        1,
+        1,
+        1,
+        3
+      ],
+      "series": "女王α"
+    },
+    {
+      "id": "ARMOR_ID_0848",
+      "name": "女王外衣α",
+      "type": "body",
+      "description": "王牌猎人娜迪娅爱用的身体防具。以调查队的装备为基础，处处体现了她个人想法的精品。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_183",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_227",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_114",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_065",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_091",
+          "level": 1
+        }
+      ],
+      "slots": [],
+      "rarity": 8,
+      "defense": 66,
+      "resistance": [
+        4,
+        1,
+        1,
+        1,
+        3
+      ],
+      "series": "女王α"
+    },
+    {
+      "id": "ARMOR_ID_0849",
+      "name": "女王腕甲α",
+      "type": "arm",
+      "description": "王牌猎人娜迪娅爱用的臂部防具。应她的要求，采用了能迅速取出弹药的设计。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_183",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_227",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_114",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_076",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_091",
+          "level": 1
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 2
+        }
+      ],
+      "rarity": 8,
+      "defense": 66,
+      "resistance": [
+        4,
+        1,
+        1,
+        1,
+        3
+      ],
+      "series": "女王α"
+    },
+    {
+      "id": "ARMOR_ID_0850",
+      "name": "女王腰甲α",
+      "type": "waist",
+      "description": "王牌猎人娜迪娅爱用的腰部防具。为了能迅速应对突发状况而设计的特别制品。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_183",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_227",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_114",
+          "level": 2
+        },
+        {
+          "skillId": "HunterSkill_076",
+          "level": 2
+        }
+      ],
+      "slots": [],
+      "rarity": 8,
+      "defense": 66,
+      "resistance": [
+        4,
+        1,
+        1,
+        1,
+        3
+      ],
+      "series": "女王α"
+    },
+    {
+      "id": "ARMOR_ID_0851",
+      "name": "女王长靴α",
+      "type": "leg",
+      "description": "王牌猎人娜迪娅爱用的脚部防具。为了支撑她完成严酷的任务，经过了精心锻造。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_183",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_227",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_065",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_091",
+          "level": 1
+        }
+      ],
+      "slots": [
+        {
+          "type": "armor",
+          "level": 3
+        },
+        {
+          "type": "armor",
+          "level": 2
+        }
+      ],
+      "rarity": 8,
+      "defense": 66,
+      "resistance": [
+        4,
+        1,
+        1,
+        1,
+        3
+      ],
+      "series": "女王α"
+    },
+    {
+      "id": "ARMOR_ID_0852",
+      "name": "沼喷龙头套α",
+      "type": "helm",
+      "description": "精致再现了沼喷龙头部的头部防具。不过即使是为了鼓起外皮，使用毒气依然会遭到严惩。",
+      "skills": [
+        {
+          "skillId": "HunterSkill_165",
+          "level": 1
+        },
+        {
+          "skillId": "HunterSkill_060",
+          "level": 5
+        },
+        {
+          "skillId": "HunterSkill_110",
+          "level": 2
+        }
+      ],
+      "slots": [],
+      "rarity": 8,
+      "defense": 68,
+      "resistance": [
+        0,
+        -3,
+        0,
+        0,
+        1
+      ],
+      "series": "沼喷龙头套α"
     }
   ]
 }

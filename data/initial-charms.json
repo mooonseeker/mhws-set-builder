@@ -1,6 +1,6 @@
 {
-  "version": "1.04.0",
-  "exportedAt": "2026-02-18T00:52:32.400Z",
+  "version": "1.041.0",
+  "exportedAt": "2026-02-23T17:17:20.201Z",
   "dataType": "charms",
   "charms": [
     {
@@ -82,13 +82,13 @@
       "createdAt": "2025-02-27T16:00:00.000Z"
     },
     {
-      "id": "CHARM_ID_0022",
-      "name": "痛击护石Ⅱ",
-      "rarity": 7,
+      "id": "CHARM_ID_0023",
+      "name": "痛击护石Ⅲ",
+      "rarity": 8,
       "skills": [
         {
           "skillId": "HunterSkill_062",
-          "level": 2
+          "level": 3
         }
       ],
       "slots": [],
@@ -693,13 +693,13 @@
       "createdAt": "2025-02-27T16:00:00.000Z"
     },
     {
-      "id": "CHARM_ID_0173",
-      "name": "锁刃护石Ⅱ",
-      "rarity": 7,
+      "id": "CHARM_ID_0174",
+      "name": "锁刃护石Ⅲ",
+      "rarity": 8,
       "skills": [
         {
           "skillId": "HunterSkill_146",
-          "level": 2
+          "level": 3
         }
       ],
       "slots": [],
