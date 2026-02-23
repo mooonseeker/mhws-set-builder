@@ -40,8 +40,10 @@ import {
 } from "@/components/ui/table";
 import { Toggle } from "@/components/ui/toggle";
 import { useDataIO } from "@/hooks";
+import { performImport } from "@/services/storage";
 import type { DataId } from "@/types";
 
+import { MigrationReview } from "./MigrationReview";
 import { ValidationReport } from "./ValidationReport";
 
 /**
@@ -65,6 +67,7 @@ export function DataIO() {
     exportMode,
     dialogState,
     setExportMode,
+    setDialogState,
     closeDialog,
     handleAction,
     handleFileImport,
@@ -81,7 +84,7 @@ export function DataIO() {
   // Handles internal file selection logic
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    handleFileImport(file, () => {
+    void handleFileImport(file, () => {
       if (fileInputRef.current) fileInputRef.current.value = "";
     });
     // Reset value so the same file can be selected again
@@ -186,12 +189,59 @@ export function DataIO() {
         open={dialogState.type !== "none"}
         onOpenChange={(open) => !open && closeDialog()}
       >
-        <DialogContent className="max-w-md">
+        <DialogContent
+          className={
+            dialogState.type === "review"
+              ? "max-w-4xl overflow-hidden p-0"
+              : "max-w-md"
+          }
+        >
           {dialogState.type === "validation" && (
             <ValidationReport
               title={dialogState.title}
               result={dialogState.result}
               onClose={closeDialog}
+            />
+          )}
+
+          {dialogState.type === "review" && (
+            <MigrationReview
+              analysis={
+                new Map([
+                  [
+                    dialogState.analysis.payload.dataType as DataId,
+                    dialogState.analysis.validation,
+                  ],
+                ])
+              }
+              title={`导入 "${databaseNames[dialogState.analysis.payload.dataType as DataId]}" 预审`}
+              description={
+                dialogState.analysis.isVersionMismatch
+                  ? "该文件的数据库版本与当前版本不一致，且包含对官方数据的修改或删除。"
+                  : "该文件包含对当前数据库官方数据的修改或删除。"
+              }
+              isDialog={true}
+              onCancel={closeDialog}
+              onConfirm={async () => {
+                try {
+                  await performImport(dialogState.analysis.payload);
+                  setDialogState({
+                    type: "feedback",
+                    title: "导入成功",
+                    description: "数据已成功导入。页面即将刷新以应用更改。",
+                    variant: "success",
+                  });
+                  setTimeout(() => window.location.reload(), 1500);
+                } catch (error) {
+                  setDialogState({
+                    type: "feedback",
+                    title: "导入失败",
+                    description:
+                      error instanceof Error ? error.message : String(error),
+                    variant: "error",
+                  });
+                }
+              }}
             />
           )}
 
@@ -243,3 +293,12 @@ export function DataIO() {
     </>
   );
 }
+
+const databaseNames: Record<DataId, string> = {
+  skills: "技能",
+  accessories: "装饰品",
+  armor: "防具",
+  weapons: "武器",
+  charms: "护石",
+  settings: "设置",
+};

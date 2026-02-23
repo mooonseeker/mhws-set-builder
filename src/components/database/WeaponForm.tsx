@@ -52,7 +52,7 @@ export function WeaponForm({
 }: WeaponFormProps) {
   const [name, setName] = useState(weapon?.name ?? "");
   const [type, setType] = useState<WeaponType>(weapon?.type ?? "hammer");
-  
+
   // Robust numeric initialization to handle CSV/JSON string mismatches.
   const [rarity, setRarity] = useState<number>(
     weapon?.rarity !== undefined ? Number(weapon.rarity) : 1,
@@ -66,7 +66,7 @@ export function WeaponForm({
   const [defense, setDefense] = useState<number>(
     weapon?.defense !== undefined ? Number(weapon.defense) : 0,
   );
-  
+
   const [attribute, setAttribute] = useState<AttributeType | undefined>(
     weapon?.attribute,
   );

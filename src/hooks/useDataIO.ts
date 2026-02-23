@@ -5,8 +5,14 @@
 
 import { useState } from "react";
 
-import { DataStorage } from "@/services/storage";
-import { exportData, importData } from "@/services/storage/transfer";
+import {
+  analyzeImport,
+  DataStorage,
+  exportData,
+  parseImportFile,
+  performImport,
+  type ImportAnalysis,
+} from "@/services/storage";
 import type { DataId } from "@/types";
 import type { ValidationResult } from "@/utils";
 
@@ -19,6 +25,10 @@ export type DialogState =
       type: "validation";
       title: string;
       result: ValidationResult;
+    }
+  | {
+      type: "review";
+      analysis: ImportAnalysis;
     }
   | {
       type: "confirm";
@@ -48,7 +58,7 @@ export function useDataIO({ databaseItems }: UseDataIOProps) {
     action: string;
   } | null>(null);
   const [importTarget, setImportTarget] = useState<DataId | null>(null);
-  const [exportMode, setExportMode] = useState<"full" | "diff">("full");
+  const [exportMode, setExportMode] = useState<"full" | "diff">("diff");
   const [dialogState, setDialogState] = useState<DialogState>({ type: "none" });
 
   /**
@@ -134,7 +144,7 @@ export function useDataIO({ databaseItems }: UseDataIOProps) {
   /**
    * Handles file selection for import.
    */
-  const handleFileImport = (
+  const handleFileImport = async (
     file: File | undefined,
     onComplete?: () => void,
   ) => {
@@ -144,36 +154,70 @@ export function useDataIO({ databaseItems }: UseDataIOProps) {
     const itemName =
       databaseItems.find((i) => i.id === targetId)?.name ?? targetId;
 
-    setDialogState({
-      type: "confirm",
-      title: `导入 "${itemName}" 数据`,
-      description: `确定要从文件 "${file.name}" 导入数据吗？现有修改可能会被覆盖。`,
-      confirmText: "确认导入",
-      onConfirm: async () => {
-        setProcessing({ id: targetId, action: "import" });
-        try {
-          await importData(file);
-          setDialogState({
-            type: "feedback",
-            title: "导入成功",
-            description: `"${itemName}" 数据已成功导入。页面即将刷新以应用更改。`,
-            variant: "success",
-          });
-          setTimeout(() => window.location.reload(), 1500);
-        } catch (error) {
-          setDialogState({
-            type: "feedback",
-            title: "导入失败",
-            description: error instanceof Error ? error.message : String(error),
-            variant: "error",
-          });
-        } finally {
-          setProcessing(null);
-          setImportTarget(null);
-          onComplete?.();
-        }
-      },
-    });
+    try {
+      setProcessing({ id: targetId, action: "analyze" });
+
+      // 1. Parse and analyze the import file
+      const payload = await parseImportFile(file);
+      const analysis = await analyzeImport(payload);
+
+      // 2. Determine if we need a manual review
+      // High risk = version mismatch OR modified official entries OR deleted official entries
+      const hasRisks =
+        analysis.isVersionMismatch ||
+        analysis.validation.mismatched > 0 ||
+        analysis.validation.missingOfficial > 0;
+
+      if (hasRisks) {
+        // Show review dialog
+        setDialogState({
+          type: "review",
+          analysis,
+        });
+      } else {
+        // Low risk: proceed with standard confirmation
+        setDialogState({
+          type: "confirm",
+          title: `导入 "${itemName}" 数据`,
+          description: `确定要从文件 "${file.name}" 导入数据吗？现有修改可能会被覆盖。`,
+          confirmText: "确认导入",
+          onConfirm: async () => {
+            setProcessing({ id: targetId, action: "import" });
+            try {
+              await performImport(payload);
+              setDialogState({
+                type: "feedback",
+                title: "导入成功",
+                description: `"${itemName}" 数据已成功导入。页面即将刷新以应用更改。`,
+                variant: "success",
+              });
+              setTimeout(() => window.location.reload(), 1500);
+            } catch (error) {
+              setDialogState({
+                type: "feedback",
+                title: "导入失败",
+                description:
+                  error instanceof Error ? error.message : String(error),
+                variant: "error",
+              });
+            } finally {
+              setProcessing(null);
+            }
+          },
+        });
+      }
+    } catch (error) {
+      setDialogState({
+        type: "feedback",
+        title: "分析失败",
+        description: error instanceof Error ? error.message : String(error),
+        variant: "error",
+      });
+    } finally {
+      setProcessing(null);
+      setImportTarget(null);
+      onComplete?.();
+    }
   };
 
   return {

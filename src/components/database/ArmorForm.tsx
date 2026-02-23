@@ -58,7 +58,7 @@ export function ArmorForm({
     armor?.defense !== undefined ? Number(armor.defense) : 0,
   );
   const [resistance, setResistance] = useState<Resistance>(
-    (armor?.resistance as Resistance) ?? [0, 0, 0, 0, 0],
+    armor?.resistance ?? [0, 0, 0, 0, 0],
   );
   const [series, setSeries] = useState(armor?.series ?? "");
   const [skills, setSkills] = useState<SkillWithLevel[]>(armor?.skills ?? []);

@@ -106,7 +106,7 @@ export function SkillForm({
 
   const { name, category, maxLevel, accessoryLevel, localError } = state;
 
-  // We still keep the effect to handle external prop changes, though 'key' prop 
+  // We still keep the effect to handle external prop changes, though 'key' prop
   // in DatabaseForm usually handles this by remounting.
   useEffect(() => {
     dispatch({ type: "RESET_FORM", skill });

@@ -5,7 +5,12 @@
 
 import { DATABASE_VERSION } from "@/constants";
 import type { DataId, DataItem } from "@/types";
-import { patch, type DataDelta } from "@/utils";
+import {
+  patch,
+  validateData,
+  type DataDelta,
+  type ValidationResult,
+} from "@/utils";
 
 import { DataStorage } from "./index";
 
@@ -18,6 +23,15 @@ export interface ExportPayload {
   dataType: DataId | "all";
   mode: "full" | "diff";
   data: DataItem[] | DataDelta<DataItem>;
+}
+
+/**
+ * Result of the import analysis.
+ */
+export interface ImportAnalysis {
+  payload: ExportPayload;
+  validation: ValidationResult;
+  isVersionMismatch: boolean;
 }
 
 /**
@@ -64,76 +78,86 @@ export function exportData(id: DataId, mode: "full" | "diff" = "full"): void {
 }
 
 /**
- * Imports data from a JSON file and performs basic validation.
- *
- * Automatically detects if the import is a full dataset or a differential patch.
- *
- * @param file The JSON file to import.
- * @throws An error if the file cannot be read or the format is incorrect.
+ * Parses an imported JSON file and returns the payload.
  */
-export async function importData(file: File): Promise<void> {
+export async function parseImportFile(file: File): Promise<ExportPayload> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-
     reader.onload = (e) => {
       try {
         const content = e.target?.result as string;
         const payload = JSON.parse(content) as ExportPayload;
-
-        // Basic structure validation.
         if (!payload.version || !payload.dataType || !payload.data) {
-          throw new Error(
-            "Invalid data structure: missing version, dataType, or data field",
-          );
+          throw new Error("Invalid structure");
         }
-
-        const dataType = payload.dataType as DataId;
-        const mode = payload.mode || "full"; // Default to full for backward compatibility.
-
-        let dataToSave: DataItem[];
-
-        const currentData = DataStorage.loadData(dataType);
-
-        if (mode === "diff") {
-          // Differential import: Apply patch to current data.
-          const delta = payload.data as DataDelta<DataItem>;
-          dataToSave = patch(currentData, delta);
-        } else {
-          // Full import: Merge with current data (non-destructive).
-          const importedData = payload.data as DataItem[];
-          const currentMap = new Map(
-            currentData.map((item) => [item.id, item]),
-          );
-
-          // Overwrite existing items or add new ones.
-          importedData.forEach((item) => {
-            currentMap.set(item.id, item);
-          });
-
-          dataToSave = Array.from(currentMap.values());
-        }
-
-        // Save the data using the DataStorage service.
-        DataStorage.saveData(dataType, dataToSave)
-          .then(() => resolve())
-          .catch((err) =>
-            reject(err instanceof Error ? err : new Error(String(err))),
-          );
-      } catch (error) {
-        reject(
-          new Error(
-            `Import failed: Invalid file format or content. (${
-              error instanceof Error ? error.message : String(error)
-            })`,
-          ),
-        );
+        resolve(payload);
+      } catch {
+        reject(new Error("Invalid file format"));
       }
     };
-
-    reader.onerror = () => {
-      reject(new Error("Failed to read the file"));
-    };
-
+    reader.onerror = () => reject(new Error("Failed to read file"));
     reader.readAsText(file);
   });
+}
+
+/**
+ * Analyzes the potential impact of an import payload.
+ */
+export async function analyzeImport(
+  payload: ExportPayload,
+): Promise<ImportAnalysis> {
+  const dataType = payload.dataType as DataId;
+  const isVersionMismatch = payload.version !== DATABASE_VERSION;
+
+  // Get current state to compare against.
+  const currentBase = await DataStorage.loadBaseDataForType(dataType);
+  const currentData = DataStorage.loadData(dataType);
+
+  let dataToPreview: DataItem[];
+  if (payload.mode === "diff") {
+    dataToPreview = patch(currentData, payload.data as DataDelta<DataItem>);
+  } else {
+    const importedData = payload.data as DataItem[];
+    const currentMap = new Map(currentData.map((item) => [item.id, item]));
+    importedData.forEach((item) => currentMap.set(item.id, item));
+    dataToPreview = Array.from(currentMap.values());
+  }
+
+  const ignoredFields: string[] =
+    dataType === "charms" ? ["keySkillValue"] : [];
+  const validation = validateData(dataToPreview, currentBase, ignoredFields);
+
+  return {
+    payload,
+    validation,
+    isVersionMismatch,
+  };
+}
+
+/**
+ * Performs the actual data import.
+ */
+export async function performImport(payload: ExportPayload): Promise<void> {
+  const dataType = payload.dataType as DataId;
+  const currentData = DataStorage.loadData(dataType);
+  let dataToSave: DataItem[];
+
+  if (payload.mode === "diff") {
+    dataToSave = patch(currentData, payload.data as DataDelta<DataItem>);
+  } else {
+    const importedData = payload.data as DataItem[];
+    const currentMap = new Map(currentData.map((item) => [item.id, item]));
+    importedData.forEach((item) => currentMap.set(item.id, item));
+    dataToSave = Array.from(currentMap.values());
+  }
+
+  await DataStorage.saveData(dataType, dataToSave);
+}
+
+/**
+ * Legacy importData function, maintained for backward compatibility or simple cases.
+ */
+export async function importData(file: File): Promise<void> {
+  const payload = await parseImportFile(file);
+  await performImport(payload);
 }

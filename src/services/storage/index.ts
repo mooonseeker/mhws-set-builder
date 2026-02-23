@@ -8,7 +8,6 @@
  */
 
 import {
-  APP_NAME,
   DATABASE_VERSION,
   DATABASE_VERSION_KEY,
   DEFAULT_ACCESSORIES_PER_PAGE,
@@ -44,50 +43,42 @@ const EMPTY_DELTA: DataDelta<DataItem> = {
   deleted: [],
 };
 
+/** Result of the DataStorage initialization process. */
+export type InitResult =
+  | { status: "ready" }
+  | { status: "review_required"; analysis: Map<DataId, ValidationResult> }
+  | { status: "error"; message: string };
+
 /**
  * Manages all persistent data for the application in a singleton pattern.
  */
 class DataStorageService {
-  /**
-   * Internal data cache. All data is loaded here after `initialize()` is called.
-   */
+  /** Internal data cache. */
   private dataCache: Map<DataId, DataItem[]> = new Map<DataId, DataItem[]>();
 
-  /**
-   * Cache for base (initial) data to avoid redundant fetch requests.
-   */
+  /** Cache for base (official) data. */
   private baseDataCache: Map<DataId, DataItem[]> = new Map<
     DataId,
     DataItem[]
   >();
 
-  /**
-   * Cache for the migration report.
-   * Stores stats from the last migration for UI display.
-   */
+  /** Stats from the last migration for UI display. */
   private migrationReport: Map<DataId, MigrationStats> | null = null;
 
-  /**
-   * Flag to indicate if the service has been initialized.
-   */
+  /** Stashed analysis when a manual review is pending. */
+  private pendingReview: Map<DataId, ValidationResult> | null = null;
+
+  /** Flag to indicate if the service has been initialized. */
   private initialized = false;
 
   /**
    * Initializes the DataStorage service.
    *
-   * This method should be called on application startup before any other
-   * data-dependent context is initialized. It performs the following steps:
-   * 1. Checks the version number in localStorage.
-   * 2. Loads initial data or performs migration if the user is new or the version mismatches.
-   * 3. Loads all data into the in-memory cache.
-   *
-   * @returns A promise that resolves when initialization is complete.
-   * @throws {Error} If initialization fails.
+   * @returns A promise that resolves to an InitResult.
    */
-  async initialize(): Promise<void> {
+  async initialize(): Promise<InitResult> {
     if (this.initialized) {
-      console.warn("DataStorage already initialized");
-      return;
+      return { status: "ready" };
     }
 
     try {
@@ -96,30 +87,104 @@ class DataStorageService {
       const storedVersion = this.getStoredVersion();
 
       if (storedVersion === DATABASE_VERSION) {
-        // Version matches, load differential data.
         console.log("[DataStorage] Version match. Loading existing data.");
         await this.loadDifferentialData();
       } else if (storedVersion === null) {
-        // New user, load initial data.
         console.log("[DataStorage] New user. Loading initial data.");
         await this.loadInitialData();
       } else {
-        // Version mismatch, perform migration.
         console.log(
-          `[DataStorage] Upgrading version: ${storedVersion} -> ${DATABASE_VERSION}`,
+          `[DataStorage] Version mismatch: ${storedVersion} -> ${DATABASE_VERSION}. Analyzing...`,
         );
-        await this.migrateToDifferential(storedVersion);
+
+        // 1. Analyze the risk of migration.
+        const analysis = await this.analyzeMigration();
+
+        // 2. Determine if a manual review is required.
+        let needsReview = false;
+        for (const result of analysis.values()) {
+          if (result.missingOfficial > 0 || result.mismatched > 0) {
+            needsReview = true;
+            break;
+          }
+        }
+
+        if (needsReview) {
+          console.log(
+            "[DataStorage] High-risk changes detected. Review required.",
+          );
+          this.pendingReview = analysis;
+          return { status: "review_required", analysis };
+        }
+
+        // 3. Low-risk migration: proceed silently.
+        await this.performDataMigration(storedVersion, DATABASE_VERSION);
       }
 
-      // Update the version number in storage.
       this.setStoredVersion(DATABASE_VERSION);
-
       this.initialized = true;
       console.log("[DataStorage] 初始化完成");
+      return { status: "ready" };
     } catch (error) {
       console.error("[DataStorage] Initialization failed:", error);
-      throw new Error("Data storage initialization failed");
+      return {
+        status: "error",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Data storage initialization failed",
+      };
     }
+  }
+
+  /**
+   * Confirms and applies the pending migration.
+   * This should be called after the user has reviewed the changes.
+   */
+  async confirmMigration(): Promise<void> {
+    if (this.initialized) return;
+
+    const storedVersion = this.getStoredVersion() ?? "unknown";
+    await this.performDataMigration(storedVersion, DATABASE_VERSION);
+
+    this.setStoredVersion(DATABASE_VERSION);
+    this.pendingReview = null;
+    this.initialized = true;
+    console.log("[DataStorage] 迁移确认并完成");
+  }
+
+  /**
+   * Gets the current pending review analysis.
+   */
+  getPendingReview(): Map<DataId, ValidationResult> | null {
+    return this.pendingReview;
+  }
+
+  /**
+   * Analyzes the impact of applying existing local deltas to the new official data.
+   */
+  private async analyzeMigration(): Promise<Map<DataId, ValidationResult>> {
+    const analysis = new Map<DataId, ValidationResult>();
+
+    for (const id of DIFFERENTIAL_DATA_IDS) {
+      const baseData = await this.loadBaseDataForType(id);
+      const delta = this.getDelta<DataItem>(id);
+
+      // Calculate what the data would look like if we apply the old delta to new base.
+      const patchedData = patch(baseData, delta);
+
+      // Validate this patched data against the new base.
+      // mismatched = user modifications of official data.
+      // missing = user deletions of official data.
+      const ignoredFields: string[] = id === "charms" ? ["keySkillValue"] : [];
+      const result = validateData(patchedData, baseData, ignoredFields);
+
+      if (!result.isValid) {
+        analysis.set(id, result);
+      }
+    }
+
+    return analysis;
   }
 
   /**
@@ -208,11 +273,7 @@ class DataStorageService {
     console.log("[DataStorage] Clearing all data");
 
     // Clear localStorage.
-    // Clear full and differential data.
     Object.values(STORAGE_KEYS).forEach((key) => localStorage.removeItem(key));
-    DIFFERENTIAL_DATA_IDS.forEach((id) =>
-      localStorage.removeItem(`${APP_NAME}-${id}`),
-    );
     Object.values(STORAGE_KEYS_DELTA).forEach((key) =>
       localStorage.removeItem(key),
     );
@@ -369,54 +430,34 @@ class DataStorageService {
   }
 
   /**
-   * Performs a one-time migration to differential storage.
+   * Orchestrates the data migration process when a version mismatch is detected.
+   * This provides a centralized place to handle structural changes or data
+   * conversions between specific versions.
+   *
+   * @param fromVersion The version currently stored in the user's browser.
+   * @param toVersion The version the application is upgrading to.
    */
-  private async migrateToDifferential(oldVersion: string): Promise<void> {
+  private async performDataMigration(
+    fromVersion: string,
+    toVersion: string,
+  ): Promise<void> {
     console.log(
-      `[DataStorage] Migrating to differential storage: ${oldVersion} -> ${DATABASE_VERSION}`,
+      `[DataStorage] Migrating data from ${fromVersion} to ${toVersion}`,
     );
 
     try {
-      // 1. Migrate/load settings.
-      await this.loadInitialDataForType("settings");
+      // Future: Add specific migration logic for version ranges here.
+      // e.g., if (compareVersions(fromVersion, "1.1.0") < 0) { ... }
 
-      // 2. Migrate other data types.
-      for (const id of DIFFERENTIAL_DATA_IDS) {
-        // 2a. Load the old full data from storage.
-        const oldKey = `${APP_NAME}-${id}`;
-        const oldStoredData = localStorage.getItem(oldKey);
-        const oldFullData = oldStoredData
-          ? (JSON.parse(oldStoredData) as DataItem[])
-          : [];
+      // Currently, we ensure existing differential patches are re-applied to
+      // the new base data. This ensures user data persists across upgrades.
+      await this.loadDifferentialData();
 
-        // 2b. Load the new base data.
-        const newBaseData = await this.loadBaseDataForType(id);
-
-        // 2c. Calculate the diff between the new base and old full data.
-        const delta = createDiff(newBaseData, oldFullData);
-
-        // 2d. Save the new diff data.
-        const deltaKey = STORAGE_KEYS_DELTA[id];
-        localStorage.setItem(deltaKey, JSON.stringify(delta));
-
-        // 2e. Load the merged data into the cache.
-        const mergedData = patch(newBaseData, delta);
-        this.dataCache.set(id, mergedData);
-
-        // 2f. [IMPORTANT] Remove the old full data from storage.
-        localStorage.removeItem(oldKey);
-
-        console.log(
-          `[DataStorage] ${id} migrated to differential storage successfully`,
-        );
-      }
-      console.log("[DataStorage] Data migration complete");
+      console.log("[DataStorage] Data migration completed successfully");
     } catch (error) {
-      console.error("[DataStorage] Data migration failed:", error);
-      // On migration failure, roll back by clearing everything and loading initial data.
-      console.log(
-        "[DataStorage] Migration failed, rolling back to initial data",
-      );
+      console.error("[DataStorage] Migration failed:", error);
+      // Fallback: On critical migration failure, clear storage to ensure a clean state.
+      console.log("[DataStorage] Resetting all data due to migration failure");
       this.clearAll();
       await this.loadInitialData();
     }
@@ -425,7 +466,7 @@ class DataStorageService {
   /**
    * Loads the base data for a specific data type from its JSON file.
    */
-  private async loadBaseDataForType(id: DataId): Promise<DataItem[]> {
+  public async loadBaseDataForType(id: DataId): Promise<DataItem[]> {
     // `settings` does not have a base data file.
     if (id === "settings") return [];
 
@@ -475,3 +516,6 @@ class DataStorageService {
  * Singleton instance of the DataStorageService.
  */
 export const DataStorage = new DataStorageService();
+
+// Re-export transfer utilities
+export * from "./transfer";
