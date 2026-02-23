@@ -9,7 +9,6 @@ import { List, Pencil, Star, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Pagination } from "@/components/ui/pagination";
 import {
@@ -20,6 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   Tooltip,
   TooltipContent,
@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/tooltip";
 import { DEFAULT_SKILLS_PER_PAGE, SKILL_CATEGORY_LABELS } from "@/constants";
 import { useSkills } from "@/hooks";
+import { cn } from "@/lib/utils";
 import { DataStorage } from "@/services/storage";
 import type { AppSettings, Skill, SkillCategory, SlotLevel } from "@/types";
 import { getAssetPath } from "@/utils";
@@ -108,16 +109,6 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
     setCurrentPage(1);
   };
 
-  const handleKeyOnlyFilterChange = (checked: boolean | "indeterminate") => {
-    setKeyOnlyFilter(checked === true);
-    setCurrentPage(1);
-  };
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-    setCurrentPage(1);
-  };
-
   const handleDelete = (skill: Skill) => {
     if (confirm(`确定要删除技能"${skill.name}"吗？`)) {
       deleteSkill(skill.id);
@@ -129,62 +120,94 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
       {/* MARK: Toolbar */}
       <div className="bg-card shrink-0 rounded-lg border p-2 shadow-sm sm:p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
-          <TooltipProvider>
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            {/* Group 1: Global Reset */}
+            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    variant={categoryFilter === "all" ? "default" : "outline"}
+                    variant="outline"
                     size="icon"
-                    onClick={() => handleCategoryChange("all")}
+                    onClick={() => {
+                      setCategoryFilter("all");
+                      setKeyOnlyFilter(false);
+                      setSearchQuery("");
+                      setCurrentPage(1);
+                    }}
+                    className="hover:bg-accent hover:text-accent-foreground h-9 w-9 shrink-0 p-0 transition-colors"
                   >
                     <List className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>
-                  <p>全部技能</p>
-                </TooltipContent>
+                <TooltipContent>全部技能</TooltipContent>
               </Tooltip>
+            </TooltipProvider>
+
+            <div className="bg-border mx-0.5 h-6 w-px shrink-0" />
+
+            {/* Group 2: Category Group */}
+            <ToggleGroup
+              type="single"
+              value={categoryFilter === "all" ? "" : categoryFilter}
+              onValueChange={(v) => {
+                if (v) handleCategoryChange(v as SkillCategory);
+                else handleCategoryChange("all");
+              }}
+              className="flex shrink-0 items-center gap-1.5 sm:gap-2"
+            >
               {(["weapon", "armor", "series", "group"] as SkillCategory[]).map(
                 (category) => (
-                  <Tooltip key={category}>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant={
-                          categoryFilter === category ? "default" : "outline"
-                        }
-                        size="icon"
-                        onClick={() => handleCategoryChange(category)}
-                      >
-                        <img
-                          src={getAssetPath(`/skill-category/${category}.png`)}
-                          alt={SKILL_CATEGORY_LABELS[category]}
-                          className="h-6 w-6"
-                        />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>{SKILL_CATEGORY_LABELS[category]}</p>
-                    </TooltipContent>
-                  </Tooltip>
+                  <ToggleGroupItem
+                    key={category}
+                    value={category}
+                    variant="outline"
+                    tooltip={SKILL_CATEGORY_LABELS[category]}
+                    className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary hover:bg-accent hover:text-accent-foreground h-9 w-9 shrink-0 p-0 transition-all"
+                  >
+                    <img
+                      src={getAssetPath(`/skill-category/${category}.png`)}
+                      alt={SKILL_CATEGORY_LABELS[category]}
+                      className="h-5 w-5 transition-all"
+                    />
+                  </ToggleGroupItem>
                 ),
               )}
-              <div className="w-2"></div>
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="key-only"
-                  checked={keyOnlyFilter}
-                  onCheckedChange={handleKeyOnlyFilterChange}
-                />
-                <label
-                  htmlFor="key-only"
-                  className="cursor-pointer text-xs sm:text-sm"
-                >
-                  仅核心技能
-                </label>
-              </div>
-            </div>
-          </TooltipProvider>
+            </ToggleGroup>
+
+            <div className="bg-border mx-0.5 h-6 w-px shrink-0" />
+
+            {/* Group 3: Key Skill Toggle */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant={keyOnlyFilter ? "default" : "outline"}
+                    size="icon"
+                    onClick={() => {
+                      setKeyOnlyFilter(!keyOnlyFilter);
+                      setCurrentPage(1);
+                    }}
+                    className={cn(
+                      "h-9 w-9 shrink-0 p-0 transition-all",
+                      keyOnlyFilter
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "hover:bg-accent hover:text-accent-foreground",
+                    )}
+                  >
+                    <Star
+                      className={cn(
+                        "h-4 w-4",
+                        keyOnlyFilter
+                          ? "fill-warning text-warning-foreground"
+                          : "fill-warning/20 text-warning",
+                      )}
+                    />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>核心技能</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
 
           <div className="flex items-center justify-end gap-4">
             <div className="text-muted-foreground text-sm">
@@ -195,7 +218,10 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
               placeholder="搜索技能名称..."
               className="h-9 max-w-40"
               value={searchQuery}
-              onChange={handleSearchChange}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
             />
             <Pagination
               currentPage={currentPage}

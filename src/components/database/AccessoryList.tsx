@@ -20,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   Tooltip,
   TooltipContent,
@@ -59,6 +60,7 @@ export function AccessoryList({
   const [typeFilter, setTypeFilter] = useState<"all" | "weapon" | "armor">(
     "all",
   );
+  const [levelFilter, setLevelFilter] = useState<"all" | number>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -90,6 +92,10 @@ export function AccessoryList({
       typeFilter !== "all" &&
       accessory.type !== typeFilter
     )
+      return false;
+
+    // Level filter from the top buttons.
+    if (levelFilter !== "all" && accessory.slotLevel !== levelFilter)
       return false;
 
     // Slot level filter: the level of the accessory must not be higher than the slot level.
@@ -129,94 +135,112 @@ export function AccessoryList({
       {/* MARK: Toolbar */}
       <div className="bg-card shrink-0 rounded-lg border p-2 shadow-sm sm:p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
-          <TooltipProvider>
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            {/* Group 1: Global Reset */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      setTypeFilter("all");
+                      setLevelFilter("all");
+                      setSearchQuery("");
+                      setCurrentPage(1);
+                    }}
+                    className="hover:bg-accent hover:text-accent-foreground h-9 w-9 transition-colors"
+                  >
+                    <List className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>全部装饰品</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <div className="bg-border mx-0.5 h-6 w-px shrink-0" />
+
+            {/* Group 2: Level Group */}
+            <ToggleGroup
+              type="single"
+              value={levelFilter === "all" ? "" : levelFilter.toString()}
+              onValueChange={(v) => {
+                if (v) setLevelFilter(parseInt(v));
+                else setLevelFilter("all");
+                setCurrentPage(1);
+              }}
+              className="gap-1.5 sm:gap-2"
+            >
+              {[1, 2, 3].map((level) => (
+                <ToggleGroupItem
+                  key={level}
+                  value={level.toString()}
+                  variant="outline"
+                  tooltip={`${level}级珠`}
+                  className={cn(
+                    "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary hover:bg-accent hover:text-accent-foreground h-9 w-9 text-xs font-black transition-all",
+                  )}
+                >
+                  {level === 1 ? "Ⅰ" : level === 2 ? "Ⅱ" : "Ⅲ"}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+
+            <div className="bg-border mx-0.5 h-6 w-px shrink-0" />
+
+            {/* Group 3: Type Group */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
               {filterBySlotType ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="default" size="icon" disabled>
-                      <img
-                        src={getAssetPath(
-                          filterBySlotType === "weapon"
-                            ? "/weapon.png"
-                            : "/armor.png",
-                        )}
-                        alt={filterBySlotType === "weapon" ? "武器" : "防具"}
-                        className="h-5 w-5"
-                      />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{filterBySlotType === "weapon" ? "武器珠" : "防具珠"}</p>
-                  </TooltipContent>
-                </Tooltip>
+                <div className="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center rounded-md border">
+                  <img
+                    src={getAssetPath(
+                      filterBySlotType === "weapon"
+                        ? "/weapon.png"
+                        : "/armor.png",
+                    )}
+                    alt={filterBySlotType === "weapon" ? "武器" : "防具"}
+                    className="h-5 w-5"
+                  />
+                </div>
               ) : (
-                <>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant={typeFilter === "all" ? "default" : "outline"}
-                        size="icon"
-                        onClick={() => {
-                          setTypeFilter("all");
-                          setCurrentPage(1);
-                        }}
-                      >
-                        <List className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>全部</p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant={
-                          typeFilter === "weapon" ? "default" : "outline"
-                        }
-                        size="icon"
-                        onClick={() => {
-                          setTypeFilter("weapon");
-                          setCurrentPage(1);
-                        }}
-                      >
-                        <img
-                          src={getAssetPath("/weapon.png")}
-                          alt="武器"
-                          className="h-5 w-5"
-                        />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>武器珠</p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant={typeFilter === "armor" ? "default" : "outline"}
-                        size="icon"
-                        onClick={() => {
-                          setTypeFilter("armor");
-                          setCurrentPage(1);
-                        }}
-                      >
-                        <img
-                          src={getAssetPath("/armor.png")}
-                          alt="防具"
-                          className="h-5 w-5"
-                        />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>防具珠</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </>
+                <ToggleGroup
+                  type="single"
+                  value={typeFilter === "all" ? "" : typeFilter}
+                  onValueChange={(v) => {
+                    if (v) setTypeFilter(v as "weapon" | "armor");
+                    else setTypeFilter("all");
+                    setCurrentPage(1);
+                  }}
+                  className="gap-1.5 sm:gap-2"
+                >
+                  <ToggleGroupItem
+                    value="weapon"
+                    variant="outline"
+                    tooltip="武器珠"
+                    className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary hover:bg-accent hover:text-accent-foreground h-9 w-9 shrink-0 p-0 transition-all"
+                  >
+                    <img
+                      src={getAssetPath("/weapon.png")}
+                      alt="武器"
+                      className="h-5 w-5 transition-all"
+                    />
+                  </ToggleGroupItem>
+                  <ToggleGroupItem
+                    value="armor"
+                    variant="outline"
+                    tooltip="防具珠"
+                    className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary hover:bg-accent hover:text-accent-foreground h-9 w-9 shrink-0 p-0 transition-all"
+                  >
+                    <img
+                      src={getAssetPath("/armor.png")}
+                      alt="防具"
+                      className="h-5 w-5 transition-all"
+                    />
+                  </ToggleGroupItem>
+                </ToggleGroup>
               )}
             </div>
-          </TooltipProvider>
+          </div>
 
           <div className="flex items-center justify-end gap-4">
             {/* Hide count information in selector mode. */}
@@ -227,7 +251,7 @@ export function AccessoryList({
             )}
             <Input
               type="text"
-              placeholder="搜索装饰品名称或技能..."
+              placeholder="搜索名称或技能..."
               className="h-9 max-w-40"
               value={searchQuery}
               onChange={(e) => {

@@ -86,7 +86,7 @@ export function CharmFilterBar({
                     <ListIcon className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>全部护石 (重置所有筛选)</TooltipContent>
+                <TooltipContent>全部护石</TooltipContent>
               </Tooltip>
             </TooltipProvider>
 
@@ -150,7 +150,7 @@ export function CharmFilterBar({
               <ToggleGroupItem
                 value="official"
                 variant="outline"
-                tooltip="仅官方护石"
+                tooltip="初始护石"
                 className="h-9 w-9 data-[state=on]:border-blue-600 data-[state=on]:bg-blue-600 data-[state=on]:text-white"
               >
                 <Anchor
@@ -162,7 +162,7 @@ export function CharmFilterBar({
               <ToggleGroupItem
                 value="custom"
                 variant="outline"
-                tooltip="仅自定义护石"
+                tooltip="收藏护石"
                 className="h-9 w-9 data-[state=on]:border-orange-600 data-[state=on]:bg-orange-600 data-[state=on]:text-white"
               >
                 <UserPlus
