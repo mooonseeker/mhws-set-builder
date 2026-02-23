@@ -19,7 +19,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { useCharms, useSkills } from "@/hooks";
 import type { Charm, Skill } from "@/types";
-import { isSuperior } from "@/utils";
+import { isOfficialCharmId, isSuperior } from "@/utils";
 
 /**
  * CharmOrganizer component provides an interface for batch management of charms.
@@ -47,25 +47,30 @@ export function CharmOrganizer() {
   // Stats for the header
   const totalCharms = enhancedCharms.length;
 
-  const handleOrganize = () => {
+  const handleOrganize = (shouldIgnoreOfficial: boolean) => {
     setIsProcessing(true);
     setProgress(0);
     setLastAction("一键整理");
 
     setTimeout(() => {
+      // Filter charms based on the provided setting
+      const pool = shouldIgnoreOfficial
+        ? enhancedCharms.filter((c) => !isOfficialCharmId(c.id))
+        : enhancedCharms;
+
       const found: { target: Charm; betterBy: Charm }[] = [];
-      for (let i = 0; i < enhancedCharms.length; i++) {
-        const candidate = enhancedCharms[i];
+      for (let i = 0; i < pool.length; i++) {
+        const candidate = pool[i];
         let superior: Charm | null = null;
-        for (let j = 0; j < enhancedCharms.length; j++) {
+        for (let j = 0; j < pool.length; j++) {
           if (i === j) continue;
-          if (isSuperior(enhancedCharms[j], candidate, skillMap)) {
-            superior = enhancedCharms[j];
+          if (isSuperior(pool[j], candidate, skillMap)) {
+            superior = pool[j];
             break;
           }
         }
         if (superior) found.push({ target: candidate, betterBy: superior });
-        if (i % 10 === 0) setProgress((i / enhancedCharms.length) * 100);
+        if (i % 10 === 0) setProgress((i / pool.length) * 100);
       }
       setInferiorCharms(found);
       setIsProcessing(false);
@@ -127,11 +132,11 @@ export function CharmOrganizer() {
         </DialogHeader>
 
         <div className="flex flex-1 flex-col gap-3 overflow-hidden px-3 py-0 2xl:gap-4 2xl:px-4 2xl:pb-4">
-          <div className="flex shrink-0 justify-center">
+          <div className="flex shrink-0 justify-center gap-4">
             <Button
               size="lg"
-              className="w-full max-w-md gap-2"
-              onClick={handleOrganize}
+              className="max-w-md flex-1 gap-2"
+              onClick={() => handleOrganize(true)}
               disabled={isProcessing}
             >
               {isProcessing ? (
@@ -139,7 +144,20 @@ export function CharmOrganizer() {
               ) : (
                 <Wand2 className="h-5 w-5" />
               )}
-              一键筛查下位护石
+              整理自定义护石
+            </Button>
+            <Button
+              size="lg"
+              className="max-w-md flex-1 gap-2"
+              onClick={() => handleOrganize(false)}
+              disabled={isProcessing}
+            >
+              {isProcessing ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <Wand2 className="h-5 w-5" />
+              )}
+              整理所有护石
             </Button>
           </div>
 

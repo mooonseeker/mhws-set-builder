@@ -15,7 +15,7 @@ import type {
   SortDirection,
 } from "@/types";
 import type { EquipmentCellType } from "@/types/set-builder";
-import { sortCharms } from "@/utils";
+import { isOfficialCharmId, sortCharms } from "@/utils";
 
 import { CharmFilterBar } from "./CharmFilterBar";
 import { CharmGallery } from "./CharmGallery";
@@ -49,6 +49,8 @@ export function CharmList({
 
   // Filter states
   const [selectedRarity, setSelectedRarity] = useState<"all" | number>("all");
+  const [isOfficialOnly, setIsOfficialOnly] = useState(false);
+  const [isCustomOnly, setIsCustomOnly] = useState(false);
   const [minKeySkillValue, setMinKeySkillValue] = useState<number | null>(null);
   const [filterSkillId, setFilterSkillId] = useState<string>("");
   const [isFilterVisible, setIsFilterVisible] = useState(false);
@@ -72,6 +74,16 @@ export function CharmList({
     // Filter by rarity
     if (selectedRarity !== "all") {
       filtered = filtered.filter((c) => c.rarity === selectedRarity);
+    }
+
+    // Filter by official status
+    if (isOfficialOnly) {
+      filtered = filtered.filter((c) => isOfficialCharmId(c.id));
+    }
+
+    // Filter by custom status
+    if (isCustomOnly) {
+      filtered = filtered.filter((c) => !isOfficialCharmId(c.id));
     }
 
     // Filter by minimum key skill value
@@ -107,6 +119,8 @@ export function CharmList({
   }, [
     enhancedCharms,
     selectedRarity,
+    isOfficialOnly,
+    isCustomOnly,
     minKeySkillValue,
     filterSkillId,
     searchQuery,
@@ -157,6 +171,18 @@ export function CharmList({
           setSelectedRarity(val);
           setCurrentPage(1);
         }}
+        isOfficialOnly={isOfficialOnly}
+        onOfficialOnlyChange={(val) => {
+          setIsOfficialOnly(val);
+          if (val) setIsCustomOnly(false); // Mutually exclusive
+          setCurrentPage(1);
+        }}
+        isCustomOnly={isCustomOnly}
+        onCustomOnlyChange={(val) => {
+          setIsCustomOnly(val);
+          if (val) setIsOfficialOnly(false); // Mutually exclusive
+          setCurrentPage(1);
+        }}
         searchQuery={searchQuery}
         onSearchChange={(val) => {
           setSearchQuery(val);
@@ -180,8 +206,11 @@ export function CharmList({
         }}
         onClearFilters={() => {
           setSelectedRarity("all");
+          setIsOfficialOnly(false);
+          setIsCustomOnly(false);
           setMinKeySkillValue(null);
           setFilterSkillId("all");
+          setSearchQuery("");
           setCurrentPage(1);
         }}
         showCount={mode !== "selector"}

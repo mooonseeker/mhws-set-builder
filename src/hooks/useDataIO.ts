@@ -162,9 +162,9 @@ export function useDataIO({ databaseItems }: UseDataIOProps) {
       const analysis = await analyzeImport(payload);
 
       // 2. Determine if we need a manual review
-      // High risk = version mismatch OR modified official entries OR deleted official entries
+      // We only force a review if official entries are modified or deleted.
+      // Version mismatch alone is acceptable if it's purely additive.
       const hasRisks =
-        analysis.isVersionMismatch ||
         analysis.validation.mismatched > 0 ||
         analysis.validation.missingOfficial > 0;
 
@@ -175,7 +175,7 @@ export function useDataIO({ databaseItems }: UseDataIOProps) {
           analysis,
         });
       } else {
-        // Low risk: proceed with standard confirmation
+        // Low risk (only additions, regardless of version): proceed with standard confirmation
         setDialogState({
           type: "confirm",
           title: `导入 "${itemName}" 数据`,

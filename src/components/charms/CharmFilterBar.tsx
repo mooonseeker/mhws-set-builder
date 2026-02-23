@@ -1,6 +1,5 @@
-import { List as ListIcon } from "lucide-react";
+import { Anchor, List as ListIcon, UserPlus } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   Tooltip,
   TooltipContent,
@@ -24,6 +24,10 @@ import { cn } from "@/lib/utils";
 interface CharmFilterBarProps {
   selectedRarity: "all" | number;
   onRarityChange: (rarity: "all" | number) => void;
+  isOfficialOnly: boolean;
+  onOfficialOnlyChange: (officialOnly: boolean) => void;
+  isCustomOnly: boolean;
+  onCustomOnlyChange: (customOnly: boolean) => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
   currentPage: number;
@@ -43,6 +47,10 @@ interface CharmFilterBarProps {
 export function CharmFilterBar({
   selectedRarity,
   onRarityChange,
+  isOfficialOnly,
+  onOfficialOnlyChange,
+  isCustomOnly,
+  onCustomOnlyChange,
   searchQuery,
   onSearchChange,
   currentPage,
@@ -64,56 +72,107 @@ export function CharmFilterBar({
     <>
       <div className="bg-card shrink-0 rounded-lg border p-2 shadow-sm sm:p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
-          <TooltipProvider>
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            {/* Group 1: Global Reset */}
+            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    variant={selectedRarity === "all" ? "default" : "outline"}
+                    variant="outline"
                     size="icon"
-                    onClick={() => onRarityChange("all")}
+                    onClick={onClearFilters}
+                    className="h-9 w-9"
                   >
                     <ListIcon className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>
-                  <p>全部护石</p>
-                </TooltipContent>
+                <TooltipContent>全部护石 (重置所有筛选)</TooltipContent>
               </Tooltip>
-              {([6, 7, 8] as const).map((rarity) => (
-                <Tooltip key={rarity}>
-                  <TooltipTrigger asChild>
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        "hover:bg-accent hover:text-accent-foreground flex h-9 w-9 cursor-pointer items-center justify-center text-xs transition-colors",
-                        selectedRarity === rarity &&
-                          "bg-primary text-primary-foreground hover:bg-primary/90",
-                      )}
-                      style={{
-                        color:
-                          selectedRarity === rarity
-                            ? undefined
-                            : `var(--rarity-${rarity})`,
-                        borderColor:
-                          selectedRarity === rarity
-                            ? undefined
-                            : `var(--rarity-${rarity})`,
-                        background:
-                          selectedRarity === rarity ? undefined : "transparent",
-                      }}
-                      onClick={() => onRarityChange(rarity)}
-                    >
-                      R{rarity}
-                    </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>R{rarity}护石</p>
-                  </TooltipContent>
-                </Tooltip>
+            </TooltipProvider>
+
+            <div className="bg-border mx-0.5 h-6 w-px shrink-0" />
+
+            {/* Group 2: Rarity Group */}
+            <ToggleGroup
+              type="single"
+              value={selectedRarity === "all" ? "" : selectedRarity.toString()}
+              onValueChange={(v) => {
+                if (v) onRarityChange(parseInt(v));
+                else onRarityChange("all");
+              }}
+              className="gap-1.5 sm:gap-2"
+            >
+              {[6, 7, 8].map((rarity) => (
+                <ToggleGroupItem
+                  key={rarity}
+                  value={rarity.toString()}
+                  variant="outline"
+                  tooltip={`R${rarity}护石`}
+                  className={cn(
+                    "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary h-9 w-9 text-xs font-black transition-all",
+                  )}
+                  style={{
+                    color:
+                      selectedRarity === rarity
+                        ? undefined
+                        : `var(--rarity-${rarity})`,
+                    borderColor:
+                      selectedRarity === rarity
+                        ? undefined
+                        : `var(--rarity-${rarity})`,
+                  }}
+                >
+                  R{rarity}
+                </ToggleGroupItem>
               ))}
-            </div>
-          </TooltipProvider>
+            </ToggleGroup>
+
+            <div className="bg-border mx-0.5 h-6 w-px shrink-0" />
+
+            {/* Group 3: Source Group */}
+            <ToggleGroup
+              type="single"
+              value={isOfficialOnly ? "official" : isCustomOnly ? "custom" : ""}
+              onValueChange={(v) => {
+                if (v === "official") {
+                  onOfficialOnlyChange(true);
+                  onCustomOnlyChange(false);
+                } else if (v === "custom") {
+                  onOfficialOnlyChange(false);
+                  onCustomOnlyChange(true);
+                } else {
+                  onOfficialOnlyChange(false);
+                  onCustomOnlyChange(false);
+                }
+              }}
+              className="gap-1.5 sm:gap-2"
+            >
+              <ToggleGroupItem
+                value="official"
+                variant="outline"
+                tooltip="仅官方护石"
+                className="h-9 w-9 data-[state=on]:border-blue-600 data-[state=on]:bg-blue-600 data-[state=on]:text-white"
+              >
+                <Anchor
+                  className={
+                    isOfficialOnly ? "h-4 w-4" : "h-4 w-4 text-blue-500"
+                  }
+                />
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                value="custom"
+                variant="outline"
+                tooltip="仅自定义护石"
+                className="h-9 w-9 data-[state=on]:border-orange-600 data-[state=on]:bg-orange-600 data-[state=on]:text-white"
+              >
+                <UserPlus
+                  className={
+                    isCustomOnly ? "h-4 w-4" : "h-4 w-4 text-orange-500"
+                  }
+                />
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
 
           <div className="flex items-center justify-end gap-4">
             {showCount && (
@@ -183,6 +242,8 @@ export function CharmFilterBar({
             </div>
           </div>
           {(selectedRarity !== "all" ||
+            isOfficialOnly ||
+            isCustomOnly ||
             minKeySkillValue !== null ||
             (filterSkillId && filterSkillId !== "all")) && (
             <Button variant="outline" size="sm" onClick={onClearFilters}>
