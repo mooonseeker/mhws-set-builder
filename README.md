@@ -2,11 +2,13 @@
 
 [![React](https://img.shields.io/badge/React-19.2-blue?logo=react)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-7.3-646CFF?logo=vite)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.2-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.5.6-orange)](package.json)
+[![Version](https://img.shields.io/badge/Version-1.7.2-orange)](package.json)
 
 **MHWS 配装器** 是一款专为《怪物猎人：荒野》(Monster Hunter Wilds) 打造的全功能配装系统。它结合了 **多阶段骨架搜索算法** 与直观的 UI 界面，旨在帮助猎人根据技能需求快速找到最优解。
+
+[![Live Demo](https://img.shields.io/badge/LIVE_DEMO-点击进入在线配装器-0083B7?style=for-the-badge&logo=googlechrome&logoColor=white)](https://mooonseeker.github.io/mhws-set-builder/)
 
 ---
 
@@ -31,6 +33,7 @@
 - **差分数据存储 (Differential Storage)**：采用 `Base Data + Delta` 架构。
   - **Base Data**: 官方基础数据（技能、装饰品、防具、武器、护石），由 CSV 脚本静态生成。
   - **Delta Data**: 用户自定义修改（新增自定义护石、调整装备属性等）以差分形式持久化于 `LocalStorage`。
+- **防具限界突破**：支持防具的限界突破（强化）系统，根据防具稀有度（Rarity 5/6）自动应用孔位升级规则。
 
 ### 📊 数据管理与交互
 
@@ -42,7 +45,7 @@
 ## 🛠️ 技术栈
 
 - **核心框架**: [`React 19.2.4`](https://react.dev/) + [`TypeScript 5.9.3`](https://www.typescriptlang.org/)
-- **UI 方案**: [`Tailwind CSS 4.1.18`](https://tailwindcss.com/) + [`shadcn/ui`](https://ui.shadcn.com/) (基于 Radix UI)
+- **UI 方案**: [`Tailwind CSS 4.2.1`](https://tailwindcss.com/) + [`shadcn/ui`](https://ui.shadcn.com/) (基于 Radix UI)
 - **状态管理**: 基于 Context API + `useReducer` 的领域驱动设计
 - **构建工具**: [`Vite 7.3.1`](https://vitejs.dev/)
 - **性能优化**: Web Worker (搜索算法离线化) + Zod 校验
