@@ -23,12 +23,14 @@ import {
  * Finds all combinations of armor pieces that provide a specific Series skill,
  * respecting already occupied armor slots.
  * @param requiredLevel The target level of the series skill (e.g., 5 for a 5-piece set bonus).
+ * @param skillId The ID of the series skill.
  * @param armorProvidersByPart A map of armor pieces that provide the skill, grouped by armor type.
  * @param occupiedTypes A set of armor types that are already part of the scaffold.
  * @returns An array of possible partial `EquipmentSet`s (scaffolds).
  */
 function findSeriesSkillCombosWithConstraints(
   requiredLevel: number,
+  skillId: string,
   armorProvidersByPart: Map<ArmorType, Armor[]>,
   occupiedTypes: Set<ArmorType>,
 ): EquipmentSet[] {
@@ -39,15 +41,15 @@ function findSeriesSkillCombosWithConstraints(
       !occupiedTypes.has(type),
   );
 
-  // Pruning: If the number of available armor types is less than the required level, it's impossible to satisfy.
-  if (availableTypes.length < requiredLevel) {
-    return [];
-  }
-
-  // Recursive function to generate all possible "part combinations".
-  const findPartCombos = (startIndex: number, currentCombo: ArmorType[]) => {
-    if (currentCombo.length === requiredLevel) {
-      // Once a valid combination of parts is found, generate all possible equipment sets for it.
+  // Recursive function to generate all possible "part combinations" that sum up to requiredLevel.
+  const findPartCombos = (
+    startIndex: number,
+    currentCombo: ArmorType[],
+    currentLevelSum: number,
+  ) => {
+    // Base Case: Requirement met.
+    if (currentLevelSum >= requiredLevel) {
+      // Generate all possible equipment sets for this specific combination of parts.
       generateEquipmentSetsForPartCombo(
         currentCombo,
         solutions,
@@ -59,13 +61,22 @@ function findSeriesSkillCombosWithConstraints(
     if (startIndex >= availableTypes.length) return;
 
     for (let i = startIndex; i < availableTypes.length; i++) {
-      currentCombo.push(availableTypes[i]);
-      findPartCombos(i + 1, currentCombo);
-      currentCombo.pop();
+      const type = availableTypes[i];
+      const armors = armorProvidersByPart.get(type) ?? [];
+      // Optimization: Assume all armors of the same type provide the same level of this series skill.
+      // In MHWS, this is virtually always true for series skills on the same armor set pieces.
+      const skillLevel =
+        armors[0].skills.find((s) => s.skillId === skillId)?.level ?? 0;
+
+      if (skillLevel > 0) {
+        currentCombo.push(type);
+        findPartCombos(i + 1, currentCombo, currentLevelSum + skillLevel);
+        currentCombo.pop();
+      }
     }
   };
 
-  findPartCombos(0, []);
+  findPartCombos(0, [], 0);
   return solutions;
 }
 
@@ -85,7 +96,7 @@ function generateEquipmentSetsForPartCombo(
 
     for (const armor of armorsForType) {
       for (const solution of currentSolutions) {
-        const newSolution = cloneDeep(solution);
+        const newSolution = { ...solution };
         newSolution[type] = { equipment: armor, accessories: [] };
         nextSolutions.push(newSolution);
       }
@@ -209,6 +220,7 @@ function resolveCombinedSeriesScaffolds(
   seriesSkills: SkillWithLevel[],
   preprocessedData: PreprocessedData,
   occupiedTypes: Set<ArmorType>,
+  initialSkills: Map<string, number>,
 ): EquipmentSet[] {
   const finalScaffolds: EquipmentSet[] = [];
 
@@ -234,25 +246,30 @@ function resolveCombinedSeriesScaffolds(
 
     const currentSkill = sortedSeriesSkills[skillIndex];
 
-    // Calculate how many levels of the current series skill are already provided by the current scaffold.
-    // In MHWS, one piece of armor typically provides 1 level of its series skill(s).
-    let levelsFromScaffold = 0;
+    // Calculate how many levels of the current series skill are already provided.
+    // 1. Levels from fixed equipment (weapon, charm, etc.) provided via initialSkills.
+    let levelsProvided = initialSkills.get(currentSkill.skillId) ?? 0;
+
+    // 2. Levels from armor pieces already added to the scaffold.
     (
       Object.values(currentScaffold) as (
         | SlottedEquipment<Equipment>
         | undefined
       )[]
     ).forEach((item) => {
-      if (
-        item?.equipment.skills.some((s) => s.skillId === currentSkill.skillId)
-      ) {
-        levelsFromScaffold += 1;
+      if (item) {
+        const skillOnPiece = item.equipment.skills.find(
+          (s) => s.skillId === currentSkill.skillId,
+        );
+        if (skillOnPiece) {
+          levelsProvided += skillOnPiece.level;
+        }
       }
     });
 
-    const neededLevel = Math.max(0, currentSkill.level - levelsFromScaffold);
+    const neededLevel = Math.max(0, currentSkill.level - levelsProvided);
 
-    // If the requirement is already met by the pieces picked for previous skills, move to the next skill.
+    // If the requirement is already met, move to the next skill.
     if (neededLevel === 0) {
       findCombosRecursive(
         skillIndex + 1,
@@ -275,6 +292,7 @@ function resolveCombinedSeriesScaffolds(
     // Find "incremental scaffolds" for the current skill, respecting occupied slots.
     const incrementalScaffolds = findSeriesSkillCombosWithConstraints(
       neededLevel,
+      currentSkill.skillId,
       providersByPart,
       currentOccupiedTypes,
     );
@@ -321,10 +339,12 @@ export function generateArmorScaffolds(
   // Case 1: There are Series skill requirements.
   if (seriesSkills.length > 0) {
     // 1a. Generate all base scaffolds that satisfy the Series skills.
+    // Pass context.currentSkills to account for weapon/charm contributions.
     const baseScaffolds = resolveCombinedSeriesScaffolds(
       seriesSkills,
       preprocessedData,
       occupiedTypesFromContext,
+      context.currentSkills,
     );
 
     // 1b. For each base scaffold, validate and supplement with Group skills.
@@ -346,18 +366,13 @@ export function generateArmorScaffolds(
         if (!item) return;
         const { equipment } = item;
 
-        if (
-          equipment &&
-          "type" in equipment &&
-          ARMOR_TYPES.includes((equipment as Armor).type)
-        ) {
-          equipment.skills.forEach((skill: SkillWithLevel) => {
-            if (requiredGroupSkillIds.has(skill.skillId)) {
-              const existing = currentGroupLevels.get(skill.skillId) ?? 0;
-              currentGroupLevels.set(skill.skillId, existing + skill.level);
-            }
-          });
-        }
+        // Count skills from all equipment (including fixed weapon/charm).
+        equipment.skills.forEach((skill: SkillWithLevel) => {
+          if (requiredGroupSkillIds.has(skill.skillId)) {
+            const existing = currentGroupLevels.get(skill.skillId) ?? 0;
+            currentGroupLevels.set(skill.skillId, existing + skill.level);
+          }
+        });
       });
 
       // Filter for Group skills that are still not met.
@@ -394,8 +409,20 @@ export function generateArmorScaffolds(
   }
   // Case 2: Only Group skill requirements exist.
   else if (groupSkills.length > 0) {
+    // For group skills, we also need to account for initial levels.
+    const remainingGroupDeficits = groupSkills
+      .map((target) => ({
+        skillId: target.skillId,
+        level: target.level - (context.currentSkills.get(target.skillId) ?? 0),
+      }))
+      .filter((skill) => skill.level > 0);
+
+    if (remainingGroupDeficits.length === 0) {
+      return [{}]; // All met.
+    }
+
     return findGroupSkillCombos(
-      groupSkills,
+      remainingGroupDeficits,
       preprocessedData,
       occupiedTypesFromContext,
     );

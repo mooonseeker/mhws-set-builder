@@ -249,6 +249,13 @@ export const findOptimalSets = (
           }
         }
 
+        // Re-calculate deficits after applying weapon accessories.
+        // This ensures the scaffold generator and later armor search know exactly what's left.
+        branchContext.skillDeficits = categorizeTargetSkills(
+          requiredSkills,
+          preprocessedData.skillDetails,
+        );
+
         // 3d. Generate armor scaffolds.
         console.log(
           `  -> Generating armor scaffolds for charm ${charm.id} with weapon skill solution...`,
