@@ -53,6 +53,7 @@ export function SkillSelector({
           className="h-10 pl-9"
           onKeyDown={(e) => {
             if (e.key === "Enter" && selectedSkillId) {
+              e.preventDefault();
               handleAdd();
             }
           }}
@@ -62,6 +63,7 @@ export function SkillSelector({
             {availableSkills.map((skill) => (
               <button
                 key={skill.id}
+                type="button"
                 className="hover:bg-accent w-full px-3 py-2 text-left"
                 onClick={() => {
                   setSelectedSkillId(skill.id);
@@ -75,7 +77,12 @@ export function SkillSelector({
         )}
       </div>
 
-      <Button onClick={handleAdd} disabled={!selectedSkillId} className="h-10">
+      <Button
+        type="button"
+        onClick={handleAdd}
+        disabled={!selectedSkillId}
+        className="h-10"
+      >
         添加
       </Button>
     </div>

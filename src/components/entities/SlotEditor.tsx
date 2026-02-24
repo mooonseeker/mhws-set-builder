@@ -83,7 +83,12 @@ export function SlotEditor({
             </SelectContent>
           </Select>
 
-          <Button variant="ghost" size="sm" onClick={() => onRemove(index)}>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => onRemove(index)}
+          >
             <X className="h-4 w-4" />
           </Button>
         </div>
@@ -100,7 +105,12 @@ export function SlotEditor({
       ))}
 
       {/* Add slot button */}
-      <Button variant="outline" onClick={onAdd} className="w-full">
+      <Button
+        type="button"
+        variant="outline"
+        onClick={onAdd}
+        className="w-full"
+      >
         添加孔位
       </Button>
     </div>

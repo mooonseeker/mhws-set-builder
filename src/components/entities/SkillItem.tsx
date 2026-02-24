@@ -162,6 +162,7 @@ export function SkillItem({
           {canInteract ? (
             <div className="flex items-center gap-1">
               <Button
+                type="button"
                 size="icon"
                 variant="outline"
                 className={btnSizeClass}
@@ -185,6 +186,7 @@ export function SkillItem({
                 {levelDisplay}
               </span>
               <Button
+                type="button"
                 size="icon"
                 variant="outline"
                 className={btnSizeClass}

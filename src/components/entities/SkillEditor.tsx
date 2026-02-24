@@ -145,6 +145,7 @@ export function SkillEditor({
               />
             </div>
             <Button
+              type="button"
               variant="ghost"
               size={variant === "compact" ? "icon" : "sm"}
               className={cn("shrink-0", variant === "compact" && "h-6 w-6")}
