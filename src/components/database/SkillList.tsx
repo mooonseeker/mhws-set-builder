@@ -5,11 +5,11 @@
 
 import { useState } from "react";
 
-import { List, Pencil, Star, Trash2 } from "lucide-react";
+import { Pencil, Star, Trash2 } from "lucide-react";
 
+import { FilterBar } from "@/components/common";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Pagination } from "@/components/ui/pagination";
 import {
   Table,
@@ -19,13 +19,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { ToggleGroup } from "@/components/ui/toggle-group";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { DEFAULT_SKILLS_PER_PAGE, SKILL_CATEGORY_LABELS } from "@/constants";
 import { useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
@@ -118,32 +113,21 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
   return (
     <div className="flex h-full flex-col gap-6">
       {/* MARK: Toolbar */}
-      <div className="bg-card shrink-0 rounded-lg border p-2 shadow-sm sm:p-4">
-        <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+      <FilterBar.Root>
+        <TooltipProvider>
+          <FilterBar.Section>
             {/* Group 1: Global Reset */}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                      setCategoryFilter("all");
-                      setKeyOnlyFilter(false);
-                      setSearchQuery("");
-                      setCurrentPage(1);
-                    }}
-                    className="hover:bg-accent hover:text-accent-foreground h-9 w-9 shrink-0 p-0 transition-colors"
-                  >
-                    <List className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>全部技能</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <FilterBar.Reset
+              onClick={() => {
+                setCategoryFilter("all");
+                setKeyOnlyFilter(false);
+                setSearchQuery("");
+                setCurrentPage(1);
+              }}
+              tooltip="全部技能"
+            />
 
-            <div className="bg-border mx-0.5 h-6 w-px shrink-0" />
+            <FilterBar.Separator />
 
             {/* Group 2: Category Group */}
             <ToggleGroup
@@ -157,66 +141,45 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
             >
               {(["weapon", "armor", "series", "group"] as SkillCategory[]).map(
                 (category) => (
-                  <ToggleGroupItem
+                  <FilterBar.ToggleItem
                     key={category}
                     value={category}
-                    variant="outline"
                     tooltip={SKILL_CATEGORY_LABELS[category]}
-                    className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary hover:bg-accent hover:text-accent-foreground h-9 w-9 shrink-0 p-0 transition-all"
                   >
-                    <img
+                    <FilterBar.Icon
                       src={getAssetPath(`/skill-category/${category}.png`)}
-                      alt={SKILL_CATEGORY_LABELS[category]}
-                      className="h-5 w-5 transition-all"
                     />
-                  </ToggleGroupItem>
+                  </FilterBar.ToggleItem>
                 ),
               )}
             </ToggleGroup>
 
-            <div className="bg-border mx-0.5 h-6 w-px shrink-0" />
+            <FilterBar.Separator />
 
             {/* Group 3: Key Skill Toggle */}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant={keyOnlyFilter ? "default" : "outline"}
-                    size="icon"
-                    onClick={() => {
-                      setKeyOnlyFilter(!keyOnlyFilter);
-                      setCurrentPage(1);
-                    }}
-                    className={cn(
-                      "h-9 w-9 shrink-0 p-0 transition-all",
-                      keyOnlyFilter
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "hover:bg-accent hover:text-accent-foreground",
-                    )}
-                  >
-                    <Star
-                      className={cn(
-                        "h-4 w-4",
-                        keyOnlyFilter
-                          ? "fill-warning text-warning-foreground"
-                          : "fill-warning/20 text-warning",
-                      )}
-                    />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>核心技能</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+            <FilterBar.Button
+              isSelected={keyOnlyFilter}
+              onClick={() => {
+                setKeyOnlyFilter(!keyOnlyFilter);
+                setCurrentPage(1);
+              }}
+              tooltip="核心技能"
+            >
+              <Star
+                className={cn(
+                  "h-4 w-4",
+                  keyOnlyFilter
+                    ? "fill-warning text-warning-foreground"
+                    : "fill-warning/20 text-warning",
+                )}
+              />
+            </FilterBar.Button>
+          </FilterBar.Section>
 
-          <div className="flex items-center justify-end gap-4">
-            <div className="text-muted-foreground text-sm">
-              共 {filteredSkills.length} 个技能
-            </div>
-            <Input
-              type="text"
+          <FilterBar.Section className="justify-end gap-4">
+            <FilterBar.Count count={filteredSkills.length} label="个技能" />
+            <FilterBar.Search
               placeholder="搜索技能名称..."
-              className="h-9 max-w-40"
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -228,9 +191,9 @@ export function SkillList({ onEdit, isLocked }: SkillListProps) {
               totalPages={totalPages}
               onPageChange={setCurrentPage}
             />
-          </div>
-        </div>
-      </div>
+          </FilterBar.Section>
+        </TooltipProvider>
+      </FilterBar.Root>
 
       {/* MARK: Skills Table */}
       <div className="bg-card min-h-0 flex-1 rounded-lg border shadow-sm">

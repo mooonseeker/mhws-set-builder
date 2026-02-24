@@ -7,11 +7,10 @@ import { useCallback, useMemo, useState } from "react";
 
 import { Edit } from "lucide-react";
 
-import { ErrorMessage, Loading } from "@/components/common";
+import { ErrorMessage, FilterBar, Loading } from "@/components/common";
 import { EquipmentCard } from "@/components/entities";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Pagination } from "@/components/ui/pagination";
 import {
   Table,
@@ -21,12 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { DEFAULT_ARMOR_SERIES_PER_PAGE, RARITY_FILTERS } from "@/constants";
 import { useArmor, useMediaQuery, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
@@ -229,7 +223,7 @@ export function ArmorList({
           {mode === "display" && onEdit && !isLocked && (
             <Button
               variant="ghost"
-              size="icon"
+              size="sm"
               className="absolute top-1 right-1 h-7 w-7 opacity-0 transition-opacity group-hover:opacity-100"
               onClick={(e) => {
                 e.stopPropagation();
@@ -268,42 +262,48 @@ export function ArmorList({
   return (
     <div className="flex h-full flex-col gap-6">
       {/* MARK: Toolbar */}
-      <div className="bg-card shrink-0 rounded-lg border p-2 shadow-sm sm:p-4">
-        <div className="flex flex-nowrap items-center justify-between gap-2 sm:gap-3">
-          <TooltipProvider>
+      <FilterBar.Root>
+        <TooltipProvider>
+          <FilterBar.Section>
+            {/* Group 1: Reset */}
+            <FilterBar.Reset
+              onClick={() => {
+                setSelectedRarity("all");
+                setSearchQuery("");
+              }}
+              tooltip="全部防具"
+            />
+
+            <FilterBar.Separator />
+
+            {/* Group 2: Rarity Filter */}
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               {RARITY_FILTERS.map(({ value, icon: Icon, label }) => (
-                <Tooltip key={value}>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant={selectedRarity === value ? "default" : "outline"}
-                      size="icon"
-                      onClick={() => {
-                        setSelectedRarity(value);
-                        setCurrentPage(1);
-                      }}
-                    >
-                      <Icon className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{label}</p>
-                  </TooltipContent>
-                </Tooltip>
+                <FilterBar.Button
+                  key={value}
+                  isSelected={selectedRarity === value}
+                  onClick={() => {
+                    setSelectedRarity(value);
+                    setCurrentPage(1);
+                  }}
+                  tooltip={label}
+                >
+                  <Icon className="h-4 w-4" />
+                </FilterBar.Button>
               ))}
             </div>
-          </TooltipProvider>
+          </FilterBar.Section>
 
-          <div className="flex items-center justify-end gap-4">
+          <FilterBar.Section className="justify-end gap-4">
             {mode !== "selector" && (
-              <div className="text-muted-foreground text-sm whitespace-nowrap">
-                共 {filteredAndPaginatedArmor.totalCount} 个防具系列
-              </div>
+              <FilterBar.Count
+                count={filteredAndPaginatedArmor.totalCount}
+                label="个防具系列"
+              />
             )}
-            <Input
-              type="text"
+            <FilterBar.Search
               placeholder="搜索系列、防具或技能..."
-              className="h-9 max-w-64 flex-1"
+              className="max-w-64"
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -315,9 +315,9 @@ export function ArmorList({
               totalPages={filteredAndPaginatedArmor.totalPages}
               onPageChange={setCurrentPage}
             />
-          </div>
-        </div>
-      </div>
+          </FilterBar.Section>
+        </TooltipProvider>
+      </FilterBar.Root>
 
       {/* MARK: Armor Table */}
       <div className="bg-card min-h-0 flex-1 rounded-lg border shadow-sm">

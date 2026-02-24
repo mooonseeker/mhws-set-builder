@@ -1,5 +1,6 @@
-import { Anchor, List as ListIcon, UserPlus } from "lucide-react";
+import { Anchor, SlidersHorizontal, UserPlus } from "lucide-react";
 
+import { FilterBar } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,13 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { ToggleGroup } from "@/components/ui/toggle-group";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
 
@@ -70,27 +66,13 @@ export function CharmFilterBar({
 
   return (
     <>
-      <div className="bg-card shrink-0 rounded-lg border p-2 shadow-sm sm:p-4">
-        <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+      <FilterBar.Root>
+        <TooltipProvider>
+          <FilterBar.Section>
             {/* Group 1: Global Reset */}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={onClearFilters}
-                    className="h-9 w-9"
-                  >
-                    <ListIcon className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>全部护石</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <FilterBar.Reset onClick={onClearFilters} tooltip="全部护石" />
 
-            <div className="bg-border mx-0.5 h-6 w-px shrink-0" />
+            <FilterBar.Separator />
 
             {/* Group 2: Rarity Group */}
             <ToggleGroup
@@ -103,14 +85,11 @@ export function CharmFilterBar({
               className="gap-1.5 sm:gap-2"
             >
               {[6, 7, 8].map((rarity) => (
-                <ToggleGroupItem
+                <FilterBar.ToggleItem
                   key={rarity}
                   value={rarity.toString()}
-                  variant="outline"
                   tooltip={`R${rarity}护石`}
-                  className={cn(
-                    "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary h-9 w-9 text-xs font-black transition-all",
-                  )}
+                  className="text-xs font-black"
                   style={{
                     color:
                       selectedRarity === rarity
@@ -123,11 +102,11 @@ export function CharmFilterBar({
                   }}
                 >
                   R{rarity}
-                </ToggleGroupItem>
+                </FilterBar.ToggleItem>
               ))}
             </ToggleGroup>
 
-            <div className="bg-border mx-0.5 h-6 w-px shrink-0" />
+            <FilterBar.Separator />
 
             {/* Group 3: Source Group */}
             <ToggleGroup
@@ -147,111 +126,98 @@ export function CharmFilterBar({
               }}
               className="gap-1.5 sm:gap-2"
             >
-              <ToggleGroupItem
-                value="official"
-                variant="outline"
-                tooltip="初始护石"
-                className="h-9 w-9 data-[state=on]:border-blue-600 data-[state=on]:bg-blue-600 data-[state=on]:text-white"
-              >
+              <FilterBar.ToggleItem value="official" tooltip="初始护石">
                 <Anchor
-                  className={
-                    isOfficialOnly ? "h-4 w-4" : "h-4 w-4 text-blue-500"
-                  }
+                  className={cn(
+                    "h-4 w-4 transition-colors",
+                    !isOfficialOnly && "text-blue-500",
+                  )}
                 />
-              </ToggleGroupItem>
-              <ToggleGroupItem
-                value="custom"
-                variant="outline"
-                tooltip="收藏护石"
-                className="h-9 w-9 data-[state=on]:border-orange-600 data-[state=on]:bg-orange-600 data-[state=on]:text-white"
-              >
+              </FilterBar.ToggleItem>
+              <FilterBar.ToggleItem value="custom" tooltip="收藏护石">
                 <UserPlus
-                  className={
-                    isCustomOnly ? "h-4 w-4" : "h-4 w-4 text-orange-500"
-                  }
+                  className={cn(
+                    "h-4 w-4 transition-colors",
+                    !isCustomOnly && "text-orange-500",
+                  )}
                 />
-              </ToggleGroupItem>
+              </FilterBar.ToggleItem>
             </ToggleGroup>
-          </div>
 
-          <div className="flex items-center justify-end gap-4">
-            {showCount && (
-              <div className="text-muted-foreground text-sm">
-                共 {totalCount} 个护石
-              </div>
-            )}
-            <Input
-              type="text"
+            <FilterBar.Separator />
+
+            {/* Group 4: Advanced Filter Toggle */}
+            <FilterBar.Button
+              isSelected={isFilterVisible}
+              onClick={onToggleFilter}
+              tooltip="进阶筛选"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+            </FilterBar.Button>
+          </FilterBar.Section>
+
+          <FilterBar.Section className="justify-end gap-4">
+            {showCount && <FilterBar.Count count={totalCount} label="个护石" />}
+            <FilterBar.Search
               placeholder="搜索技能名称..."
-              className="h-9 max-w-40"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
             />
-
-            <Button
-              variant={isFilterVisible ? "secondary" : "outline"}
-              size="sm"
-              onClick={onToggleFilter}
-            >
-              筛选
-            </Button>
 
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={onPageChange}
             />
-          </div>
-        </div>
-      </div>
+          </FilterBar.Section>
+        </TooltipProvider>
+      </FilterBar.Root>
 
       {/* Collapsible filter section */}
-      {isFilterVisible && (
-        <div className="bg-muted shrink-0 space-y-4 rounded-lg p-4 sm:p-6">
-          <h3 className="text-base font-medium sm:text-lg">筛选条件</h3>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
-            <div className="space-y-3">
-              <Label className="text-sm font-medium">最小核心技能价值</Label>
-              <Input
-                type="number"
-                min={0}
-                placeholder="0+"
-                value={minKeySkillValue ?? ""}
-                onChange={(e) =>
-                  onMinKeySkillValueChange(
-                    e.target.value ? parseInt(e.target.value) : null,
-                  )
-                }
-              />
-            </div>
-            <div className="space-y-3">
-              <Label className="text-sm font-medium">包含技能</Label>
-              <Select value={filterSkillId} onValueChange={onFilterSkillChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="全部技能" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">全部技能</SelectItem>
-                  {skills.map((skill) => (
-                    <SelectItem key={skill.id} value={skill.id}>
-                      {skill.name} {isKeySkill(skill.id) && "⭐"}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+      <FilterBar.Collapsible isVisible={isFilterVisible}>
+        <h3 className="text-base font-medium sm:text-lg">筛选条件</h3>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+          <div className="space-y-3">
+            <Label className="text-sm font-medium">最小核心技能价值</Label>
+            <Input
+              type="number"
+              min={0}
+              placeholder="0+"
+              value={minKeySkillValue ?? ""}
+              onChange={(e) =>
+                onMinKeySkillValueChange(
+                  e.target.value ? parseInt(e.target.value) : null,
+                )
+              }
+            />
           </div>
-          {(selectedRarity !== "all" ||
-            isOfficialOnly ||
-            isCustomOnly ||
-            minKeySkillValue !== null ||
-            (filterSkillId && filterSkillId !== "all")) && (
-            <Button variant="outline" size="sm" onClick={onClearFilters}>
-              清除筛选
-            </Button>
-          )}
+          <div className="space-y-3">
+            <Label className="text-sm font-medium">包含技能</Label>
+            <Select value={filterSkillId} onValueChange={onFilterSkillChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="全部技能" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">全部技能</SelectItem>
+                {skills.map((skill) => (
+                  <SelectItem key={skill.id} value={skill.id}>
+                    {skill.name} {isKeySkill(skill.id) && "⭐"}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-      )}
+        {(selectedRarity !== "all" ||
+          isOfficialOnly ||
+          isCustomOnly ||
+          minKeySkillValue !== null ||
+          (filterSkillId && filterSkillId !== "all")) && (
+          <Button variant="outline" size="sm" onClick={onClearFilters}>
+            清除筛选
+          </Button>
+        )}
+      </FilterBar.Collapsible>
     </>
   );
 }

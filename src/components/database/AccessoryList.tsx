@@ -5,12 +5,12 @@
 
 import { useState } from "react";
 
-import { List, Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 
+import { FilterBar } from "@/components/common";
 import { SkillItem } from "@/components/entities/";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Pagination } from "@/components/ui/pagination";
 import {
   Table,
@@ -20,13 +20,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { ToggleGroup } from "@/components/ui/toggle-group";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { DEFAULT_ACCESSORIES_PER_PAGE } from "@/constants";
 import { useAccessories, useSkills } from "@/hooks";
 import { cn } from "@/lib/utils";
@@ -133,32 +128,21 @@ export function AccessoryList({
   return (
     <div className="flex h-full flex-col gap-6">
       {/* MARK: Toolbar */}
-      <div className="bg-card shrink-0 rounded-lg border p-2 shadow-sm sm:p-4">
-        <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+      <FilterBar.Root>
+        <TooltipProvider>
+          <FilterBar.Section>
             {/* Group 1: Global Reset */}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                      setTypeFilter("all");
-                      setLevelFilter("all");
-                      setSearchQuery("");
-                      setCurrentPage(1);
-                    }}
-                    className="hover:bg-accent hover:text-accent-foreground h-9 w-9 transition-colors"
-                  >
-                    <List className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>全部装饰品</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <FilterBar.Reset
+              onClick={() => {
+                setTypeFilter("all");
+                setLevelFilter("all");
+                setSearchQuery("");
+                setCurrentPage(1);
+              }}
+              tooltip="全部装饰品"
+            />
 
-            <div className="bg-border mx-0.5 h-6 w-px shrink-0" />
+            <FilterBar.Separator />
 
             {/* Group 2: Level Group */}
             <ToggleGroup
@@ -169,37 +153,33 @@ export function AccessoryList({
                 else setLevelFilter("all");
                 setCurrentPage(1);
               }}
-              className="gap-1.5 sm:gap-2"
+              className="flex shrink-0 items-center gap-1.5 sm:gap-2"
             >
               {[1, 2, 3].map((level) => (
-                <ToggleGroupItem
+                <FilterBar.ToggleItem
                   key={level}
                   value={level.toString()}
-                  variant="outline"
                   tooltip={`${level}级珠`}
-                  className={cn(
-                    "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary hover:bg-accent hover:text-accent-foreground h-9 w-9 text-xs font-black transition-all",
-                  )}
+                  className="text-xs font-black"
                 >
                   {level === 1 ? "Ⅰ" : level === 2 ? "Ⅱ" : "Ⅲ"}
-                </ToggleGroupItem>
+                </FilterBar.ToggleItem>
               ))}
             </ToggleGroup>
 
-            <div className="bg-border mx-0.5 h-6 w-px shrink-0" />
+            <FilterBar.Separator />
 
             {/* Group 3: Type Group */}
             <div className="flex items-center gap-1.5 sm:gap-2">
               {filterBySlotType ? (
                 <div className="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center rounded-md border">
-                  <img
+                  <FilterBar.Icon
                     src={getAssetPath(
                       filterBySlotType === "weapon"
                         ? "/weapon.png"
                         : "/armor.png",
                     )}
                     alt={filterBySlotType === "weapon" ? "武器" : "防具"}
-                    className="h-5 w-5"
                   />
                 </div>
               ) : (
@@ -211,48 +191,35 @@ export function AccessoryList({
                     else setTypeFilter("all");
                     setCurrentPage(1);
                   }}
-                  className="gap-1.5 sm:gap-2"
+                  className="flex shrink-0 items-center gap-1.5 sm:gap-2"
                 >
-                  <ToggleGroupItem
-                    value="weapon"
-                    variant="outline"
-                    tooltip="武器珠"
-                    className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary hover:bg-accent hover:text-accent-foreground h-9 w-9 shrink-0 p-0 transition-all"
-                  >
-                    <img
+                  <FilterBar.ToggleItem value="weapon" tooltip="武器珠">
+                    <FilterBar.Icon
                       src={getAssetPath("/weapon.png")}
                       alt="武器"
-                      className="h-5 w-5 transition-all"
                     />
-                  </ToggleGroupItem>
-                  <ToggleGroupItem
-                    value="armor"
-                    variant="outline"
-                    tooltip="防具珠"
-                    className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary hover:bg-accent hover:text-accent-foreground h-9 w-9 shrink-0 p-0 transition-all"
-                  >
-                    <img
+                  </FilterBar.ToggleItem>
+                  <FilterBar.ToggleItem value="armor" tooltip="防具珠">
+                    <FilterBar.Icon
                       src={getAssetPath("/armor.png")}
                       alt="防具"
-                      className="h-5 w-5 transition-all"
                     />
-                  </ToggleGroupItem>
+                  </FilterBar.ToggleItem>
                 </ToggleGroup>
               )}
             </div>
-          </div>
+          </FilterBar.Section>
 
-          <div className="flex items-center justify-end gap-4">
+          <FilterBar.Section className="justify-end gap-4">
             {/* Hide count information in selector mode. */}
             {mode !== "selector" && (
-              <div className="text-muted-foreground text-sm">
-                共 {filteredAccessories.length} 种装饰品
-              </div>
+              <FilterBar.Count
+                count={filteredAccessories.length}
+                label="种装饰品"
+              />
             )}
-            <Input
-              type="text"
+            <FilterBar.Search
               placeholder="搜索名称或技能..."
-              className="h-9 max-w-40"
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -264,9 +231,9 @@ export function AccessoryList({
               totalPages={totalPages}
               onPageChange={setCurrentPage}
             />
-          </div>
-        </div>
-      </div>
+          </FilterBar.Section>
+        </TooltipProvider>
+      </FilterBar.Root>
 
       {/* MARK: Accessory Table */}
       <div className="bg-card min-h-0 flex-1 rounded-lg border shadow-sm">

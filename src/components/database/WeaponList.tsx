@@ -7,9 +7,9 @@ import { useMemo, useState } from "react";
 
 import { Edit } from "lucide-react";
 
+import { FilterBar } from "@/components/common";
 import { EquipmentCard } from "@/components/entities/";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -18,13 +18,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { ToggleGroup } from "@/components/ui/toggle-group";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { RARITY_FILTERS, WEAPON_TYPE_LABELS } from "@/constants";
 import { useSettings, useWeapon } from "@/hooks";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -142,70 +137,70 @@ export function WeaponList({
   return (
     <div className="flex h-full flex-col gap-4">
       {/* MARK: Toolbar */}
-      <div className="bg-card shrink-0 rounded-lg border p-2 shadow-sm sm:p-4">
+      <FilterBar.Root>
         <TooltipProvider>
-          <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
-            {/* Weapon type toggle */}
+          <FilterBar.Section className="w-full">
+            {/* Left side: Weapon type toggle - Using 'contents' for fluid wrapping */}
             <ToggleGroup
               type="single"
               value={selectedWeaponType}
               onValueChange={(value) =>
                 value && setSelectedWeaponType(value as WeaponType)
               }
-              className="flex-wrap justify-start"
+              className="contents"
             >
               {WEAPON_TYPES.map((type) => (
-                <ToggleGroupItem
+                <FilterBar.ToggleItem
                   key={type}
                   value={type}
                   tooltip={WEAPON_TYPE_LABELS[type]}
-                  className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground hover:bg-accent hover:text-accent-foreground"
                 >
-                  <img
+                  <FilterBar.Icon
                     src={getAssetPath(`/weapon-type/${type}.png`)}
-                    alt={type}
-                    className="h-6 w-6"
                   />
-                </ToggleGroupItem>
+                </FilterBar.ToggleItem>
               ))}
             </ToggleGroup>
 
-            {/* Right-side group: Rarity filter + Search input */}
-            <div className="flex items-center gap-2">
-              {/* Rarity filter */}
-              <div className="flex items-center gap-2">
+            {/* Right side: Reset | Rarity | Search - Pushed to the right */}
+            <div className="ms-auto flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <FilterBar.Reset
+                onClick={() => {
+                  setSelectedRarity("all");
+                  setSearchQuery("");
+                }}
+                tooltip="全部武器"
+              />
+
+              <FilterBar.Separator />
+
+              {/* Rarity Filter */}
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 {RARITY_FILTERS.map(({ value, icon: Icon, label }) => (
-                  <Tooltip key={value}>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant={
-                          selectedRarity === value ? "default" : "outline"
-                        }
-                        size="icon"
-                        onClick={() => setSelectedRarity(value)}
-                      >
-                        <Icon className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>{label}</p>
-                    </TooltipContent>
-                  </Tooltip>
+                  <FilterBar.Button
+                    key={value}
+                    isSelected={selectedRarity === value}
+                    onClick={() => setSelectedRarity(value)}
+                    tooltip={label}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </FilterBar.Button>
                 ))}
               </div>
 
+              <FilterBar.Separator />
+
               {/* Search input */}
-              <Input
-                type="text"
+              <FilterBar.Search
                 placeholder="搜索武器名称..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="max-w-sm"
               />
             </div>
-          </div>
+          </FilterBar.Section>
         </TooltipProvider>
-      </div>
+      </FilterBar.Root>
 
       {/* MARK: Weapon Table */}
       <div className="bg-card min-h-0 flex-1 overflow-x-auto rounded-lg border shadow-sm">
